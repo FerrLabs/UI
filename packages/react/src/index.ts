@@ -1,16 +1,19 @@
 /**
- * @ferrlabs/ui-react — shared React components.
+ * @ferrlabs/ui-react — shared React components for FerrLabs product apps.
  *
- * Consumed by:
- *   - FerrLabs-Cloud/app (unified dashboard)
- *   - FerrLabs-Cloud/admin (staff panel)
- *
- * Style: Tailwind classes only, no inline styles. Consumers must import
- * @ferrlabs/ui-tailwind/tokens + the product accent in their global CSS.
+ * Most components were ported from FerrFlow-Cloud's app package. Some still
+ * reference the caller's API client / toast store — see individual component
+ * docs for wiring.
  */
 
 export { Button } from './components/Button';
 export type { ButtonProps } from './components/Button';
 
-// TODO: Input, Card, Dialog, Toast, Skeleton, Dropdown, Tabs, Badge,
-//       EmptyState, ErrorBoundary, Avatar, Spinner, etc.
+export { ConfirmDialog } from './components/ConfirmDialog';
+export { FormDialog } from './components/FormDialog';
+export { default as ErrorBoundary } from './components/ErrorBoundary';
+export { default as Loading } from './components/Loading';
+export { PasswordStrengthBar } from './components/PasswordStrengthBar';
+export { ToastContainer } from './components/ToastContainer';
+
+export * from './lib/toast';
