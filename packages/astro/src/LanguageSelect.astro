@@ -1,0 +1,29 @@
+---
+/**
+ * EN/FR language switcher used in every FerrLabs site navbar.
+ * Shared so the visual style and ARIA behavior stay aligned across products.
+ */
+interface Props {
+  lang: 'en' | 'fr';
+  /** URL to the EN equivalent of the current page. */
+  enEquiv: string;
+  /** URL to the FR equivalent of the current page. */
+  frEquiv: string;
+}
+
+const { lang, enEquiv, frEquiv } = Astro.props;
+---
+
+<label class="flex items-center gap-1 text-sm">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="10" />
+    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+  </svg>
+  <select
+    class="bg-transparent text-sm focus:outline-none cursor-pointer"
+    onchange="window.location.href=this.value"
+  >
+    <option value={enEquiv} selected={lang === 'en'}>EN</option>
+    <option value={frEquiv} selected={lang === 'fr'}>FR</option>
+  </select>
+</label>

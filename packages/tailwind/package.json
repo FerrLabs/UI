@@ -1,0 +1,18 @@
+{
+  "name": "@ferrlabs/ui-tailwind",
+  "version": "0.1.0",
+  "description": "Shared Tailwind CSS 4 theme tokens for FerrLabs products (FerrFlow orange, FerrVault emerald, FerrLabs slate).",
+  "type": "module",
+  "files": ["src", "README.md"],
+  "exports": {
+    "./tokens": "./src/tokens.css",
+    "./products": "./src/products.css"
+  },
+  "scripts": {
+    "typecheck": "echo 'no TypeScript in this package'",
+    "build": "echo 'CSS only — nothing to build'"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
