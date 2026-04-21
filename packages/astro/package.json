@@ -1,0 +1,21 @@
+{
+  "name": "@ferrlabs/ui-astro",
+  "version": "0.1.0",
+  "description": "Astro components shared across FerrLabs marketing sites (ferrlabs.com, ferrflow.com, ferrvault.com).",
+  "type": "module",
+  "files": ["src", "README.md"],
+  "exports": {
+    "./CrossProductFooter.astro": "./src/CrossProductFooter.astro",
+    "./LanguageSelect.astro": "./src/LanguageSelect.astro"
+  },
+  "scripts": {
+    "typecheck": "echo 'astro check runs at the consuming site level'",
+    "build": "echo 'Astro components ship as source — no build step'"
+  },
+  "peerDependencies": {
+    "astro": ">=6.0.0"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

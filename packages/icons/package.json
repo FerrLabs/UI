@@ -1,0 +1,26 @@
+{
+  "name": "@ferrlabs/ui-icons",
+  "version": "0.1.0",
+  "description": "SVG icon set shared across FerrLabs products.",
+  "type": "module",
+  "files": ["src", "dist", "README.md"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./svg/*": "./src/svg/*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.0"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
