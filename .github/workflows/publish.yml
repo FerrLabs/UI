@@ -1,0 +1,46 @@
+name: Publish packages
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Publish ${{ matrix.package }}
+    runs-on: ferrlabs-k8s
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [tailwind, icons, react, astro, auth]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
+        with:
+          version: 10
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: https://npm.pkg.github.com
+          scope: '@ferrlabs'
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build package
+        working-directory: packages/${{ matrix.package }}
+        run: pnpm build || echo "no build step"
+      - name: Publish
+        working-directory: packages/${{ matrix.package }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          current=$(node -p "require('./package.json').version")
+          name=$(node -p "require('./package.json').name")
+          if npm view "$name@$current" version --registry https://npm.pkg.github.com >/dev/null 2>&1; then
+            echo "Already published: $name@$current — skipping"
+            exit 0
+          fi
+          pnpm publish --no-git-checks --access restricted
