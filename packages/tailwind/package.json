@@ -12,7 +12,17 @@
     "typecheck": "echo 'no TypeScript in this package'",
     "build": "echo 'CSS only — nothing to build'"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FerrLabs/UI.git",
+    "directory": "packages/tailwind"
+  },
+  "bugs": {
+    "url": "https://github.com/FerrLabs/UI/issues"
+  },
+  "homepage": "https://github.com/FerrLabs/UI#readme",
   "publishConfig": {
-    "access": "restricted"
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com"
   }
 }

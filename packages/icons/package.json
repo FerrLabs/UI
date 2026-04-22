@@ -20,7 +20,17 @@
   "devDependencies": {
     "typescript": "^6.0.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FerrLabs/UI.git",
+    "directory": "packages/icons"
+  },
+  "bugs": {
+    "url": "https://github.com/FerrLabs/UI/issues"
+  },
+  "homepage": "https://github.com/FerrLabs/UI#readme",
   "publishConfig": {
-    "access": "restricted"
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com"
   }
 }

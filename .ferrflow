@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ferrflow.com/schema/ferrflow.json",
+  "workspace": {
+    "recoverMissedReleases": true,
+    "skipCi": true
+  },
+  "package": [
+    { "name": "tailwind", "path": "packages/tailwind", "changelog": "packages/tailwind/CHANGELOG.md", "versionedFiles": [{ "path": "packages/tailwind/package.json", "format": "json" }] },
+    { "name": "icons", "path": "packages/icons", "changelog": "packages/icons/CHANGELOG.md", "versionedFiles": [{ "path": "packages/icons/package.json", "format": "json" }] },
+    { "name": "react", "path": "packages/react", "changelog": "packages/react/CHANGELOG.md", "versionedFiles": [{ "path": "packages/react/package.json", "format": "json" }] },
+    { "name": "astro", "path": "packages/astro", "changelog": "packages/astro/CHANGELOG.md", "versionedFiles": [{ "path": "packages/astro/package.json", "format": "json" }] },
+    { "name": "auth", "path": "packages/auth", "changelog": "packages/auth/CHANGELOG.md", "versionedFiles": [{ "path": "packages/auth/package.json", "format": "json" }] }
+  ]
+}
