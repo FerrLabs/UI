@@ -21,6 +21,8 @@ jobs:
           node-version: '24'
           cache: pnpm
       - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm install --frozen-lockfile
       - name: Typecheck all packages
         run: pnpm typecheck
