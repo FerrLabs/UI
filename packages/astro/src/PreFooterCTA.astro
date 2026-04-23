@@ -1,0 +1,278 @@
+---
+/**
+ * Pre-footer call-to-action band.
+ *
+ * Sits directly above the `Footer`. Always present on product marketing
+ * sites — the FerrLabs holding intentionally does not render it
+ * (contract: `DESIGN.md` §4.1).
+ *
+ * Three action types:
+ *   - `cta`       — a single link button (e.g. "Start free trial")
+ *   - `code`      — a monospace code line (e.g. `cargo install ferrflow`)
+ *                   with a one-click copy button
+ *   - `waitlist`  — an email input + submit that posts to a configurable
+ *                   endpoint (defaults to mailto:contact@ferrlabs.com)
+ *
+ * Two sentences: title = the promise, subtitle = the proof. Period at
+ * the end of each. See the copy matrix in `DESIGN.md` §4.1.
+ */
+
+type Accent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet';
+type Lang = 'en' | 'fr';
+
+interface CtaAction {
+  type: 'cta';
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+interface CodeAction {
+  type: 'code';
+  /** The command to display, e.g. `cargo install ferrflow`. */
+  snippet: string;
+  /** Optional aria-label for the copy button. */
+  copyLabel?: string;
+}
+
+interface WaitlistAction {
+  type: 'waitlist';
+  /** Placeholder shown in the email input. */
+  placeholder: string;
+  /** Submit button label. */
+  cta: string;
+  /** Where the form POSTs to. Defaults to `mailto:contact@ferrlabs.com?subject=Waitlist`. */
+  action?: string;
+  /** Form method. Default 'POST'. Ignored when `action` is a mailto URL. */
+  method?: 'GET' | 'POST';
+}
+
+type Action = CtaAction | CodeAction | WaitlistAction;
+
+interface Props {
+  lang: Lang;
+  accent: Accent;
+  title: string;
+  subtitle: string;
+  action: Action;
+}
+
+const { lang, accent, title, subtitle, action } = Astro.props;
+
+const accentSlug = (a: Accent) =>
+  a === 'slate' ? 'labs-slate' :
+  a === 'orange' ? 'flow-orange' :
+  a === 'emerald' ? 'vault-emerald' :
+  a === 'indigo' ? 'track-indigo' : 'growth-violet';
+
+const t = (en: string, fr: string) => (lang === 'fr' ? fr : en);
+---
+
+<section
+  class="ferrlabs-prefooter"
+  style={`--accent: var(--color-ferr${accentSlug(accent)});`}
+  aria-labelledby="ferrlabs-prefooter-title"
+>
+  <div class="ferrlabs-prefooter-inner">
+    <h2 id="ferrlabs-prefooter-title" class="ferrlabs-prefooter-title">
+      <span class="ferrlabs-prefooter-line">{title}</span>
+      <span class="ferrlabs-prefooter-line ferrlabs-prefooter-subtitle">{subtitle}</span>
+    </h2>
+
+    {action.type === 'cta' && (
+      <a
+        href={action.href}
+        class="ferrlabs-prefooter-cta"
+        rel={action.external ? 'noopener noreferrer' : undefined}
+        target={action.external ? '_blank' : undefined}
+      >
+        {action.label}
+      </a>
+    )}
+
+    {action.type === 'code' && (
+      <div class="ferrlabs-prefooter-code">
+        <code data-ferrlabs-prefooter-snippet>{action.snippet}</code>
+        <button
+          type="button"
+          class="ferrlabs-prefooter-copy"
+          data-ferrlabs-prefooter-copy
+          aria-label={action.copyLabel ?? t('Copy command', 'Copier la commande')}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+      </div>
+    )}
+
+    {action.type === 'waitlist' && (
+      <form
+        class="ferrlabs-prefooter-waitlist"
+        method={action.method ?? 'POST'}
+        action={action.action ?? 'mailto:contact@ferrlabs.com?subject=Waitlist'}
+      >
+        <label class="sr-only" for="ferrlabs-prefooter-email">{t('Email', 'E-mail')}</label>
+        <input
+          id="ferrlabs-prefooter-email"
+          name="email"
+          type="email"
+          required
+          placeholder={action.placeholder}
+        />
+        <button type="submit">{action.cta}</button>
+      </form>
+    )}
+  </div>
+</section>
+
+{action.type === 'code' && (
+  <script is:inline>
+    (function () {
+      if (window.__ferrlabsPrefooterCopyWired) return;
+      window.__ferrlabsPrefooterCopyWired = true;
+      document.querySelectorAll('[data-ferrlabs-prefooter-copy]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var snippet = btn.parentElement && btn.parentElement.querySelector('[data-ferrlabs-prefooter-snippet]');
+          if (!snippet || !navigator.clipboard) return;
+          navigator.clipboard.writeText(snippet.textContent || '').then(function () {
+            btn.classList.add('copied');
+            setTimeout(function () { btn.classList.remove('copied'); }, 1500);
+          });
+        });
+      });
+    })();
+  </script>
+)}
+
+<style>
+  .ferrlabs-prefooter {
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.02) 100%);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 5rem 1.5rem;
+  }
+  .ferrlabs-prefooter-inner {
+    max-width: 48rem;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  .ferrlabs-prefooter-title {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin: 0;
+    color: #0f172a;
+  }
+  .ferrlabs-prefooter-line {
+    display: block;
+  }
+  .ferrlabs-prefooter-subtitle {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .ferrlabs-prefooter-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--accent);
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 150ms ease, transform 150ms ease;
+  }
+  .ferrlabs-prefooter-cta:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+  }
+
+  .ferrlabs-prefooter-code {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: #0f172a;
+    color: #f1f5f9;
+    border-radius: 0.5rem;
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, monospace);
+    font-size: 0.95rem;
+  }
+  .ferrlabs-prefooter-code code {
+    font-family: inherit;
+    user-select: all;
+  }
+  .ferrlabs-prefooter-copy {
+    background: transparent;
+    border: none;
+    color: currentColor;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 150ms ease;
+  }
+  .ferrlabs-prefooter-copy:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .ferrlabs-prefooter-copy.copied {
+    color: var(--accent);
+  }
+
+  .ferrlabs-prefooter-waitlist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    width: 100%;
+    max-width: 28rem;
+  }
+  .ferrlabs-prefooter-waitlist input {
+    flex: 1;
+    min-width: 12rem;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    background: white;
+    color: #0f172a;
+  }
+  .ferrlabs-prefooter-waitlist input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+  .ferrlabs-prefooter-waitlist button {
+    padding: 0.625rem 1.25rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 150ms ease;
+  }
+  .ferrlabs-prefooter-waitlist button:hover {
+    opacity: 0.92;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

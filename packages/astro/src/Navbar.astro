@@ -1,0 +1,416 @@
+---
+/**
+ * Shared navbar for every FerrLabs marketing site.
+ *
+ * Vitrine-only (Astro). The FerrLabs product apps (app.ferrlabs.com,
+ * admin.ferrlabs.com, auth.ferrlabs.com, future app.ferrvault.com, …)
+ * have their own chrome and do NOT use this component.
+ *
+ * Contract: see workspace `DESIGN.md` §3.2.
+ *
+ * Intentionally no GitHub icon — the OSS link (previously on ferrflow.com
+ * because FerrFlow is open-source) is now just a regular nav link passed
+ * via `links` if the product needs one. This keeps the navbar uniform
+ * across products regardless of their OSS status.
+ *
+ * Includes a "Products" dropdown that lists every FerrLabs product with
+ * its brand accent dot, so any visitor can jump to a sibling site from
+ * anywhere in the org. Contents are hardcoded here (single source of
+ * truth) so adding a new product = one PR on this component, the change
+ * shows up on every site on the next build.
+ */
+
+import LanguageSelect from './LanguageSelect.astro';
+
+type Accent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet';
+type Product = 'ferrlabs' | 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth';
+type Lang = 'en' | 'fr';
+
+export interface Link {
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+export interface Brand {
+  name: string;
+  href: string;
+  /** Optional logo; `<img src>` or imported asset. Omit to fall back to a letter mark. */
+  logoSrc?: string;
+}
+
+interface Props {
+  lang: Lang;
+  currentProduct: Product;
+  accent: Accent;
+  brand: Brand;
+  links?: Link[];
+  /** Optional primary CTA rendered on the right (e.g. "Sign in", "Get started"). */
+  cta?: { label: string; href: string; external?: boolean };
+  /** URL for the EN version of the current page (for LanguageSelect). */
+  enEquiv: string;
+  /** URL for the FR version of the current page. */
+  frEquiv: string;
+  /** When the current page has no FR equivalent yet, render FR disabled. Default: true. */
+  hasAltTranslation?: boolean;
+  /** Default: true. Disable on pages that need a fixed-height navbar with no scroll effect. */
+  sticky?: boolean;
+  /** Default: true. Navbar background becomes translucent with a backdrop blur. */
+  translucent?: boolean;
+}
+
+const {
+  lang,
+  currentProduct,
+  accent,
+  brand,
+  links = [],
+  cta,
+  enEquiv,
+  frEquiv,
+  hasAltTranslation = true,
+  sticky = true,
+  translucent = true,
+} = Astro.props;
+
+const accentSlug = (a: Accent) =>
+  a === 'slate' ? 'labs-slate' :
+  a === 'orange' ? 'flow-orange' :
+  a === 'emerald' ? 'vault-emerald' :
+  a === 'indigo' ? 'track-indigo' : 'growth-violet';
+
+const t = (en: string, fr: string) => (lang === 'fr' ? fr : en);
+
+// All FerrLabs products, used for the "Products" dropdown. The current one
+// is kept in the list but marked as active so visitors know where they are.
+const allProducts: { id: Product; label: string; href: string; accent: Accent; tagline: string; taglineFr: string }[] = [
+  { id: 'ferrlabs',   label: 'FerrLabs',   href: 'https://ferrlabs.com',       accent: 'slate',
+    tagline: 'Developer tools company',          taglineFr: 'Éditeur d\u2019outils pour développeurs' },
+  { id: 'ferrflow',   label: 'FerrFlow',   href: 'https://ferrflow.com',       accent: 'orange',
+    tagline: 'Versioning CLI (open source)',     taglineFr: 'CLI de versioning (open source)' },
+  { id: 'ferrvault',  label: 'FerrVault',  href: 'https://vault.ferrlabs.com', accent: 'emerald',
+    tagline: 'Secrets management',               taglineFr: 'Gestion des secrets' },
+  { id: 'ferrtrack',  label: 'FerrTrack',  href: 'https://track.ferrlabs.com', accent: 'indigo',
+    tagline: 'Metrics and observability',        taglineFr: 'Métriques et observabilité' },
+  { id: 'ferrgrowth', label: 'FerrGrowth', href: 'https://ferrgrowth.com',     accent: 'violet',
+    tagline: 'Growth tooling',                   taglineFr: 'Outils de croissance' },
+];
+
+const initial = brand.name.replace(/[^A-Za-z]/g, '').charAt(0).toUpperCase() || 'F';
+---
+
+<header
+  class:list={['ferrlabs-nav', { sticky, translucent }]}
+  style={`--accent: var(--color-ferr${accentSlug(accent)});`}
+  data-current-product={currentProduct}
+>
+  <div class="ferrlabs-nav-inner">
+    <a href={brand.href} class="ferrlabs-nav-brand" aria-label={brand.name}>
+      {brand.logoSrc ? (
+        <img src={brand.logoSrc} alt="" class="ferrlabs-nav-logo" />
+      ) : (
+        <span class="ferrlabs-nav-logo-fallback" aria-hidden="true">{initial}</span>
+      )}
+      <span class="ferrlabs-nav-brand-name">{brand.name}</span>
+    </a>
+
+    <nav class="ferrlabs-nav-links" aria-label="Primary">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          rel={link.external ? 'noopener noreferrer' : undefined}
+          target={link.external ? '_blank' : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+
+      <div class="ferrlabs-nav-products" data-ferrlabs-nav-products>
+        <button
+          type="button"
+          class="ferrlabs-nav-products-trigger"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="ferrlabs-nav-products-menu"
+        >
+          {t('Products', 'Produits')}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <div id="ferrlabs-nav-products-menu" class="ferrlabs-nav-products-menu" role="menu" hidden>
+          <ul>
+            {allProducts.map((p) => (
+              <li role="none">
+                <a
+                  href={p.href}
+                  role="menuitem"
+                  class:list={['ferrlabs-nav-product', { current: p.id === currentProduct }]}
+                  aria-current={p.id === currentProduct ? 'page' : undefined}
+                >
+                  <span
+                    class="ferrlabs-nav-product-swatch"
+                    style={`--swatch: var(--color-ferr${accentSlug(p.accent)});`}
+                    aria-hidden="true"
+                  ></span>
+                  <span class="ferrlabs-nav-product-text">
+                    <strong>{p.label}</strong>
+                    <em>{lang === 'fr' ? p.taglineFr : p.tagline}</em>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="ferrlabs-nav-trailing">
+      <LanguageSelect
+        lang={lang}
+        enEquiv={enEquiv}
+        frEquiv={frEquiv}
+        hasAltTranslation={hasAltTranslation}
+      />
+      {cta && (
+        <a
+          href={cta.href}
+          class="ferrlabs-nav-cta"
+          rel={cta.external ? 'noopener noreferrer' : undefined}
+          target={cta.external ? '_blank' : undefined}
+        >
+          {cta.label}
+        </a>
+      )}
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  (function () {
+    if (window.__ferrlabsNavProductsWired) return;
+    window.__ferrlabsNavProductsWired = true;
+
+    document.querySelectorAll('[data-ferrlabs-nav-products]').forEach(function (root) {
+      var trigger = root.querySelector('.ferrlabs-nav-products-trigger');
+      var menu = root.querySelector('.ferrlabs-nav-products-menu');
+      if (!trigger || !menu) return;
+
+      var open = function () {
+        menu.hidden = false;
+        trigger.setAttribute('aria-expanded', 'true');
+      };
+      var close = function () {
+        menu.hidden = true;
+        trigger.setAttribute('aria-expanded', 'false');
+      };
+      var toggle = function () {
+        if (menu.hidden) open(); else close();
+      };
+
+      trigger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggle();
+      });
+
+      // Close on click anywhere else.
+      document.addEventListener('click', function (e) {
+        if (!root.contains(e.target)) close();
+      });
+
+      // Close on Escape.
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !menu.hidden) {
+          close();
+          trigger.focus();
+        }
+      });
+    });
+  })();
+</script>
+
+<style>
+  .ferrlabs-nav {
+    --nav-fg: #0f172a;
+    --nav-bg: #ffffff;
+    --nav-muted: #475569;
+    --nav-border: rgba(15, 23, 42, 0.08);
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--nav-border);
+    color: var(--nav-fg);
+    z-index: 40;
+  }
+  .ferrlabs-nav.sticky {
+    position: sticky;
+    top: 0;
+  }
+  .ferrlabs-nav.translucent {
+    background: color-mix(in srgb, var(--nav-bg) 85%, transparent);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+  }
+
+  .ferrlabs-nav-inner {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .ferrlabs-nav-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .ferrlabs-nav-logo {
+    height: 28px;
+    width: auto;
+  }
+  .ferrlabs-nav-logo-fallback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 0.5rem;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+  .ferrlabs-nav-brand-name {
+    font-size: 1rem;
+  }
+
+  .ferrlabs-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+  }
+  .ferrlabs-nav-links a {
+    color: var(--nav-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 150ms ease;
+  }
+  .ferrlabs-nav-links a:hover {
+    color: var(--accent);
+  }
+
+  .ferrlabs-nav-products {
+    position: relative;
+  }
+  .ferrlabs-nav-products-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--nav-muted);
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: color 150ms ease;
+  }
+  .ferrlabs-nav-products-trigger:hover,
+  .ferrlabs-nav-products-trigger[aria-expanded="true"] {
+    color: var(--accent);
+  }
+  .ferrlabs-nav-products-menu {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    left: 0;
+    width: 22rem;
+    background: var(--nav-bg);
+    border: 1px solid var(--nav-border);
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.15);
+    padding: 0.5rem;
+    z-index: 50;
+  }
+  .ferrlabs-nav-products-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .ferrlabs-nav-product {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 150ms ease;
+  }
+  .ferrlabs-nav-product:hover {
+    background: rgba(15, 23, 42, 0.04);
+  }
+  .ferrlabs-nav-product.current {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+  .ferrlabs-nav-product-swatch {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 9999px;
+    background: var(--swatch);
+    margin-top: 0.3rem;
+    flex-shrink: 0;
+  }
+  .ferrlabs-nav-product-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+  .ferrlabs-nav-product-text strong {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .ferrlabs-nav-product-text em {
+    font-style: normal;
+    font-size: 0.8rem;
+    color: var(--nav-muted);
+  }
+
+  .ferrlabs-nav-trailing {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .ferrlabs-nav-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: var(--accent);
+    color: white;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 150ms ease;
+  }
+  .ferrlabs-nav-cta:hover {
+    opacity: 0.92;
+  }
+
+  @media (max-width: 768px) {
+    .ferrlabs-nav-links {
+      gap: 1rem;
+    }
+    .ferrlabs-nav-links > a {
+      display: none;  /* hide simple links on mobile; Products menu stays */
+    }
+    .ferrlabs-nav-products-menu {
+      width: min(calc(100vw - 3rem), 22rem);
+    }
+  }
+</style>
