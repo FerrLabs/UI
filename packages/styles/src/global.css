@@ -1,0 +1,62 @@
+/*
+ * FerrLabs base stylesheet.
+ *
+ * Drop-in replacement for the `@import "tailwindcss";` line at the top of
+ * every product's global.css. Loads:
+ *   1. Self-hosted Fraunces + DM Mono (no Google Fonts CDN, no tracking)
+ *   2. Tailwind CSS v4
+ *   3. FerrLabs design tokens (brand accents, font vars) as a @theme
+ *   4. Minimal base layer that wires font-family + antialiasing
+ *
+ * Usage in each consuming app's global.css:
+ *
+ *     @import "@ferrlabs/styles/global.css";
+ *     [ ...your product-specific overrides... ]
+ *
+ * Do not @import tailwindcss yourself — this file already does it. If you
+ * do, you'll generate utilities twice and bloat the final CSS.
+ */
+
+/* 1. Fonts — only the weights we actually use, to keep the payload down.
+ *    Fraunces: 400 body / 700 semibold / 900 display.
+ *    DM Mono: 400 regular / 500 medium.
+ *    Reviewed in DESIGN.md §2.
+ */
+@import "@fontsource/fraunces/400.css";
+@import "@fontsource/fraunces/700.css";
+@import "@fontsource/fraunces/900.css";
+@import "@fontsource/dm-mono/400.css";
+@import "@fontsource/dm-mono/500.css";
+
+/* 2. Tailwind v4 — consumers do NOT @import this themselves. */
+@import "tailwindcss";
+
+/* 3. Design tokens. Keep this after the tailwindcss import so that @theme
+ *    overrides the defaults rather than the other way round.
+ */
+@import "./tokens.css";
+
+/* 4. Base layer. Scoped under @layer base so product-level rules still
+ *    win when they want to override the brand defaults (admin uses a
+ *    sans system font for density; that's fine — it can override here).
+ */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-mono);
+  }
+}
