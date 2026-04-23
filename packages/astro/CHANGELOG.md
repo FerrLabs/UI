@@ -4,6 +4,12 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.4.0] - 2026-04-23
+
+### Features
+
+- feat(ui-astro): ship rich LanguageSelect with globe icon, caret, and soft-fallback FR option (#14)
+
 ## [0.2.0] - 2026-04-23
 
 ### Features
