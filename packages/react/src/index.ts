@@ -9,11 +9,12 @@
 export { Button } from './components/Button';
 export type { ButtonProps } from './components/Button';
 
-export { ConfirmDialog } from './components/ConfirmDialog';
-export { FormDialog } from './components/FormDialog';
+export { default as ConfirmDialog } from './components/ConfirmDialog';
+export { default as FormDialog } from './components/FormDialog';
 export { default as ErrorBoundary } from './components/ErrorBoundary';
-export { default as Loading } from './components/Loading';
-export { PasswordStrengthBar } from './components/PasswordStrengthBar';
-export { ToastContainer } from './components/ToastContainer';
+export { Spinner, LoadingPage, ErrorBox } from './components/Loading';
+export { default as PasswordStrengthBar } from './components/PasswordStrengthBar';
+export { default as ToastContainer } from './components/ToastContainer';
 
 export * from './lib/toast';
+export * from './lib/passwordStrength';

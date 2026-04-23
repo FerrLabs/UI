@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { api, ApiError } from '../lib/api';
-import PasswordStrengthBar from '../components/PasswordStrengthBar';
-import type { StrengthScore } from '../lib/passwordStrength';
+import { api, ApiError } from './lib/api';
+import PasswordStrengthBar from '@ferrlabs/ui-react';
+import type { StrengthScore } from './lib/passwordStrength';
 
 /// Minimum zxcvbn score we'll allow before enabling submit. Score 3
 /// ("strong") corresponds to roughly 10^8 guesses — comfortably out of reach

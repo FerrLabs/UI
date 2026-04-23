@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { api, ApiError, type ApiUser } from '../lib/api';
+import { api, ApiError, type ApiUser } from './lib/api';
 
 type AuthState =
   | { status: 'loading' }
