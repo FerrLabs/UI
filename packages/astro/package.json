@@ -1,31 +1,34 @@
 {
-  "name": "@ferrlabs/ui-astro",
-  "version": "0.1.0",
+  "bugs": {
+    "url": "https://github.com/FerrLabs/UI/issues"
+  },
   "description": "Astro components shared across FerrLabs marketing sites (ferrlabs.com, ferrflow.com, ferrvault.com).",
-  "type": "module",
-  "files": ["src", "README.md"],
   "exports": {
     "./CrossProductFooter.astro": "./src/CrossProductFooter.astro",
     "./LanguageSelect.astro": "./src/LanguageSelect.astro"
   },
-  "scripts": {
-    "typecheck": "echo 'astro check runs at the consuming site level'",
-    "build": "echo 'Astro components ship as source — no build step'"
-  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "homepage": "https://github.com/FerrLabs/UI#readme",
+  "name": "@ferrlabs/ui-astro",
   "peerDependencies": {
     "astro": ">=6.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/FerrLabs/UI.git",
-    "directory": "packages/astro"
-  },
-  "bugs": {
-    "url": "https://github.com/FerrLabs/UI/issues"
-  },
-  "homepage": "https://github.com/FerrLabs/UI#readme",
   "publishConfig": {
     "access": "restricted",
     "registry": "https://npm.pkg.github.com"
-  }
+  },
+  "repository": {
+    "directory": "packages/astro",
+    "type": "git",
+    "url": "git+https://github.com/FerrLabs/UI.git"
+  },
+  "scripts": {
+    "build": "echo 'Astro components ship as source — no build step'",
+    "typecheck": "echo 'astro check runs at the consuming site level'"
+  },
+  "type": "module",
+  "version": "0.2.0"
 }

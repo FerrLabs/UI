@@ -1,29 +1,11 @@
 {
-  "name": "@ferrlabs/ui-auth",
-  "version": "0.1.0",
-  "description": "React auth forms shared across FerrLabs product apps — login, signup, reset password, OAuth buttons, 2FA.",
-  "type": "module",
-  "files": ["src", "dist", "README.md"],
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
-  },
-  "scripts": {
-    "typecheck": "echo 'ui-auth is WIP scaffold — typecheck re-enabled once real auth service lands. TODO(ui-auth): FerrLabs/UI#NEW'",
-    "build": "echo 'ui-auth is WIP scaffold — no build emitted'"
-  },
-  "peerDependencies": {
-    "react": ">=19.0.0",
-    "react-dom": ">=19.0.0",
-    "react-router-dom": ">=7.0.0"
+  "bugs": {
+    "url": "https://github.com/FerrLabs/UI/issues"
   },
   "dependencies": {
     "@ferrlabs/ui-react": "workspace:*"
   },
+  "description": "React auth forms shared across FerrLabs product apps — login, signup, reset password, OAuth buttons, 2FA.",
   "devDependencies": {
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
@@ -32,17 +14,39 @@
     "react-router-dom": "^7.0.0",
     "typescript": "^6.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/FerrLabs/UI.git",
-    "directory": "packages/auth"
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
-  "bugs": {
-    "url": "https://github.com/FerrLabs/UI/issues"
-  },
+  "files": [
+    "src",
+    "dist",
+    "README.md"
+  ],
   "homepage": "https://github.com/FerrLabs/UI#readme",
+  "main": "./dist/index.js",
+  "name": "@ferrlabs/ui-auth",
+  "peerDependencies": {
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0",
+    "react-router-dom": ">=7.0.0"
+  },
   "publishConfig": {
     "access": "restricted",
     "registry": "https://npm.pkg.github.com"
-  }
+  },
+  "repository": {
+    "directory": "packages/auth",
+    "type": "git",
+    "url": "git+https://github.com/FerrLabs/UI.git"
+  },
+  "scripts": {
+    "build": "echo 'ui-auth is WIP scaffold — no build emitted'",
+    "typecheck": "echo 'ui-auth is WIP scaffold — typecheck re-enabled once real auth service lands. TODO(ui-auth): FerrLabs/UI#NEW'"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "version": "0.2.0"
 }
