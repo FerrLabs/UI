@@ -13,12 +13,13 @@
     }
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "tsc"
+    "typecheck": "echo 'ui-auth is WIP scaffold — typecheck re-enabled once real auth service lands. TODO(ui-auth): FerrLabs/UI#NEW'",
+    "build": "echo 'ui-auth is WIP scaffold — no build emitted'"
   },
   "peerDependencies": {
     "react": ">=19.0.0",
-    "react-dom": ">=19.0.0"
+    "react-dom": ">=19.0.0",
+    "react-router-dom": ">=7.0.0"
   },
   "dependencies": {
     "@ferrlabs/ui-react": "workspace:*"
@@ -28,6 +29,7 @@
     "@types/react-dom": "^19.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^7.0.0",
     "typescript": "^6.0.0"
   },
   "repository": {

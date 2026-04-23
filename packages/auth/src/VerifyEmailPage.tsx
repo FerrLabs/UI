@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { api, ApiError } from '../lib/api';
+import { api, ApiError } from './lib/api';
 
 // Shared "enter your 6-digit code" step for both the register flow (right after
 // POST /auth/register) and the login flow (when the backend reports

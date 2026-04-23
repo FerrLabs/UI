@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../lib/api';
+import { api } from './lib/api';
 
 // The request endpoint always returns 202 — it leaks nothing about whether an
 // account exists, so the page shows the same success copy unconditionally.

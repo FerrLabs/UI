@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { api, ApiError } from '../lib/api';
-import PasswordStrengthBar from '../components/PasswordStrengthBar';
-import type { StrengthScore } from '../lib/passwordStrength';
+import { api, ApiError } from './lib/api';
+import PasswordStrengthBar from '@ferrlabs/ui-react';
+import type { StrengthScore } from './lib/passwordStrength';
 
 /// Gate submit on score >= 3 ("strong"). Same threshold as Register — keeps
 /// the UX consistent and prevents users from walking out of a reset with a
