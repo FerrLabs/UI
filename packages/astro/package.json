@@ -4,10 +4,10 @@
   },
   "description": "Astro components shared across FerrLabs marketing sites (ferrlabs.com, ferrflow.com, ferrvault.com, ferrtrack.com, ferrgrowth.com).",
   "exports": {
-    "./Navbar.astro": "./src/Navbar.astro",
     "./Footer.astro": "./src/Footer.astro",
-    "./PreFooterCTA.astro": "./src/PreFooterCTA.astro",
-    "./LanguageSelect.astro": "./src/LanguageSelect.astro"
+    "./LanguageSelect.astro": "./src/LanguageSelect.astro",
+    "./Navbar.astro": "./src/Navbar.astro",
+    "./PreFooterCTA.astro": "./src/PreFooterCTA.astro"
   },
   "files": [
     "src",
@@ -32,5 +32,5 @@
     "typecheck": "echo 'astro check runs at the consuming site level'"
   },
   "type": "module",
-  "version": "0.4.0"
+  "version": "0.5.0"
 }

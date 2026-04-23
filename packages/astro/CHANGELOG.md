@@ -4,6 +4,13 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.5.0] - 2026-04-23
+
+### Features
+
+- feat(ui-astro): Navbar + Footer + PreFooterCTA + sticky-bottom layout (#23)
+- feat: add @ferrlabs/styles package — Fraunces + DM Mono + Tailwind + brand tokens (#22)
+
 ## [0.4.0] - 2026-04-23
 
 ### Features
