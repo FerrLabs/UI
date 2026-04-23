@@ -1,23 +1,41 @@
 ---
 /**
- * Shared navbar for every FerrLabs marketing site.
+ * Shared navbar for every FerrLabs marketing site AND the Starlight docs.
  *
- * Vitrine-only (Astro). The FerrLabs product apps (app.ferrlabs.com,
- * admin.ferrlabs.com, auth.ferrlabs.com, future app.ferrvault.com, …)
- * have their own chrome and do NOT use this component.
+ * Used by:
+ *   - Marketing vitrine pages (ferrlabs.com, ferrflow.com, ferrvault.com,
+ *     ferrtrack.com, ferrgrowth.com) — direct render in Layout.astro.
+ *   - Starlight docs (ferrflow.com/docs/…) — wrapped by the site's
+ *     `Header.astro` override, with `hideLanguageToggle` so Starlight's
+ *     native LanguageSelect takes over, `activePage="docs"` so the Docs
+ *     nav link is marked current, and the Starlight chrome
+ *     (VersionSelect, Search) passed through the slots below.
+ *
+ * Product apps (app.ferrlabs.com, admin.ferrlabs.com, auth.ferrlabs.com,
+ * future app.ferrvault.com, …) have their own chrome and do NOT use
+ * this component.
  *
  * Contract: see workspace `DESIGN.md` §3.2.
  *
- * Intentionally no GitHub icon — the OSS link (previously on ferrflow.com
- * because FerrFlow is open-source) is now just a regular nav link passed
- * via `links` if the product needs one. This keeps the navbar uniform
- * across products regardless of their OSS status.
+ * ## Slots
+ *   - default `<slot />`  — right-cluster extras rendered left of the
+ *     LanguageSelect + CTA. Used by Starlight docs to inject VersionSelect
+ *     and a second-breakpoint LanguageSelect.
+ *   - `<slot name="center" />` — absolute-centered content (used by docs
+ *     for the Search trigger). On ≤900 px viewports falls back to inline
+ *     flow so it doesn't overlap the brand/right cluster.
  *
- * Includes a "Products" dropdown that lists every FerrLabs product with
- * its brand accent dot, so any visitor can jump to a sibling site from
- * anywhere in the org. Contents are hardcoded here (single source of
- * truth) so adding a new product = one PR on this component, the change
- * shows up on every site on the next build.
+ * ## Design decision: no GitHub icon
+ * The OSS link (previously on ferrflow.com because FerrFlow is open-
+ * source) is now just a regular nav link passed via `links` if the
+ * product needs one. Keeps the navbar uniform across products
+ * regardless of their OSS status.
+ *
+ * ## Products dropdown
+ * Lists every FerrLabs product with its brand-accent swatch and a
+ * one-line tagline. Contents are hardcoded inside this component so
+ * adding a new product = one PR here and the link appears on every site
+ * on the next build.
  */
 
 import LanguageSelect from './LanguageSelect.astro';
@@ -47,12 +65,25 @@ interface Props {
   links?: Link[];
   /** Optional primary CTA rendered on the right (e.g. "Sign in", "Get started"). */
   cta?: { label: string; href: string; external?: boolean };
+  /**
+   * Highlight the link matching the current page. Applied via aria-current
+   * + visual emphasis. Values match paths added to `links` (by href prefix)
+   * plus two conventions: `'home'` always matches the brand link, `'docs'`
+   * matches any link whose label/href includes "docs".
+   */
+  activePage?: 'home' | 'docs' | string;
   /** URL for the EN version of the current page (for LanguageSelect). */
   enEquiv: string;
   /** URL for the FR version of the current page. */
   frEquiv: string;
   /** When the current page has no FR equivalent yet, render FR disabled. Default: true. */
   hasAltTranslation?: boolean;
+  /**
+   * Skip the built-in LanguageSelect. Docs pages pass `true` so
+   * Starlight's native `<LanguageSelect />` (which knows the localised
+   * URL of the current doc via Starlight's route context) takes over.
+   */
+  hideLanguageToggle?: boolean;
   /** Default: true. Disable on pages that need a fixed-height navbar with no scroll effect. */
   sticky?: boolean;
   /** Default: true. Navbar background becomes translucent with a backdrop blur. */
@@ -66,12 +97,25 @@ const {
   brand,
   links = [],
   cta,
+  activePage,
   enEquiv,
   frEquiv,
   hasAltTranslation = true,
+  hideLanguageToggle = false,
   sticky = true,
   translucent = true,
 } = Astro.props;
+
+/** A link is considered "active" when `activePage` matches either its
+ *  href (prefix match on normalised path) or the `docs` convention
+ *  (href contains "/docs"). Brand/logo is active iff activePage is "home". */
+function isLinkActive(href: string): boolean {
+  if (!activePage) return false;
+  if (activePage === 'docs' && href.includes('/docs')) return true;
+  if (activePage !== 'home' && href.includes(`/${activePage}`)) return true;
+  return false;
+}
+const isBrandActive = activePage === 'home';
 
 const accentSlug = (a: Accent) =>
   a === 'slate' ? 'labs-slate' :
@@ -91,7 +135,7 @@ const allProducts: { id: Product; label: string; href: string; accent: Accent; t
   { id: 'ferrvault',  label: 'FerrVault',  href: 'https://vault.ferrlabs.com', accent: 'emerald',
     tagline: 'Secrets management',               taglineFr: 'Gestion des secrets' },
   { id: 'ferrtrack',  label: 'FerrTrack',  href: 'https://track.ferrlabs.com', accent: 'indigo',
-    tagline: 'Metrics and observability',        taglineFr: 'Métriques et observabilité' },
+    tagline: 'Issue tracker',                    taglineFr: 'Suivi d\u2019issues' },
   { id: 'ferrgrowth', label: 'FerrGrowth', href: 'https://ferrgrowth.com',     accent: 'violet',
     tagline: 'Growth tooling',                   taglineFr: 'Outils de croissance' },
 ];
@@ -105,7 +149,12 @@ const initial = brand.name.replace(/[^A-Za-z]/g, '').charAt(0).toUpperCase() || 
   data-current-product={currentProduct}
 >
   <div class="ferrlabs-nav-inner">
-    <a href={brand.href} class="ferrlabs-nav-brand" aria-label={brand.name}>
+    <a
+      href={brand.href}
+      class:list={['ferrlabs-nav-brand', { current: isBrandActive }]}
+      aria-label={brand.name}
+      aria-current={isBrandActive ? 'page' : undefined}
+    >
       {brand.logoSrc ? (
         <img src={brand.logoSrc} alt="" class="ferrlabs-nav-logo" />
       ) : (
@@ -120,6 +169,8 @@ const initial = brand.name.replace(/[^A-Za-z]/g, '').charAt(0).toUpperCase() || 
           href={link.href}
           rel={link.external ? 'noopener noreferrer' : undefined}
           target={link.external ? '_blank' : undefined}
+          class:list={{ current: isLinkActive(link.href) }}
+          aria-current={isLinkActive(link.href) ? 'page' : undefined}
         >
           {link.label}
         </a>
@@ -166,13 +217,27 @@ const initial = brand.name.replace(/[^A-Za-z]/g, '').charAt(0).toUpperCase() || 
       </div>
     </nav>
 
+    {/* Absolutely-centered slot. Collapses to zero layout cost when empty
+        (no `<slot name="center" />` content provided). On ≤900 px viewports
+        it falls back to inline flow so it doesn't overlap the brand/right
+        cluster — see the `@media` block in the style block below. */}
+    <div class="ferrlabs-nav-center">
+      <slot name="center" />
+    </div>
+
     <div class="ferrlabs-nav-trailing">
-      <LanguageSelect
-        lang={lang}
-        enEquiv={enEquiv}
-        frEquiv={frEquiv}
-        hasAltTranslation={hasAltTranslation}
-      />
+      {/* Default slot — right-cluster extras rendered LEFT of the
+          LanguageSelect + CTA. Starlight passes VersionSelect + its own
+          LanguageSelect here. Empty on marketing pages. */}
+      <slot />
+      {!hideLanguageToggle && (
+        <LanguageSelect
+          lang={lang}
+          enEquiv={enEquiv}
+          frEquiv={frEquiv}
+          hasAltTranslation={hasAltTranslation}
+        />
+      )}
       {cta && (
         <a
           href={cta.href}
@@ -252,12 +317,37 @@ const initial = brand.name.replace(/[^A-Za-z]/g, '').charAt(0).toUpperCase() || 
   }
 
   .ferrlabs-nav-inner {
+    position: relative;  /* anchor for the absolutely-positioned center slot */
     max-width: 80rem;
     margin: 0 auto;
     padding: 0.75rem 1.5rem;
     display: flex;
     align-items: center;
     gap: 1.5rem;
+  }
+
+  /* Center slot — absolutely centred in the header so its position is
+     independent of the left/right cluster widths. The wrapper itself
+     does not capture pointer events; only its children do (so an empty
+     slot never blocks clicks on the left cluster).
+     On ≤900 px viewports drop back into flex flow to avoid overlap. */
+  .ferrlabs-nav-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+  }
+  .ferrlabs-nav-center > * {
+    pointer-events: auto;
+  }
+  @media (max-width: 900px) {
+    .ferrlabs-nav-center {
+      position: static;
+      transform: none;
+    }
   }
 
   .ferrlabs-nav-brand {
@@ -302,6 +392,13 @@ const initial = brand.name.replace(/[^A-Za-z]/g, '').charAt(0).toUpperCase() || 
     transition: color 150ms ease;
   }
   .ferrlabs-nav-links a:hover {
+    color: var(--accent);
+  }
+  .ferrlabs-nav-links a.current {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .ferrlabs-nav-brand.current .ferrlabs-nav-brand-name {
     color: var(--accent);
   }
 
