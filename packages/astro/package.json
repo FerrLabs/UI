@@ -2,9 +2,11 @@
   "bugs": {
     "url": "https://github.com/FerrLabs/UI/issues"
   },
-  "description": "Astro components shared across FerrLabs marketing sites (ferrlabs.com, ferrflow.com, ferrvault.com).",
+  "description": "Astro components shared across FerrLabs marketing sites (ferrlabs.com, ferrflow.com, ferrvault.com, ferrtrack.com, ferrgrowth.com).",
   "exports": {
-    "./CrossProductFooter.astro": "./src/CrossProductFooter.astro",
+    "./Navbar.astro": "./src/Navbar.astro",
+    "./Footer.astro": "./src/Footer.astro",
+    "./PreFooterCTA.astro": "./src/PreFooterCTA.astro",
     "./LanguageSelect.astro": "./src/LanguageSelect.astro"
   },
   "files": [

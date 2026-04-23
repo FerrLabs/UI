@@ -41,6 +41,10 @@
  *    sans system font for density; that's fine — it can override here).
  */
 @layer base {
+  html,
+  body {
+    height: 100%;
+  }
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -48,9 +52,24 @@
     text-rendering: optimizeLegibility;
   }
 
+  /*
+   * Sticky-footer layout. Vitrine Astro pages use <body> as the flex
+   * container; the <header> (Navbar) sits at the top, a <main> takes
+   * remaining space via `flex: 1`, and the <footer> (with
+   * `margin-top: auto`) is pinned to the bottom regardless of page
+   * content height. Combined with <html, body { height: 100% }>, short
+   * pages stop leaving a gap between the content and the footer.
+   */
   body {
     margin: 0;
     font-family: var(--font-sans);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  body > main {
+    flex: 1;
+    min-height: 0;
   }
 
   code,

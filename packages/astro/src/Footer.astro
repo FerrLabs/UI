@@ -1,0 +1,231 @@
+---
+/**
+ * Shared footer for every FerrLabs marketing site (ferrlabs.com,
+ * ferrflow.com, ferrvault.com, ferrtrack.com, ferrgrowth.com).
+ *
+ * Four columns: Product / Resources / FerrLabs (cross-product) / Legal.
+ * Columns 3 and 4 are hardcoded inside this component so every site
+ * stays in sync when a new product launches. Columns 1 and 2 are
+ * per-site via props.
+ *
+ * Contract: see workspace `DESIGN.md` §3.3.
+ *
+ * Relies on the CSS vars exposed by `@ferrlabs/styles` (the brand accent
+ * colors `--color-ferrflow-orange`, `--color-ferrvault-emerald`, etc.).
+ */
+
+type Accent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet';
+type Product = 'ferrlabs' | 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth';
+type Lang = 'en' | 'fr';
+
+export interface Link {
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+interface Props {
+  lang: Lang;
+  currentProduct: Product;
+  accent: Accent;
+  /** Optional override — dark by default on product sites, light on FerrLabs holding. */
+  variant?: 'dark' | 'light';
+  /** Column 1 — "Product" entries for this site (docs, pricing, changelog, …). */
+  productLinks?: Link[];
+  /** Column 2 — "Resources" entries (blog, guides, support, …). */
+  resourceLinks?: Link[];
+}
+
+const {
+  lang,
+  currentProduct,
+  accent,
+  variant = currentProduct === 'ferrlabs' ? 'light' : 'dark',
+  productLinks = [],
+  resourceLinks = [],
+} = Astro.props;
+
+// All FerrLabs products. The current one is filtered out of the
+// cross-product column so each footer only lists the "others".
+const allProducts: { id: Product; label: string; href: string; accent: Accent }[] = [
+  { id: 'ferrlabs',   label: 'FerrLabs',   href: 'https://ferrlabs.com',       accent: 'slate' },
+  { id: 'ferrflow',   label: 'FerrFlow',   href: 'https://ferrflow.com',       accent: 'orange' },
+  { id: 'ferrvault',  label: 'FerrVault',  href: 'https://vault.ferrlabs.com', accent: 'emerald' },
+  { id: 'ferrtrack',  label: 'FerrTrack',  href: 'https://track.ferrlabs.com', accent: 'indigo' },
+  { id: 'ferrgrowth', label: 'FerrGrowth', href: 'https://ferrgrowth.com',     accent: 'violet' },
+];
+const otherProducts = allProducts.filter((p) => p.id !== currentProduct);
+
+const t = (en: string, fr: string) => (lang === 'fr' ? fr : en);
+const productName = allProducts.find((p) => p.id === currentProduct)?.label ?? 'FerrLabs';
+const year = new Date().getFullYear();
+
+const accentSlug = (a: Accent) =>
+  a === 'slate' ? 'labs-slate' :
+  a === 'orange' ? 'flow-orange' :
+  a === 'emerald' ? 'vault-emerald' :
+  a === 'indigo' ? 'track-indigo' : 'growth-violet';
+---
+
+<footer
+  class:list={['ferrlabs-footer', variant]}
+  data-current-product={currentProduct}
+  style={`--accent: var(--color-ferr${accentSlug(accent)});`}
+>
+  <div class="ferrlabs-footer-inner">
+    <div class="ferrlabs-footer-cols">
+      {productLinks.length > 0 && (
+        <div class="ferrlabs-footer-col">
+          <h3>{t('Product', 'Produit')}</h3>
+          <ul>
+            {productLinks.map((link) => (
+              <li>
+                <a href={link.href} rel={link.external ? 'noopener noreferrer' : undefined} target={link.external ? '_blank' : undefined}>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {resourceLinks.length > 0 && (
+        <div class="ferrlabs-footer-col">
+          <h3>{t('Resources', 'Ressources')}</h3>
+          <ul>
+            {resourceLinks.map((link) => (
+              <li>
+                <a href={link.href} rel={link.external ? 'noopener noreferrer' : undefined} target={link.external ? '_blank' : undefined}>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div class="ferrlabs-footer-col">
+        <h3>FerrLabs</h3>
+        <ul>
+          {otherProducts.map((p) => (
+            <li>
+              <a href={p.href} class="ferrlabs-footer-product">
+                <span
+                  class="ferrlabs-footer-swatch"
+                  style={`--swatch: var(--color-ferr${accentSlug(p.accent)});`}
+                  aria-hidden="true"
+                ></span>
+                {p.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="ferrlabs-footer-col">
+        <h3>{t('Legal', 'Légal')}</h3>
+        <ul>
+          <li><a href="https://ferrlabs.com/legal/terms">{t('Terms', 'CGU')}</a></li>
+          <li><a href="https://ferrlabs.com/legal/privacy">{t('Privacy', 'Confidentialité')}</a></li>
+          <li><a href="https://ferrlabs.com/legal/security">{t('Security', 'Sécurité')}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ferrlabs-footer-bottom">
+      <span>
+        <strong>{productName}</strong> &mdash; {t('a FerrLabs product', 'un produit FerrLabs')}
+      </span>
+      <span>&copy; {year} FerrLabs</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ferrlabs-footer {
+    --footer-fg: #0f172a;
+    --footer-bg: #f8fafc;
+    --footer-muted: #475569;
+    --footer-border: #e2e8f0;
+    /* Sticky-bottom support: pairs with the `.ferrlabs-page` layout helper
+       in @ferrlabs/styles. If the consuming site uses a different layout,
+       the `margin-top: auto` is a harmless no-op. */
+    margin-top: auto;
+    background: var(--footer-bg);
+    color: var(--footer-fg);
+    border-top: 1px solid var(--footer-border);
+  }
+  .ferrlabs-footer.dark {
+    --footer-fg: #f1f5f9;
+    --footer-bg: #0f172a;
+    --footer-muted: #94a3b8;
+    --footer-border: rgba(255, 255, 255, 0.08);
+  }
+  .ferrlabs-footer-inner {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 2rem;
+  }
+  .ferrlabs-footer-cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+  @media (min-width: 768px) {
+    .ferrlabs-footer-cols {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .ferrlabs-footer-col h3 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--footer-muted);
+    margin: 0 0 1rem;
+  }
+  .ferrlabs-footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .ferrlabs-footer-col a {
+    color: var(--footer-fg);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 150ms ease;
+  }
+  .ferrlabs-footer-col a:hover {
+    color: var(--accent);
+  }
+  .ferrlabs-footer-product {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .ferrlabs-footer-swatch {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--swatch);
+    flex-shrink: 0;
+  }
+  .ferrlabs-footer-bottom {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--footer-border);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--footer-muted);
+  }
+  .ferrlabs-footer-bottom strong {
+    color: var(--footer-fg);
+    font-weight: 600;
+  }
+</style>
