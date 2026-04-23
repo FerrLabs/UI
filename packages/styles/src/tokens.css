@@ -1,0 +1,31 @@
+/*
+ * FerrLabs design tokens — brand accents, typography, spacing scale.
+ *
+ * Defined inside @theme so Tailwind v4 auto-generates utilities
+ * (`bg-ferrlabs-slate`, `text-ferrflow-orange`, `font-display`, etc.).
+ *
+ * Source of truth: workspace `DESIGN.md` section 1–2. If you change a
+ * value here, update DESIGN.md in the same PR.
+ */
+
+@theme {
+  /* Typography
+   * --------------------------------------------------------------------
+   * Fraunces is the FerrLabs display/body face — distinctive, editorial,
+   * distinguishes us from the sea of Inter-washed SaaS landing pages.
+   * DM Mono is the code face; chosen over JetBrains Mono because its
+   * metrics sit better against Fraunces.
+   */
+  --font-sans: "Fraunces", Georgia, ui-serif, serif;
+  --font-display: "Fraunces", Georgia, ui-serif, serif;
+  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Brand accents per product. One product = one accent — never mix.
+   * See DESIGN.md §1 for the "when to use which" matrix.
+   */
+  --color-ferrlabs-slate: #1e293b;   /* Holding (sober, neutral) */
+  --color-ferrflow-orange: #e8733a;  /* FerrFlow (warm, CLI-tool voice) */
+  --color-ferrvault-emerald: #10b981;/* FerrVault (calm, security) */
+  --color-ferrtrack-indigo: #6366f1; /* FerrTrack (analytic, data) */
+  --color-ferrgrowth-violet: #8b5cf6;/* FerrGrowth (energetic) */
+}

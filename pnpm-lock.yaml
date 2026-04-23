@@ -67,6 +67,18 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
 
+  packages/styles:
+    dependencies:
+      '@fontsource/dm-mono':
+        specifier: ^5.0.0
+        version: 5.2.7
+      '@fontsource/fraunces':
+        specifier: ^5.0.0
+        version: 5.2.9
+      tailwindcss:
+        specifier: ^4.0.0
+        version: 4.2.4
+
   packages/tailwind: {}
 
 packages:
@@ -273,6 +285,12 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource/dm-mono@5.2.7':
+    resolution: {integrity: sha512-Ma1az2atTVgQWuOWwjuxx26p/6A6CU9HBNKq1CFV6YKpKhpswnf9ry9Ql4+T6bTZzkdtSfS6tjJvqZOljVzIFQ==}
+
+  '@fontsource/fraunces@5.2.9':
+    resolution: {integrity: sha512-XDzuddBtoC7BZgZdBn6b7hsFZY2+V1hgN7yca5fBTKuHjb/lOd45a0Ji8dTUgFhPoL7RdGupo+bC2BFSt6UH8Q==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -1303,6 +1321,9 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
+  tailwindcss@4.2.4:
+    resolution: {integrity: sha512-HhKppgO81FQof5m6TEnuBWCZGgfRAWbaeOaGT00KOy/Pf/j6oUihdvBpA7ltCeAvZpFhW3j0PTclkxsd4IXYDA==}
+
   tiny-inflate@1.0.3:
     resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
 
@@ -1685,6 +1706,10 @@ snapshots:
 
   '@esbuild/win32-x64@0.27.7':
     optional: true
+
+  '@fontsource/dm-mono@5.2.7': {}
+
+  '@fontsource/fraunces@5.2.9': {}
 
   '@img/colour@1.1.0':
     optional: true
@@ -2997,6 +3022,8 @@ snapshots:
       csso: 5.0.5
       picocolors: 1.1.1
       sax: 1.6.0
+
+  tailwindcss@4.2.4: {}
 
   tiny-inflate@1.0.3: {}
 
