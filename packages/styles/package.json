@@ -1,26 +1,25 @@
 {
-  "name": "@ferrlabs/styles",
-  "version": "0.1.0",
-  "description": "Shared base stylesheet for every FerrLabs product — fonts, Tailwind import, brand tokens. Import once at the top of each app's global.css.",
-  "type": "module",
-  "exports": {
-    "./global.css": "./src/global.css",
-    "./tokens.css": "./src/tokens.css",
-    "./package.json": "./package.json"
-  },
-  "files": [
-    "src",
-    "README.md"
-  ],
-  "scripts": {
-    "build": "echo 'CSS ships as source \u2014 no build step'",
-    "typecheck": "echo 'No TypeScript in this package'"
+  "bugs": {
+    "url": "https://github.com/FerrLabs/UI/issues"
   },
   "dependencies": {
     "@fontsource/dm-mono": "^5.0.0",
     "@fontsource/fraunces": "^5.0.0",
     "tailwindcss": "^4.0.0"
   },
+  "description": "Shared base stylesheet for every FerrLabs product — fonts, Tailwind import, brand tokens. Import once at the top of each app's global.css.",
+  "exports": {
+    "./global.css": "./src/global.css",
+    "./package.json": "./package.json",
+    "./tokens.css": "./src/tokens.css"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "homepage": "https://github.com/FerrLabs/UI#readme",
+  "license": "MPL-2.0",
+  "name": "@ferrlabs/styles",
   "peerDependencies": {
     "tailwindcss": "^4.0.0"
   },
@@ -29,18 +28,19 @@
       "optional": false
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/FerrLabs/UI.git",
-    "directory": "packages/styles"
-  },
-  "bugs": {
-    "url": "https://github.com/FerrLabs/UI/issues"
-  },
-  "homepage": "https://github.com/FerrLabs/UI#readme",
   "publishConfig": {
     "access": "restricted",
     "registry": "https://npm.pkg.github.com"
   },
-  "license": "MPL-2.0"
+  "repository": {
+    "directory": "packages/styles",
+    "type": "git",
+    "url": "git+https://github.com/FerrLabs/UI.git"
+  },
+  "scripts": {
+    "build": "echo 'CSS ships as source — no build step'",
+    "typecheck": "echo 'No TypeScript in this package'"
+  },
+  "type": "module",
+  "version": "0.2.0"
 }
