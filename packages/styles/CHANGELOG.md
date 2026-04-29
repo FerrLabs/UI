@@ -4,6 +4,17 @@ All notable changes to `styles` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.0] - 2026-04-29
+
+### Features
+
+- feat(styles): add Firefox scrollbar-width support + thumb hover (#32)
+
+### Bug Fixes
+
+- fix(ci): typecheck and build only changed packages (#30)
+- fix(ci): publish only the bumped package on release tag (#29)
+
 ## [0.2.0] - 2026-04-28
 
 ### Features
