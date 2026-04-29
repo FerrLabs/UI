@@ -13,6 +13,8 @@ jobs:
     runs-on: ferrlabs-k8s
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v5
         with:
           version: 10
@@ -24,10 +26,41 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm install --frozen-lockfile
-      - name: Typecheck all packages
-        run: pnpm typecheck
-      - name: Build all packages
-        run: pnpm build
+      - name: Resolve change-aware filter
+        id: filter
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.base_ref }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            git fetch origin "$BASE" --depth=1 --quiet || true
+            echo "filter=...[origin/${BASE}]" >> "$GITHUB_OUTPUT"
+            echo "PR vs origin/${BASE}"
+          elif [ "$EVENT" = "push" ]; then
+            echo "filter=...[HEAD~1]" >> "$GITHUB_OUTPUT"
+            echo "push vs HEAD~1"
+          else
+            echo "filter=" >> "$GITHUB_OUTPUT"
+            echo "manual dispatch — full workspace"
+          fi
+      - name: Typecheck
+        env:
+          FILTER: ${{ steps.filter.outputs.filter }}
+        run: |
+          if [ -n "$FILTER" ]; then
+            pnpm --filter "$FILTER" typecheck
+          else
+            pnpm -r typecheck
+          fi
+      - name: Build
+        env:
+          FILTER: ${{ steps.filter.outputs.filter }}
+        run: |
+          if [ -n "$FILTER" ]; then
+            pnpm --filter "$FILTER" build
+          else
+            pnpm -r build
+          fi
 
   release:
     name: Release with FerrFlow
