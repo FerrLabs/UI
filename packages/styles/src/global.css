@@ -103,6 +103,13 @@
     background: var(--color-rule-strong);
     border-radius: 10px;
   }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-2);
+  }
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-rule-strong) transparent;
+  }
 }
 
 /*
