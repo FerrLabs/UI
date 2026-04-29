@@ -4,10 +4,39 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      package:
+        description: Package to publish (omit to republish all)
+        required: false
+        type: string
 
 jobs:
+  resolve:
+    name: Resolve packages
+    runs-on: ferrlabs-k8s
+    outputs:
+      packages: ${{ steps.pick.outputs.packages }}
+    steps:
+      - id: pick
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          INPUT: ${{ inputs.package }}
+        run: |
+          if [ -n "$TAG" ]; then
+            pkg="${TAG%%@*}"
+            echo "packages=[\"$pkg\"]" >> "$GITHUB_OUTPUT"
+            echo "Release tag $TAG → publish $pkg"
+          elif [ -n "$INPUT" ]; then
+            echo "packages=[\"$INPUT\"]" >> "$GITHUB_OUTPUT"
+            echo "Manual dispatch → publish $INPUT"
+          else
+            echo 'packages=["tailwind","icons","react","astro","auth","styles"]' >> "$GITHUB_OUTPUT"
+            echo "Manual dispatch (no input) → publish all"
+          fi
+
   publish:
     name: Publish ${{ matrix.package }}
+    needs: resolve
     runs-on: ferrlabs-k8s
     permissions:
       contents: read
@@ -15,7 +44,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: [tailwind, icons, react, astro, auth, styles]
+        package: ${{ fromJson(needs.resolve.outputs.packages) }}
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v5
