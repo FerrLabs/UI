@@ -615,6 +615,19 @@ const hasLogoSlot = Astro.slots.has('logo');
             }
           });
         });
+
+        if (!window.__ferrlabsNavScrollWired) {
+          window.__ferrlabsNavScrollWired = true;
+          var legacyNavs = document.querySelectorAll('.ferrlabs-nav.sticky');
+          if (legacyNavs.length) {
+            var sync = function () {
+              var scrolled = window.scrollY > 8;
+              legacyNavs.forEach(function (n) { n.classList.toggle('scrolled', scrolled); });
+            };
+            sync();
+            window.addEventListener('scroll', sync, { passive: true });
+          }
+        }
       })();
     </script>
 
@@ -625,9 +638,10 @@ const hasLogoSlot = Astro.slots.has('logo');
         --nav-muted: #475569;
         --nav-border: rgba(15, 23, 42, 0.08);
         background: var(--nav-bg);
-        border-bottom: 1px solid var(--nav-border);
+        border-bottom: 1px solid transparent;
         color: var(--nav-fg);
         z-index: 40;
+        transition: border-color 200ms ease;
       }
       .ferrlabs-nav.sticky {
         position: sticky;
@@ -637,6 +651,9 @@ const hasLogoSlot = Astro.slots.has('logo');
         background: color-mix(in srgb, var(--nav-bg) 85%, transparent);
         backdrop-filter: saturate(180%) blur(10px);
         -webkit-backdrop-filter: saturate(180%) blur(10px);
+      }
+      .ferrlabs-nav.scrolled {
+        border-bottom-color: var(--nav-border);
       }
 
       .ferrlabs-nav-inner {
