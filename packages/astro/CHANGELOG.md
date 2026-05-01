@@ -4,6 +4,19 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.8.0] - 2026-05-01
+
+### Features
+
+- feat(astro): generic Navbar + Footer with full prop API for cross-product reuse (#35)
+- feat(styles): add Firefox scrollbar-width support + thumb hover (#32)
+- feat(styles): editorial design system primitives — paper palette, container, btn, eyebrow, dark theme (#25)
+
+### Bug Fixes
+
+- fix(ci): typecheck and build only changed packages (#30)
+- fix(ci): publish only the bumped package on release tag (#29)
+
 ## [0.7.0] - 2026-05-01
 
 ### Features
