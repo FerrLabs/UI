@@ -4,6 +4,12 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.9.3] - 2026-05-01
+
+### Bug Fixes
+
+- fix(astro): legacy Navbar border now scroll-aware (was permanent) (#39)
+
 ## [0.9.2] - 2026-05-01
 
 ### Bug Fixes
