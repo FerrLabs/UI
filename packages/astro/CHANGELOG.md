@@ -4,6 +4,12 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.7.0] - 2026-05-01
+
+### Features
+
+- feat(ui-astro): generic Navbar + Footer with full prop API for cross-product reuse — editorial mode (hex accent, brandName/brandTag, navLinks, products chip strip, links.{resources,legal,about}, backToHolding) coexists with legacy product-aware mode for backward compat with FerrFlow docs (#34)
+
 ## [0.5.0] - 2026-04-23
 
 ### Features
