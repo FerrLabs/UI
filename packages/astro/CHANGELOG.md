@@ -4,6 +4,12 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.9.2] - 2026-05-01
+
+### Bug Fixes
+
+- fix(astro): prevent mixed-content warning on PreFooterCTA mailto form (hijack submit, build mailto in JS) (#38)
+
 ## [0.9.1] - 2026-05-01
 
 ### Bug Fixes
