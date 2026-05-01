@@ -107,23 +107,28 @@ const t = (en: string, fr: string) => (lang === 'fr' ? fr : en);
       </div>
     )}
 
-    {action.type === 'waitlist' && (
-      <form
-        class="ferrlabs-prefooter-waitlist"
-        method={action.method ?? 'POST'}
-        action={action.action ?? 'mailto:contact@ferrlabs.com?subject=Waitlist'}
-      >
-        <label class="sr-only" for="ferrlabs-prefooter-email">{t('Email', 'E-mail')}</label>
-        <input
-          id="ferrlabs-prefooter-email"
-          name="email"
-          type="email"
-          required
-          placeholder={action.placeholder}
-        />
-        <button type="submit">{action.cta}</button>
-      </form>
-    )}
+    {action.type === 'waitlist' && (() => {
+      const isMailto = !action.action || action.action.startsWith('mailto:');
+      const mailtoTarget = action.action ?? 'mailto:contact@ferrlabs.com?subject=Waitlist';
+      return (
+        <form
+          class="ferrlabs-prefooter-waitlist"
+          method={action.method ?? 'POST'}
+          action={isMailto ? '#' : action.action}
+          data-mailto={isMailto ? mailtoTarget : undefined}
+        >
+          <label class="sr-only" for="ferrlabs-prefooter-email">{t('Email', 'E-mail')}</label>
+          <input
+            id="ferrlabs-prefooter-email"
+            name="email"
+            type="email"
+            required
+            placeholder={action.placeholder}
+          />
+          <button type="submit">{action.cta}</button>
+        </form>
+      );
+    })()}
   </div>
 </section>
 
@@ -140,6 +145,29 @@ const t = (en: string, fr: string) => (lang === 'fr' ? fr : en);
             btn.classList.add('copied');
             setTimeout(function () { btn.classList.remove('copied'); }, 1500);
           });
+        });
+      });
+    })();
+  </script>
+)}
+
+{action.type === 'waitlist' && (
+  <script is:inline>
+    (function () {
+      if (window.__ferrlabsPrefooterMailtoWired) return;
+      window.__ferrlabsPrefooterMailtoWired = true;
+      document.querySelectorAll('form.ferrlabs-prefooter-waitlist[data-mailto]').forEach(function (form) {
+        form.addEventListener('submit', function (ev) {
+          var target = form.getAttribute('data-mailto');
+          if (!target) return;
+          ev.preventDefault();
+          var input = form.querySelector('input[type="email"]');
+          var email = input && input.value ? input.value.trim() : '';
+          var url = target;
+          if (email) {
+            url += (url.indexOf('?') === -1 ? '?' : '&') + 'body=' + encodeURIComponent(email);
+          }
+          window.location.href = url;
         });
       });
     })();
