@@ -1,20 +1,5 @@
 ---
-/**
- * Shared footer for every FerrLabs marketing site (ferrlabs.com,
- * ferrflow.com, ferrvault.com, ferrtrack.com, ferrgrowth.com).
- *
- * Four columns: Product / Resources / FerrLabs (cross-product) / Legal.
- * Columns 3 and 4 are hardcoded inside this component so every site
- * stays in sync when a new product launches. Columns 1 and 2 are
- * per-site via props.
- *
- * Contract: see workspace `DESIGN.md` §3.3.
- *
- * Relies on the CSS vars exposed by `@ferrlabs/styles` (the brand accent
- * colors `--color-ferrflow-orange`, `--color-ferrvault-emerald`, etc.).
- */
-
-type Accent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet';
+type LegacyAccent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet';
 type Product = 'ferrlabs' | 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth';
 type Lang = 'en' | 'fr';
 
@@ -24,30 +9,69 @@ export interface Link {
   external?: boolean;
 }
 
+export interface ProductChip {
+  name: string;
+  href: string;
+  accent: string;
+  current?: boolean;
+}
+
 interface Props {
   lang: Lang;
-  currentProduct: Product;
-  accent: Accent;
-  /** Optional override — dark by default on product sites, light on FerrLabs holding. */
+  accent: LegacyAccent | string;
+  accentSlug?: LegacyAccent;
+  currentProduct?: Product;
   variant?: 'dark' | 'light';
-  /** Column 1 — "Product" entries for this site (docs, pricing, changelog, …). */
   productLinks?: Link[];
-  /** Column 2 — "Resources" entries (blog, guides, support, …). */
   resourceLinks?: Link[];
+  brandName?: string;
+  brandWordmark?: string;
+  tagline?: string;
+  products?: ProductChip[];
+  links?: {
+    resources?: Link[];
+    legal?: Link[];
+    about?: Link[];
+  };
+  rights?: string;
+  backToHolding?: { label: string; href: string };
 }
 
 const {
   lang,
-  currentProduct,
   accent,
-  variant = currentProduct === 'ferrlabs' ? 'light' : 'dark',
+  accentSlug,
+  currentProduct,
+  variant,
   productLinks = [],
   resourceLinks = [],
+  brandName,
+  brandWordmark,
+  tagline,
+  products,
+  links,
+  rights,
+  backToHolding,
 } = Astro.props;
 
-// All FerrLabs products. The current one is filtered out of the
-// cross-product column so each footer only lists the "others".
-const allProducts: { id: Product; label: string; href: string; accent: Accent }[] = [
+const isHexAccent = typeof accent === 'string' && accent.startsWith('#');
+const legacyAccentName: LegacyAccent | undefined =
+  accentSlug ?? (isHexAccent ? undefined : (accent as LegacyAccent));
+const isEditorialMode = Boolean(brandName) || Boolean(products) || isHexAccent;
+
+const legacySlug = (a: LegacyAccent | undefined) =>
+  !a ? 'flow-orange' :
+  a === 'slate' ? 'labs-slate' :
+  a === 'orange' ? 'flow-orange' :
+  a === 'emerald' ? 'vault-emerald' :
+  a === 'indigo' ? 'track-indigo' : 'growth-violet';
+
+const accentCssValue = isHexAccent ? (accent as string) : `var(--color-ferr${legacySlug(legacyAccentName)})`;
+
+const t = (en: string, fr: string) => (lang === 'fr' ? fr : en);
+const year = new Date().getFullYear();
+
+const allProducts: { id: Product; label: string; href: string; accent: LegacyAccent }[] = [
   { id: 'ferrlabs',   label: 'FerrLabs',   href: 'https://ferrlabs.com',       accent: 'slate' },
   { id: 'ferrflow',   label: 'FerrFlow',   href: 'https://ferrflow.com',       accent: 'orange' },
   { id: 'ferrvault',  label: 'FerrVault',  href: 'https://vault.ferrlabs.com', accent: 'emerald' },
@@ -55,177 +79,387 @@ const allProducts: { id: Product; label: string; href: string; accent: Accent }[
   { id: 'ferrgrowth', label: 'FerrGrowth', href: 'https://ferrgrowth.com',     accent: 'violet' },
 ];
 const otherProducts = allProducts.filter((p) => p.id !== currentProduct);
-
-const t = (en: string, fr: string) => (lang === 'fr' ? fr : en);
 const productName = allProducts.find((p) => p.id === currentProduct)?.label ?? 'FerrLabs';
-const year = new Date().getFullYear();
+const legacyVariant = variant ?? (currentProduct === 'ferrlabs' ? 'light' : 'dark');
 
-const accentSlug = (a: Accent) =>
-  a === 'slate' ? 'labs-slate' :
-  a === 'orange' ? 'flow-orange' :
-  a === 'emerald' ? 'vault-emerald' :
-  a === 'indigo' ? 'track-indigo' : 'growth-violet';
+const wordmark = brandWordmark ?? brandName ?? '';
+const hasLogoSlot = Astro.slots.has('logo');
+const resolvedRights = rights ?? `© ${year} FerrLabs`;
 ---
 
-<footer
-  class:list={['ferrlabs-footer', variant]}
-  data-current-product={currentProduct}
-  style={`--accent: var(--color-ferr${accentSlug(accent)});`}
->
-  <div class="ferrlabs-footer-inner">
-    <div class="ferrlabs-footer-cols">
-      {productLinks.length > 0 && (
+{isEditorialMode ? (
+  <footer class="ferrlabs-edi-footer" style={`--ferr-accent: ${accentCssValue};`}>
+    <div class="edi-footer-container">
+      <div class="edi-footer-grid">
+        <div class="edi-brand-col">
+          <div class="edi-brand-row">
+            {hasLogoSlot && <slot name="logo" />}
+            <span class="edi-wordmark">{wordmark}</span>
+          </div>
+          {tagline && <p class="edi-tagline">{tagline}</p>}
+          {products && products.length > 0 && (
+            <div class="edi-chips">
+              {products.map((p) => (
+                <a href={p.href} class:list={['edi-chip', 'mono', p.current && 'is-current']}>
+                  <span class="edi-dot" style={`background:${p.accent};`} aria-hidden></span>
+                  {p.name}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div class="edi-cols">
+          {links?.resources && links.resources.length > 0 && (
+            <div class="edi-col">
+              <h3 class="mono">{t('Resources', 'Ressources')}</h3>
+              <ul>
+                {links.resources.map((l) => (
+                  <li>
+                    <a href={l.href} rel={l.external ? 'noopener noreferrer' : undefined} target={l.external ? '_blank' : undefined}>
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {links?.about && links.about.length > 0 && (
+            <div class="edi-col">
+              <h3 class="mono">{t('About', 'À propos')}</h3>
+              <ul>
+                {links.about.map((l) => (
+                  <li>
+                    <a href={l.href} rel={l.external ? 'noopener noreferrer' : undefined} target={l.external ? '_blank' : undefined}>
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {links?.legal && links.legal.length > 0 && (
+            <div class="edi-col">
+              <h3 class="mono">{t('Legal', 'Légal')}</h3>
+              <ul>
+                {links.legal.map((l) => (
+                  <li>
+                    <a href={l.href} rel={l.external ? 'noopener noreferrer' : undefined} target={l.external ? '_blank' : undefined}>
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {backToHolding && (
+            <div class="edi-back-col">
+              <a href={backToHolding.href} class="mono edi-back-link">{backToHolding.label}</a>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div class="edi-footer-bottom">
+        <span class="mono edi-bottom-text">{resolvedRights}</span>
+      </div>
+    </div>
+
+    <style>
+      .ferrlabs-edi-footer {
+        padding: 96px 0 48px;
+        border-top: 1px solid var(--rule, rgba(30, 41, 59, 0.14));
+        background: var(--bg, #faf8f4);
+        color: var(--fg, #1e293b);
+        margin-top: auto;
+      }
+      .edi-footer-container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+      @media (max-width: 768px) {
+        .edi-footer-container { padding: 0 20px; }
+      }
+      .edi-footer-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+        gap: 48px;
+      }
+      .edi-brand-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .edi-wordmark {
+        font-family: var(--font-serif, 'Fraunces', Georgia, ui-serif, serif);
+        font-weight: 900;
+        font-size: 32px;
+        letter-spacing: -0.03em;
+      }
+      .edi-tagline {
+        font-family: var(--font-serif, 'Fraunces', Georgia, ui-serif, serif);
+        font-style: italic;
+        font-size: 18px;
+        color: var(--fg-2, #475569);
+        margin-top: 16px;
+        max-width: 380px;
+        line-height: 1.45;
+      }
+      .edi-chips {
+        margin-top: 28px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .edi-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--rule, rgba(30, 41, 59, 0.14));
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--fg-2, #475569);
+        text-decoration: none;
+        transition: border-color 180ms;
+      }
+      .edi-chip:hover { border-color: var(--rule-strong, rgba(30, 41, 59, 0.28)); }
+      .edi-chip.is-current { border-color: var(--fg, #1e293b); color: var(--fg, #1e293b); }
+      .edi-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      .mono { font-family: var(--font-mono, 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace); }
+
+      .edi-cols {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 32px;
+        align-items: start;
+      }
+      .edi-col h3 {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--fg-3, #64748b);
+        margin: 0 0 16px;
+      }
+      .edi-col ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .edi-col a {
+        color: var(--fg-2, #475569);
+        text-decoration: none;
+        font-size: 13px;
+        transition: color 150ms ease;
+      }
+      .edi-col a:hover { color: var(--ferr-accent); }
+
+      .edi-back-col { align-self: end; }
+      .edi-back-link {
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--fg-2, #475569);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 1px solid var(--rule-strong, rgba(30, 41, 59, 0.28));
+        padding-bottom: 4px;
+      }
+      .edi-back-link:hover { color: var(--fg, #1e293b); }
+
+      .edi-footer-bottom {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--rule, rgba(30, 41, 59, 0.14));
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .edi-bottom-text {
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: var(--fg-3, #64748b);
+      }
+
+      @media (max-width: 720px) {
+        .edi-footer-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </footer>
+) : (
+  <footer
+    class:list={['ferrlabs-footer', legacyVariant]}
+    data-current-product={currentProduct}
+    style={`--accent: ${accentCssValue};`}
+  >
+    <div class="ferrlabs-footer-inner">
+      <div class="ferrlabs-footer-cols">
+        {productLinks.length > 0 && (
+          <div class="ferrlabs-footer-col">
+            <h3>{t('Product', 'Produit')}</h3>
+            <ul>
+              {productLinks.map((link) => (
+                <li>
+                  <a href={link.href} rel={link.external ? 'noopener noreferrer' : undefined} target={link.external ? '_blank' : undefined}>
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {resourceLinks.length > 0 && (
+          <div class="ferrlabs-footer-col">
+            <h3>{t('Resources', 'Ressources')}</h3>
+            <ul>
+              {resourceLinks.map((link) => (
+                <li>
+                  <a href={link.href} rel={link.external ? 'noopener noreferrer' : undefined} target={link.external ? '_blank' : undefined}>
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div class="ferrlabs-footer-col">
-          <h3>{t('Product', 'Produit')}</h3>
+          <h3>FerrLabs</h3>
           <ul>
-            {productLinks.map((link) => (
+            {otherProducts.map((p) => (
               <li>
-                <a href={link.href} rel={link.external ? 'noopener noreferrer' : undefined} target={link.external ? '_blank' : undefined}>
-                  {link.label}
+                <a href={p.href} class="ferrlabs-footer-product">
+                  <span
+                    class="ferrlabs-footer-swatch"
+                    style={`--swatch: var(--color-ferr${legacySlug(p.accent)});`}
+                    aria-hidden="true"
+                  ></span>
+                  {p.label}
                 </a>
               </li>
             ))}
           </ul>
         </div>
-      )}
 
-      {resourceLinks.length > 0 && (
         <div class="ferrlabs-footer-col">
-          <h3>{t('Resources', 'Ressources')}</h3>
+          <h3>{t('Legal', 'Légal')}</h3>
           <ul>
-            {resourceLinks.map((link) => (
-              <li>
-                <a href={link.href} rel={link.external ? 'noopener noreferrer' : undefined} target={link.external ? '_blank' : undefined}>
-                  {link.label}
-                </a>
-              </li>
-            ))}
+            <li><a href="https://ferrlabs.com/legal/terms">{t('Terms', 'CGU')}</a></li>
+            <li><a href="https://ferrlabs.com/legal/privacy">{t('Privacy', 'Confidentialité')}</a></li>
+            <li><a href="https://ferrlabs.com/legal/security">{t('Security', 'Sécurité')}</a></li>
           </ul>
         </div>
-      )}
-
-      <div class="ferrlabs-footer-col">
-        <h3>FerrLabs</h3>
-        <ul>
-          {otherProducts.map((p) => (
-            <li>
-              <a href={p.href} class="ferrlabs-footer-product">
-                <span
-                  class="ferrlabs-footer-swatch"
-                  style={`--swatch: var(--color-ferr${accentSlug(p.accent)});`}
-                  aria-hidden="true"
-                ></span>
-                {p.label}
-              </a>
-            </li>
-          ))}
-        </ul>
       </div>
 
-      <div class="ferrlabs-footer-col">
-        <h3>{t('Legal', 'Légal')}</h3>
-        <ul>
-          <li><a href="https://ferrlabs.com/legal/terms">{t('Terms', 'CGU')}</a></li>
-          <li><a href="https://ferrlabs.com/legal/privacy">{t('Privacy', 'Confidentialité')}</a></li>
-          <li><a href="https://ferrlabs.com/legal/security">{t('Security', 'Sécurité')}</a></li>
-        </ul>
+      <div class="ferrlabs-footer-bottom">
+        <span>
+          <strong>{productName}</strong> &mdash; {t('a FerrLabs product', 'un produit FerrLabs')}
+        </span>
+        <span>&copy; {year} FerrLabs</span>
       </div>
     </div>
 
-    <div class="ferrlabs-footer-bottom">
-      <span>
-        <strong>{productName}</strong> &mdash; {t('a FerrLabs product', 'un produit FerrLabs')}
-      </span>
-      <span>&copy; {year} FerrLabs</span>
-    </div>
-  </div>
-</footer>
-
-<style>
-  .ferrlabs-footer {
-    --footer-fg: #0f172a;
-    --footer-bg: #f8fafc;
-    --footer-muted: #475569;
-    --footer-border: #e2e8f0;
-    /* Sticky-bottom support: pairs with the `.ferrlabs-page` layout helper
-       in @ferrlabs/styles. If the consuming site uses a different layout,
-       the `margin-top: auto` is a harmless no-op. */
-    margin-top: auto;
-    background: var(--footer-bg);
-    color: var(--footer-fg);
-    border-top: 1px solid var(--footer-border);
-  }
-  .ferrlabs-footer.dark {
-    --footer-fg: #f1f5f9;
-    --footer-bg: #0f172a;
-    --footer-muted: #94a3b8;
-    --footer-border: rgba(255, 255, 255, 0.08);
-  }
-  .ferrlabs-footer-inner {
-    max-width: 72rem;
-    margin: 0 auto;
-    padding: 4rem 1.5rem 2rem;
-  }
-  .ferrlabs-footer-cols {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2.5rem;
-  }
-  @media (min-width: 768px) {
-    .ferrlabs-footer-cols {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  }
-  .ferrlabs-footer-col h3 {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--footer-muted);
-    margin: 0 0 1rem;
-  }
-  .ferrlabs-footer-col ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .ferrlabs-footer-col a {
-    color: var(--footer-fg);
-    text-decoration: none;
-    font-size: 0.875rem;
-    transition: color 150ms ease;
-  }
-  .ferrlabs-footer-col a:hover {
-    color: var(--accent);
-  }
-  .ferrlabs-footer-product {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .ferrlabs-footer-swatch {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 9999px;
-    background: var(--swatch);
-    flex-shrink: 0;
-  }
-  .ferrlabs-footer-bottom {
-    margin-top: 3rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--footer-border);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.75rem;
-    font-size: 0.75rem;
-    color: var(--footer-muted);
-  }
-  .ferrlabs-footer-bottom strong {
-    color: var(--footer-fg);
-    font-weight: 600;
-  }
-</style>
+    <style>
+      .ferrlabs-footer {
+        --footer-fg: #0f172a;
+        --footer-bg: #f8fafc;
+        --footer-muted: #475569;
+        --footer-border: #e2e8f0;
+        margin-top: auto;
+        background: var(--footer-bg);
+        color: var(--footer-fg);
+        border-top: 1px solid var(--footer-border);
+      }
+      .ferrlabs-footer.dark {
+        --footer-fg: #f1f5f9;
+        --footer-bg: #0f172a;
+        --footer-muted: #94a3b8;
+        --footer-border: rgba(255, 255, 255, 0.08);
+      }
+      .ferrlabs-footer-inner {
+        max-width: 72rem;
+        margin: 0 auto;
+        padding: 4rem 1.5rem 2rem;
+      }
+      .ferrlabs-footer-cols {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2.5rem;
+      }
+      @media (min-width: 768px) {
+        .ferrlabs-footer-cols {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+      .ferrlabs-footer-col h3 {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--footer-muted);
+        margin: 0 0 1rem;
+      }
+      .ferrlabs-footer-col ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .ferrlabs-footer-col a {
+        color: var(--footer-fg);
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: color 150ms ease;
+      }
+      .ferrlabs-footer-col a:hover {
+        color: var(--accent);
+      }
+      .ferrlabs-footer-product {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .ferrlabs-footer-swatch {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 9999px;
+        background: var(--swatch);
+        flex-shrink: 0;
+      }
+      .ferrlabs-footer-bottom {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--footer-border);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0.75rem;
+        font-size: 0.75rem;
+        color: var(--footer-muted);
+      }
+      .ferrlabs-footer-bottom strong {
+        color: var(--footer-fg);
+        font-weight: 600;
+      }
+    </style>
+  </footer>
+)}
