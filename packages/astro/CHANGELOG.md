@@ -4,6 +4,12 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.9.1] - 2026-05-01
+
+### Bug Fixes
+
+- fix(astro): use is:global on Navbar styles (runtime .scrolled was tree-shaken) (#37)
+
 ## [0.8.0] - 2026-05-01
 
 ### Features
