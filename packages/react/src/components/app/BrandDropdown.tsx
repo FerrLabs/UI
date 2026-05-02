@@ -51,6 +51,8 @@ export function BrandDropdown({ current, apps = DEFAULT_APPS, children, classNam
     };
   }, [open]);
 
+  const currentApp = apps.find(a => a.id === current);
+
   return (
     <div ref={rootRef} className={className} style={{ position: 'relative', display: 'block', flex: 1, minWidth: 0, alignSelf: 'stretch' }}>
       <button
@@ -58,7 +60,7 @@ export function BrandDropdown({ current, apps = DEFAULT_APPS, children, classNam
         onClick={() => setOpen(o => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
-        title="Switch app"
+        title={currentApp ? `${currentApp.label} — switch to another FerrLabs app` : 'Switch app'}
         style={{
           display: 'flex',
           alignItems: 'center',
