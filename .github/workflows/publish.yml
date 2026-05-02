@@ -75,3 +75,28 @@ jobs:
             exit 0
           fi
           pnpm publish --no-git-checks --access restricted
+
+  notify-consumers:
+    name: Notify consumers of new release
+    needs: publish
+    if: github.event_name == 'release'
+    runs-on: ferrlabs-k8s
+    steps:
+      - name: Dispatch ferrlabs-package-published event
+        env:
+          # PAT with `repo` scope on each consumer repo. Set this as an org
+          # secret named FERRFLOW_DISPATCH_TOKEN with read+write to all the
+          # FerrLabs/*-Cloud repos. Falls back to GITHUB_TOKEN which CANNOT
+          # cross-repo dispatch — the fallback is here only to avoid breaking
+          # the workflow before the secret is configured.
+          GH_TOKEN: ${{ secrets.FERRFLOW_DISPATCH_TOKEN || secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          for repo in FerrLabs-Cloud FerrFlow-Cloud FerrVault-Cloud FerrTrack-Cloud FerrGrowth-Cloud FerrFleet-Cloud ; do
+            echo "Dispatching to $repo..."
+            gh api "repos/FerrLabs/$repo/dispatches" \
+              -f "event_type=ferrlabs-package-published" \
+              -f "client_payload[tag]=$TAG" \
+              -f "client_payload[released_at]=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              || echo "  (failed to dispatch to $repo — continuing)"
+          done
