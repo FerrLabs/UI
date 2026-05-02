@@ -4,6 +4,12 @@ All notable changes to `react` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.4.0] - 2026-05-02
+
+### Features
+
+- feat(react): add AuthLayout + AuthField + AuthSubmit + AuthDivider (#41)
+
 ## [0.3.0] - 2026-05-02
 
 ### Features
