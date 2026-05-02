@@ -26,3 +26,10 @@ export * from './lib/passwordStrength';
  * must satisfy in its global stylesheet.
  */
 export * from './components/app';
+
+/**
+ * Auth chrome — used by `auth.ferrlabs.com` to render the sign-in /
+ * register screens with a per-product accent driven by the OAuth
+ * `client_id` query param.
+ */
+export * from './components/auth';
