@@ -4,6 +4,12 @@ All notable changes to `react` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.5.0] - 2026-05-02
+
+### Features
+
+- feat(react): add BrandDropdown component for app switching (#42)
+
 ## [0.4.0] - 2026-05-02
 
 ### Features
