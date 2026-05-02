@@ -60,7 +60,7 @@ export function BrandDropdown({ current, apps = DEFAULT_APPS, children, classNam
         onClick={() => setOpen(o => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
-        title={currentApp ? `${currentApp.label} — switch to another FerrLabs app` : 'Switch app'}
+        title={currentApp ? `${currentApp.label} · switch to another FerrLabs app` : 'Switch app'}
         style={{
           display: 'flex',
           alignItems: 'center',
