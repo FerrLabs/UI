@@ -4,6 +4,13 @@ All notable changes to `react` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.7.1] - 2026-05-02
+
+### Bug Fixes
+
+- fix(react): show current app name in BrandDropdown tooltip (#50)
+- fix(ci): rename dispatch secret FERRFLOW_DISPATCH_TOKEN → FERRLABS_DISPATCH_TOKEN (#49)
+
 ## [0.7.0] - 2026-05-02
 
 ### Features
