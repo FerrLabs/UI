@@ -16,6 +16,13 @@
 
 export { AppShell, type AppShellProps, type NavGroup, type NavItem } from './AppShell';
 export { AppLogoMark, type ProductSlug } from './AppLogoMark';
+export {
+  BrandDropdown,
+  DEFAULT_APPS as BRAND_DROPDOWN_APPS,
+  type BrandDropdownProps,
+  type BrandDropdownApp,
+  type BrandDropdownAppId,
+} from './BrandDropdown';
 export { AppButton } from './AppButton';
 export { Avatar } from './Avatar';
 export { CommandHint } from './CommandHint';

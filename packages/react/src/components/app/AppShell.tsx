@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { AppLogoMark, type ProductSlug } from './AppLogoMark';
+import { BrandDropdown, type BrandDropdownAppId, type BrandDropdownApp } from './BrandDropdown';
 
 export interface NavItem {
   id: string;
@@ -51,6 +52,13 @@ export interface AppShellProps {
   /** Topbar right-side cluster (search hint, primary action, avatar, …). */
   topbarRight?: ReactNode;
 
+  /**
+   * When set, wraps the sidebar brand block in a clickable dropdown that
+   * lets the user switch between FerrLabs apps. Pass `current` to mark the
+   * active app; optionally override the app list.
+   */
+  appSwitcher?: { current: BrandDropdownAppId; apps?: BrandDropdownApp[] };
+
   /** Page content. */
   children: ReactNode;
 }
@@ -78,6 +86,7 @@ export function AppShell({
   onProjectClick,
   breadcrumb,
   topbarRight,
+  appSwitcher,
   children,
 }: AppShellProps) {
   const [collapsed, setCollapsed] = useState(false);
@@ -120,32 +129,63 @@ export function AppShell({
             minHeight: 64,
           }}
         >
-          <AppLogoMark accent={accent} product={product} />
-          {!collapsed && (
-            <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
-              <span
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontWeight: 900,
-                  fontSize: 17,
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                {productName.toLowerCase()}
+          {appSwitcher && !collapsed ? (
+            <BrandDropdown current={appSwitcher.current} apps={appSwitcher.apps}>
+              <AppLogoMark accent={accent} product={product} />
+              <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontWeight: 900,
+                    fontSize: 17,
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  {productName.toLowerCase()}
+                </span>
+                <span
+                  className="mono"
+                  style={{
+                    fontSize: 9.5,
+                    color: 'var(--color-fg-3)',
+                    letterSpacing: '0.08em',
+                    marginTop: 2,
+                  }}
+                >
+                  by ferrlabs
+                </span>
               </span>
-              <a
-                href={marketingHref}
-                className="mono"
-                style={{
-                  fontSize: 9.5,
-                  color: 'var(--color-fg-3)',
-                  letterSpacing: '0.08em',
-                  marginTop: 2,
-                }}
-              >
-                by ferrlabs ↗
-              </a>
-            </div>
+            </BrandDropdown>
+          ) : (
+            <>
+              <AppLogoMark accent={accent} product={product} />
+              {!collapsed && (
+                <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontWeight: 900,
+                      fontSize: 17,
+                      letterSpacing: '-0.02em',
+                    }}
+                  >
+                    {productName.toLowerCase()}
+                  </span>
+                  <a
+                    href={marketingHref}
+                    className="mono"
+                    style={{
+                      fontSize: 9.5,
+                      color: 'var(--color-fg-3)',
+                      letterSpacing: '0.08em',
+                      marginTop: 2,
+                    }}
+                  >
+                    by ferrlabs ↗
+                  </a>
+                </div>
+              )}
+            </>
           )}
         </div>
 

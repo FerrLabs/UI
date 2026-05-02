@@ -1,4 +1,4 @@
-export type ProductSlug = 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth' | 'ferragents';
+export type ProductSlug = 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth' | 'ferragents' | 'ferrfleet' | 'ferrlabs';
 
 interface Props {
   size?: number;
@@ -48,7 +48,14 @@ export function AppLogoMark({ size = 24, accent = 'currentColor', product }: Pro
           <path d="M 16 14 Q 24 12, 26 4 Q 18 4, 16 12" fill={accent} opacity="0.65" />
         </g>
       )}
-      {product === 'ferragents' && (
+      {product === 'ferrlabs' && (
+        <g>
+          <text x="2"  y="22" fontFamily="DM Mono, ui-monospace, monospace" fontSize="9" fill={accent} opacity="0.5">[</text>
+          <text x="9"  y="22" fontFamily="Fraunces, Georgia, serif" fontWeight="900" fontSize="19" fill={accent} letterSpacing="-0.04em">FL</text>
+          <text x="26" y="22" fontFamily="DM Mono, ui-monospace, monospace" fontSize="9" fill={accent} opacity="0.5">]</text>
+        </g>
+      )}
+      {(product === 'ferragents' || product === 'ferrfleet') && (
         <g>
           <circle cx="16" cy="16" r="3.5" fill={accent} />
           <circle cx="16" cy="16" r="10" stroke={accent} strokeWidth="1.2" fill="none" opacity="0.35" />
