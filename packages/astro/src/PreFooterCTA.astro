@@ -17,7 +17,7 @@
  * the end of each. See the copy matrix in `DESIGN.md` §4.1.
  */
 
-type Accent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet';
+type Accent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet' | 'amber';
 type Lang = 'en' | 'fr';
 
 interface CtaAction {
@@ -63,7 +63,8 @@ const accentSlug = (a: Accent) =>
   a === 'slate' ? 'labs-slate' :
   a === 'orange' ? 'flow-orange' :
   a === 'emerald' ? 'vault-emerald' :
-  a === 'indigo' ? 'track-indigo' : 'growth-violet';
+  a === 'indigo' ? 'track-indigo' :
+  a === 'amber' ? 'fleet-amber' : 'growth-violet';
 
 const t = (en: string, fr: string) => (lang === 'fr' ? fr : en);
 ---
