@@ -4,6 +4,15 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.10.0] - 2026-05-02
+
+### Features
+
+- feat(astro,styles): add 'amber' accent for FerrFleet brand (#45)
+- feat(react): add BrandDropdown component for app switching (#42)
+- feat(react): add AuthLayout + AuthField + AuthSubmit + AuthDivider (#41)
+- feat(react): add product-app chrome (AppShell + AppLogoMark + PageHeader + Stat + Tag + Avatar + AppButton + CommandHint) (#40)
+
 ## [0.9.3] - 2026-05-01
 
 ### Bug Fixes
