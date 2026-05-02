@@ -25,6 +25,7 @@ export {
 } from './BrandDropdown';
 export { AppButton } from './AppButton';
 export { Avatar } from './Avatar';
+export { UserMenu, type UserMenuProps, type UserMenuItem } from './UserMenu';
 export { CommandHint } from './CommandHint';
 export { PageHeader } from './PageHeader';
 export { Stat } from './Stat';
