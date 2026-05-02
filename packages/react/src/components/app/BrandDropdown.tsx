@@ -21,11 +21,11 @@ export interface BrandDropdownProps {
 }
 
 export const DEFAULT_APPS: BrandDropdownApp[] = [
-  { id: 'ferrlabs',   label: 'FerrLabs',   tag: 'Org & holding',       href: 'https://ferrlabs.com',       accent: '#1e293b' },
+  { id: 'ferrlabs',   label: 'FerrLabs',   tag: 'Org & holding',       href: 'https://app.ferrlabs.com',   accent: '#1e293b' },
   { id: 'ferrgrowth', label: 'FerrGrowth', tag: 'Growth tooling',      href: 'https://app.ferrgrowth.com', accent: '#7c3aed' },
-  { id: 'ferrtrack',  label: 'FerrTrack',  tag: 'Issue tracker',       href: 'https://ferrtrack.com',      accent: '#6366f1' },
-  { id: 'ferrvault',  label: 'FerrVault',  tag: 'Secrets management',  href: 'https://ferrvault.com',      accent: '#10b981' },
-  { id: 'ferrfleet',  label: 'FerrFleet',  tag: 'Agent fleet runtime', href: 'https://ferrfleet.com',      accent: '#f59e0b' },
+  { id: 'ferrfleet',  label: 'FerrFleet',  tag: 'Agent fleet runtime', href: 'https://app.ferrfleet.com',  accent: '#f59e0b' },
+  { id: 'ferrtrack',  label: 'FerrTrack',  tag: 'Issue tracker',       href: 'https://app.ferrtrack.com',  accent: '#6366f1' },
+  { id: 'ferrvault',  label: 'FerrVault',  tag: 'Secrets management',  href: 'https://app.ferrvault.com',  accent: '#10b981' },
 ];
 
 /**
