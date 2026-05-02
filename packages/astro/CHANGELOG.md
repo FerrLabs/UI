@@ -4,6 +4,19 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.12.0] - 2026-05-02
+
+### Features
+
+- feat(ui): point app switcher to app.* subdomains and reorder products (#54)
+
+### Bug Fixes
+
+- fix(react): use middle-dot separator in BrandDropdown tooltip (#52)
+- fix(ci): use curl instead of gh CLI for cross-repo dispatch (#51)
+- fix(react): show current app name in BrandDropdown tooltip (#50)
+- fix(ci): rename dispatch secret FERRFLOW_DISPATCH_TOKEN → FERRLABS_DISPATCH_TOKEN (#49)
+
 ## [0.11.0] - 2026-05-02
 
 ### Features
