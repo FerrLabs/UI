@@ -4,6 +4,12 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.11.0] - 2026-05-02
+
+### Features
+
+- feat(react): polish BrandDropdown + add UserMenu (#47)
+
 ## [0.10.0] - 2026-05-02
 
 ### Features
