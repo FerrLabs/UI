@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { AppLogoMark, type ProductSlug } from './AppLogoMark';
 
 export type BrandDropdownAppId =
   | 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth' | 'ferrfleet' | 'ferrlabs';
@@ -16,15 +17,15 @@ export interface BrandDropdownProps {
   apps?: BrandDropdownApp[];
   children: ReactNode;
   className?: string;
+  collapsed?: boolean;
 }
 
 export const DEFAULT_APPS: BrandDropdownApp[] = [
-  { id: 'ferrflow',   label: 'FerrFlow',   tag: 'Versioning CLI',      href: 'https://app.ferrflow.com',   accent: '#e8733a' },
-  { id: 'ferrvault',  label: 'FerrVault',  tag: 'Secrets management',  href: 'https://ferrvault.com', accent: '#10b981' },
-  { id: 'ferrtrack',  label: 'FerrTrack',  tag: 'Issue tracker',       href: 'https://ferrtrack.com', accent: '#6366f1' },
-  { id: 'ferrgrowth', label: 'FerrGrowth', tag: 'Growth tooling',      href: 'https://app.ferrgrowth.com', accent: '#7c3aed' },
-  { id: 'ferrfleet',  label: 'FerrFleet',  tag: 'Agent fleet runtime', href: 'https://ferrfleet.com', accent: '#f59e0b' },
   { id: 'ferrlabs',   label: 'FerrLabs',   tag: 'Org & holding',       href: 'https://ferrlabs.com',       accent: '#1e293b' },
+  { id: 'ferrgrowth', label: 'FerrGrowth', tag: 'Growth tooling',      href: 'https://app.ferrgrowth.com', accent: '#7c3aed' },
+  { id: 'ferrtrack',  label: 'FerrTrack',  tag: 'Issue tracker',       href: 'https://ferrtrack.com',      accent: '#6366f1' },
+  { id: 'ferrvault',  label: 'FerrVault',  tag: 'Secrets management',  href: 'https://ferrvault.com',      accent: '#10b981' },
+  { id: 'ferrfleet',  label: 'FerrFleet',  tag: 'Agent fleet runtime', href: 'https://ferrfleet.com',      accent: '#f59e0b' },
 ];
 
 /**
@@ -32,7 +33,7 @@ export const DEFAULT_APPS: BrandDropdownApp[] = [
  * Wraps arbitrary brand content (logo + name + tagline). The whole wrapped
  * region becomes the trigger; a chevron is appended on the right.
  */
-export function BrandDropdown({ current, apps = DEFAULT_APPS, children, className }: BrandDropdownProps) {
+export function BrandDropdown({ current, apps = DEFAULT_APPS, children, className, collapsed = false }: BrandDropdownProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
@@ -51,7 +52,7 @@ export function BrandDropdown({ current, apps = DEFAULT_APPS, children, classNam
   }, [open]);
 
   return (
-    <div ref={rootRef} className={className} style={{ position: 'relative', display: 'block' }}>
+    <div ref={rootRef} className={className} style={{ position: 'relative', display: 'block', flex: 1, minWidth: 0, alignSelf: 'stretch' }}>
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
@@ -61,36 +62,48 @@ export function BrandDropdown({ current, apps = DEFAULT_APPS, children, classNam
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 12,
+          gap: collapsed ? 0 : 12,
+          justifyContent: collapsed ? 'center' : 'flex-start',
           width: '100%',
+          height: '100%',
+          minHeight: 'inherit',
           background: 'transparent',
           border: 'none',
-          padding: 0,
+          padding: collapsed ? 0 : '0 20px',
           margin: 0,
           cursor: 'pointer',
           color: 'inherit',
           font: 'inherit',
           textAlign: 'left',
-          borderRadius: 8,
+          borderRadius: 0,
           transition: 'background 140ms ease',
+          boxSizing: 'border-box',
         }}
         onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-app-nav-hover, rgba(30,41,59,0.03))')}
         onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
       >
-        <span style={{ flex: 1, minWidth: 0, display: 'inline-flex', alignItems: 'center', gap: 12 }}>
+        <span style={{
+          flex: collapsed ? 'none' : 1,
+          minWidth: 0,
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 12,
+        }}>
           {children}
         </span>
-        <span
-          aria-hidden
-          style={{
-            color: 'var(--color-fg-3, #64748b)',
-            fontSize: 12,
-            opacity: 0.7,
-            flexShrink: 0,
-          }}
-        >
-          ▾
-        </span>
+        {!collapsed && (
+          <span
+            aria-hidden
+            style={{
+              color: 'var(--color-fg-3, #64748b)',
+              fontSize: 12,
+              opacity: 0.7,
+              flexShrink: 0,
+            }}
+          >
+            ▾
+          </span>
+        )}
       </button>
 
       {open && (
@@ -98,22 +111,24 @@ export function BrandDropdown({ current, apps = DEFAULT_APPS, children, classNam
           role="menu"
           style={{
             position: 'absolute',
-            top: 'calc(100% + 8px)',
+            top: '100%',
             left: 0,
             right: 0,
-            minWidth: 240,
-            background: 'var(--color-card, #ffffff)',
-            border: '1px solid var(--color-rule, rgba(30,41,59,0.10))',
-            borderRadius: 10,
-            boxShadow: '0 10px 40px -10px rgba(15, 23, 42, 0.18)',
-            padding: 6,
+            background: 'var(--color-app-sidebar, #f7f7f5)',
+            borderBottom: '1px solid var(--color-rule, rgba(30,41,59,0.10))',
+            padding: '8px 8px 12px',
             zIndex: 60,
           }}
         >
-          <div className="mono" style={{
-            padding: '6px 10px 8px', fontSize: 9.5, letterSpacing: '0.12em',
-            textTransform: 'uppercase', color: 'var(--color-fg-3, #64748b)',
-          }}>Switch app</div>
+          {!collapsed && (
+            <div className="mono" style={{
+              padding: '4px 12px 6px',
+              fontSize: 10,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--color-fg-3, #64748b)',
+            }}>Switch app</div>
+          )}
           {apps.map(a => {
             const isCurrent = a.id === current;
             return (
@@ -122,13 +137,22 @@ export function BrandDropdown({ current, apps = DEFAULT_APPS, children, classNam
                 href={a.href}
                 role="menuitem"
                 aria-current={isCurrent ? 'page' : undefined}
+                title={collapsed ? `${a.label} — ${a.tag}` : undefined}
                 style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '8px 10px', borderRadius: 7,
-                  textDecoration: 'none', color: 'inherit',
-                  background: isCurrent
-                    ? `color-mix(in oklab, ${a.accent} 10%, transparent)`
-                    : 'transparent',
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: collapsed ? 0 : 12,
+                  justifyContent: collapsed ? 'center' : 'flex-start',
+                  padding: collapsed ? '8px 0' : '8px 12px',
+                  margin: '1px 0',
+                  borderRadius: 8,
+                  textDecoration: 'none',
+                  color: isCurrent ? 'var(--color-fg, #1e293b)' : 'var(--color-fg-2, #475569)',
+                  background: isCurrent ? 'var(--color-app-nav-active, rgba(30,41,59,0.06))' : 'transparent',
+                  fontFamily: 'var(--font-serif)',
+                  fontSize: 13.5,
+                  transition: 'background 120ms',
                 }}
                 onMouseEnter={(e) => {
                   if (!isCurrent) e.currentTarget.style.background = 'var(--color-app-nav-hover, rgba(30,41,59,0.03))';
@@ -137,20 +161,46 @@ export function BrandDropdown({ current, apps = DEFAULT_APPS, children, classNam
                   if (!isCurrent) e.currentTarget.style.background = 'transparent';
                 }}
               >
-                <span style={{ width: 8, height: 8, borderRadius: 4, background: a.accent, flexShrink: 0 }} />
-                <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--color-fg, #1e293b)' }}>
-                    {a.label}
-                  </span>
-                  <span className="mono" style={{ display: 'block', fontSize: 10.5, color: 'var(--color-fg-3, #64748b)', marginTop: 2 }}>
-                    {a.tag}
-                  </span>
+                {isCurrent && !collapsed && (
+                  <span
+                    aria-hidden
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                      top: 8,
+                      bottom: 8,
+                      width: 2,
+                      background: a.accent,
+                      borderRadius: 2,
+                    }}
+                  />
+                )}
+                <span style={{
+                  width: 22,
+                  height: 22,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  borderRadius: 6,
+                  background: isCurrent ? `color-mix(in oklab, ${a.accent} 12%, transparent)` : 'transparent',
+                  transition: 'background 120ms',
+                }}>
+                  <AppLogoMark product={a.id as ProductSlug} accent={a.accent} size={18} />
                 </span>
-                {isCurrent && (
-                  <span className="mono" style={{
-                    fontSize: 9.5, color: a.accent,
-                    letterSpacing: '0.06em', textTransform: 'uppercase',
-                  }}>current</span>
+                {!collapsed && (
+                  <>
+                    <span style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>{a.label}</span>
+                    <span className="mono" style={{
+                      fontSize: 10,
+                      color: 'var(--color-fg-3, #64748b)',
+                      letterSpacing: '0.04em',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: 110,
+                    }}>{a.tag}</span>
+                  </>
                 )}
               </a>
             );

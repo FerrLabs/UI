@@ -123,38 +123,42 @@ export function AppShell({
             display: 'flex',
             alignItems: 'center',
             gap: 12,
-            padding: collapsed ? '20px 0' : '20px 20px',
+            padding: appSwitcher && !collapsed ? 0 : (collapsed ? '20px 0' : '20px 20px'),
             justifyContent: collapsed ? 'center' : 'flex-start',
             borderBottom: '1px solid var(--color-rule)',
+            height: 64,
             minHeight: 64,
+            boxSizing: 'border-box',
           }}
         >
-          {appSwitcher && !collapsed ? (
-            <BrandDropdown current={appSwitcher.current} apps={appSwitcher.apps}>
+          {appSwitcher ? (
+            <BrandDropdown current={appSwitcher.current} apps={appSwitcher.apps} collapsed={collapsed}>
               <AppLogoMark accent={accent} product={product} />
-              <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontWeight: 900,
-                    fontSize: 17,
-                    letterSpacing: '-0.02em',
-                  }}
-                >
-                  {productName.toLowerCase()}
+              {!collapsed && (
+                <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontWeight: 900,
+                      fontSize: 17,
+                      letterSpacing: '-0.02em',
+                    }}
+                  >
+                    {productName.toLowerCase()}
+                  </span>
+                  <span
+                    className="mono"
+                    style={{
+                      fontSize: 9.5,
+                      color: 'var(--color-fg-3)',
+                      letterSpacing: '0.08em',
+                      marginTop: 2,
+                    }}
+                  >
+                    by ferrlabs
+                  </span>
                 </span>
-                <span
-                  className="mono"
-                  style={{
-                    fontSize: 9.5,
-                    color: 'var(--color-fg-3)',
-                    letterSpacing: '0.08em',
-                    marginTop: 2,
-                  }}
-                >
-                  by ferrlabs
-                </span>
-              </span>
+              )}
             </BrandDropdown>
           ) : (
             <>
