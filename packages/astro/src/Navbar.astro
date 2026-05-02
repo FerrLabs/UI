@@ -92,18 +92,18 @@ const accentCssValue = isHexAccent ? (accent as string) : `var(--color-ferr${leg
 const t = (en: string, fr: string) => (lang === 'fr' ? fr : en);
 
 const allProducts: { id: Product; label: string; href: string; accent: LegacyAccent; tagline: string; taglineFr: string }[] = [
-  { id: 'ferrlabs',   label: 'FerrLabs',   href: 'https://ferrlabs.com',       accent: 'slate',
+  { id: 'ferrlabs',   label: 'FerrLabs',   href: 'https://ferrlabs.com',   accent: 'slate',
     tagline: 'Developer tools company',          taglineFr: 'Éditeur d’outils pour développeurs' },
-  { id: 'ferrflow',   label: 'FerrFlow',   href: 'https://ferrflow.com',       accent: 'orange',
-    tagline: 'Versioning CLI (open source)',     taglineFr: 'CLI de versioning (open source)' },
-  { id: 'ferrvault',  label: 'FerrVault',  href: 'https://ferrvault.com', accent: 'emerald',
-    tagline: 'Secrets management',               taglineFr: 'Gestion des secrets' },
-  { id: 'ferrtrack',  label: 'FerrTrack',  href: 'https://ferrtrack.com', accent: 'indigo',
-    tagline: 'Issue tracker',                    taglineFr: 'Suivi d’issues' },
-  { id: 'ferrgrowth', label: 'FerrGrowth', href: 'https://ferrgrowth.com',     accent: 'violet',
+  { id: 'ferrgrowth', label: 'FerrGrowth', href: 'https://ferrgrowth.com', accent: 'violet',
     tagline: 'Growth tooling',                   taglineFr: 'Outils de croissance' },
-  { id: 'ferrfleet',  label: 'FerrFleet',  href: 'https://ferrfleet.com', accent: 'amber',
+  { id: 'ferrfleet',  label: 'FerrFleet',  href: 'https://ferrfleet.com',  accent: 'amber',
     tagline: 'Agent fleet runtime',              taglineFr: 'Runtime de flotte d\'agents' },
+  { id: 'ferrtrack',  label: 'FerrTrack',  href: 'https://ferrtrack.com',  accent: 'indigo',
+    tagline: 'Issue tracker',                    taglineFr: 'Suivi d’issues' },
+  { id: 'ferrvault',  label: 'FerrVault',  href: 'https://ferrvault.com',  accent: 'emerald',
+    tagline: 'Secrets management',               taglineFr: 'Gestion des secrets' },
+  { id: 'ferrflow',   label: 'FerrFlow',   href: 'https://ferrflow.com',   accent: 'orange',
+    tagline: 'Versioning CLI (open source)',     taglineFr: 'CLI de versioning (open source)' },
 ];
 
 const initial = resolvedBrandName.replace(/[^A-Za-z]/g, '').charAt(0).toUpperCase() || 'F';
