@@ -4,6 +4,13 @@ All notable changes to `react` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.7.2] - 2026-05-02
+
+### Bug Fixes
+
+- fix(react): use middle-dot separator in BrandDropdown tooltip (#52)
+- fix(ci): use curl instead of gh CLI for cross-repo dispatch (#51)
+
 ## [0.7.1] - 2026-05-02
 
 ### Bug Fixes
