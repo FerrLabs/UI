@@ -18,3 +18,11 @@ export { default as ToastContainer } from './components/ToastContainer';
 
 export * from './lib/toast';
 export * from './lib/passwordStrength';
+
+/**
+ * Product-app chrome (AppShell, AppLogoMark, PageHeader, Stat, Tag, Avatar,
+ * AppButton, CommandHint). Token-driven, router-agnostic. See
+ * `./components/app/index.ts` for the token contract every consuming app
+ * must satisfy in its global stylesheet.
+ */
+export * from './components/app';
