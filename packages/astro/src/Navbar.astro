@@ -1,8 +1,8 @@
 ---
 import LanguageSelect from './LanguageSelect.astro';
 
-type LegacyAccent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet';
-type Product = 'ferrlabs' | 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth';
+type LegacyAccent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet' | 'amber';
+type Product = 'ferrlabs' | 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth' | 'ferrfleet';
 type Lang = 'en' | 'fr';
 
 export interface Link {
@@ -84,7 +84,8 @@ const legacySlug = (a: LegacyAccent | undefined) =>
   a === 'slate' ? 'labs-slate' :
   a === 'orange' ? 'flow-orange' :
   a === 'emerald' ? 'vault-emerald' :
-  a === 'indigo' ? 'track-indigo' : 'growth-violet';
+  a === 'indigo' ? 'track-indigo' :
+  a === 'amber' ? 'fleet-amber' : 'growth-violet';
 
 const accentCssValue = isHexAccent ? (accent as string) : `var(--color-ferr${legacySlug(legacyAccentName)})`;
 
@@ -101,6 +102,8 @@ const allProducts: { id: Product; label: string; href: string; accent: LegacyAcc
     tagline: 'Issue tracker',                    taglineFr: 'Suivi d’issues' },
   { id: 'ferrgrowth', label: 'FerrGrowth', href: 'https://ferrgrowth.com',     accent: 'violet',
     tagline: 'Growth tooling',                   taglineFr: 'Outils de croissance' },
+  { id: 'ferrfleet',  label: 'FerrFleet',  href: 'https://fleet.ferrlabs.com', accent: 'amber',
+    tagline: 'Agent fleet runtime',              taglineFr: 'Runtime de flotte d\'agents' },
 ];
 
 const initial = resolvedBrandName.replace(/[^A-Za-z]/g, '').charAt(0).toUpperCase() || 'F';
