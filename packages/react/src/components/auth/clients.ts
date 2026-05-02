@@ -45,7 +45,7 @@ export const AUTH_CLIENTS: Record<AuthClientKey, AuthClient> = {
     color: '#10b981',
     soft: '#ecfdf5',
     tagline: 'secrets without infra',
-    hostHint: 'app.vault.ferrlabs.com',
+    hostHint: 'app.ferrvault.com',
   },
   ferrtrack: {
     key: 'ferrtrack',
@@ -53,7 +53,7 @@ export const AUTH_CLIENTS: Record<AuthClientKey, AuthClient> = {
     color: '#6366f1',
     soft: '#eef2ff',
     tagline: 'issue tracking, keyboard-first',
-    hostHint: 'app.track.ferrlabs.com',
+    hostHint: 'app.ferrtrack.com',
   },
   ferrgrowth: {
     key: 'ferrgrowth',

@@ -75,10 +75,10 @@ const year = new Date().getFullYear();
 const allProducts: { id: Product; label: string; href: string; accent: LegacyAccent }[] = [
   { id: 'ferrlabs',   label: 'FerrLabs',   href: 'https://ferrlabs.com',       accent: 'slate' },
   { id: 'ferrflow',   label: 'FerrFlow',   href: 'https://ferrflow.com',       accent: 'orange' },
-  { id: 'ferrvault',  label: 'FerrVault',  href: 'https://vault.ferrlabs.com', accent: 'emerald' },
-  { id: 'ferrtrack',  label: 'FerrTrack',  href: 'https://track.ferrlabs.com', accent: 'indigo' },
+  { id: 'ferrvault',  label: 'FerrVault',  href: 'https://ferrvault.com', accent: 'emerald' },
+  { id: 'ferrtrack',  label: 'FerrTrack',  href: 'https://ferrtrack.com', accent: 'indigo' },
   { id: 'ferrgrowth', label: 'FerrGrowth', href: 'https://ferrgrowth.com',     accent: 'violet' },
-  { id: 'ferrfleet',  label: 'FerrFleet',  href: 'https://fleet.ferrlabs.com', accent: 'amber' },
+  { id: 'ferrfleet',  label: 'FerrFleet',  href: 'https://ferrfleet.com', accent: 'amber' },
 ];
 const otherProducts = allProducts.filter((p) => p.id !== currentProduct);
 const productName = allProducts.find((p) => p.id === currentProduct)?.label ?? 'FerrLabs';
