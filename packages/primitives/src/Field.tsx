@@ -11,10 +11,6 @@ export interface FieldProps {
   className?: string;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
-
 export function Field({
   label,
   hint,
@@ -31,28 +27,48 @@ export function Field({
   const describedBy = error ? errorId : hint ? hintId : undefined;
 
   return (
-    <div className={classes('flex flex-col gap-1.5', className)}>
-      <div className="flex items-baseline justify-between gap-2">
-        <label htmlFor={id} className="text-xs font-medium tracking-wide text-slate-700">
+    <div className={className} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'baseline',
+          justifyContent: 'space-between',
+          gap: 8,
+        }}
+      >
+        <label
+          htmlFor={id}
+          className="mono"
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 11,
+            fontWeight: 500,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: 'var(--color-ink-3)',
+          }}
+        >
           {label}
           {required && (
-            <span aria-hidden className="ml-1 text-red-600">
+            <span aria-hidden style={{ marginLeft: 4, color: '#dc2626' }}>
               *
             </span>
           )}
           {optional && !required && (
-            <span className="ml-1 text-slate-400 font-normal">(optional)</span>
+            <span style={{ marginLeft: 6, color: 'var(--color-ink-3)', fontWeight: 400 }}>
+              (optional)
+            </span>
           )}
         </label>
-        {trailingLabel && <div className="text-xs">{trailingLabel}</div>}
+        {trailingLabel && <div style={{ fontSize: 12 }}>{trailingLabel}</div>}
       </div>
       {children({ id, describedBy, invalid: Boolean(error) })}
       {error ? (
-        <p id={errorId} className="text-xs text-red-600">
+        <p id={errorId} style={{ margin: 0, fontSize: 12, color: '#dc2626' }}>
           {error}
         </p>
       ) : hint ? (
-        <p id={hintId} className="text-xs text-slate-500">
+        <p id={hintId} style={{ margin: 0, fontSize: 12, color: 'var(--color-ink-3)' }}>
           {hint}
         </p>
       ) : null}

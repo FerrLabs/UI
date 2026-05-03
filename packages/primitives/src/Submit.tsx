@@ -1,4 +1,4 @@
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } from 'react';
 
 export interface SubmitProps extends Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -9,33 +9,65 @@ export interface SubmitProps extends Omit<
   children: ReactNode;
 }
 
-const baseStyles =
-  'inline-flex items-center justify-center gap-2 h-10 px-4 rounded-full text-sm font-medium leading-none whitespace-nowrap select-none cursor-pointer border border-transparent bg-accent text-white transition-[background-color,box-shadow,color] duration-150 ease-out hover:bg-accent/90 hover:shadow-md active:bg-accent/80 active:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none';
-
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
-
 export const Submit = forwardRef<HTMLButtonElement, SubmitProps>(function Submit(
-  { loading = false, fullWidth = false, disabled, className, children, ...rest },
+  { loading = false, fullWidth = false, disabled, className, style, children, ...rest },
   ref,
 ) {
+  const isInactive = Boolean(disabled || loading);
+  const accent = 'var(--color-accent, var(--color-ink))';
+
+  const baseStyle: CSSProperties = {
+    display: fullWidth ? 'flex' : 'inline-flex',
+    width: fullWidth ? '100%' : undefined,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    height: 40,
+    padding: '0 16px',
+    fontFamily: 'var(--font-mono)',
+    fontSize: 12,
+    fontWeight: 500,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    lineHeight: 1,
+    whiteSpace: 'nowrap',
+    userSelect: 'none',
+    color: '#fff',
+    background: accent,
+    border: `1px solid ${accent}`,
+    borderRadius: 8,
+    cursor: isInactive ? 'not-allowed' : 'pointer',
+    opacity: isInactive ? 0.55 : 1,
+    transition: 'background 160ms ease-out, opacity 160ms, box-shadow 160ms',
+    ...style,
+  };
+
   return (
     <button
       ref={ref}
       type="submit"
-      className={classes(baseStyles, fullWidth && 'w-full', className)}
-      disabled={disabled || loading}
+      className={['mono', className].filter(Boolean).join(' ')}
+      style={baseStyle}
+      disabled={isInactive}
       aria-busy={loading || undefined}
       {...rest}
     >
       {loading && (
         <span
           aria-hidden
-          className="inline-block size-3.5 rounded-full border-2 border-current border-r-transparent animate-spin"
+          style={{
+            width: 12,
+            height: 12,
+            border: '1.5px solid #fff',
+            borderRightColor: 'transparent',
+            borderRadius: '50%',
+            display: 'inline-block',
+            animation: 'ferrlabs-spin 700ms linear infinite',
+          }}
         />
       )}
       {children}
+      <style>{`@keyframes ferrlabs-spin { to { transform: rotate(360deg); } }`}</style>
     </button>
   );
 });

@@ -3,6 +3,8 @@ import {
   forwardRef,
   useContext,
   useId,
+  useState,
+  type CSSProperties,
   type InputHTMLAttributes,
   type ReactNode,
 } from 'react';
@@ -27,10 +29,6 @@ export interface RadioGroupProps {
   ariaLabel?: string;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
-
 export function RadioGroup({
   name,
   value,
@@ -47,11 +45,12 @@ export function RadioGroup({
       <div
         role="radiogroup"
         aria-label={ariaLabel}
-        className={classes(
-          'flex',
-          orientation === 'vertical' ? 'flex-col gap-2' : 'flex-row gap-4',
-          className,
-        )}
+        className={className}
+        style={{
+          display: 'flex',
+          flexDirection: orientation === 'vertical' ? 'column' : 'row',
+          gap: orientation === 'vertical' ? 10 : 16,
+        }}
       >
         {children}
       </div>
@@ -69,24 +68,60 @@ export interface RadioProps extends Omit<
   invalid?: boolean;
 }
 
-const inputStyles =
-  'peer appearance-none size-4 rounded-full border border-slate-300 bg-white cursor-pointer transition-colors duration-150 checked:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50';
-
-const dot =
-  "after:content-[''] after:absolute after:inset-1 after:rounded-full after:bg-accent after:opacity-0 peer-checked:after:opacity-100 after:pointer-events-none after:transition-opacity";
-
-const invalidStyles = 'border-red-500 focus-visible:ring-red-500/40';
-
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
-  { value, label, hint, invalid, className, disabled, id, ...rest },
+  { value, label, hint, invalid, className, style, disabled, id, onFocus, onBlur, ...rest },
   ref,
 ) {
   const ctx = useContext(RadioGroupContext);
   const checked = ctx?.value !== undefined ? String(ctx.value) === String(value) : undefined;
   const isDisabled = disabled || ctx?.disabled;
+  const [focused, setFocused] = useState(false);
+
+  const accent = 'var(--color-accent, var(--color-ink))';
+  const errorColor = '#dc2626';
+  const borderColor = invalid ? errorColor : checked ? accent : 'var(--color-rule-strong)';
+
+  const boxStyle: CSSProperties = {
+    position: 'relative',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 16,
+    height: 16,
+    flexShrink: 0,
+    borderRadius: 999,
+    background: isDisabled ? 'var(--color-paper-2)' : 'var(--color-card)',
+    border: `1px solid ${borderColor}`,
+    boxShadow: focused
+      ? `0 0 0 3px color-mix(in oklab, ${invalid ? '#dc2626' : 'var(--color-accent, var(--color-ink))'} 30%, transparent)`
+      : undefined,
+    transition: 'border-color 140ms, box-shadow 140ms',
+    cursor: isDisabled ? 'not-allowed' : 'pointer',
+    opacity: isDisabled ? 0.55 : 1,
+  };
+
+  const inputStyle: CSSProperties = {
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    margin: 0,
+    opacity: 0,
+    cursor: isDisabled ? 'not-allowed' : 'pointer',
+  };
+
+  const dotStyle: CSSProperties = {
+    width: 8,
+    height: 8,
+    borderRadius: 999,
+    background: accent,
+    opacity: checked ? 1 : 0,
+    transition: 'opacity 120ms',
+    pointerEvents: 'none',
+  };
 
   const inputElement = (
-    <span className={classes('relative inline-block size-4 shrink-0', dot)}>
+    <span style={boxStyle}>
       <input
         ref={ref}
         id={id}
@@ -96,29 +131,53 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
         checked={checked}
         disabled={isDisabled}
         onChange={(e) => ctx?.onChange?.(e.currentTarget.value)}
-        className={classes(inputStyles, invalid && invalidStyles)}
+        onFocus={(e) => {
+          setFocused(true);
+          onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setFocused(false);
+          onBlur?.(e);
+        }}
+        style={inputStyle}
         aria-invalid={invalid || undefined}
         {...rest}
       />
+      <span aria-hidden style={dotStyle} />
     </span>
   );
 
   if (!label && !hint) {
-    return <span className={className}>{inputElement}</span>;
+    return (
+      <span className={className} style={style}>
+        {inputElement}
+      </span>
+    );
   }
 
   return (
     <label
-      className={classes(
-        'inline-flex items-start gap-2.5 cursor-pointer select-none',
-        isDisabled && 'cursor-not-allowed opacity-60',
-        className,
-      )}
+      className={className}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'flex-start',
+        gap: 10,
+        cursor: isDisabled ? 'not-allowed' : 'pointer',
+        userSelect: 'none',
+        opacity: isDisabled ? 0.6 : 1,
+        ...style,
+      }}
     >
       {inputElement}
-      <span className="flex flex-col gap-0.5">
-        {label && <span className="text-sm text-slate-900 leading-tight">{label}</span>}
-        {hint && <span className="text-xs text-slate-500 leading-tight">{hint}</span>}
+      <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {label && (
+          <span style={{ fontSize: 14, color: 'var(--color-ink)', lineHeight: 1.25 }}>{label}</span>
+        )}
+        {hint && (
+          <span style={{ fontSize: 12, color: 'var(--color-ink-3)', lineHeight: 1.25 }}>
+            {hint}
+          </span>
+        )}
       </span>
     </label>
   );
