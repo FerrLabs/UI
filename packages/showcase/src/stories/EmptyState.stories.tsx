@@ -1,5 +1,6 @@
+import { Button } from '@ferrlabs/ui-react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button, EmptyState } from '@ferrlabs/ui-primitives';
+import { EmptyState } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof EmptyState> = {
   title: 'Primitives/EmptyState',

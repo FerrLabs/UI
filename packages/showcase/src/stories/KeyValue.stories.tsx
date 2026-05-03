@@ -1,5 +1,6 @@
+import { Tag } from '@ferrlabs/ui-react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Badge, KeyValue } from '@ferrlabs/ui-primitives';
+import { KeyValue } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof KeyValue> = {
   title: 'Data/KeyValue',
@@ -18,13 +19,20 @@ type Story = StoryObj<typeof KeyValue>;
 
 const subscriptionItems = [
   { label: 'Product', value: 'FerrTrack' },
-  { label: 'Tier', value: <Badge variant="accent">Pro</Badge> },
+  {
+    label: 'Tier',
+    value: (
+      <Tag soft variant="accent">
+        Pro
+      </Tag>
+    ),
+  },
   {
     label: 'Status',
     value: (
-      <Badge variant="success" dot>
+      <Tag soft variant="success" dot>
         Active
-      </Badge>
+      </Tag>
     ),
   },
   { label: 'Renewal', value: 'May 1, 2026', hint: 'Auto-renews unless canceled.' },

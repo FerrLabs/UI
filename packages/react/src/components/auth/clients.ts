@@ -4,7 +4,7 @@
  * internal staff platform, never shown publicly on the auth page.
  *
  * Glyph is the small marker used in the dark left panel; the brand SVG
- * mark itself comes from `AppLogoMark` (re-exported via the app barrel).
+ * mark itself comes from `LogoMark` (re-exported via the app barrel).
  */
 
 export type AuthClientKey = 'ferrlabs' | 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth';
@@ -74,9 +74,9 @@ export const AUTH_CLIENTS: Record<AuthClientKey, AuthClient> = {
 export function clientFromOauthId(clientId: string | null | undefined): AuthClientKey {
   if (!clientId) return 'ferrlabs';
   const id = clientId.toLowerCase();
-  if (id.startsWith('ferrflow'))   return 'ferrflow';
-  if (id.startsWith('ferrvault'))  return 'ferrvault';
-  if (id.startsWith('ferrtrack'))  return 'ferrtrack';
+  if (id.startsWith('ferrflow')) return 'ferrflow';
+  if (id.startsWith('ferrvault')) return 'ferrvault';
+  if (id.startsWith('ferrtrack')) return 'ferrtrack';
   if (id.startsWith('ferrgrowth')) return 'ferrgrowth';
   return 'ferrlabs';
 }

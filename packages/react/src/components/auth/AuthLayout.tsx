@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { AppLogoMark } from '../app/AppLogoMark';
+import { LogoMark } from '../app/LogoMark';
 import { AUTH_CLIENTS, type AuthClientKey } from './clients';
 
 export type AuthMode = 'login' | 'signup';
@@ -223,8 +223,8 @@ function BrandPanel({
             margin: 0,
           }}
         >
-          One identity for{' '}
-          <span style={{ fontStyle: 'italic', fontWeight: 300 }}>every</span> tool we make.
+          One identity for <span style={{ fontStyle: 'italic', fontWeight: 300 }}>every</span> tool
+          we make.
         </h2>
         <p
           style={{
@@ -276,7 +276,7 @@ function BrandPanel({
           {client === 'ferrlabs' ? (
             <FerrlabsMark size={22} />
           ) : (
-            <AppLogoMark accent="#fff" product={client} size={22} />
+            <LogoMark accent="#fff" product={client} size={22} />
           )}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -343,14 +343,7 @@ function BrandPanel({
 function FerrlabsMark({ size = 24 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-      <text
-        x="3"
-        y="22"
-        fontFamily="DM Mono, monospace"
-        fontSize="11"
-        fill="#fff"
-        opacity="0.5"
-      >
+      <text x="3" y="22" fontFamily="DM Mono, monospace" fontSize="11" fill="#fff" opacity="0.5">
         [
       </text>
       <text
@@ -364,14 +357,7 @@ function FerrlabsMark({ size = 24 }: { size?: number }) {
       >
         FL
       </text>
-      <text
-        x="26"
-        y="22"
-        fontFamily="DM Mono, monospace"
-        fontSize="11"
-        fill="#fff"
-        opacity="0.5"
-      >
+      <text x="26" y="22" fontFamily="DM Mono, monospace" fontSize="11" fill="#fff" opacity="0.5">
         ]
       </text>
     </svg>
@@ -379,9 +365,9 @@ function FerrlabsMark({ size = 24 }: { size?: number }) {
 }
 
 const CONSTELLATION_PRODUCTS: { key: AuthClientKey; y: number }[] = [
-  { key: 'ferrflow',   y: 30 },
-  { key: 'ferrvault',  y: 90 },
-  { key: 'ferrtrack',  y: 150 },
+  { key: 'ferrflow', y: 30 },
+  { key: 'ferrvault', y: 90 },
+  { key: 'ferrtrack', y: 150 },
   { key: 'ferrgrowth', y: 210 },
 ];
 
@@ -441,12 +427,7 @@ function Constellation({ activeClient }: { activeClient: AuthClientKey }) {
         })}
         {/* Identity node (ferrlabs) */}
         <circle cx={cx} cy={cy} r="14" fill="rgba(255,255,255,0.14)" />
-        <circle
-          cx={cx}
-          cy={cy}
-          r="7"
-          fill="#fff"
-        />
+        <circle cx={cx} cy={cy} r="7" fill="#fff" />
         <text
           x={cx}
           y={cy + 28}

@@ -14,8 +14,8 @@
  *   --font-serif, --font-mono.
  */
 
-export { AppShell, type AppShellProps, type NavGroup, type NavItem } from './AppShell';
-export { AppLogoMark, type ProductSlug } from './AppLogoMark';
+export { Shell, type ShellProps, type NavGroup, type NavItem } from './Shell';
+export { LogoMark, type ProductSlug } from './LogoMark';
 export {
   BrandDropdown,
   DEFAULT_APPS as BRAND_DROPDOWN_APPS,
@@ -23,10 +23,12 @@ export {
   type BrandDropdownApp,
   type BrandDropdownAppId,
 } from './BrandDropdown';
-export { AppButton } from './AppButton';
-export { Avatar } from './Avatar';
+export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './Button';
+/** @deprecated Renamed to `Button`. Will be removed in a future major. */
+export { Button as AppButton } from './Button';
+export { Avatar, type AvatarSize, type AvatarShape } from './Avatar';
 export { UserMenu, type UserMenuProps, type UserMenuItem } from './UserMenu';
 export { CommandHint } from './CommandHint';
-export { PageHeader } from './PageHeader';
+export { PageHeader, type BreadcrumbCrumb } from './PageHeader';
 export { Stat } from './Stat';
-export { Tag } from './Tag';
+export { Tag, type TagVariant, type TagSize } from './Tag';

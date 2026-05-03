@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { AppLogoMark, type ProductSlug } from './AppLogoMark';
+import { LogoMark, type ProductSlug } from './LogoMark';
 import { BrandDropdown, type BrandDropdownAppId, type BrandDropdownApp } from './BrandDropdown';
 
 export interface NavItem {
@@ -15,7 +15,7 @@ export interface NavGroup {
   items: NavItem[];
 }
 
-export interface AppShellProps {
+export interface ShellProps {
   /** Product slug — selects the brand mark and is the canonical identifier. */
   product: ProductSlug;
   /** Display name shown next to the mark in the sidebar header. */
@@ -28,9 +28,9 @@ export interface AppShellProps {
   sections: NavGroup[];
 
   /**
-   * Active route — the AppShell highlights the nav item whose `href` matches.
+   * Active route — the Shell highlights the nav item whose `href` matches.
    * Match policy: exact match OR `currentPath` starts with `href + '/'`.
-   * The caller (router-aware) supplies this; the AppShell stays agnostic of
+   * The caller (router-aware) supplies this; the Shell stays agnostic of
    * react-router / next / wouter / …
    */
   currentPath: string;
@@ -73,7 +73,7 @@ export interface AppShellProps {
  * Router-agnostic: pass `currentPath` + `onNavigate`. Adapters for
  * react-router / next live in the consuming app.
  */
-export function AppShell({
+export function Shell({
   product,
   productName,
   marketingHref,
@@ -88,7 +88,7 @@ export function AppShell({
   topbarRight,
   appSwitcher,
   children,
-}: AppShellProps) {
+}: ShellProps) {
   const [collapsed, setCollapsed] = useState(false);
 
   const isActive = (href: string) => {
@@ -123,7 +123,7 @@ export function AppShell({
             display: 'flex',
             alignItems: 'center',
             gap: 12,
-            padding: appSwitcher && !collapsed ? 0 : (collapsed ? '20px 0' : '20px 20px'),
+            padding: appSwitcher && !collapsed ? 0 : collapsed ? '20px 0' : '20px 20px',
             justifyContent: collapsed ? 'center' : 'flex-start',
             borderBottom: '1px solid var(--color-rule)',
             height: 64,
@@ -132,10 +132,16 @@ export function AppShell({
           }}
         >
           {appSwitcher ? (
-            <BrandDropdown current={appSwitcher.current} apps={appSwitcher.apps} collapsed={collapsed}>
-              <AppLogoMark accent={accent} product={product} />
+            <BrandDropdown
+              current={appSwitcher.current}
+              apps={appSwitcher.apps}
+              collapsed={collapsed}
+            >
+              <LogoMark accent={accent} product={product} />
               {!collapsed && (
-                <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
+                <span
+                  style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}
+                >
                   <span
                     style={{
                       fontFamily: 'var(--font-serif)',
@@ -162,9 +168,11 @@ export function AppShell({
             </BrandDropdown>
           ) : (
             <>
-              <AppLogoMark accent={accent} product={product} />
+              <LogoMark accent={accent} product={product} />
               {!collapsed && (
-                <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
+                <div
+                  style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}
+                >
                   <span
                     style={{
                       fontFamily: 'var(--font-serif)',
@@ -193,8 +201,8 @@ export function AppShell({
           )}
         </div>
 
-        {projectName && (
-          collapsed ? (
+        {projectName &&
+          (collapsed ? (
             <button
               type="button"
               onClick={onProjectClick}
@@ -278,8 +286,7 @@ export function AppShell({
               </div>
               <span style={{ color: 'var(--color-fg-3)', fontSize: 10 }}>▾</span>
             </button>
-          )
-        )}
+          ))}
 
         <nav style={{ flex: 1, padding: '8px 8px', overflowY: 'auto' }}>
           {sections.map((group, gi) => (
@@ -356,9 +363,7 @@ export function AppShell({
                     >
                       {item.icon}
                     </span>
-                    {!collapsed && (
-                      <span style={{ flex: 1, textAlign: 'left' }}>{item.label}</span>
-                    )}
+                    {!collapsed && <span style={{ flex: 1, textAlign: 'left' }}>{item.label}</span>}
                     {!collapsed && item.badge != null && (
                       <span
                         className="mono"
@@ -433,7 +438,9 @@ export function AppShell({
           >
             {(breadcrumb ?? []).map((b, i, a) => (
               <span key={i} style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}>
-                <span style={{ color: i === a.length - 1 ? 'var(--color-fg)' : 'var(--color-fg-3)' }}>
+                <span
+                  style={{ color: i === a.length - 1 ? 'var(--color-fg)' : 'var(--color-fg-3)' }}
+                >
                   {b}
                 </span>
                 {i < a.length - 1 && <span style={{ opacity: 0.5 }}>/</span>}

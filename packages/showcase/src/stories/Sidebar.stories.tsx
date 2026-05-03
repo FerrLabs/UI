@@ -1,13 +1,7 @@
+import { Avatar, Button, Tag } from '@ferrlabs/ui-react';
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import {
-  Avatar,
-  Badge,
-  Button,
-  Sidebar,
-  SidebarItem,
-  SidebarSection,
-} from '@ferrlabs/ui-primitives';
+import { Sidebar, SidebarItem, SidebarSection } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Sidebar> = {
   title: 'Layout/Sidebar',
@@ -76,9 +70,9 @@ function ControlledShell({ initialCollapsed = false }: { initialCollapsed?: bool
             icon={<Icon d={ICONS.members} />}
             label="Members"
             badge={
-              <Badge variant="neutral" size="sm">
+              <Tag soft variant="neutral" size="sm">
                 12
-              </Badge>
+              </Tag>
             }
             collapsed={collapsed}
           />
@@ -89,9 +83,9 @@ function ControlledShell({ initialCollapsed = false }: { initialCollapsed?: bool
             icon={<Icon d={ICONS.billing} />}
             label="Billing"
             badge={
-              <Badge variant="warning" size="sm">
+              <Tag soft variant="warning" size="sm">
                 !
-              </Badge>
+              </Tag>
             }
             collapsed={collapsed}
           />

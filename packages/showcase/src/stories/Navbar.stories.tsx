@@ -1,5 +1,6 @@
+import { Avatar, Button } from '@ferrlabs/ui-react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Avatar, Button, Navbar, NavLink } from '@ferrlabs/ui-primitives';
+import { Navbar, NavLink } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Navbar> = {
   title: 'Layout/Navbar',

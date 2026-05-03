@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Banner, Button } from '@ferrlabs/ui-primitives';
+import { Banner } from '@ferrlabs/ui-primitives';
+import { Button } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Banner> = {
   title: 'Primitives/Banner',
@@ -37,11 +38,7 @@ export const Warning: Story = {
     variant: 'warning',
     title: 'Trial ending soon',
     children: '3 days left on FerrVault. Add a payment method to keep it active.',
-    action: (
-      <Button variant="ghost" size="sm">
-        Add card
-      </Button>
-    ),
+    action: <Button variant="ghost">Add card</Button>,
   },
 };
 
@@ -50,11 +47,7 @@ export const Danger: Story = {
     variant: 'danger',
     title: 'Payment failed',
     children: 'We could not charge your card on file. Update payment to avoid interruption.',
-    action: (
-      <Button variant="danger" size="sm">
-        Update payment
-      </Button>
-    ),
+    action: <Button accent="#dc2626">Update payment</Button>,
   },
 };
 
