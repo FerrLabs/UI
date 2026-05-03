@@ -4,6 +4,13 @@ All notable changes to `react` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.8.3] - 2026-05-03
+
+### Bug Fixes
+
+- fix(react): BrandDropdown hover area fills the full sidebar header height (#61)
+- fix(react): keep AppShell project switcher visible (icon-only) when sidebar is collapsed (#59)
+
 ## [0.8.2] - 2026-05-03
 
 ### Bug Fixes
