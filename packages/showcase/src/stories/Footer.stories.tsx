@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { AppFooter } from '@ferrlabs/ui-primitives';
+import { Footer } from '@ferrlabs/ui-primitives';
 
-const meta: Meta<typeof AppFooter> = {
-  title: 'Layout/AppFooter',
-  component: AppFooter,
+const meta: Meta<typeof Footer> = {
+  title: 'Layout/Footer',
+  component: Footer,
   parameters: { layout: 'fullscreen' },
 };
 
 export default meta;
-type Story = StoryObj<typeof AppFooter>;
+type Story = StoryObj<typeof Footer>;
 
 const FerrLabsBrand = () => (
   <>

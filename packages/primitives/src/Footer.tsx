@@ -5,7 +5,7 @@ export interface FooterColumn {
   links: Array<{ label: ReactNode; href: string; external?: boolean }>;
 }
 
-export interface AppFooterProps {
+export interface FooterProps {
   /** Brand cluster — typically a logo (SVG) + wordmark. Sits in the left column. */
   brand?: ReactNode;
   /** Italic Fraunces tagline below the brand. */
@@ -27,7 +27,7 @@ export interface AppFooterProps {
  * --font-mono) tokens from `@ferrlabs/styles`. No Tailwind classes — same
  * inline-style + token contract as the rest of the editorial bundle.
  */
-export function AppFooter({ brand, tagline, columns, bottom, className, style }: AppFooterProps) {
+export function Footer({ brand, tagline, columns, bottom, className, style }: FooterProps) {
   return (
     <footer
       className={className}

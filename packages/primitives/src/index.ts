@@ -36,7 +36,11 @@ export {
   type SidebarSectionProps,
   type SidebarItemProps,
 } from './Sidebar';
-export { AppFooter, type AppFooterProps, type FooterColumn } from './AppFooter';
+export { Footer, type FooterProps, type FooterColumn } from './Footer';
+/** @deprecated Renamed to `Footer`. Will be removed in a future major. */
+export { Footer as AppFooter } from './Footer';
+/** @deprecated Renamed to `FooterProps`. Will be removed in a future major. */
+export type { FooterProps as AppFooterProps } from './Footer';
 export { Container, type ContainerProps } from './Container';
 export { Divider, type DividerProps } from './Divider';
 export { DataTable, type DataTableProps, type Column } from './DataTable';
