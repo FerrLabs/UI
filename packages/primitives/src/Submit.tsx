@@ -10,7 +10,7 @@ export interface SubmitProps extends Omit<
 }
 
 const baseStyles =
-  'inline-flex items-center justify-center gap-2 h-10 px-4 rounded-full text-sm font-medium leading-none whitespace-nowrap select-none border border-transparent bg-accent text-white transition-colors duration-150 hover:bg-accent/90 active:bg-accent/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none';
+  'inline-flex items-center justify-center gap-2 h-10 px-4 rounded-full text-sm font-medium leading-none whitespace-nowrap select-none cursor-pointer border border-transparent bg-accent text-white transition-[background-color,box-shadow,color] duration-150 ease-out hover:bg-accent/90 hover:shadow-md active:bg-accent/80 active:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none';
 
 function classes(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(' ');
