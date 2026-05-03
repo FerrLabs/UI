@@ -8,24 +8,61 @@ export interface EmptyStateProps {
   className?: string;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
-
 export function EmptyState({ title, description, icon, action, className }: EmptyStateProps) {
   return (
     <div
-      className={classes(
-        'flex flex-col items-center justify-center text-center px-6 py-16 rounded-xl border border-dashed border-slate-200 bg-slate-50/50',
-        className,
-      )}
+      className={className}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        padding: '64px 24px',
+        borderRadius: 14,
+        border: '1px dashed var(--color-rule-strong, rgba(30, 41, 59, 0.28))',
+        background: 'transparent',
+      }}
     >
-      {icon && <div className="mb-4 text-slate-400">{icon}</div>}
-      <h3 className="text-base font-semibold text-slate-900">{title}</h3>
-      {description && (
-        <p className="mt-1.5 text-sm text-slate-500 max-w-sm leading-relaxed">{description}</p>
+      {icon && (
+        <div
+          style={{
+            marginBottom: 16,
+            color: 'var(--color-ink-3, #64748b)',
+            display: 'inline-flex',
+          }}
+        >
+          {icon}
+        </div>
       )}
-      {action && <div className="mt-5">{action}</div>}
+      <h3
+        style={{
+          fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
+          fontWeight: 700,
+          fontSize: 18,
+          lineHeight: 1.25,
+          letterSpacing: '-0.01em',
+          color: 'var(--color-ink, #1e293b)',
+          margin: 0,
+        }}
+      >
+        {title}
+      </h3>
+      {description && (
+        <p
+          style={{
+            marginTop: 8,
+            fontSize: 14,
+            lineHeight: 1.55,
+            color: 'var(--color-ink-3, #64748b)',
+            maxWidth: 380,
+            marginBottom: 0,
+          }}
+        >
+          {description}
+        </p>
+      )}
+      {action && <div style={{ marginTop: 20 }}>{action}</div>}
     </div>
   );
 }
