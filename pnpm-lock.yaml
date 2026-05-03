@@ -58,6 +58,24 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
 
+  packages/primitives:
+    devDependencies:
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.5(react@19.2.5)
+      typescript:
+        specifier: ^6.0.0
+        version: 6.0.3
+
   packages/react:
     devDependencies:
       '@types/react':
