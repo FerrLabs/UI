@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
+import { useState } from 'react';
 
 export interface PaginationProps {
   page: number;
@@ -8,10 +9,6 @@ export interface PaginationProps {
   showFirstLast?: boolean;
   className?: string;
   ariaLabel?: string;
-}
-
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
 }
 
 function range(from: number, to: number): number[] {
@@ -37,11 +34,7 @@ function pageList(page: number, totalPages: number, siblingCount: number): Array
   return result;
 }
 
-const btn =
-  'inline-flex items-center justify-center min-w-8 h-8 px-2 rounded-md text-sm font-medium cursor-pointer transition-colors duration-150 disabled:opacity-40 disabled:cursor-not-allowed';
-
-const inactive = 'text-slate-700 hover:bg-slate-100';
-const active = 'bg-accent text-white pointer-events-none';
+const HOVER_BG = 'color-mix(in oklab, var(--color-ink) 6%, transparent)';
 
 interface ItemProps {
   onClick?: () => void;
@@ -52,6 +45,34 @@ interface ItemProps {
 }
 
 function PageButton({ onClick, disabled, selected, children, ariaLabel }: ItemProps) {
+  const [hovered, setHovered] = useState(false);
+  const baseStyle: CSSProperties = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 32,
+    width: 32,
+    height: 32,
+    padding: '0 6px',
+    borderRadius: 8,
+    border: 'none',
+    background: 'transparent',
+    fontFamily: 'inherit',
+    fontSize: 14,
+    fontWeight: 500,
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    transition: 'background 120ms ease, color 120ms ease',
+    opacity: disabled ? 0.4 : 1,
+    color: 'var(--color-ink-2)',
+  };
+  const activeStyle: CSSProperties = {
+    background: 'var(--color-accent)',
+    color: '#fff',
+    pointerEvents: 'none',
+  };
+  const hoverStyle: CSSProperties =
+    !disabled && !selected && hovered ? { background: HOVER_BG, color: 'var(--color-ink)' } : {};
+
   return (
     <button
       type="button"
@@ -59,7 +80,9 @@ function PageButton({ onClick, disabled, selected, children, ariaLabel }: ItemPr
       disabled={disabled}
       aria-current={selected ? 'page' : undefined}
       aria-label={ariaLabel}
-      className={classes(btn, selected ? active : inactive)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ ...baseStyle, ...(selected ? activeStyle : null), ...hoverStyle }}
     >
       {children}
     </button>
@@ -79,7 +102,11 @@ export function Pagination({
   const items = pageList(page, totalPages, siblingCount);
 
   return (
-    <nav aria-label={ariaLabel} className={classes('flex items-center gap-1', className)}>
+    <nav
+      aria-label={ariaLabel}
+      className={className}
+      style={{ display: 'flex', alignItems: 'center', gap: 4 }}
+    >
       {showFirstLast && (
         <PageButton onClick={() => onPageChange(1)} disabled={page === 1} ariaLabel="First page">
           «
@@ -94,7 +121,15 @@ export function Pagination({
       </PageButton>
       {items.map((it, i) =>
         it === 'gap' ? (
-          <span key={`gap-${i}`} aria-hidden className="px-2 text-slate-400">
+          <span
+            key={`gap-${i}`}
+            aria-hidden
+            style={{
+              padding: '0 6px',
+              color: 'var(--color-ink-3)',
+              fontSize: 14,
+            }}
+          >
             …
           </span>
         ) : (

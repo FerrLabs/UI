@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 export interface KeyValueItem {
   label: ReactNode;
@@ -13,9 +13,23 @@ export interface KeyValueProps {
   className?: string;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
+const labelStyle: CSSProperties = {
+  fontFamily: 'var(--font-mono)',
+  fontSize: 11,
+  letterSpacing: '0.14em',
+  textTransform: 'uppercase',
+  color: 'var(--color-ink-3)',
+};
+
+const valueStyle: CSSProperties = {
+  fontSize: 14,
+  color: 'var(--color-ink)',
+};
+
+const hintStyle: CSSProperties = {
+  fontSize: 12,
+  color: 'var(--color-ink-3)',
+};
 
 export function KeyValue({
   items,
@@ -23,18 +37,25 @@ export function KeyValue({
   density = 'normal',
   className,
 }: KeyValueProps) {
-  const gap = density === 'compact' ? 'gap-y-2' : 'gap-y-3';
-  const labelStyles = 'text-xs font-mono uppercase tracking-wider text-slate-500';
-  const valueStyles = 'text-sm text-slate-900';
+  const rowGap = density === 'compact' ? 8 : 12;
+  const innerGap = density === 'compact' ? 2 : 4;
 
   if (orientation === 'vertical') {
     return (
-      <dl className={classes('flex flex-col', gap, className)}>
+      <dl
+        className={className}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          rowGap,
+          margin: 0,
+        }}
+      >
         {items.map((item, i) => (
-          <div key={i} className="flex flex-col gap-0.5">
-            <dt className={labelStyles}>{item.label}</dt>
-            <dd className={valueStyles}>{item.value}</dd>
-            {item.hint && <p className="text-xs text-slate-500">{item.hint}</p>}
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: innerGap }}>
+            <dt style={labelStyle}>{item.label}</dt>
+            <dd style={{ ...valueStyle, margin: 0 }}>{item.value}</dd>
+            {item.hint && <p style={{ ...hintStyle, margin: 0 }}>{item.hint}</p>}
           </div>
         ))}
       </dl>
@@ -42,15 +63,31 @@ export function KeyValue({
   }
 
   return (
-    <dl className={classes('grid grid-cols-[max-content_1fr] gap-x-6', gap, className)}>
+    <dl
+      className={className}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'max-content 1fr',
+        columnGap: 24,
+        rowGap,
+        margin: 0,
+      }}
+    >
       {items.map((item, i) => (
-        <div key={i} className="contents">
-          <dt className={classes(labelStyles, 'self-start pt-0.5 whitespace-nowrap')}>
+        <div key={i} style={{ display: 'contents' }}>
+          <dt
+            style={{
+              ...labelStyle,
+              alignSelf: 'start',
+              paddingTop: 2,
+              whiteSpace: 'nowrap',
+            }}
+          >
             {item.label}
           </dt>
-          <dd className="flex flex-col">
-            <span className={valueStyles}>{item.value}</span>
-            {item.hint && <span className="text-xs text-slate-500 mt-0.5">{item.hint}</span>}
+          <dd style={{ display: 'flex', flexDirection: 'column', margin: 0 }}>
+            <span style={valueStyle}>{item.value}</span>
+            {item.hint && <span style={{ ...hintStyle, marginTop: 2 }}>{item.hint}</span>}
           </dd>
         </div>
       ))}
