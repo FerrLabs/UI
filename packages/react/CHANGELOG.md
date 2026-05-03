@@ -4,6 +4,12 @@ All notable changes to `react` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.8.2] - 2026-05-03
+
+### Bug Fixes
+
+- fix(react): keep AppShell project switcher visible (icon-only) when sidebar is collapsed (#59)
+
 ## [0.8.1] - 2026-05-03
 
 ### Bug Fixes
