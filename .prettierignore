@@ -1,0 +1,8 @@
+node_modules
+dist
+build
+.astro
+.vite
+pnpm-lock.yaml
+*.tsbuildinfo
+CHANGELOG.md
