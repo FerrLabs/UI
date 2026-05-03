@@ -1,4 +1,10 @@
-import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
+import {
+  forwardRef,
+  useId,
+  type CSSProperties,
+  type InputHTMLAttributes,
+  type ReactNode,
+} from 'react';
 
 export interface SliderProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -14,10 +20,6 @@ export interface SliderProps extends Omit<
   format?: (value: number) => ReactNode;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
-
 export const Slider = forwardRef<HTMLInputElement, SliderProps>(function Slider(
   {
     value,
@@ -31,46 +33,115 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(function Slider(
     className,
     disabled,
     id,
+    style,
     ...rest
   },
   ref,
 ) {
+  const internalId = useId();
+  const inputId = id ?? internalId;
   const pct = ((value - min) / (max - min)) * 100;
+  const accent = 'var(--color-accent, var(--color-fg, #1e293b))';
+  const track = 'var(--color-rule, rgba(30, 41, 59, 0.14))';
+
+  const containerStyle: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    width: '100%',
+    ...style,
+  };
+
+  const inputStyle: CSSProperties = {
+    width: '100%',
+    height: 6,
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    appearance: 'none',
+    WebkitAppearance: 'none',
+    borderRadius: 999,
+    outline: 'none',
+    opacity: disabled ? 0.5 : 1,
+    background: `linear-gradient(to right, ${accent} 0%, ${accent} ${pct}%, ${track} ${pct}%, ${track} 100%)`,
+  };
 
   return (
-    <div className={classes('flex flex-col gap-2 w-full', className)}>
+    <div className={className} style={containerStyle}>
       {(label || showValue) && (
-        <div className="flex items-center justify-between text-xs">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           {label && (
-            <label htmlFor={id} className="font-medium text-slate-700">
+            <label
+              htmlFor={inputId}
+              className="mono"
+              style={{
+                fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+                fontSize: 11,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                fontWeight: 500,
+                color: 'var(--color-ink-3, #64748b)',
+              }}
+            >
               {label}
             </label>
           )}
           {showValue && (
-            <span className="font-mono text-slate-600">{format ? format(value) : value}</span>
+            <span
+              className="mono"
+              style={{
+                fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+                fontSize: 12,
+                color: 'var(--color-ink-2, #475569)',
+              }}
+            >
+              {format ? format(value) : value}
+            </span>
           )}
         </div>
       )}
       <input
         ref={ref}
         type="range"
-        id={id}
+        id={inputId}
         min={min}
         max={max}
         step={step}
         value={value}
         disabled={disabled}
         onChange={(e) => onChange(Number(e.currentTarget.value))}
-        className={classes(
-          'w-full h-2 cursor-pointer appearance-none rounded-full bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:opacity-50 disabled:cursor-not-allowed',
-          '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-accent [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-sm',
-          '[&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-accent [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0',
-        )}
-        style={{
-          background: `linear-gradient(to right, var(--color-accent) 0%, var(--color-accent) ${pct}%, rgb(226 232 240) ${pct}%, rgb(226 232 240) 100%)`,
-        }}
+        style={inputStyle}
         {...rest}
       />
+      <style>{`
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #ffffff;
+          border: 1px solid var(--color-rule-strong, rgba(30, 41, 59, 0.24));
+          box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18);
+          cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #ffffff;
+          border: 1px solid var(--color-rule-strong, rgba(30, 41, 59, 0.24));
+          box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18);
+          cursor: pointer;
+        }
+        input[type="range"]:focus-visible {
+          box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-accent, var(--color-fg, #1e293b)) 14%, transparent);
+        }
+      `}</style>
     </div>
   );
 });

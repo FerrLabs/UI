@@ -1,4 +1,4 @@
-import { useRef, useState, type DragEvent, type ReactNode } from 'react';
+import { useRef, useState, type CSSProperties, type DragEvent, type ReactNode } from 'react';
 
 export interface FileUploadProps {
   onFiles: (files: File[]) => void;
@@ -9,10 +9,7 @@ export interface FileUploadProps {
   label?: ReactNode;
   hint?: ReactNode;
   className?: string;
-}
-
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
+  style?: CSSProperties;
 }
 
 function formatBytes(b: number): string {
@@ -31,9 +28,11 @@ export function FileUpload({
   label,
   hint,
   className,
+  style,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [focused, setFocused] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   function handle(files: FileList | null) {
@@ -57,12 +56,53 @@ export function FileUpload({
     handle(e.dataTransfer.files);
   }
 
+  const accent = 'var(--color-accent, var(--color-fg, #1e293b))';
+  const dropzoneStyle: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    padding: '40px 24px',
+    borderRadius: 12,
+    border: dragOver
+      ? `2px dashed ${accent}`
+      : '2px dashed var(--color-rule-strong, rgba(30, 41, 59, 0.24))',
+    background: dragOver ? `color-mix(in oklab, ${accent} 5%, transparent)` : 'transparent',
+    color: dragOver ? accent : 'var(--color-ink-2, #475569)',
+    fontFamily: 'var(--font-serif, "Fraunces", Georgia, ui-serif, serif)',
+    fontSize: 14,
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    opacity: disabled ? 0.5 : 1,
+    pointerEvents: disabled ? 'none' : undefined,
+    outline: 'none',
+    boxShadow: focused ? `0 0 0 4px color-mix(in oklab, ${accent} 14%, transparent)` : 'none',
+    transition: 'border-color 160ms, background 160ms, color 160ms, box-shadow 140ms',
+  };
+
   return (
-    <div className={classes('flex flex-col gap-1.5', className)}>
-      {label && <span className="text-xs font-medium tracking-wide text-slate-700">{label}</span>}
+    <div
+      className={className}
+      style={{ display: 'flex', flexDirection: 'column', gap: 6, ...style }}
+    >
+      {label && (
+        <span
+          className="mono"
+          style={{
+            fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+            fontSize: 10.5,
+            fontWeight: 500,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: 'var(--color-ink-3, #64748b)',
+          }}
+        >
+          {label}
+        </span>
+      )}
       <div
         role="button"
-        tabIndex={0}
+        tabIndex={disabled ? -1 : 0}
         aria-disabled={disabled}
         onClick={() => !disabled && inputRef.current?.click()}
         onKeyDown={(e) => {
@@ -71,6 +111,8 @@ export function FileUpload({
             inputRef.current?.click();
           }
         }}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         onDragOver={(e) => {
           if (disabled) return;
           e.preventDefault();
@@ -78,13 +120,17 @@ export function FileUpload({
         }}
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
-        className={classes(
-          'flex flex-col items-center justify-center gap-2 px-6 py-10 rounded-lg border-2 border-dashed text-sm cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
-          dragOver
-            ? 'border-accent bg-accent/5 text-accent'
-            : 'border-slate-300 text-slate-600 hover:border-slate-400 hover:bg-slate-50',
-          disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
-        )}
+        style={dropzoneStyle}
+        onMouseEnter={(e) => {
+          if (disabled || dragOver) return;
+          e.currentTarget.style.borderColor = 'var(--color-ink-3, #64748b)';
+          e.currentTarget.style.background = 'var(--color-paper-2, #f4f4f2)';
+        }}
+        onMouseLeave={(e) => {
+          if (disabled || dragOver) return;
+          e.currentTarget.style.borderColor = 'var(--color-rule-strong, rgba(30, 41, 59, 0.24))';
+          e.currentTarget.style.background = 'transparent';
+        }}
       >
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
           <path
@@ -95,13 +141,21 @@ export function FileUpload({
             strokeLinejoin="round"
           />
         </svg>
-        <div className="text-center">
-          <div className="font-medium">
-            <span className="text-accent">Click to upload</span>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontWeight: 500 }}>
+            <span style={{ color: accent }}>Click to upload</span>
             {' or drag and drop'}
           </div>
           {(accept || maxSizeMB) && (
-            <div className="mt-1 text-xs text-slate-500">
+            <div
+              className="mono"
+              style={{
+                marginTop: 4,
+                fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+                fontSize: 11,
+                color: 'var(--color-ink-3, #64748b)',
+              }}
+            >
               {accept && <span>{accept.replace(/\./g, '').toUpperCase()}</span>}
               {accept && maxSizeMB && <span> · </span>}
               {maxSizeMB && <span>up to {formatBytes(maxSizeMB * 1024 * 1024)}</span>}
@@ -114,12 +168,22 @@ export function FileUpload({
           accept={accept}
           multiple={multiple}
           disabled={disabled}
-          className="hidden"
+          style={{ display: 'none' }}
           onChange={(e) => handle(e.currentTarget.files)}
         />
       </div>
-      {hint && !error && <p className="text-xs text-slate-500">{hint}</p>}
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {hint && !error && (
+        <p
+          style={{
+            margin: 0,
+            fontSize: 12,
+            color: 'var(--color-ink-3, #64748b)',
+          }}
+        >
+          {hint}
+        </p>
+      )}
+      {error && <p style={{ margin: 0, fontSize: 12, color: '#dc2626' }}>{error}</p>}
     </div>
   );
 }

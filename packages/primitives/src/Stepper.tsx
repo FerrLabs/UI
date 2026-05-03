@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 export interface Step {
   id: string;
@@ -11,53 +11,123 @@ export interface StepperProps {
   current: number;
   orientation?: 'horizontal' | 'vertical';
   className?: string;
+  style?: CSSProperties;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
+const accent = 'var(--color-accent, var(--color-fg, #1e293b))';
+const rule = 'var(--color-rule, rgba(30, 41, 59, 0.14))';
+
+function bubbleStyle(state: 'completed' | 'active' | 'future', size = 28): CSSProperties {
+  const base: CSSProperties = {
+    width: size,
+    height: size,
+    borderRadius: '50%',
+    display: 'grid',
+    placeItems: 'center',
+    fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+    fontSize: 12,
+    fontWeight: 500,
+    flexShrink: 0,
+  };
+  if (state === 'completed') {
+    return { ...base, background: accent, color: '#ffffff' };
+  }
+  if (state === 'active') {
+    return {
+      ...base,
+      background: 'var(--color-card, #ffffff)',
+      color: accent,
+      border: `2px solid ${accent}`,
+    };
+  }
+  return {
+    ...base,
+    background: 'var(--color-paper-2, #f4f4f2)',
+    color: 'var(--color-ink-3, #64748b)',
+  };
 }
 
-export function Stepper({ steps, current, orientation = 'horizontal', className }: StepperProps) {
+function labelStyle(state: 'completed' | 'active' | 'future'): CSSProperties {
+  return {
+    fontFamily: 'var(--font-serif, "Fraunces", Georgia, ui-serif, serif)',
+    fontSize: 14,
+    fontWeight: 500,
+    lineHeight: 1.3,
+    color:
+      state === 'active'
+        ? 'var(--color-ink, #1e293b)'
+        : state === 'completed'
+          ? 'var(--color-ink-2, #475569)'
+          : 'var(--color-ink-3, #64748b)',
+  };
+}
+
+const descriptionStyle: CSSProperties = {
+  marginTop: 2,
+  fontSize: 12,
+  lineHeight: 1.3,
+  color: 'var(--color-ink-3, #64748b)',
+  fontFamily: 'var(--font-serif, "Fraunces", Georgia, ui-serif, serif)',
+};
+
+export function Stepper({
+  steps,
+  current,
+  orientation = 'horizontal',
+  className,
+  style,
+}: StepperProps) {
   if (orientation === 'vertical') {
     return (
-      <ol className={classes('flex flex-col gap-4', className)}>
+      <ol
+        className={className}
+        style={{
+          listStyle: 'none',
+          padding: 0,
+          margin: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 16,
+          ...style,
+        }}
+      >
         {steps.map((step, i) => {
           const completed = i < current;
           const active = i === current;
+          const state: 'completed' | 'active' | 'future' = completed
+            ? 'completed'
+            : active
+              ? 'active'
+              : 'future';
           return (
-            <li key={step.id} className="relative flex gap-3 pb-4 last:pb-0">
+            <li
+              key={step.id}
+              style={{
+                position: 'relative',
+                display: 'flex',
+                gap: 12,
+                paddingBottom: i < steps.length - 1 ? 16 : 0,
+              }}
+            >
               {i < steps.length - 1 && (
                 <span
                   aria-hidden
-                  className={classes(
-                    'absolute left-3 top-7 bottom-0 w-px',
-                    completed ? 'bg-accent' : 'bg-slate-200',
-                  )}
+                  style={{
+                    position: 'absolute',
+                    left: 13,
+                    top: 30,
+                    bottom: 0,
+                    width: 1,
+                    background: completed ? accent : rule,
+                  }}
                 />
               )}
-              <span
-                aria-hidden
-                className={classes(
-                  'relative shrink-0 size-6 rounded-full grid place-items-center text-[11px] font-medium ring-2 ring-white',
-                  completed && 'bg-accent text-white',
-                  active && !completed && 'bg-white text-accent border-2 border-accent',
-                  !active && !completed && 'bg-slate-100 text-slate-500',
-                )}
-              >
+              <span aria-hidden style={bubbleStyle(state, 28)}>
                 {completed ? '✓' : i + 1}
               </span>
-              <div className="flex-1 min-w-0">
-                <div
-                  className={classes(
-                    'text-sm font-medium',
-                    active ? 'text-slate-900' : completed ? 'text-slate-700' : 'text-slate-500',
-                  )}
-                >
-                  {step.label}
-                </div>
-                {step.description && (
-                  <div className="mt-0.5 text-xs text-slate-500">{step.description}</div>
-                )}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={labelStyle(state)}>{step.label}</div>
+                {step.description && <div style={descriptionStyle}>{step.description}</div>}
               </div>
             </li>
           );
@@ -67,47 +137,65 @@ export function Stepper({ steps, current, orientation = 'horizontal', className 
   }
 
   return (
-    <ol className={classes('flex items-start gap-2 w-full', className)}>
+    <ol
+      className={className}
+      style={{
+        listStyle: 'none',
+        padding: 0,
+        margin: 0,
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 8,
+        width: '100%',
+        ...style,
+      }}
+    >
       {steps.map((step, i) => {
         const completed = i < current;
         const active = i === current;
+        const state: 'completed' | 'active' | 'future' = completed
+          ? 'completed'
+          : active
+            ? 'active'
+            : 'future';
         return (
-          <li key={step.id} className="flex items-start gap-2 flex-1 min-w-0">
-            <div className="flex flex-col items-center gap-1.5 shrink-0">
-              <span
-                aria-hidden
-                className={classes(
-                  'size-7 rounded-full grid place-items-center text-xs font-medium',
-                  completed && 'bg-accent text-white',
-                  active && !completed && 'bg-white text-accent border-2 border-accent',
-                  !active && !completed && 'bg-slate-100 text-slate-500',
-                )}
-              >
+          <li
+            key={step.id}
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 8,
+              flex: 1,
+              minWidth: 0,
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 6,
+                flexShrink: 0,
+              }}
+            >
+              <span aria-hidden style={bubbleStyle(state, 28)}>
                 {completed ? '✓' : i + 1}
               </span>
             </div>
-            <div className="flex-1 min-w-0 pt-1">
-              <div
-                className={classes(
-                  'text-sm font-medium leading-tight',
-                  active ? 'text-slate-900' : completed ? 'text-slate-700' : 'text-slate-500',
-                )}
-              >
-                {step.label}
-              </div>
-              {step.description && (
-                <div className="mt-0.5 text-xs text-slate-500 leading-tight">
-                  {step.description}
-                </div>
-              )}
+            <div style={{ flex: 1, minWidth: 0, paddingTop: 4 }}>
+              <div style={labelStyle(state)}>{step.label}</div>
+              {step.description && <div style={descriptionStyle}>{step.description}</div>}
             </div>
             {i < steps.length - 1 && (
               <span
                 aria-hidden
-                className={classes(
-                  'mt-3 h-px flex-1 self-start',
-                  completed ? 'bg-accent' : 'bg-slate-200',
-                )}
+                style={{
+                  marginTop: 14,
+                  height: 1,
+                  flex: 1,
+                  alignSelf: 'flex-start',
+                  background: completed ? accent : rule,
+                }}
               />
             )}
           </li>

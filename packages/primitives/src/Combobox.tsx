@@ -1,4 +1,12 @@
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 
 export interface ComboboxOption<T = string> {
   value: T;
@@ -16,11 +24,8 @@ export interface ComboboxProps<T = string> {
   disabled?: boolean;
   invalid?: boolean;
   className?: string;
+  style?: CSSProperties;
   emptyMessage?: ReactNode;
-}
-
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
 }
 
 export function Combobox<T = string>({
@@ -31,12 +36,14 @@ export function Combobox<T = string>({
   disabled = false,
   invalid = false,
   className,
+  style,
   emptyMessage = 'No results.',
 }: ComboboxProps<T>) {
   const id = useId();
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
+  const [focused, setFocused] = useState(false);
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -85,8 +92,42 @@ export function Combobox<T = string>({
     }
   }
 
+  const errorColor = '#dc2626';
+  const accent = 'var(--color-accent, var(--color-fg, #1e293b))';
+  const ringShadow = invalid
+    ? `0 0 0 4px color-mix(in oklab, ${errorColor} 14%, transparent)`
+    : `0 0 0 4px color-mix(in oklab, ${accent} 14%, transparent)`;
+  const borderColor = invalid
+    ? errorColor
+    : focused
+      ? accent
+      : 'var(--color-rule-strong, rgba(30, 41, 59, 0.24))';
+
+  const inputStyle: CSSProperties = {
+    width: '100%',
+    boxSizing: 'border-box',
+    height: 40,
+    padding: '0 32px 0 14px',
+    border: `1px solid ${borderColor}`,
+    borderRadius: 8,
+    background: disabled ? 'var(--color-paper-2, #f4f4f2)' : 'var(--color-card, #ffffff)',
+    fontFamily: 'var(--font-serif, "Fraunces", Georgia, ui-serif, serif)',
+    fontWeight: 400,
+    fontSize: 14,
+    lineHeight: 1.4,
+    color: disabled ? 'var(--color-ink-3, #64748b)' : 'var(--color-ink, #1e293b)',
+    outline: 'none',
+    cursor: disabled ? 'not-allowed' : 'text',
+    transition: 'border-color 140ms, box-shadow 140ms',
+    boxShadow: focused ? ringShadow : 'none',
+  };
+
   return (
-    <div ref={containerRef} className={classes('relative w-full', className)}>
+    <div
+      ref={containerRef}
+      className={className}
+      style={{ position: 'relative', width: '100%', ...style }}
+    >
       <input
         ref={inputRef}
         type="text"
@@ -110,16 +151,25 @@ export function Combobox<T = string>({
           setOpen(true);
           setActiveIndex(0);
         }}
-        onFocus={() => setOpen(true)}
+        onFocus={() => {
+          setFocused(true);
+          setOpen(true);
+        }}
+        onBlur={() => setFocused(false)}
         onKeyDown={handleKey}
-        className={classes(
-          'w-full h-10 px-3 pr-8 rounded-md bg-white text-sm text-slate-900 placeholder:text-slate-400 border border-slate-300 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/30 disabled:bg-slate-50 disabled:cursor-not-allowed',
-          invalid && 'border-red-500 focus:border-red-500 focus:ring-red-500/30',
-        )}
+        style={inputStyle}
       />
       <span
         aria-hidden
-        className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+        style={{
+          position: 'absolute',
+          right: 10,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          color: 'var(--color-ink-3, #64748b)',
+          pointerEvents: 'none',
+          display: 'inline-flex',
+        }}
       >
         <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
           <path
@@ -135,10 +185,33 @@ export function Combobox<T = string>({
         <ul
           id={`${id}-list`}
           role="listbox"
-          className="absolute z-30 mt-1 left-0 right-0 max-h-60 overflow-y-auto bg-white shadow-lg ring-1 ring-slate-200 rounded-md p-1"
+          style={{
+            position: 'absolute',
+            zIndex: 30,
+            top: 'calc(100% + 4px)',
+            left: 0,
+            right: 0,
+            maxHeight: 240,
+            overflowY: 'auto',
+            margin: 0,
+            padding: 4,
+            listStyle: 'none',
+            background: 'var(--color-card, #ffffff)',
+            border: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+            borderRadius: 8,
+            boxShadow: '0 8px 24px rgba(15, 23, 42, 0.12)',
+          }}
         >
           {filtered.length === 0 ? (
-            <li className="px-3 py-2 text-sm text-slate-500">{emptyMessage}</li>
+            <li
+              style={{
+                padding: '8px 12px',
+                fontSize: 14,
+                color: 'var(--color-ink-3, #64748b)',
+              }}
+            >
+              {emptyMessage}
+            </li>
           ) : (
             filtered.map((opt, i) => {
               const selected = selectedOption?.value === opt.value;
@@ -155,15 +228,44 @@ export function Combobox<T = string>({
                     commit(opt);
                   }}
                   onMouseEnter={() => setActiveIndex(i)}
-                  className={classes(
-                    'flex items-baseline gap-2 px-3 py-1.5 rounded text-sm cursor-pointer',
-                    active && 'bg-slate-100',
-                    selected && 'text-accent',
-                    opt.disabled && 'opacity-50 cursor-not-allowed',
-                  )}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    gap: 8,
+                    padding: '6px 12px',
+                    borderRadius: 6,
+                    fontSize: 14,
+                    fontFamily: 'var(--font-serif, "Fraunces", Georgia, ui-serif, serif)',
+                    cursor: opt.disabled ? 'not-allowed' : 'pointer',
+                    opacity: opt.disabled ? 0.5 : 1,
+                    background: active ? 'var(--color-paper-2, #f4f4f2)' : 'transparent',
+                    color: selected ? accent : 'var(--color-ink, #1e293b)',
+                    transition: 'background 120ms',
+                  }}
                 >
-                  <span className="flex-1 min-w-0 truncate">{opt.label}</span>
-                  {opt.hint && <span className="text-xs text-slate-500">{opt.hint}</span>}
+                  <span
+                    style={{
+                      flex: 1,
+                      minWidth: 0,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {opt.label}
+                  </span>
+                  {opt.hint && (
+                    <span
+                      className="mono"
+                      style={{
+                        fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+                        fontSize: 11,
+                        color: 'var(--color-ink-3, #64748b)',
+                      }}
+                    >
+                      {opt.hint}
+                    </span>
+                  )}
                 </li>
               );
             })
