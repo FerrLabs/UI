@@ -4,6 +4,12 @@ All notable changes to `react` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.8.1] - 2026-05-03
+
+### Bug Fixes
+
+- fix(react): rebalance FerrLabs [FL] mark so the closing bracket no longer overlaps FL (#57)
+
 ## [0.8.0] - 2026-05-02
 
 ### Features
