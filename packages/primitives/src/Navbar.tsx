@@ -1,49 +1,92 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 export interface NavbarProps {
+  /** Brand cluster — typically a logo (SVG) + Fraunces wordmark anchored to `/`. */
   brand?: ReactNode;
+  /** Centre nav (`<NavLink>`s) — mono uppercase links with underline on hover. */
   links?: ReactNode;
+  /** Right-side action cluster (lang pill, GitHub button, sign-in). */
   actions?: ReactNode;
+  /** When true, sticks to the top with a backdrop blur. */
   sticky?: boolean;
-  variant?: 'light' | 'dark';
   className?: string;
+  style?: CSSProperties;
 }
 
 function classes(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(' ');
 }
 
-const variantStyles = {
-  light: 'bg-white text-slate-900 border-b border-slate-200',
-  dark: 'bg-slate-900 text-white border-b border-slate-800',
-} as const;
-
-export function Navbar({
-  brand,
-  links,
-  actions,
-  sticky = false,
-  variant = 'light',
-  className,
-}: NavbarProps) {
+/**
+ * Editorial site navbar — paper background + backdrop blur, 72px tall,
+ * 1440px max-width, mono uppercase links. Mirrors the holding ferrlabs.com
+ * navbar at `FerrLabs-Cloud/site/src/components/Navbar.astro`.
+ */
+export function Navbar({ brand, links, actions, sticky = true, className, style }: NavbarProps) {
   return (
     <header
-      className={classes(
-        'w-full',
-        sticky && 'sticky top-0 z-30 backdrop-blur-md',
-        sticky && variant === 'light' && 'bg-white/85',
-        sticky && variant === 'dark' && 'bg-slate-900/85',
-        !sticky && variantStyles[variant],
-        sticky && variantStyles[variant].replace(/^bg-\S+\s/, ''),
-        className,
-      )}
+      className={className}
+      style={{
+        position: sticky ? 'sticky' : 'relative',
+        top: sticky ? 0 : undefined,
+        zIndex: 50,
+        background: 'rgba(250, 248, 244, 0.85)',
+        WebkitBackdropFilter: sticky ? 'saturate(140%) blur(14px)' : undefined,
+        backdropFilter: sticky ? 'saturate(140%) blur(14px)' : undefined,
+        borderBottom: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+        ...style,
+      }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center gap-4">
-        <div className="flex items-center gap-3 min-w-0 shrink-0">{brand}</div>
-        {links && (
-          <nav className="hidden md:flex items-center gap-1 ml-4 flex-1 min-w-0">{links}</nav>
+      <div
+        style={{
+          maxWidth: 1440,
+          margin: '0 auto',
+          padding: '0 40px',
+          height: 72,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 24,
+        }}
+      >
+        {brand && (
+          <a
+            href="/"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              color: 'var(--color-ink, #1e293b)',
+              textDecoration: 'none',
+              letterSpacing: '-0.01em',
+            }}
+          >
+            {brand}
+          </a>
         )}
-        {actions && <div className="ml-auto flex items-center gap-2 shrink-0">{actions}</div>}
+        {links && (
+          <nav
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 28,
+              marginLeft: 'auto',
+            }}
+          >
+            {links}
+          </nav>
+        )}
+        {actions && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              marginLeft: links ? 0 : 'auto',
+            }}
+          >
+            {actions}
+          </div>
+        )}
       </div>
     </header>
   );
@@ -53,37 +96,49 @@ export interface NavLinkProps {
   href: string;
   children: ReactNode;
   active?: boolean;
-  variant?: 'light' | 'dark';
   external?: boolean;
+  className?: string;
 }
 
-export function NavLink({
-  href,
-  children,
-  active = false,
-  variant = 'light',
-  external,
-}: NavLinkProps) {
-  const base =
-    'px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-150 cursor-pointer';
-  const styles =
-    variant === 'dark'
-      ? active
-        ? 'bg-white/10 text-white'
-        : 'text-slate-300 hover:text-white hover:bg-white/5'
-      : active
-        ? 'bg-slate-900/5 text-slate-900'
-        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-900/5';
-
+/**
+ * Editorial navbar link — mono uppercase 12px, with an underline that
+ * scales-in on hover. Same pattern as the real ferrlabs.com nav.
+ */
+export function NavLink({ href, children, active = false, external, className }: NavLinkProps) {
   return (
     <a
       href={href}
-      className={`${base} ${styles}`}
       target={external ? '_blank' : undefined}
       rel={external ? 'noreferrer' : undefined}
       aria-current={active ? 'page' : undefined}
+      className={classes('mono', className)}
+      style={{
+        position: 'relative',
+        fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+        fontSize: 12,
+        letterSpacing: '0.06em',
+        textTransform: 'uppercase',
+        color: active ? 'var(--color-ink, #1e293b)' : 'var(--color-ink-2, #475569)',
+        textDecoration: 'none',
+        padding: '6px 0',
+        cursor: 'pointer',
+        transition: 'color 180ms ease',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.color = 'var(--color-ink, #1e293b)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.color = active
+          ? 'var(--color-ink, #1e293b)'
+          : 'var(--color-ink-2, #475569)';
+      }}
     >
       {children}
+      {external && (
+        <span aria-hidden style={{ marginLeft: 6, opacity: 0.6 }}>
+          ↗
+        </span>
+      )}
     </a>
   );
 }

@@ -1,6 +1,6 @@
-import { Avatar, Button } from '@ferrlabs/ui-react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Navbar, NavLink } from '@ferrlabs/ui-primitives';
+import { Button } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Navbar> = {
   title: 'Layout/Navbar',
@@ -11,81 +11,188 @@ const meta: Meta<typeof Navbar> = {
 export default meta;
 type Story = StoryObj<typeof Navbar>;
 
-const Brand = () => (
-  <a href="/" className="flex items-center gap-2 cursor-pointer">
-    <span className="font-mono text-xs opacity-50">[</span>
-    <span className="font-bold tracking-tight">FerrLabs</span>
-    <span className="font-mono text-xs opacity-50">]</span>
-  </a>
+const FerrLabsBrand = () => (
+  <>
+    <svg width="48" height="28" viewBox="0 0 48 28" aria-hidden="true">
+      <text
+        x="0"
+        y="22"
+        fontFamily="DM Mono, ui-monospace, monospace"
+        fontSize="10"
+        fill="currentColor"
+        opacity="0.5"
+      >
+        [
+      </text>
+      <text
+        x="10"
+        y="22"
+        fontFamily="Fraunces, Georgia, serif"
+        fontWeight="900"
+        fontSize="22"
+        fill="currentColor"
+        letterSpacing="-1"
+      >
+        FL
+      </text>
+      <text
+        x="40"
+        y="22"
+        fontFamily="DM Mono, ui-monospace, monospace"
+        fontSize="10"
+        fill="currentColor"
+        opacity="0.5"
+      >
+        ]
+      </text>
+    </svg>
+    <span
+      style={{
+        fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
+        fontWeight: 900,
+        fontSize: 22,
+        letterSpacing: '-0.02em',
+      }}
+    >
+      ferrlabs
+    </span>
+  </>
 );
 
-export const Light: Story = {
+const LangPill = ({ active = 'en' as 'en' | 'fr' }) => (
+  <div
+    className="mono"
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      border: '1px solid var(--color-rule)',
+      borderRadius: 999,
+      overflow: 'hidden',
+    }}
+  >
+    {(['en', 'fr'] as const).map((lang) => (
+      <a
+        key={lang}
+        href={`#${lang}`}
+        style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: 11,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          padding: '6px 12px',
+          textDecoration: 'none',
+          color: active === lang ? 'var(--color-paper)' : 'var(--color-ink-2)',
+          background: active === lang ? 'var(--color-ink)' : 'transparent',
+          transition: 'background 180ms, color 180ms',
+        }}
+      >
+        {lang}
+      </a>
+    ))}
+  </div>
+);
+
+/**
+ * 1:1 mirror of the real ferrlabs.com navbar — `[FL]` SVG + ferrlabs
+ * wordmark, Products / About links, EN/FR lang pill, GitHub button.
+ */
+export const FerrLabsHolding: Story = {
   args: {
-    brand: <Brand />,
+    brand: <FerrLabsBrand />,
     links: (
       <>
-        <NavLink href="#products" active>
-          Products
-        </NavLink>
-        <NavLink href="#pricing">Pricing</NavLink>
-        <NavLink href="#docs">Docs</NavLink>
-        <NavLink href="#blog">Blog</NavLink>
+        <NavLink href="#products">Products</NavLink>
+        <NavLink href="#about">About</NavLink>
       </>
     ),
     actions: (
       <>
-        <Button variant="ghost" size="sm">
+        <LangPill active="en" />
+        <Button as="a" href="https://github.com/FerrLabs" size="sm" variant="ghost">
+          GitHub ↗
+        </Button>
+      </>
+    ),
+  },
+};
+
+export const Minimal: Story = {
+  args: {
+    brand: <FerrLabsBrand />,
+    actions: <LangPill />,
+  },
+};
+
+export const NoSticky: Story = {
+  args: {
+    sticky: false,
+    brand: <FerrLabsBrand />,
+    links: (
+      <>
+        <NavLink href="#a">Section A</NavLink>
+        <NavLink href="#b">Section B</NavLink>
+        <NavLink href="#c" active>
+          Section C
+        </NavLink>
+      </>
+    ),
+  },
+};
+
+export const ProductSite: Story = {
+  args: {
+    brand: (
+      <>
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 28,
+            height: 28,
+            borderRadius: 6,
+            background: 'var(--color-ferrflow-orange)',
+            color: '#fff',
+            fontWeight: 700,
+            fontSize: 13,
+          }}
+        >
+          F
+        </span>
+        <span
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontWeight: 900,
+            fontSize: 22,
+            letterSpacing: '-0.02em',
+          }}
+        >
+          ferrflow
+        </span>
+      </>
+    ),
+    links: (
+      <>
+        <NavLink href="#features" active>
+          Features
+        </NavLink>
+        <NavLink href="#docs">Docs</NavLink>
+        <NavLink href="#pricing">Pricing</NavLink>
+        <NavLink href="#changelog">Changelog</NavLink>
+      </>
+    ),
+    actions: (
+      <>
+        <LangPill />
+        <Button
+          as="a"
+          href="https://app.ferrflow.com"
+          size="sm"
+          accent="var(--color-ferrflow-orange)"
+        >
           Sign in
         </Button>
-        <Button size="sm">Create org</Button>
       </>
     ),
   },
-};
-
-export const Dark: Story = {
-  args: {
-    variant: 'dark',
-    brand: <Brand />,
-    links: (
-      <>
-        <NavLink href="#products" variant="dark" active>
-          Products
-        </NavLink>
-        <NavLink href="#pricing" variant="dark">
-          Pricing
-        </NavLink>
-        <NavLink href="#docs" variant="dark">
-          Docs
-        </NavLink>
-      </>
-    ),
-    actions: (
-      <>
-        <Avatar name="Ada Lovelace" size="sm" />
-      </>
-    ),
-  },
-};
-
-export const Sticky: Story = {
-  args: {
-    sticky: true,
-    brand: <Brand />,
-    links: (
-      <>
-        <NavLink href="#a">A</NavLink>
-        <NavLink href="#b">B</NavLink>
-      </>
-    ),
-    actions: <Button size="sm">Sign in</Button>,
-  },
-  render: (args) => (
-    <div>
-      <Navbar {...args} />
-      <div className="h-[200vh] p-6 text-sm text-slate-500">
-        Scroll — the navbar stays at the top.
-      </div>
-    </div>
-  ),
 };
