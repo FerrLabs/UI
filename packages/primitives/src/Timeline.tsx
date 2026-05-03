@@ -14,41 +14,105 @@ export interface TimelineProps {
   className?: string;
 }
 
-const dotStyles = {
-  neutral: 'bg-slate-300',
-  accent: 'bg-accent',
-  success: 'bg-emerald-500',
-  warning: 'bg-amber-500',
-  danger: 'bg-red-500',
+const dotColor = {
+  neutral: 'var(--color-ink-3)',
+  accent: 'var(--color-accent)',
+  success: '#10b981',
+  warning: '#f59e0b',
+  danger: '#dc2626',
 } as const;
-
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
 
 export function Timeline({ events, className }: TimelineProps) {
   return (
-    <ol className={classes('relative flex flex-col gap-5', className)}>
-      <span aria-hidden className="absolute left-[7px] top-1 bottom-1 w-px bg-slate-200" />
+    <ol
+      className={className}
+      style={{
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 20,
+        listStyle: 'none',
+        padding: 0,
+        margin: 0,
+      }}
+    >
+      <span
+        aria-hidden
+        style={{
+          position: 'absolute',
+          left: 7,
+          top: 4,
+          bottom: 4,
+          width: 1,
+          background: 'var(--color-rule)',
+        }}
+      />
       {events.map((event) => {
         const variant = event.variant ?? 'neutral';
         return (
-          <li key={event.id} className="relative pl-8">
+          <li key={event.id} style={{ position: 'relative', paddingLeft: 32 }}>
             <span
               aria-hidden
-              className={classes(
-                'absolute left-0 top-1 size-3.5 rounded-full ring-2 ring-white grid place-items-center text-[8px] text-white',
-                dotStyles[variant],
-              )}
+              style={{
+                position: 'absolute',
+                left: 0,
+                top: 4,
+                width: 14,
+                height: 14,
+                borderRadius: 999,
+                background: dotColor[variant],
+                boxShadow: '0 0 0 2px var(--color-card)',
+                display: 'grid',
+                placeItems: 'center',
+                fontSize: 8,
+                color: '#fff',
+              }}
             >
               {event.icon}
             </span>
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="text-sm font-medium text-slate-900">{event.title}</span>
-              {event.meta && <span className="text-xs text-slate-500">{event.meta}</span>}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: 8,
+                flexWrap: 'wrap',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--font-display, var(--font-serif))',
+                  fontWeight: 700,
+                  fontSize: 14,
+                  color: 'var(--color-ink)',
+                }}
+              >
+                {event.title}
+              </span>
+              {event.meta && (
+                <span
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 11,
+                    letterSpacing: '0.06em',
+                    color: 'var(--color-ink-3)',
+                  }}
+                >
+                  {event.meta}
+                </span>
+              )}
             </div>
             {event.description && (
-              <p className="mt-1 text-sm text-slate-600 leading-relaxed">{event.description}</p>
+              <p
+                style={{
+                  marginTop: 4,
+                  marginBottom: 0,
+                  fontSize: 13,
+                  color: 'var(--color-ink-2)',
+                  lineHeight: 1.55,
+                }}
+              >
+                {event.description}
+              </p>
             )}
           </li>
         );

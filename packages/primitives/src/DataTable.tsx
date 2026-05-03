@@ -1,4 +1,4 @@
-import { useMemo, useState, type Key, type ReactNode } from 'react';
+import { useMemo, useState, type CSSProperties, type Key, type ReactNode } from 'react';
 
 export interface Column<Row> {
   key: string;
@@ -28,15 +28,8 @@ export interface DataTableProps<Row> {
   stickyHeader?: boolean;
 }
 
-const alignStyles = {
-  left: 'text-left',
-  right: 'text-right',
-  center: 'text-center',
-} as const;
-
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
+const SELECTED_BG = 'color-mix(in oklab, var(--color-accent) 6%, transparent)';
+const HOVER_BG = 'color-mix(in oklab, var(--color-ink) 4%, transparent)';
 
 export function DataTable<Row>({
   rows,
@@ -53,6 +46,7 @@ export function DataTable<Row>({
   stickyHeader,
 }: DataTableProps<Row>) {
   const [sort, setSort] = useState(initialSort);
+  const [hoverKey, setHoverKey] = useState<Key | null>(null);
 
   const sorted = useMemo(() => {
     if (!sort) return rows;
@@ -78,23 +72,43 @@ export function DataTable<Row>({
     ? sorted.some((r) => selection.selected.has(rowKey(r))) && !allSelected
     : false;
 
-  const cellPad = density === 'compact' ? 'px-3 py-1.5' : 'px-4 py-2.5';
-  const headerPad = density === 'compact' ? 'px-3 py-2' : 'px-4 py-3';
+  const cellPadding = density === 'compact' ? '6px 12px' : '10px 16px';
+  const headerPadding = density === 'compact' ? '8px 12px' : '12px 16px';
+
+  const containerStyle: CSSProperties = {
+    width: '100%',
+    overflowX: 'auto',
+    borderRadius: 10,
+    border: '1px solid var(--color-card-rule)',
+    background: 'var(--color-card)',
+  };
+
+  const tableStyle: CSSProperties = {
+    width: '100%',
+    borderCollapse: 'collapse',
+    fontSize: 14,
+    color: 'var(--color-ink)',
+  };
+
+  const theadStyle: CSSProperties = {
+    background: 'var(--color-paper-2)',
+    color: 'var(--color-ink-3)',
+    ...(stickyHeader ? { position: 'sticky', top: 0, zIndex: 10 } : null),
+  };
 
   return (
-    <div
-      className={classes(
-        'w-full overflow-x-auto rounded-lg ring-1 ring-slate-200 bg-white',
-        className,
-      )}
-    >
-      <table className="w-full text-sm border-collapse">
-        <thead
-          className={classes('bg-slate-50 text-slate-500', stickyHeader && 'sticky top-0 z-10')}
-        >
+    <div className={className} style={containerStyle}>
+      <table style={tableStyle}>
+        <thead style={theadStyle}>
           <tr>
             {selection && (
-              <th className={classes('w-10', headerPad)}>
+              <th
+                style={{
+                  width: 40,
+                  padding: headerPadding,
+                  borderBottom: '1px solid var(--color-rule)',
+                }}
+              >
                 <input
                   type="checkbox"
                   aria-label="Select all"
@@ -109,7 +123,12 @@ export function DataTable<Row>({
                       selection.onChange(new Set());
                     }
                   }}
-                  className="size-4 rounded border-slate-300 text-accent focus:ring-accent/40 cursor-pointer"
+                  style={{
+                    width: 16,
+                    height: 16,
+                    accentColor: 'var(--color-accent)',
+                    cursor: 'pointer',
+                  }}
                 />
               </th>
             )}
@@ -120,13 +139,20 @@ export function DataTable<Row>({
                 <th
                   key={col.key}
                   scope="col"
-                  className={classes(
-                    headerPad,
-                    'text-[11px] font-mono font-semibold uppercase tracking-wider whitespace-nowrap',
-                    alignStyles[col.align ?? 'left'],
-                    col.className,
-                  )}
-                  style={col.width ? { width: col.width } : undefined}
+                  className={col.className}
+                  style={{
+                    padding: headerPadding,
+                    borderBottom: '1px solid var(--color-rule)',
+                    textAlign: col.align ?? 'left',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 11,
+                    fontWeight: 600,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    whiteSpace: 'nowrap',
+                    color: 'var(--color-ink-3)',
+                    ...(col.width ? { width: col.width } : null),
+                  }}
                   aria-sort={
                     active ? (sort?.direction === 'asc' ? 'ascending' : 'descending') : undefined
                   }
@@ -134,7 +160,6 @@ export function DataTable<Row>({
                   {sortable ? (
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1 cursor-pointer hover:text-slate-900"
                       onClick={() =>
                         setSort((prev) =>
                           prev?.key === col.key
@@ -142,9 +167,25 @@ export function DataTable<Row>({
                             : { key: col.key, direction: 'asc' },
                         )
                       }
+                      onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-ink)')}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = 'inherit')}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 4,
+                        cursor: 'pointer',
+                        background: 'transparent',
+                        border: 'none',
+                        padding: 0,
+                        font: 'inherit',
+                        letterSpacing: 'inherit',
+                        textTransform: 'inherit',
+                        color: 'inherit',
+                        transition: 'color 120ms ease',
+                      }}
                     >
                       {col.header}
-                      <span aria-hidden className="text-slate-400">
+                      <span aria-hidden style={{ opacity: active ? 1 : 0.55 }}>
                         {active ? (sort?.direction === 'asc' ? '↑' : '↓') : '↕'}
                       </span>
                     </button>
@@ -156,14 +197,34 @@ export function DataTable<Row>({
             })}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 text-slate-800">
+        <tbody>
           {loading ? (
             Array.from({ length: loadingRows }).map((_, i) => (
               <tr key={`loading-${i}`}>
-                {selection && <td className={cellPad} />}
+                {selection && (
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      borderBottom: '1px solid var(--color-rule)',
+                    }}
+                  />
+                )}
                 {columns.map((col) => (
-                  <td key={col.key} className={cellPad}>
-                    <div className="h-4 rounded bg-slate-100 animate-pulse" />
+                  <td
+                    key={col.key}
+                    style={{
+                      padding: cellPadding,
+                      borderBottom: '1px solid var(--color-rule)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        height: 16,
+                        borderRadius: 4,
+                        background: 'var(--color-rule)',
+                        animation: 'pulse 1.6s ease-in-out infinite',
+                      }}
+                    />
                   </td>
                 ))}
               </tr>
@@ -172,7 +233,12 @@ export function DataTable<Row>({
             <tr>
               <td
                 colSpan={columns.length + (selection ? 1 : 0)}
-                className="py-12 text-center text-slate-500 text-sm"
+                style={{
+                  padding: '48px 16px',
+                  textAlign: 'center',
+                  color: 'var(--color-ink-3)',
+                  fontSize: 14,
+                }}
               >
                 {empty ?? 'No data.'}
               </td>
@@ -181,18 +247,33 @@ export function DataTable<Row>({
             sorted.map((row) => {
               const k = rowKey(row);
               const isSelected = selection?.selected.has(k) ?? false;
+              const isHovered = hoverKey === k;
+              const rowBg = isSelected
+                ? SELECTED_BG
+                : onRowClick && isHovered
+                  ? HOVER_BG
+                  : undefined;
               return (
                 <tr
                   key={k}
                   data-selected={isSelected || undefined}
-                  className={classes(
-                    onRowClick && 'cursor-pointer hover:bg-slate-50',
-                    isSelected && 'bg-accent/5',
-                  )}
                   onClick={onRowClick ? () => onRowClick(row) : undefined}
+                  onMouseEnter={onRowClick ? () => setHoverKey(k) : undefined}
+                  onMouseLeave={onRowClick ? () => setHoverKey(null) : undefined}
+                  style={{
+                    cursor: onRowClick ? 'pointer' : undefined,
+                    background: rowBg,
+                    transition: 'background 120ms ease',
+                  }}
                 >
                   {selection && (
-                    <td className={cellPad} onClick={(e) => e.stopPropagation()}>
+                    <td
+                      onClick={(e) => e.stopPropagation()}
+                      style={{
+                        padding: cellPadding,
+                        borderBottom: '1px solid var(--color-rule)',
+                      }}
+                    >
                       <input
                         type="checkbox"
                         aria-label="Select row"
@@ -203,14 +284,26 @@ export function DataTable<Row>({
                           else next.delete(k);
                           selection.onChange(next);
                         }}
-                        className="size-4 rounded border-slate-300 text-accent focus:ring-accent/40 cursor-pointer"
+                        style={{
+                          width: 16,
+                          height: 16,
+                          accentColor: 'var(--color-accent)',
+                          cursor: 'pointer',
+                        }}
                       />
                     </td>
                   )}
                   {columns.map((col) => (
                     <td
                       key={col.key}
-                      className={classes(cellPad, alignStyles[col.align ?? 'left'], col.className)}
+                      className={col.className}
+                      style={{
+                        padding: cellPadding,
+                        borderBottom: '1px solid var(--color-rule)',
+                        textAlign: col.align ?? 'left',
+                        fontSize: 14,
+                        color: 'var(--color-ink)',
+                      }}
                     >
                       {col.cell(row)}
                     </td>
@@ -221,6 +314,12 @@ export function DataTable<Row>({
           )}
         </tbody>
       </table>
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 0.55; }
+          50% { opacity: 0.95; }
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import type { HTMLAttributes, ReactNode } from 'react';
+import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 
 export interface ProgressBarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   value?: number;
@@ -10,22 +10,14 @@ export interface ProgressBarProps extends Omit<HTMLAttributes<HTMLDivElement>, '
   indeterminate?: boolean;
 }
 
-const sizeStyles = {
-  sm: 'h-1',
-  md: 'h-2',
-  lg: 'h-3',
-} as const;
+const sizeHeight = { sm: 4, md: 8, lg: 12 } as const;
 
-const variantStyles = {
-  accent: 'bg-accent',
-  success: 'bg-emerald-500',
-  warning: 'bg-amber-500',
-  danger: 'bg-red-500',
+const variantColor = {
+  accent: 'var(--color-accent)',
+  success: '#10b981',
+  warning: '#f59e0b',
+  danger: '#dc2626',
 } as const;
-
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
 
 export function ProgressBar({
   value = 0,
@@ -36,17 +28,55 @@ export function ProgressBar({
   variant = 'accent',
   indeterminate = false,
   className,
+  style,
   ...rest
 }: ProgressBarProps) {
   const pct = Math.max(0, Math.min(100, (value / max) * 100));
   const display = showValue ? `${Math.round(pct)}%` : null;
+  const height = sizeHeight[size];
+  const fill = variantColor[variant];
+
+  const wrapperStyle: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 6,
+    ...style,
+  };
+
+  const fillStyle: CSSProperties = indeterminate
+    ? {
+        height: '100%',
+        width: '40%',
+        borderRadius: 999,
+        background: fill,
+        animation: 'progress-indeterminate 1.4s ease-in-out infinite',
+      }
+    : {
+        height: '100%',
+        width: `${pct}%`,
+        borderRadius: 999,
+        background: fill,
+        transition: 'width 300ms ease-out',
+      };
 
   return (
-    <div className={classes('flex flex-col gap-1.5', className)} {...rest}>
+    <div className={className} style={wrapperStyle} {...rest}>
       {(label || display) && (
-        <div className="flex items-center justify-between text-xs text-slate-600">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontSize: 12,
+            color: 'var(--color-ink-2)',
+          }}
+        >
           <span>{label}</span>
-          {display && <span className="font-mono">{display}</span>}
+          {display && (
+            <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-ink-3)' }}>
+              {display}
+            </span>
+          )}
         </div>
       )}
       <div
@@ -55,16 +85,15 @@ export function ProgressBar({
         aria-valuemin={0}
         aria-valuemax={max}
         aria-label={typeof label === 'string' ? label : undefined}
-        className={classes('w-full bg-slate-200 rounded-full overflow-hidden', sizeStyles[size])}
+        style={{
+          width: '100%',
+          height,
+          background: 'var(--color-rule)',
+          borderRadius: 999,
+          overflow: 'hidden',
+        }}
       >
-        <div
-          className={classes(
-            'h-full rounded-full transition-[width] duration-300 ease-out',
-            variantStyles[variant],
-            indeterminate && 'animate-[progress-indeterminate_1.4s_ease-in-out_infinite]',
-          )}
-          style={indeterminate ? { width: '40%' } : { width: `${pct}%` }}
-        />
+        <div style={fillStyle} />
         {indeterminate && (
           <style>{`
             @keyframes progress-indeterminate {
