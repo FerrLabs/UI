@@ -1,4 +1,11 @@
-import { createContext, useContext, useId, type HTMLAttributes, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useId,
+  type CSSProperties,
+  type HTMLAttributes,
+  type ReactNode,
+} from 'react';
 
 interface TabsContextValue {
   value: string;
@@ -17,15 +24,13 @@ export interface TabsProps {
   className?: string;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
-
 export function Tabs({ value, onChange, variant = 'underline', children, className }: TabsProps) {
   const baseId = useId();
   return (
     <TabsContext.Provider value={{ value, onChange, baseId, variant }}>
-      <div className={classes('flex flex-col', className)}>{children}</div>
+      <div className={className} style={{ display: 'flex', flexDirection: 'column' }}>
+        {children}
+      </div>
     </TabsContext.Provider>
   );
 }
@@ -34,17 +39,23 @@ export interface TabListProps extends HTMLAttributes<HTMLDivElement> {
   ariaLabel?: string;
 }
 
-export function TabList({ ariaLabel, className, children, ...rest }: TabListProps) {
+export function TabList({ ariaLabel, className, style, children, ...rest }: TabListProps) {
   const ctx = useContext(TabsContext);
   return (
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className={classes(
-        'flex items-center gap-1',
-        ctx?.variant === 'underline' && 'border-b border-slate-200',
-        className,
-      )}
+      className={className}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 4,
+        borderBottom:
+          ctx?.variant === 'underline'
+            ? '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))'
+            : undefined,
+        ...style,
+      }}
       {...rest}
     >
       {children}
@@ -65,17 +76,38 @@ export function Tab({ value, children, disabled }: TabProps) {
   const id = `${ctx.baseId}-tab-${value}`;
   const panelId = `${ctx.baseId}-panel-${value}`;
 
-  const baseStyles =
-    'cursor-pointer text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyle: CSSProperties = {
+    fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+    fontSize: 11,
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    fontWeight: 500,
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    opacity: disabled ? 0.5 : 1,
+    background: 'transparent',
+    transition: 'color 160ms ease, border-color 160ms ease, background 160ms ease',
+  };
 
-  const variantStyles =
+  const variantStyle: CSSProperties =
     ctx.variant === 'underline'
-      ? selected
-        ? 'px-3 py-2 border-b-2 -mb-px border-accent text-slate-900'
-        : 'px-3 py-2 border-b-2 -mb-px border-transparent text-slate-500 hover:text-slate-900'
-      : selected
-        ? 'px-3 py-1.5 rounded-full bg-accent text-white'
-        : 'px-3 py-1.5 rounded-full text-slate-600 hover:bg-slate-100';
+      ? {
+          padding: '10px 12px',
+          marginBottom: -1,
+          borderTop: 'none',
+          borderLeft: 'none',
+          borderRight: 'none',
+          borderBottom: selected
+            ? '2px solid var(--color-accent, #e8733a)'
+            : '2px solid transparent',
+          color: selected ? 'var(--color-ink, #1e293b)' : 'var(--color-ink-3, #64748b)',
+        }
+      : {
+          padding: '6px 12px',
+          borderRadius: 999,
+          border: 'none',
+          background: selected ? 'var(--color-accent, #e8733a)' : 'transparent',
+          color: selected ? '#fff' : 'var(--color-ink-2, #475569)',
+        };
 
   return (
     <button
@@ -87,7 +119,8 @@ export function Tab({ value, children, disabled }: TabProps) {
       tabIndex={selected ? 0 : -1}
       disabled={disabled}
       onClick={() => ctx.onChange(value)}
-      className={classes(baseStyles, variantStyles)}
+      className="mono"
+      style={{ ...baseStyle, ...variantStyle }}
     >
       {children}
     </button>
@@ -98,7 +131,7 @@ export interface TabPanelProps extends HTMLAttributes<HTMLDivElement> {
   value: string;
 }
 
-export function TabPanel({ value, className, children, ...rest }: TabPanelProps) {
+export function TabPanel({ value, className, style, children, ...rest }: TabPanelProps) {
   const ctx = useContext(TabsContext);
   if (!ctx) throw new Error('<TabPanel> must be used inside <Tabs>.');
   if (ctx.value !== value) return null;
@@ -107,7 +140,8 @@ export function TabPanel({ value, className, children, ...rest }: TabPanelProps)
       role="tabpanel"
       id={`${ctx.baseId}-panel-${value}`}
       aria-labelledby={`${ctx.baseId}-tab-${value}`}
-      className={classes('pt-4', className)}
+      className={className}
+      style={{ paddingTop: 16, ...style }}
       {...rest}
     >
       {children}
