@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 
 export interface DrawerProps {
   open: boolean;
@@ -9,17 +9,14 @@ export interface DrawerProps {
   footer?: ReactNode;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
+  style?: CSSProperties;
 }
 
-const sizeStyles: Record<NonNullable<DrawerProps['size']>, string> = {
-  sm: 'w-72',
-  md: 'w-96',
-  lg: 'w-[28rem]',
+const sizeWidth: Record<NonNullable<DrawerProps['size']>, number> = {
+  sm: 288,
+  md: 384,
+  lg: 448,
 };
-
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
 
 export function Drawer({
   open,
@@ -30,6 +27,7 @@ export function Drawer({
   footer,
   size = 'md',
   className,
+  style,
 }: DrawerProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -48,12 +46,12 @@ export function Drawer({
     return () => dialog.removeEventListener('close', handleClose);
   }, [onClose]);
 
-  const positionClasses = side === 'right' ? 'ml-auto mr-0' : 'mr-auto ml-0';
-
-  const animation =
+  const positionStyle: CSSProperties =
     side === 'right'
-      ? 'open:animate-[drawer-in-right_200ms_ease-out]'
-      : 'open:animate-[drawer-in-left_200ms_ease-out]';
+      ? { marginLeft: 'auto', marginRight: 0 }
+      : { marginRight: 'auto', marginLeft: 0 };
+
+  const animationName = side === 'right' ? 'drawer-in-right' : 'drawer-in-left';
 
   return (
     <dialog
@@ -61,32 +59,90 @@ export function Drawer({
       onClick={(e) => {
         if (e.target === dialogRef.current) onClose();
       }}
-      className={classes(
-        'p-0 bg-transparent backdrop:bg-slate-900/30 m-0 max-h-screen h-screen',
-        positionClasses,
-        animation,
-      )}
-      style={{ inset: 0 }}
+      className={className}
+      style={{
+        padding: 0,
+        background: 'transparent',
+        border: 'none',
+        margin: 0,
+        maxHeight: '100vh',
+        height: '100vh',
+        inset: 0,
+        animation: `${animationName} 200ms ease-out`,
+        ...positionStyle,
+        ...style,
+      }}
     >
       <style>{`
+        dialog::backdrop {
+          background: rgba(30, 41, 59, 0.45);
+        }
         @keyframes drawer-in-right { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes drawer-in-left  { from { transform: translateX(-100%); } to { transform: translateX(0); } }
       `}</style>
       <div
-        className={classes(
-          'h-screen flex flex-col bg-white shadow-xl ring-1 ring-slate-200',
-          sizeStyles[size],
-          className,
-        )}
+        style={{
+          height: '100vh',
+          width: sizeWidth[size],
+          display: 'flex',
+          flexDirection: 'column',
+          background: 'var(--color-card, #fff)',
+          boxShadow: '0 20px 48px rgba(15, 23, 42, 0.18)',
+          borderLeft:
+            side === 'right'
+              ? '1px solid var(--color-card-rule, rgba(30, 41, 59, 0.10))'
+              : undefined,
+          borderRight:
+            side === 'left'
+              ? '1px solid var(--color-card-rule, rgba(30, 41, 59, 0.10))'
+              : undefined,
+        }}
       >
         {title && (
-          <div className="px-5 py-4 border-b border-slate-100">
-            <h2 className="text-base font-semibold text-slate-900">{title}</h2>
+          <div
+            style={{
+              padding: '16px 20px',
+              borderBottom: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
+                fontSize: 16,
+                fontWeight: 600,
+                lineHeight: 1.3,
+                color: 'var(--color-ink, #1e293b)',
+                margin: 0,
+              }}
+            >
+              {title}
+            </h2>
           </div>
         )}
-        <div className="flex-1 overflow-y-auto px-5 py-4 text-sm text-slate-700">{children}</div>
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '16px 20px',
+            fontSize: 14,
+            lineHeight: 1.5,
+            color: 'var(--color-ink-2, #475569)',
+          }}
+        >
+          {children}
+        </div>
         {footer && (
-          <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2">
+          <div
+            style={{
+              padding: '12px 20px',
+              background: 'var(--color-paper-2, #f3efe7)',
+              borderTop: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              gap: 8,
+            }}
+          >
             {footer}
           </div>
         )}
