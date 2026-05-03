@@ -1,4 +1,4 @@
-import type { HTMLAttributes, ReactNode } from 'react';
+import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 
 export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
@@ -6,38 +6,40 @@ export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
 }
 
-const sizeStyles = {
-  sm: 'max-w-3xl',
-  md: 'max-w-5xl',
-  lg: 'max-w-7xl',
-  xl: 'max-w-[1440px]',
-  '2xl': 'max-w-[1600px]',
-  full: 'max-w-full',
-} as const;
+const sizeMap: Record<NonNullable<ContainerProps['size']>, string | number> = {
+  sm: 768,
+  md: 1024,
+  lg: 1280,
+  xl: 1440,
+  '2xl': 1600,
+  full: '100%',
+};
 
-const paddingStyles = {
-  none: 'px-0',
-  sm: 'px-3 sm:px-4',
-  md: 'px-4 sm:px-6',
-  lg: 'px-6 sm:px-10',
-} as const;
-
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
+const paddingMap: Record<NonNullable<ContainerProps['padding']>, string> = {
+  none: '0',
+  sm: '0 16px',
+  md: '0 24px',
+  lg: '0 40px',
+};
 
 export function Container({
   size = 'lg',
   padding = 'md',
   className,
   children,
+  style,
   ...rest
 }: ContainerProps) {
+  const containerStyle: CSSProperties = {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '100%',
+    maxWidth: sizeMap[size],
+    padding: paddingMap[padding],
+    ...style,
+  };
   return (
-    <div
-      className={classes('mx-auto w-full', sizeStyles[size], paddingStyles[padding], className)}
-      {...rest}
-    >
+    <div className={className} style={containerStyle} {...rest}>
       {children}
     </div>
   );

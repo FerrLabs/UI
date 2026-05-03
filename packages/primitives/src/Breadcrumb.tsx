@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode } from 'react';
+import { Fragment, useState, type CSSProperties, type ReactNode } from 'react';
 
 export interface BreadcrumbCrumb {
   label: ReactNode;
@@ -9,45 +9,96 @@ export interface BreadcrumbProps {
   items: BreadcrumbCrumb[];
   separator?: ReactNode;
   className?: string;
+  style?: CSSProperties;
   ariaLabel?: string;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
+function CrumbLink({ href, children }: { href: string; children: ReactNode }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <a
+      href={href}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        color: hover ? 'var(--color-ink, #1e293b)' : 'var(--color-ink-3, #64748b)',
+        textDecoration: 'none',
+        transition: 'color 140ms ease',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {children}
+    </a>
+  );
 }
 
 export function Breadcrumb({
   items,
   separator = '/',
   className,
+  style,
   ariaLabel = 'Breadcrumb',
 }: BreadcrumbProps) {
   return (
-    <nav aria-label={ariaLabel} className={classes('text-xs', className)}>
-      <ol className="flex items-center flex-wrap gap-1.5 text-slate-500">
+    <nav
+      aria-label={ariaLabel}
+      className={className}
+      style={{
+        fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+        fontSize: 11,
+        letterSpacing: '0.06em',
+        ...style,
+      }}
+    >
+      <ol
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 6,
+          listStyle: 'none',
+          padding: 0,
+          margin: 0,
+        }}
+      >
         {items.map((item, i) => {
           const isLast = i === items.length - 1;
           return (
             <Fragment key={i}>
-              <li className="flex items-center min-w-0">
+              <li
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  minWidth: 0,
+                }}
+              >
                 {item.href && !isLast ? (
-                  <a
-                    href={item.href}
-                    className="hover:text-slate-900 cursor-pointer transition-colors truncate"
-                  >
-                    {item.label}
-                  </a>
+                  <CrumbLink href={item.href}>{item.label}</CrumbLink>
                 ) : (
                   <span
-                    className={classes('truncate', isLast ? 'text-slate-900 font-medium' : '')}
                     aria-current={isLast ? 'page' : undefined}
+                    style={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      color: isLast ? 'var(--color-ink, #1e293b)' : 'var(--color-ink-3, #64748b)',
+                      fontWeight: isLast ? 600 : 400,
+                    }}
                   >
                     {item.label}
                   </span>
                 )}
               </li>
               {!isLast && (
-                <li aria-hidden className="text-slate-300">
+                <li
+                  aria-hidden
+                  style={{
+                    color: 'var(--color-ink-3, #64748b)',
+                    opacity: 0.6,
+                  }}
+                >
                   {separator}
                 </li>
               )}

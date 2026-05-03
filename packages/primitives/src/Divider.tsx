@@ -1,37 +1,67 @@
-import type { HTMLAttributes, ReactNode } from 'react';
+import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 
 export interface DividerProps extends HTMLAttributes<HTMLDivElement> {
   orientation?: 'horizontal' | 'vertical';
   label?: ReactNode;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
-
-export function Divider({ orientation = 'horizontal', label, className, ...rest }: DividerProps) {
+export function Divider({
+  orientation = 'horizontal',
+  label,
+  className,
+  style,
+  ...rest
+}: DividerProps) {
   if (orientation === 'vertical') {
     return (
       <div
         role="separator"
         aria-orientation="vertical"
-        className={classes('inline-block w-px self-stretch bg-slate-200', className)}
+        className={className}
+        style={{
+          display: 'inline-block',
+          width: 1,
+          alignSelf: 'stretch',
+          background: 'var(--color-rule, rgba(30, 41, 59, 0.14))',
+          ...style,
+        }}
         {...rest}
       />
     );
   }
 
   if (label) {
+    const lineStyle: CSSProperties = {
+      flex: 1,
+      height: 1,
+      background: 'var(--color-rule, rgba(30, 41, 59, 0.14))',
+    };
     return (
       <div
         role="separator"
         aria-orientation="horizontal"
-        className={classes('flex items-center gap-3', className)}
+        className={className}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          ...style,
+        }}
         {...rest}
       >
-        <span className="flex-1 h-px bg-slate-200" />
-        <span className="text-xs text-slate-500 font-mono uppercase tracking-wider">{label}</span>
-        <span className="flex-1 h-px bg-slate-200" />
+        <span style={lineStyle} />
+        <span
+          style={{
+            fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+            fontSize: 11,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: 'var(--color-ink-3, #64748b)',
+          }}
+        >
+          {label}
+        </span>
+        <span style={lineStyle} />
       </div>
     );
   }
@@ -40,8 +70,15 @@ export function Divider({ orientation = 'horizontal', label, className, ...rest 
     <hr
       role="separator"
       aria-orientation="horizontal"
-      className={classes('border-0 h-px bg-slate-200 my-0', className)}
-      {...rest}
+      className={className}
+      style={{
+        border: 0,
+        height: 1,
+        background: 'var(--color-rule, rgba(30, 41, 59, 0.14))',
+        margin: 0,
+        ...style,
+      }}
+      {...(rest as React.HTMLAttributes<HTMLHRElement>)}
     />
   );
 }

@@ -3,6 +3,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type ReactElement,
   type ReactNode,
 } from 'react';
@@ -14,6 +15,7 @@ export interface MenuProps {
   children: ReactNode;
   align?: MenuAlign;
   className?: string;
+  style?: CSSProperties;
 }
 
 export interface MenuItemProps {
@@ -26,11 +28,7 @@ export interface MenuItemProps {
   shortcut?: ReactNode;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
-
-export function Menu({ trigger, children, align = 'start', className }: MenuProps) {
+export function Menu({ trigger, children, align = 'start', className, style }: MenuProps) {
   const containerRef = useRef<HTMLSpanElement>(null);
   const [open, setOpen] = useState(false);
 
@@ -61,18 +59,26 @@ export function Menu({ trigger, children, align = 'start', className }: MenuProp
   } as React.HTMLAttributes<HTMLElement>);
 
   return (
-    <span ref={containerRef} className="relative inline-flex">
+    <span ref={containerRef} style={{ position: 'relative', display: 'inline-flex' }}>
       {triggerEl}
       {open && (
         <div
           role="menu"
           onClick={() => setOpen(false)}
-          className={classes(
-            'absolute z-40 mt-1 min-w-44 rounded-md bg-white shadow-lg ring-1 ring-slate-200 p-1',
-            align === 'end' ? 'right-0' : 'left-0',
-            'top-full',
-            className,
-          )}
+          className={className}
+          style={{
+            position: 'absolute',
+            top: 'calc(100% + 6px)',
+            [align === 'end' ? 'right' : 'left']: 0,
+            zIndex: 60,
+            minWidth: 220,
+            background: 'var(--color-card, #ffffff)',
+            border: '1px solid var(--color-card-rule, rgba(30, 41, 59, 0.10))',
+            borderRadius: 10,
+            boxShadow: '0 8px 24px rgba(15, 23, 42, 0.12)',
+            padding: 6,
+            ...style,
+          }}
         >
           {children}
         </div>
@@ -90,25 +96,80 @@ export function MenuItem({
   destructive,
   shortcut,
 }: MenuItemProps) {
-  const baseStyles =
-    'flex items-center gap-2 px-2.5 py-1.5 rounded text-sm cursor-pointer transition-colors duration-100 focus-visible:outline-none focus-visible:bg-slate-100';
-  const stateStyles = disabled
-    ? 'opacity-50 cursor-not-allowed'
-    : destructive
-      ? 'text-red-700 hover:bg-red-50'
-      : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900';
+  const baseColor = destructive ? '#dc2626' : 'var(--color-ink-2, #475569)';
+  const hoverColor = destructive ? '#dc2626' : 'var(--color-ink, #1e293b)';
+  const hoverBg = destructive
+    ? 'color-mix(in oklab, #dc2626 8%, var(--color-paper, transparent))'
+    : 'var(--color-paper-2, rgba(30, 41, 59, 0.04))';
+
+  const baseStyle: CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    padding: '8px 12px',
+    borderRadius: 6,
+    fontSize: 14,
+    fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+    color: baseColor,
+    background: 'transparent',
+    border: 'none',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    opacity: disabled ? 0.5 : 1,
+    width: '100%',
+    textAlign: 'left',
+    textDecoration: 'none',
+    transition: 'background 140ms ease, color 140ms ease',
+  };
+
+  const onMouseEnter = (e: { currentTarget: HTMLElement }) => {
+    if (disabled) return;
+    e.currentTarget.style.background = hoverBg;
+    e.currentTarget.style.color = hoverColor;
+  };
+  const onMouseLeave = (e: { currentTarget: HTMLElement }) => {
+    if (disabled) return;
+    e.currentTarget.style.background = 'transparent';
+    e.currentTarget.style.color = baseColor;
+  };
 
   const content = (
     <>
-      {icon && <span className="size-4 shrink-0 grid place-items-center">{icon}</span>}
-      <span className="flex-1 min-w-0">{children}</span>
-      {shortcut && <span className="text-xs font-mono text-slate-400">{shortcut}</span>}
+      {icon && (
+        <span
+          style={{
+            width: 16,
+            display: 'inline-flex',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >
+          {icon}
+        </span>
+      )}
+      <span style={{ flex: 1, minWidth: 0 }}>{children}</span>
+      {shortcut && (
+        <span
+          style={{
+            fontSize: 11,
+            fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+            color: 'var(--color-ink-3, #64748b)',
+          }}
+        >
+          {shortcut}
+        </span>
+      )}
     </>
   );
 
   if (href) {
     return (
-      <a href={href} role="menuitem" className={classes(baseStyles, stateStyles)}>
+      <a
+        href={href}
+        role="menuitem"
+        style={baseStyle}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
         {content}
       </a>
     );
@@ -119,7 +180,9 @@ export function MenuItem({
       role="menuitem"
       onClick={onSelect}
       disabled={disabled}
-      className={classes(baseStyles, stateStyles, 'text-left w-full')}
+      style={baseStyle}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {content}
     </button>
@@ -127,12 +190,30 @@ export function MenuItem({
 }
 
 export function MenuSeparator() {
-  return <div role="separator" className="my-1 h-px bg-slate-200" />;
+  return (
+    <div
+      role="separator"
+      style={{
+        margin: '4px 0',
+        height: 1,
+        background: 'var(--color-rule, rgba(30, 41, 59, 0.14))',
+      }}
+    />
+  );
 }
 
 export function MenuLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400">
+    <div
+      style={{
+        padding: '6px 12px',
+        fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+        fontSize: 10,
+        letterSpacing: '0.14em',
+        textTransform: 'uppercase',
+        color: 'var(--color-ink-3, #64748b)',
+      }}
+    >
       {children}
     </div>
   );
