@@ -2,6 +2,7 @@ import {
   useCallback,
   useEffect,
   useRef,
+  type CSSProperties,
   type ReactNode,
   type MouseEvent as ReactMouseEvent,
 } from 'react';
@@ -16,18 +17,15 @@ export interface ModalProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   dismissOnBackdrop?: boolean;
   className?: string;
+  style?: CSSProperties;
 }
 
-const sizeStyles: Record<NonNullable<ModalProps['size']>, string> = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-lg',
-  xl: 'max-w-2xl',
+const sizeMaxWidth: Record<NonNullable<ModalProps['size']>, number> = {
+  sm: 384,
+  md: 448,
+  lg: 512,
+  xl: 672,
 };
-
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
 
 export function Modal({
   open,
@@ -39,6 +37,7 @@ export function Modal({
   size = 'md',
   dismissOnBackdrop = true,
   className,
+  style,
 }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -72,33 +71,93 @@ export function Modal({
     <dialog
       ref={dialogRef}
       onClick={handleBackdropClick}
-      className={classes(
-        'p-0 bg-transparent backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm m-auto rounded-xl',
-        'open:animate-[modal-in_160ms_ease-out]',
-      )}
+      className={className}
+      style={{
+        padding: 0,
+        background: 'transparent',
+        margin: 'auto',
+        borderRadius: 14,
+        border: 'none',
+        animation: 'modal-in 160ms ease-out',
+        ...style,
+      }}
     >
       <style>{`
+        dialog::backdrop {
+          background: rgba(30, 41, 59, 0.45);
+          backdrop-filter: blur(2px);
+        }
         @keyframes modal-in {
           from { opacity: 0; transform: scale(0.96); }
           to   { opacity: 1; transform: scale(1); }
         }
       `}</style>
       <div
-        className={classes(
-          'w-[calc(100vw-2rem)] bg-white rounded-xl shadow-xl ring-1 ring-slate-200 overflow-hidden',
-          sizeStyles[size],
-          className,
-        )}
+        style={{
+          width: 'calc(100vw - 2rem)',
+          maxWidth: sizeMaxWidth[size],
+          background: 'var(--color-card, #fff)',
+          borderRadius: 14,
+          boxShadow: '0 20px 48px rgba(15, 23, 42, 0.18)',
+          border: '1px solid var(--color-card-rule, rgba(30, 41, 59, 0.10))',
+          overflow: 'hidden',
+        }}
       >
         {(title || description) && (
-          <div className="px-6 pt-6 pb-3">
-            {title && <h2 className="text-lg font-semibold text-slate-900">{title}</h2>}
-            {description && <p className="mt-1 text-sm text-slate-500">{description}</p>}
+          <div style={{ padding: '24px 24px 12px' }}>
+            {title && (
+              <h2
+                style={{
+                  fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
+                  fontSize: 18,
+                  fontWeight: 600,
+                  lineHeight: 1.3,
+                  color: 'var(--color-ink, #1e293b)',
+                  margin: 0,
+                }}
+              >
+                {title}
+              </h2>
+            )}
+            {description && (
+              <p
+                style={{
+                  marginTop: 4,
+                  marginBottom: 0,
+                  fontSize: 14,
+                  lineHeight: 1.5,
+                  color: 'var(--color-ink-3, #64748b)',
+                }}
+              >
+                {description}
+              </p>
+            )}
           </div>
         )}
-        {children && <div className="px-6 py-3 text-sm text-slate-700">{children}</div>}
+        {children && (
+          <div
+            style={{
+              padding: '12px 24px',
+              fontSize: 14,
+              lineHeight: 1.5,
+              color: 'var(--color-ink-2, #475569)',
+            }}
+          >
+            {children}
+          </div>
+        )}
         {footer && (
-          <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2">
+          <div
+            style={{
+              padding: '16px 24px',
+              background: 'var(--color-paper-2, #f3efe7)',
+              borderTop: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              gap: 8,
+            }}
+          >
             {footer}
           </div>
         )}

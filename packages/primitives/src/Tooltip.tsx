@@ -1,4 +1,11 @@
-import { useId, useState, type ReactElement, cloneElement, type ReactNode } from 'react';
+import {
+  useId,
+  useState,
+  type CSSProperties,
+  type ReactElement,
+  cloneElement,
+  type ReactNode,
+} from 'react';
 
 export type TooltipSide = 'top' | 'right' | 'bottom' | 'left';
 
@@ -7,20 +14,17 @@ export interface TooltipProps {
   children: ReactElement;
   side?: TooltipSide;
   className?: string;
+  style?: CSSProperties;
 }
 
-const sideStyles: Record<TooltipSide, string> = {
-  top: 'bottom-full left-1/2 -translate-x-1/2 mb-1.5',
-  right: 'left-full top-1/2 -translate-y-1/2 ml-1.5',
-  bottom: 'top-full left-1/2 -translate-x-1/2 mt-1.5',
-  left: 'right-full top-1/2 -translate-y-1/2 mr-1.5',
+const sidePositioning: Record<TooltipSide, CSSProperties> = {
+  top: { bottom: '100%', left: '50%', transform: 'translateX(-50%)', marginBottom: 6 },
+  right: { left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 6 },
+  bottom: { top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: 6 },
+  left: { right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: 6 },
 };
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
-
-export function Tooltip({ content, children, side = 'top', className }: TooltipProps) {
+export function Tooltip({ content, children, side = 'top', className, style }: TooltipProps) {
   const [open, setOpen] = useState(false);
   const id = useId();
 
@@ -33,22 +37,34 @@ export function Tooltip({ content, children, side = 'top', className }: TooltipP
   } as React.HTMLAttributes<HTMLElement>);
 
   return (
-    <span className="relative inline-flex">
+    <span style={{ position: 'relative', display: 'inline-flex' }}>
       {trigger}
       {open && (
         <span
           id={id}
           role="tooltip"
-          className={classes(
-            'absolute z-50 whitespace-nowrap rounded-md bg-slate-900 text-white text-xs px-2 py-1 shadow-md pointer-events-none animate-[tooltip-in_120ms_ease-out]',
-            sideStyles[side],
-            className,
-          )}
+          className={className}
+          style={{
+            position: 'absolute',
+            zIndex: 50,
+            whiteSpace: 'nowrap',
+            borderRadius: 8,
+            background: 'var(--color-ink, #1e293b)',
+            color: '#fff',
+            fontSize: 12,
+            lineHeight: 1.4,
+            padding: '4px 8px',
+            boxShadow: '0 8px 24px rgba(15, 23, 42, 0.18)',
+            pointerEvents: 'none',
+            animation: 'tooltip-in 120ms ease-out',
+            ...sidePositioning[side],
+            ...style,
+          }}
         >
           <style>{`
             @keyframes tooltip-in {
-              from { opacity: 0; transform: scale(0.94); }
-              to   { opacity: 1; transform: scale(1); }
+              from { opacity: 0; transform: ${sidePositioning[side].transform ?? 'none'} scale(0.94); }
+              to   { opacity: 1; transform: ${sidePositioning[side].transform ?? 'none'} scale(1); }
             }
           `}</style>
           {content}

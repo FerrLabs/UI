@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error';
 
@@ -18,11 +26,11 @@ interface ToastContextValue {
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
-const variantStyles: Record<ToastVariant, string> = {
-  info: 'bg-slate-900 text-white border-slate-700',
-  success: 'bg-emerald-600 text-white border-emerald-700',
-  warning: 'bg-amber-500 text-white border-amber-600',
-  error: 'bg-red-600 text-white border-red-700',
+const variantBackground: Record<ToastVariant, string> = {
+  info: 'var(--color-ink, #1e293b)',
+  success: '#10b981',
+  warning: '#f59e0b',
+  error: '#dc2626',
 };
 
 const variantIcons: Record<ToastVariant, string> = {
@@ -36,10 +44,6 @@ let counter = 0;
 function nextId(): string {
   counter += 1;
   return `toast-${Date.now()}-${counter}`;
-}
-
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
 }
 
 export interface ToastProviderProps {
@@ -69,43 +73,93 @@ export function ToastProvider({ children }: ToastProviderProps) {
   return (
     <ToastContext.Provider value={{ toasts, push, dismiss }}>
       {children}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
-        {toasts.map((t) => (
-          <div
-            key={t.id}
-            role={t.variant === 'error' ? 'alert' : 'status'}
-            className={classes(
-              'pointer-events-auto min-w-72 max-w-sm rounded-lg shadow-lg border px-4 py-3 flex items-start gap-3 animate-[toast-in_180ms_ease-out]',
-              variantStyles[t.variant ?? 'info'],
-            )}
-          >
-            <style>{`
-              @keyframes toast-in {
-                from { opacity: 0; transform: translateY(8px); }
-                to   { opacity: 1; transform: translateY(0); }
-              }
-            `}</style>
-            <span aria-hidden className="font-mono leading-none mt-0.5 opacity-80">
-              {variantIcons[t.variant ?? 'info']}
-            </span>
-            <div className="flex-1 min-w-0">
-              {t.title && <div className="text-sm font-medium leading-tight">{t.title}</div>}
-              <div
-                className={classes('text-sm leading-snug', Boolean(t.title) && 'mt-0.5 opacity-90')}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 16,
+          right: 16,
+          zIndex: 50,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 8,
+          pointerEvents: 'none',
+        }}
+      >
+        <style>{`
+          @keyframes toast-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+          }
+        `}</style>
+        {toasts.map((t) => {
+          const variant = t.variant ?? 'info';
+          const itemStyle: CSSProperties = {
+            pointerEvents: 'auto',
+            minWidth: 288,
+            maxWidth: 384,
+            borderRadius: 10,
+            boxShadow: '0 12px 32px rgba(15, 23, 42, 0.18)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '12px 16px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: 12,
+            background: variantBackground[variant],
+            color: '#fff',
+            animation: 'toast-in 180ms ease-out',
+          };
+
+          return (
+            <div key={t.id} role={variant === 'error' ? 'alert' : 'status'} style={itemStyle}>
+              <span
+                aria-hidden
+                className="mono"
+                style={{
+                  fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+                  lineHeight: 1,
+                  marginTop: 2,
+                  opacity: 0.8,
+                }}
               >
-                {t.message}
+                {variantIcons[variant]}
+              </span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                {t.title && (
+                  <div style={{ fontSize: 14, fontWeight: 500, lineHeight: 1.25 }}>{t.title}</div>
+                )}
+                <div
+                  style={{
+                    fontSize: 14,
+                    lineHeight: 1.4,
+                    marginTop: t.title ? 2 : 0,
+                    opacity: t.title ? 0.9 : 1,
+                  }}
+                >
+                  {t.message}
+                </div>
               </div>
+              <button
+                type="button"
+                onClick={() => dismiss(t.id)}
+                aria-label="Dismiss"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  cursor: 'pointer',
+                  lineHeight: 1,
+                  fontSize: 18,
+                  padding: 0,
+                  transition: 'color 120ms ease',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)')}
+              >
+                ×
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => dismiss(t.id)}
-              aria-label="Dismiss"
-              className="text-white/70 hover:text-white cursor-pointer leading-none text-lg"
-            >
-              ×
-            </button>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </ToastContext.Provider>
   );
@@ -120,7 +174,6 @@ export function useToast(): ToastContextValue {
 }
 
 export function ToastViewportSentinel() {
-  // No-op — kept for symmetry with libraries that require an explicit viewport.
   useEffect(() => undefined, []);
   return null;
 }
