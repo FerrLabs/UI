@@ -1,6 +1,7 @@
+import { Button, Avatar, Tag } from '@ferrlabs/ui-react';
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Avatar, Badge, Button, DataTable, type Column } from '@ferrlabs/ui-primitives';
+import { DataTable, type Column } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof DataTable> = {
   title: 'Data/DataTable',
@@ -82,7 +83,11 @@ const columns: Array<Column<Member>> = [
     key: 'role',
     header: 'Role',
     sortBy: (r) => r.role,
-    cell: (r) => <Badge variant={r.role === 'Owner' ? 'accent' : 'neutral'}>{r.role}</Badge>,
+    cell: (r) => (
+      <Tag soft variant={r.role === 'Owner' ? 'accent' : 'neutral'}>
+        {r.role}
+      </Tag>
+    ),
   },
   { key: 'joined', header: 'Joined', sortBy: (r) => r.joined, cell: (r) => r.joined },
   {
@@ -91,11 +96,13 @@ const columns: Array<Column<Member>> = [
     align: 'right',
     cell: (r) =>
       r.active ? (
-        <Badge variant="success" dot>
+        <Tag soft variant="success" dot>
           Active
-        </Badge>
+        </Tag>
       ) : (
-        <Badge variant="neutral">Disabled</Badge>
+        <Tag soft variant="neutral">
+          Disabled
+        </Tag>
       ),
   },
 ];

@@ -1,33 +1,45 @@
-@import 'tailwindcss';
-@import '@ferrlabs/ui-tailwind/tokens';
-@import '@ferrlabs/ui-tailwind/products';
+@import '@ferrlabs/styles/global.css';
 
 @source "../../primitives/dist/**/*.js";
+@source "../../react/dist/**/*.js";
 @source "../src/**/*.{ts,tsx}";
 
 @theme {
-  --color-accent: var(--color-primary-600);
+  /* Per-theme accent override — used by the Storybook toolbar to swap the
+   * accent colour live without rebuilding. The same `--color-accent` token
+   * is what every primitive consumes via `bg-accent`/`text-accent`/etc.
+   */
+  --color-accent: var(--color-ferrflow-orange);
+
+  /* Aliases so the existing @ferrlabs/ui-react components (which reach
+   * for var(--color-fg), var(--color-fg-2), etc.) render correctly inside
+   * the showcase. The styles package defines paper/ink; map them here.
+   */
+  --color-fg: var(--color-ink);
+  --color-fg-2: var(--color-ink-2);
+  --color-fg-3: var(--color-ink-3);
 }
 
 [data-accent='slate'] {
-  --color-accent: var(--color-slate-800);
+  --color-accent: var(--color-ferrlabs-slate);
 }
 [data-accent='orange'] {
-  --color-accent: var(--color-primary-600);
+  --color-accent: var(--color-ferrflow-orange);
 }
 [data-accent='emerald'] {
-  --color-accent: var(--color-emerald-500);
+  --color-accent: var(--color-ferrvault-emerald);
 }
 [data-accent='indigo'] {
-  --color-accent: #6366f1;
+  --color-accent: var(--color-ferrtrack-indigo);
 }
 [data-accent='violet'] {
-  --color-accent: #7c3aed;
+  --color-accent: var(--color-ferrgrowth-violet);
 }
 [data-accent='amber'] {
-  --color-accent: #f59e0b;
+  --color-accent: var(--color-ferrfleet-amber);
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
 }

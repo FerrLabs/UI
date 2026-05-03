@@ -1,5 +1,6 @@
+import { Button } from '@ferrlabs/ui-react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button, Popover } from '@ferrlabs/ui-primitives';
+import { Popover } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Popover> = {
   title: 'Primitives/Popover',

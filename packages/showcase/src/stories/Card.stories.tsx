@@ -1,5 +1,6 @@
+import { Button, Tag } from '@ferrlabs/ui-react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Badge, Button, Card, CardHeader } from '@ferrlabs/ui-primitives';
+import { Card, CardHeader } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Card> = {
   title: 'Primitives/Card',
@@ -31,9 +32,9 @@ export const WithHeader: Story = {
         title="FerrFlow"
         description="Universal semantic versioning, free and open source."
         trailing={
-          <Badge variant="success" dot>
+          <Tag soft variant="success" dot>
             Active
-          </Badge>
+          </Tag>
         }
       />
       <p className="mt-4 text-sm text-slate-600 leading-relaxed">

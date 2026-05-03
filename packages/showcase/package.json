@@ -2,7 +2,7 @@
   "name": "@ferrlabs/ui-showcase",
   "version": "0.1.0",
   "private": true,
-  "description": "Storybook showcase for FerrLabs primitives — live examples + theme toggle across slate/orange/emerald/indigo/violet/amber.",
+  "description": "Storybook showcase for FerrLabs primitives + editorial brand components. Themable across slate / orange / emerald / indigo / violet / amber.",
   "type": "module",
   "scripts": {
     "storybook": "storybook dev -p 6006 --no-open",
@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ferrlabs/styles": "workspace:*",
     "@ferrlabs/ui-primitives": "workspace:*",
+    "@ferrlabs/ui-react": "workspace:*",
     "@ferrlabs/ui-tailwind": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

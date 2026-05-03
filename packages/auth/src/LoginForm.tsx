@@ -36,7 +36,9 @@ export function LoginForm({ onSubmit, signupUrl, forgotUrl }: LoginFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-sm mx-auto">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-slate-800 mb-1">Email</label>
+        <label htmlFor="email" className="block text-sm font-medium text-slate-800 mb-1">
+          Email
+        </label>
         <input
           id="email"
           type="email"
@@ -49,7 +51,9 @@ export function LoginForm({ onSubmit, signupUrl, forgotUrl }: LoginFormProps) {
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-slate-800 mb-1">Password</label>
+        <label htmlFor="password" className="block text-sm font-medium text-slate-800 mb-1">
+          Password
+        </label>
         <input
           id="password"
           type="password"
@@ -60,7 +64,10 @@ export function LoginForm({ onSubmit, signupUrl, forgotUrl }: LoginFormProps) {
           autoComplete="current-password"
         />
         {forgotUrl && (
-          <a href={forgotUrl} className="text-xs text-primary-600 hover:text-primary-800 mt-1 inline-block">
+          <a
+            href={forgotUrl}
+            className="text-xs text-primary-600 hover:text-primary-800 mt-1 inline-block"
+          >
             Forgot password?
           </a>
         )}
@@ -68,7 +75,7 @@ export function LoginForm({ onSubmit, signupUrl, forgotUrl }: LoginFormProps) {
 
       {error && <div className="text-sm text-red-600">{error}</div>}
 
-      <Button type="submit" loading={loading} className="w-full">
+      <Button type="submit" loading={loading} fullWidth>
         Sign in
       </Button>
 

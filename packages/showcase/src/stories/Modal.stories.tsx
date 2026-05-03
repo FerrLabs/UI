@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button, Modal } from '@ferrlabs/ui-primitives';
+import { Modal } from '@ferrlabs/ui-primitives';
+import { Button } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Modal> = {
   title: 'Primitives/Modal',
@@ -26,7 +27,7 @@ export const Default: Story = {
               <Button variant="ghost" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button variant="danger" onClick={() => setOpen(false)}>
+              <Button accent="#dc2626" onClick={() => setOpen(false)}>
                 Rotate key
               </Button>
             </>
