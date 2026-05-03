@@ -1,7 +1,7 @@
-import { Avatar, Button, Tag } from '@ferrlabs/ui-react';
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Sidebar, SidebarItem, SidebarSection } from '@ferrlabs/ui-primitives';
+import { Avatar, Button, LogoMark, Tag } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Sidebar> = {
   title: 'Layout/Sidebar',
@@ -11,15 +11,6 @@ const meta: Meta<typeof Sidebar> = {
 
 export default meta;
 type Story = StoryObj<typeof Sidebar>;
-
-const Brand = ({ collapsed }: { collapsed: boolean }) => (
-  <div className="flex items-center gap-2 cursor-pointer">
-    <span className="size-7 rounded-md bg-accent text-white grid place-items-center font-bold text-xs">
-      A
-    </span>
-    {!collapsed && <span className="font-semibold text-sm">Acme Inc.</span>}
-  </div>
-);
 
 const Icon = ({ d }: { d: string }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -39,21 +30,66 @@ const ICONS = {
   billing: 'M3 9h18M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z',
   audit: 'M9 12h6m-6 4h6m-9-9h12v14H6V7zm3-4h6v4H9V3z',
   settings:
-    'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-12v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.5 8.5 2.2 2.2M5.6 18.4l2.1-2.1m8.5-8.5 2.2-2.2',
+    'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-12v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.5 8.5 2.2 2.2',
 };
+
+const FerrFlowBrand = ({ collapsed }: { collapsed: boolean }) => (
+  <>
+    <LogoMark product="ferrflow" accent="var(--color-ferrflow-orange)" />
+    {!collapsed && (
+      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
+        <span
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontWeight: 900,
+            fontSize: 17,
+            letterSpacing: '-0.02em',
+          }}
+        >
+          ferrflow
+        </span>
+        <span
+          className="mono"
+          style={{
+            fontSize: 9.5,
+            color: 'var(--color-ink-3)',
+            letterSpacing: '0.08em',
+            marginTop: 2,
+          }}
+        >
+          by ferrlabs
+        </span>
+      </div>
+    )}
+  </>
+);
 
 function ControlledShell({ initialCollapsed = false }: { initialCollapsed?: boolean }) {
   const [collapsed, setCollapsed] = useState(initialCollapsed);
+  const [active, setActive] = useState('overview');
   return (
-    <div className="flex min-h-[480px] bg-slate-50">
+    <div style={{ display: 'flex', minHeight: 600, background: 'var(--color-app-bg, #fafaf9)' }}>
       <Sidebar
-        brand={<Brand collapsed={collapsed} />}
+        brand={<FerrFlowBrand collapsed={collapsed} />}
         collapsed={collapsed}
         footer={
           <button
             type="button"
             onClick={() => setCollapsed((c) => !c)}
-            className="w-full text-xs text-slate-500 hover:text-slate-900 cursor-pointer px-2 py-1.5 rounded hover:bg-slate-100"
+            className="mono"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 10,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--color-ink-3)',
+              padding: '6px 10px',
+              border: 'none',
+              background: 'transparent',
+              cursor: 'pointer',
+              width: '100%',
+              textAlign: 'left',
+            }}
           >
             {collapsed ? '→ Expand' : '← Collapse'}
           </button>
@@ -63,39 +99,67 @@ function ControlledShell({ initialCollapsed = false }: { initialCollapsed?: bool
           <SidebarItem
             icon={<Icon d={ICONS.overview} />}
             label="Overview"
-            active
+            active={active === 'overview'}
+            onClick={() => setActive('overview')}
             collapsed={collapsed}
           />
           <SidebarItem
             icon={<Icon d={ICONS.members} />}
             label="Members"
+            active={active === 'members'}
+            onClick={() => setActive('members')}
             badge={
-              <Tag soft variant="neutral" size="sm">
+              <Tag size="sm" variant="neutral" soft>
                 12
               </Tag>
             }
             collapsed={collapsed}
           />
-          <SidebarItem icon={<Icon d={ICONS.audit} />} label="Audit log" collapsed={collapsed} />
+          <SidebarItem
+            icon={<Icon d={ICONS.audit} />}
+            label="Audit log"
+            active={active === 'audit'}
+            onClick={() => setActive('audit')}
+            collapsed={collapsed}
+          />
         </SidebarSection>
         <SidebarSection title="Org" collapsed={collapsed}>
           <SidebarItem
             icon={<Icon d={ICONS.billing} />}
             label="Billing"
+            active={active === 'billing'}
+            onClick={() => setActive('billing')}
             badge={
-              <Tag soft variant="warning" size="sm">
+              <Tag size="sm" variant="warning" soft>
                 !
               </Tag>
             }
             collapsed={collapsed}
           />
-          <SidebarItem icon={<Icon d={ICONS.settings} />} label="Settings" collapsed={collapsed} />
+          <SidebarItem
+            icon={<Icon d={ICONS.settings} />}
+            label="Settings"
+            active={active === 'settings'}
+            onClick={() => setActive('settings')}
+            collapsed={collapsed}
+          />
         </SidebarSection>
       </Sidebar>
-      <main className="flex-1 p-8">
-        <h1 className="text-xl font-semibold text-slate-900">Overview</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Sidebar collapses with the toggle at the bottom.
+      <main style={{ flex: 1, padding: 32 }}>
+        <h1
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontWeight: 900,
+            fontSize: 28,
+            margin: 0,
+            color: 'var(--color-ink)',
+          }}
+        >
+          {active.charAt(0).toUpperCase() + active.slice(1)}
+        </h1>
+        <p style={{ marginTop: 12, color: 'var(--color-ink-2)' }}>
+          Editorial sidebar with mono uppercase labels, accent-colored active state, and collapse
+          toggle. Same visual language as Shell.
         </p>
       </main>
     </div>
@@ -114,20 +178,46 @@ export const WithUserFooter: Story = {
   render: () => {
     const [collapsed, setCollapsed] = useState(false);
     return (
-      <div className="flex min-h-[480px] bg-slate-50">
+      <div style={{ display: 'flex', minHeight: 600, background: 'var(--color-app-bg, #fafaf9)' }}>
         <Sidebar
-          brand={<Brand collapsed={collapsed} />}
+          brand={<FerrFlowBrand collapsed={collapsed} />}
           collapsed={collapsed}
           footer={
-            <div className="flex items-center gap-2 p-1">
-              <Avatar name="Ada Lovelace" size="sm" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 4 }}>
+              <Avatar name="Ada Lovelace" size={28} accent="var(--color-ferrflow-orange)" />
               {!collapsed && (
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-medium truncate">Ada Lovelace</div>
-                  <div className="text-[11px] text-slate-500 truncate">ada@acme.com</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontWeight: 700,
+                      fontSize: 13,
+                      color: 'var(--color-ink)',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    Ada Lovelace
+                  </div>
+                  <div
+                    className="mono"
+                    style={{
+                      fontSize: 10,
+                      color: 'var(--color-ink-3)',
+                      letterSpacing: '0.04em',
+                    }}
+                  >
+                    ada@acme.com
+                  </div>
                 </div>
               )}
-              <Button variant="ghost" size="sm" onClick={() => setCollapsed((c) => !c)}>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setCollapsed((c) => !c)}
+                aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              >
                 {collapsed ? '→' : '←'}
               </Button>
             </div>
@@ -141,7 +231,7 @@ export const WithUserFooter: Story = {
           />
           <SidebarItem icon={<Icon d={ICONS.members} />} label="Members" collapsed={collapsed} />
         </Sidebar>
-        <main className="flex-1 p-8 text-sm text-slate-500">Body content</main>
+        <main style={{ flex: 1, padding: 32, color: 'var(--color-ink-2)' }}>Body content</main>
       </div>
     );
   },
