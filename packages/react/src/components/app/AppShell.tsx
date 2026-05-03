@@ -193,62 +193,92 @@ export function AppShell({
           )}
         </div>
 
-        {!collapsed && projectName && (
-          <button
-            type="button"
-            onClick={onProjectClick}
-            style={{
-              margin: 12,
-              padding: '10px 12px',
-              background: 'var(--color-card)',
-              border: '1px solid var(--color-rule)',
-              borderRadius: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              cursor: 'pointer',
-              color: 'var(--color-fg)',
-              textAlign: 'left',
-            }}
-          >
-            <span
+        {projectName && (
+          collapsed ? (
+            <button
+              type="button"
+              onClick={onProjectClick}
+              aria-label={projectName}
+              title={projectName}
+              data-project-switcher
               style={{
-                width: 28,
-                height: 28,
-                borderRadius: 8,
+                margin: '6px auto 12px',
+                width: 36,
+                height: 36,
+                padding: 0,
                 background: accent,
                 color: '#fff',
+                border: 'none',
+                borderRadius: 9,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontFamily: 'var(--font-serif)',
                 fontWeight: 900,
-                fontSize: 14,
-                flexShrink: 0,
+                fontSize: 15,
+                cursor: 'pointer',
               }}
             >
               {projectName[0]?.toUpperCase()}
-            </span>
-            <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-              <div
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={onProjectClick}
+              data-project-switcher
+              style={{
+                margin: 12,
+                padding: '10px 12px',
+                background: 'var(--color-card)',
+                border: '1px solid var(--color-rule)',
+                borderRadius: 10,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                cursor: 'pointer',
+                color: 'var(--color-fg)',
+                textAlign: 'left',
+              }}
+            >
+              <span
                 style={{
-                  fontSize: 13,
-                  fontWeight: 500,
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
+                  width: 28,
+                  height: 28,
+                  borderRadius: 8,
+                  background: accent,
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: 'var(--font-serif)',
+                  fontWeight: 900,
+                  fontSize: 14,
+                  flexShrink: 0,
                 }}
               >
-                {projectName}
-              </div>
-              {projectMeta && (
-                <div className="mono" style={{ fontSize: 10, color: 'var(--color-fg-3)' }}>
-                  {projectMeta}
+                {projectName[0]?.toUpperCase()}
+              </span>
+              <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                <div
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 500,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {projectName}
                 </div>
-              )}
-            </div>
-            <span style={{ color: 'var(--color-fg-3)', fontSize: 10 }}>▾</span>
-          </button>
+                {projectMeta && (
+                  <div className="mono" style={{ fontSize: 10, color: 'var(--color-fg-3)' }}>
+                    {projectMeta}
+                  </div>
+                )}
+              </div>
+              <span style={{ color: 'var(--color-fg-3)', fontSize: 10 }}>▾</span>
+            </button>
+          )
         )}
 
         <nav style={{ flex: 1, padding: '8px 8px', overflowY: 'auto' }}>
