@@ -1,36 +1,62 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 
 export interface SidebarProps {
+  /** Brand cluster — typically a logo + product name. Sits in the 64px top cell. */
   brand?: ReactNode;
+  /** Optional project switcher row directly below the brand cell. */
+  project?: {
+    name: string;
+    meta?: ReactNode;
+    onClick?: () => void;
+    /** Hex accent for the leading initial tile. Defaults to var(--color-accent). */
+    accent?: string;
+  };
+  /** Nav items + section headers — pass `<SidebarSection>` and `<SidebarItem>` children. */
   children?: ReactNode;
+  /** Custom footer slot. When omitted, a built-in "Collapse / Expand" toggle renders instead. */
   footer?: ReactNode;
+  /** Controlled collapse state. Omit to use the built-in toggle (uncontrolled). */
   collapsed?: boolean;
+  /** Called when the built-in collapse toggle is clicked. Required if `collapsed` is controlled. */
+  onCollapsedChange?: (next: boolean) => void;
   width?: number | string;
   collapsedWidth?: number | string;
   className?: string;
   style?: CSSProperties;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
-
 /**
- * Editorial app sidebar — paper-app palette + DM Mono section labels +
- * accent active state. Same visual language as the Shell sidebar in
- * `@ferrlabs/ui-react`. Use this when you need a sidebar without the full
- * Shell chrome (no topbar, no breadcrumb).
+ * Editorial app sidebar — paper-app palette, Fraunces serif item labels,
+ * left accent bar on the active item. Mirror of the Shell sidebar in
+ * `@ferrlabs/ui-react/Shell`. Use this when you need the sidebar without
+ * the full Shell chrome (no topbar, no breadcrumb, no main outlet).
  */
 export function Sidebar({
   brand,
+  project,
   children,
   footer,
-  collapsed = false,
+  collapsed: collapsedProp,
+  onCollapsedChange,
   width = 256,
   collapsedWidth = 64,
   className,
   style,
 }: SidebarProps) {
+  const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const isControlled = collapsedProp !== undefined;
+  const collapsed = isControlled ? Boolean(collapsedProp) : internalCollapsed;
+
+  const toggle = () => {
+    const next = !collapsed;
+    if (isControlled) {
+      onCollapsedChange?.(next);
+    } else {
+      setInternalCollapsed(next);
+      onCollapsedChange?.(next);
+    }
+  };
+
   return (
     <aside
       data-collapsed={collapsed || undefined}
@@ -66,26 +92,140 @@ export function Sidebar({
           {brand}
         </div>
       )}
+
+      {project &&
+        (collapsed ? (
+          <button
+            type="button"
+            onClick={project.onClick}
+            aria-label={project.name}
+            title={project.name}
+            data-project-switcher
+            style={{
+              margin: '6px auto 12px',
+              width: 36,
+              height: 36,
+              padding: 0,
+              background: project.accent ?? 'var(--color-accent, var(--color-fg))',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 9,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
+              fontWeight: 900,
+              fontSize: 15,
+              cursor: 'pointer',
+            }}
+          >
+            {project.name[0]?.toUpperCase()}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={project.onClick}
+            data-project-switcher
+            style={{
+              margin: 12,
+              padding: '10px 12px',
+              background: 'var(--color-card, #fff)',
+              border: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+              borderRadius: 10,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              cursor: 'pointer',
+              color: 'var(--color-ink, #1e293b)',
+              textAlign: 'left',
+            }}
+          >
+            <span
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 8,
+                background: project.accent ?? 'var(--color-accent, var(--color-fg))',
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
+                fontWeight: 900,
+                fontSize: 14,
+                flexShrink: 0,
+              }}
+            >
+              {project.name[0]?.toUpperCase()}
+            </span>
+            <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+              <div
+                style={{
+                  fontSize: 13,
+                  fontWeight: 500,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {project.name}
+              </div>
+              {project.meta && (
+                <div
+                  className="mono"
+                  style={{
+                    fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+                    fontSize: 10,
+                    color: 'var(--color-ink-3, #64748b)',
+                  }}
+                >
+                  {project.meta}
+                </div>
+              )}
+            </div>
+            <span style={{ color: 'var(--color-ink-3, #64748b)', fontSize: 10 }}>▾</span>
+          </button>
+        ))}
+
       <nav
         style={{
           flex: 1,
+          padding: '8px 8px',
           overflowY: 'auto',
-          padding: collapsed ? '12px 6px' : '12px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
         }}
       >
         {children}
       </nav>
-      {footer && (
+
+      {footer ?? (
         <div
           style={{
-            padding: 12,
             borderTop: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+            padding: 8,
           }}
         >
-          {footer}
+          <button
+            type="button"
+            onClick={toggle}
+            style={{
+              width: '100%',
+              padding: '8px 12px',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--color-ink-3, #64748b)',
+              fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+              fontSize: 11,
+              letterSpacing: '0.06em',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: collapsed ? 'center' : 'flex-start',
+              gap: 10,
+            }}
+          >
+            <span aria-hidden>{collapsed ? '→' : '←'}</span>
+            {!collapsed && <span>Collapse</span>}
+          </button>
         </div>
       )}
     </aside>
@@ -100,17 +240,18 @@ export interface SidebarSectionProps {
 
 export function SidebarSection({ title, collapsed = false, children }: SidebarSectionProps) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 }}>
-      {title && !collapsed && (
+    <div style={{ marginBottom: 24 }}>
+      {!collapsed && title && (
         <div
           className="mono"
           style={{
             fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+            padding: '4px 12px',
             fontSize: 10,
             letterSpacing: '0.14em',
             textTransform: 'uppercase',
             color: 'var(--color-ink-3, #64748b)',
-            padding: '8px 10px 4px',
+            marginBottom: 6,
           }}
         >
           {title}
@@ -128,6 +269,8 @@ export interface SidebarItemProps {
   active?: boolean;
   badge?: ReactNode;
   collapsed?: boolean;
+  /** Override the accent used for the active state (defaults to var(--color-accent)). */
+  accent?: string;
   onClick?: () => void;
 }
 
@@ -138,81 +281,95 @@ export function SidebarItem({
   active = false,
   badge,
   collapsed = false,
+  accent,
   onClick,
 }: SidebarItemProps) {
+  const accentColor = accent ?? 'var(--color-accent, var(--color-fg))';
+
   const baseStyle: CSSProperties = {
+    width: '100%',
     display: 'flex',
     alignItems: 'center',
-    gap: 10,
-    padding: collapsed ? '8px' : '8px 10px',
+    gap: 12,
+    padding: collapsed ? '10px 0' : '8px 12px',
     justifyContent: collapsed ? 'center' : 'flex-start',
+    margin: '1px 0',
     borderRadius: 8,
-    fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
-    fontSize: 12,
-    letterSpacing: '0.04em',
-    color: active ? 'var(--color-ink, #1e293b)' : 'var(--color-ink-2, #475569)',
     background: active ? 'var(--color-app-nav-active, rgba(30, 41, 59, 0.06))' : 'transparent',
-    textDecoration: 'none',
-    cursor: 'pointer',
-    transition: 'background 140ms, color 140ms',
     border: 'none',
-    width: '100%',
+    cursor: 'pointer',
+    color: active ? 'var(--color-ink, #1e293b)' : 'var(--color-ink-2, #475569)',
+    fontSize: 13.5,
+    fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
+    transition: 'background 120ms',
+    position: 'relative',
+    textDecoration: 'none',
     textAlign: 'left',
   };
-
-  const content = (
-    <>
-      {icon && (
-        <span
-          aria-hidden
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 16,
-            height: 16,
-            flexShrink: 0,
-            color: active ? 'var(--color-ink, #1e293b)' : 'var(--color-ink-3, #64748b)',
-          }}
-        >
-          {icon}
-        </span>
-      )}
-      {!collapsed && (
-        <span
-          style={{
-            flex: 1,
-            minWidth: 0,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {label}
-        </span>
-      )}
-      {!collapsed && badge && <span style={{ flexShrink: 0 }}>{badge}</span>}
-    </>
-  );
 
   const onMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
     if (!active) {
       e.currentTarget.style.background = 'var(--color-app-nav-hover, rgba(30, 41, 59, 0.03))';
-      e.currentTarget.style.color = 'var(--color-ink, #1e293b)';
     }
   };
   const onMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
     if (!active) {
       e.currentTarget.style.background = 'transparent';
-      e.currentTarget.style.color = 'var(--color-ink-2, #475569)';
     }
   };
+
+  const content = (
+    <>
+      {active && !collapsed && (
+        <span
+          aria-hidden
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 8,
+            bottom: 8,
+            width: 2,
+            background: accentColor,
+            borderRadius: 2,
+          }}
+        />
+      )}
+      {icon && (
+        <span
+          style={{
+            width: 16,
+            display: 'inline-flex',
+            justifyContent: 'center',
+            color: active ? accentColor : 'var(--color-ink-3, #64748b)',
+            fontSize: 14,
+          }}
+        >
+          {icon}
+        </span>
+      )}
+      {!collapsed && <span style={{ flex: 1, textAlign: 'left' }}>{label}</span>}
+      {!collapsed && badge != null && (
+        <span
+          className="mono"
+          style={{
+            fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+            fontSize: 10,
+            padding: '1px 7px',
+            borderRadius: 999,
+            background: active ? accentColor : 'var(--color-rule, rgba(30, 41, 59, 0.14))',
+            color: active ? '#fff' : 'var(--color-ink-3, #64748b)',
+          }}
+        >
+          {badge}
+        </span>
+      )}
+    </>
+  );
 
   if (href) {
     return (
       <a
         href={href}
-        className={classes('mono', active && 'is-active')}
         title={collapsed && typeof label === 'string' ? label : undefined}
         aria-current={active ? 'page' : undefined}
         style={baseStyle}
@@ -227,7 +384,6 @@ export function SidebarItem({
     <button
       type="button"
       onClick={onClick}
-      className={classes('mono', active && 'is-active')}
       title={collapsed && typeof label === 'string' ? label : undefined}
       aria-current={active ? 'page' : undefined}
       style={baseStyle}
