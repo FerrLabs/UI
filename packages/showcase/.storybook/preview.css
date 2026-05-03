@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+@import '@ferrlabs/ui-tailwind/tokens';
+@import '@ferrlabs/ui-tailwind/products';
+
+@source "../../primitives/dist/**/*.js";
+@source "../src/**/*.{ts,tsx}";
+
+@theme {
+  --color-accent: var(--color-primary-600);
+}
+
+[data-accent='slate'] {
+  --color-accent: var(--color-slate-800);
+}
+[data-accent='orange'] {
+  --color-accent: var(--color-primary-600);
+}
+[data-accent='emerald'] {
+  --color-accent: var(--color-emerald-500);
+}
+[data-accent='indigo'] {
+  --color-accent: #6366f1;
+}
+[data-accent='violet'] {
+  --color-accent: #7c3aed;
+}
+[data-accent='amber'] {
+  --color-accent: #f59e0b;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+}
