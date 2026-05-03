@@ -1,20 +1,24 @@
-import { useState, type HTMLAttributes, type ReactNode } from 'react';
+import { useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 
-export interface CodeProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
+export interface CodeProps extends Omit<HTMLAttributes<HTMLElement>, 'children' | 'style'> {
   children: string;
+  style?: CSSProperties;
 }
 
-function classes(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
-
-export function Code({ children, className, ...rest }: CodeProps) {
+export function Code({ children, className, style, ...rest }: CodeProps) {
   return (
     <code
-      className={classes(
-        'inline px-1.5 py-0.5 rounded bg-slate-100 text-slate-800 font-mono text-[0.92em]',
-        className,
-      )}
+      className={className}
+      style={{
+        display: 'inline',
+        padding: '1.5px 4px',
+        borderRadius: 4,
+        background: 'var(--color-paper-2, rgba(30, 41, 59, 0.06))',
+        color: 'var(--color-ink, #1e293b)',
+        fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+        fontSize: '0.92em',
+        ...style,
+      }}
       {...rest}
     >
       {children}
@@ -28,6 +32,32 @@ export interface CodeBlockProps {
   filename?: ReactNode;
   copyable?: boolean;
   className?: string;
+  style?: CSSProperties;
+}
+
+function CopyButton({ onClick, copied }: { onClick: () => void; copied: boolean }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+        fontSize: 11,
+        color: hover ? 'var(--color-ink, #1e293b)' : 'var(--color-ink-3, #64748b)',
+        background: hover ? 'var(--color-paper-2, rgba(30, 41, 59, 0.06))' : 'transparent',
+        border: 'none',
+        borderRadius: 4,
+        padding: '2px 6px',
+        cursor: 'pointer',
+        transition: 'color 140ms ease, background 140ms ease',
+      }}
+    >
+      {copied ? 'Copied' : 'Copy'}
+    </button>
+  );
 }
 
 export function CodeBlock({
@@ -36,6 +66,7 @@ export function CodeBlock({
   filename,
   copyable = true,
   className,
+  style,
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
 
@@ -48,32 +79,78 @@ export function CodeBlock({
 
   return (
     <div
-      className={classes('rounded-lg ring-1 ring-slate-200 bg-slate-50 overflow-hidden', className)}
+      className={className}
+      style={{
+        borderRadius: 10,
+        border: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+        background: 'var(--color-paper-2, #f3efe7)',
+        overflow: 'hidden',
+        ...style,
+      }}
     >
       {(filename || language || copyable) && (
-        <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-slate-200 bg-white">
-          <div className="flex items-center gap-2 min-w-0">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 8,
+            padding: '8px 12px',
+            borderBottom: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+            background: 'var(--color-card, #ffffff)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              minWidth: 0,
+            }}
+          >
             {filename && (
-              <span className="text-xs font-mono text-slate-700 truncate">{filename}</span>
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+                  fontSize: 12,
+                  color: 'var(--color-ink-2, #475569)',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {filename}
+              </span>
             )}
             {language && (
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+                  fontSize: 10,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-ink-3, #64748b)',
+                }}
+              >
                 {language}
               </span>
             )}
           </div>
-          {copyable && (
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="text-xs text-slate-500 hover:text-slate-900 cursor-pointer px-1.5 py-0.5 rounded hover:bg-slate-100"
-            >
-              {copied ? 'Copied' : 'Copy'}
-            </button>
-          )}
+          {copyable && <CopyButton onClick={handleCopy} copied={copied} />}
         </div>
       )}
-      <pre className="overflow-x-auto p-4 text-xs font-mono leading-relaxed text-slate-800">
+      <pre
+        style={{
+          overflowX: 'auto',
+          padding: 16,
+          margin: 0,
+          fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+          fontSize: 12,
+          lineHeight: 1.6,
+          color: 'var(--color-ink, #1e293b)',
+          background: 'transparent',
+        }}
+      >
         <code>{children}</code>
       </pre>
     </div>
