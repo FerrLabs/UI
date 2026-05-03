@@ -55,3 +55,21 @@ export { FileUpload, type FileUploadProps } from './FileUpload';
 export { Combobox, type ComboboxProps, type ComboboxOption } from './Combobox';
 export { DatePicker, type DatePickerProps } from './DatePicker';
 export { Stepper, type StepperProps, type Step } from './Stepper';
+export {
+  Menu,
+  MenuItem,
+  MenuSeparator,
+  MenuLabel,
+  type MenuProps,
+  type MenuItemProps,
+  type MenuAlign,
+} from './Menu';
+export {
+  Accordion,
+  AccordionItem,
+  type AccordionProps,
+  type AccordionItemProps,
+} from './Accordion';
+export { Breadcrumb, type BreadcrumbProps, type BreadcrumbCrumb } from './Breadcrumb';
+export { Chip, type ChipProps, type ChipVariant } from './Chip';
+export { Code, CodeBlock, type CodeProps, type CodeBlockProps } from './Code';
