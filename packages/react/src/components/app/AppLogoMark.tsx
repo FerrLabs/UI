@@ -50,9 +50,9 @@ export function AppLogoMark({ size = 24, accent = 'currentColor', product }: Pro
       )}
       {product === 'ferrlabs' && (
         <g>
-          <text x="2"  y="22" fontFamily="DM Mono, ui-monospace, monospace" fontSize="9" fill={accent} opacity="0.5">[</text>
-          <text x="9"  y="22" fontFamily="Fraunces, Georgia, serif" fontWeight="900" fontSize="19" fill={accent} letterSpacing="-0.04em">FL</text>
-          <text x="26" y="22" fontFamily="DM Mono, ui-monospace, monospace" fontSize="9" fill={accent} opacity="0.5">]</text>
+          <text x="4"  y="22" fontFamily="DM Mono, ui-monospace, monospace" fontSize="12" fill={accent} opacity="0.5">[</text>
+          <text x="16" y="22" textAnchor="middle" fontFamily="Fraunces, Georgia, serif" fontWeight="900" fontSize="14" fill={accent} letterSpacing="-0.02em">FL</text>
+          <text x="28" y="22" textAnchor="end" fontFamily="DM Mono, ui-monospace, monospace" fontSize="12" fill={accent} opacity="0.5">]</text>
         </g>
       )}
       {(product === 'ferragents' || product === 'ferrfleet') && (
