@@ -54,7 +54,7 @@ export function BrandDropdown({ current, apps = DEFAULT_APPS, children, classNam
   const currentApp = apps.find(a => a.id === current);
 
   return (
-    <div ref={rootRef} className={className} style={{ position: 'relative', display: 'block', flex: 1, minWidth: 0, alignSelf: 'stretch' }}>
+    <div ref={rootRef} className={className} style={{ position: 'relative', display: 'flex', flex: 1, minWidth: 0, alignSelf: 'stretch', height: '100%' }}>
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
