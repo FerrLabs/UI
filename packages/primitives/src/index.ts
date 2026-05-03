@@ -30,3 +30,16 @@ export {
   type TabPanelProps,
 } from './Tabs';
 export { Banner, type BannerProps, type BannerVariant } from './Banner';
+export { PageHeader, type PageHeaderProps, type BreadcrumbItem } from './PageHeader';
+export { Navbar, NavLink, type NavbarProps, type NavLinkProps } from './Navbar';
+export {
+  Sidebar,
+  SidebarSection,
+  SidebarItem,
+  type SidebarProps,
+  type SidebarSectionProps,
+  type SidebarItemProps,
+} from './Sidebar';
+export { AppFooter, type AppFooterProps, type FooterColumn } from './AppFooter';
+export { Container, type ContainerProps } from './Container';
+export { Divider, type DividerProps } from './Divider';
