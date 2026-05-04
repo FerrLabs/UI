@@ -57,6 +57,7 @@ jobs:
       - name: Build
         env:
           FILTER: ${{ steps.filter.outputs.filter }}
+          NODE_OPTIONS: --max-old-space-size=4096
         run: |
           if [ -n "$FILTER" ]; then
             pnpm --filter "$FILTER" build
