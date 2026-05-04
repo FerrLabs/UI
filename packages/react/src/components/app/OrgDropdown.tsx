@@ -61,7 +61,7 @@ export function OrgDropdown({
       className={className}
       style={{
         position: 'relative',
-        margin: collapsed ? '6px 8px 12px 20px' : '12px 12px 12px 8px',
+        margin: collapsed ? '6px auto 12px' : '12px 12px 12px 8px',
         width: collapsed ? CARD_HEIGHT_COLLAPSED : 'auto',
         transition: 'margin 220ms ease, width 220ms ease',
       }}
@@ -102,13 +102,13 @@ export function OrgDropdown({
             background: tileBg,
             borderRadius: collapsed ? 9 : 8,
             color: '#fff',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: 'grid',
+            placeItems: 'center',
             fontFamily: 'var(--font-display, "Fraunces", Georgia, serif)',
             fontWeight: 900,
-            fontSize: collapsed ? 16 : 14,
+            fontSize: collapsed ? 15 : 14,
             lineHeight: 1,
+            paddingBottom: 2,
             transition:
               'top 220ms ease, left 220ms ease, width 220ms ease, height 220ms ease, border-radius 220ms ease, font-size 220ms ease',
             pointerEvents: 'none',
