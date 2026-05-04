@@ -132,8 +132,9 @@ export function BrandDropdown({
           font: 'inherit',
           textAlign: 'left',
           borderRadius: 0,
-          transition: 'background 140ms ease',
+          transition: 'background 140ms ease, padding 220ms ease, gap 220ms ease',
           boxSizing: 'border-box',
+          overflow: 'hidden',
         }}
         onMouseEnter={(e) =>
           (e.currentTarget.style.background = 'var(--color-app-nav-hover, rgba(30,41,59,0.03))')
@@ -151,19 +152,20 @@ export function BrandDropdown({
         >
           {children}
         </span>
-        {!collapsed && (
-          <span
-            aria-hidden
-            style={{
-              color: 'var(--color-fg-3, #64748b)',
-              fontSize: 12,
-              opacity: 0.7,
-              flexShrink: 0,
-            }}
-          >
-            ▾
-          </span>
-        )}
+        <span
+          aria-hidden
+          style={{
+            color: 'var(--color-fg-3, #64748b)',
+            fontSize: 12,
+            flexShrink: 0,
+            opacity: collapsed ? 0 : 0.7,
+            maxWidth: collapsed ? 0 : 16,
+            overflow: 'hidden',
+            transition: 'opacity 160ms ease, max-width 220ms ease',
+          }}
+        >
+          ▾
+        </span>
       </button>
 
       {open && (

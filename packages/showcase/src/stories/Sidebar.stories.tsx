@@ -34,32 +34,42 @@ const ProductBrand = ({
 }) => (
   <>
     <LogoMark product={product} accent={accent} />
-    {!collapsed && (
-      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
-        <span
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontWeight: 900,
-            fontSize: 17,
-            letterSpacing: '-0.02em',
-            color: 'var(--color-ink)',
-          }}
-        >
-          {product}
-        </span>
-        <span
-          className="mono"
-          style={{
-            fontSize: 9.5,
-            color: 'var(--color-ink-3)',
-            letterSpacing: '0.08em',
-            marginTop: 2,
-          }}
-        >
-          by ferrlabs ↗
-        </span>
-      </div>
-    )}
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        lineHeight: 1.1,
+        minWidth: 0,
+        opacity: collapsed ? 0 : 1,
+        maxWidth: collapsed ? 0 : 999,
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        transition: 'opacity 160ms ease, max-width 220ms ease',
+      }}
+    >
+      <span
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontWeight: 900,
+          fontSize: 17,
+          letterSpacing: '-0.02em',
+          color: 'var(--color-ink)',
+        }}
+      >
+        {product}
+      </span>
+      <span
+        className="mono"
+        style={{
+          fontSize: 9.5,
+          color: 'var(--color-ink-3)',
+          letterSpacing: '0.08em',
+          marginTop: 2,
+        }}
+      >
+        by ferrlabs ↗
+      </span>
+    </div>
   </>
 );
 

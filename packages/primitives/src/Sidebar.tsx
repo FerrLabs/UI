@@ -242,7 +242,17 @@ export function Sidebar({
             }}
           >
             <span aria-hidden>{collapsed ? '→' : '←'}</span>
-            {!collapsed && <span>Collapse</span>}
+            <span
+              style={{
+                opacity: collapsed ? 0 : 1,
+                maxWidth: collapsed ? 0 : 999,
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                transition: 'opacity 160ms ease, max-width 220ms ease',
+              }}
+            >
+              Collapse
+            </span>
           </button>
         </div>
       )}
@@ -259,17 +269,24 @@ export interface SidebarSectionProps {
 export function SidebarSection({ title, collapsed = false, children }: SidebarSectionProps) {
   return (
     <div style={{ marginBottom: 24 }}>
-      {!collapsed && title && (
+      {title && (
         <div
           className="mono"
+          aria-hidden={collapsed || undefined}
           style={{
             fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
-            padding: '4px 12px',
+            padding: collapsed ? '0 12px' : '4px 12px',
             fontSize: 10,
             letterSpacing: '0.14em',
             textTransform: 'uppercase',
             color: 'var(--color-ink-3, #64748b)',
-            marginBottom: 6,
+            marginBottom: collapsed ? 0 : 6,
+            opacity: collapsed ? 0 : 1,
+            maxHeight: collapsed ? 0 : 24,
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            transition:
+              'opacity 160ms ease, max-height 220ms ease, padding 220ms ease, margin-bottom 220ms ease',
           }}
         >
           {title}
@@ -308,7 +325,7 @@ export function SidebarItem({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-    gap: 12,
+    gap: collapsed ? 0 : 12,
     padding: collapsed ? '10px 0' : '8px 12px',
     justifyContent: collapsed ? 'center' : 'flex-start',
     margin: '1px 0',
@@ -319,10 +336,11 @@ export function SidebarItem({
     color: active ? 'var(--color-ink, #1e293b)' : 'var(--color-ink-2, #475569)',
     fontSize: 13.5,
     fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
-    transition: 'background 120ms',
+    transition: 'background 120ms, gap 220ms ease, padding 220ms ease',
     position: 'relative',
     textDecoration: 'none',
     textAlign: 'left',
+    overflow: 'hidden',
   };
 
   const onMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
@@ -365,17 +383,40 @@ export function SidebarItem({
           {icon}
         </span>
       )}
-      {!collapsed && <span style={{ flex: 1, textAlign: 'left' }}>{label}</span>}
-      {!collapsed && badge != null && (
+      <span
+        style={{
+          flex: 1,
+          textAlign: 'left',
+          opacity: collapsed ? 0 : 1,
+          maxWidth: collapsed ? 0 : 999,
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          transition: 'opacity 160ms ease, max-width 220ms ease',
+        }}
+      >
+        {label}
+      </span>
+      {badge != null && (
         <span
           className="mono"
+          aria-hidden={collapsed || undefined}
           style={{
             fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
             fontSize: 10,
-            padding: '1px 7px',
+            padding: collapsed ? 0 : '1px 7px',
             borderRadius: 999,
-            background: active ? accentColor : 'var(--color-rule, rgba(30, 41, 59, 0.14))',
+            background: collapsed
+              ? 'transparent'
+              : active
+                ? accentColor
+                : 'var(--color-rule, rgba(30, 41, 59, 0.14))',
             color: active ? '#fff' : 'var(--color-ink-3, #64748b)',
+            opacity: collapsed ? 0 : 1,
+            maxWidth: collapsed ? 0 : 999,
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            transition:
+              'opacity 160ms ease, max-width 220ms ease, padding 220ms ease, background 160ms ease',
           }}
         >
           {badge}

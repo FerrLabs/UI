@@ -47,105 +47,74 @@ export function OrgDropdown({
 
   const accentColor = (a?: string) => a ?? 'var(--color-accent, var(--color-fg))';
 
-  if (collapsed) {
-    return (
-      <div
-        ref={rootRef}
-        className={className}
-        style={{ position: 'relative', margin: '6px auto 12px' }}
-      >
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          aria-haspopup="menu"
-          aria-expanded={open}
-          aria-label={current.name}
-          title={current.name}
-          data-org-switcher
-          style={{
-            width: 36,
-            height: 36,
-            padding: 0,
-            background: accentColor(current.accent),
-            color: '#fff',
-            border: 'none',
-            borderRadius: 9,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontFamily: 'var(--font-display, "Fraunces", Georgia, serif)',
-            fontWeight: 900,
-            fontSize: 15,
-            cursor: 'pointer',
-          }}
-        >
-          {current.name[0]?.toUpperCase()}
-        </button>
-        {open && (
-          <Panel
-            orgs={orgs}
-            current={current}
-            onSelect={(id) => {
-              setOpen(false);
-              onSelect?.(id);
-            }}
-            onCreate={
-              onCreate
-                ? () => {
-                    setOpen(false);
-                    onCreate();
-                  }
-                : undefined
-            }
-            createLabel={createLabel}
-            collapsed
-          />
-        )}
-      </div>
-    );
-  }
-
   return (
-    <div ref={rootRef} className={className} style={{ position: 'relative', margin: 12 }}>
+    <div
+      ref={rootRef}
+      className={className}
+      style={{
+        position: 'relative',
+        margin: collapsed ? '6px auto 12px' : 12,
+        width: collapsed ? 36 : 'auto',
+        transition: 'margin 220ms ease',
+      }}
+    >
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
+        aria-label={collapsed ? current.name : undefined}
+        title={collapsed ? current.name : undefined}
         data-org-switcher
         style={{
-          width: '100%',
-          padding: '10px 12px',
-          background: 'var(--color-card, #fff)',
-          border: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
-          borderRadius: 10,
+          width: collapsed ? 36 : '100%',
+          height: collapsed ? 36 : 'auto',
+          padding: collapsed ? 0 : '10px 12px',
+          background: collapsed ? accentColor(current.accent) : 'var(--color-card, #fff)',
+          border: collapsed ? 'none' : '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+          borderRadius: collapsed ? 9 : 10,
           display: 'flex',
           alignItems: 'center',
-          gap: 10,
+          gap: collapsed ? 0 : 10,
+          justifyContent: collapsed ? 'center' : 'flex-start',
           cursor: 'pointer',
-          color: 'var(--color-ink, #1e293b)',
+          color: collapsed ? '#fff' : 'var(--color-ink, #1e293b)',
           textAlign: 'left',
+          overflow: 'hidden',
+          transition:
+            'width 220ms ease, height 220ms ease, padding 220ms ease, background 220ms ease, border-color 220ms ease, border-radius 220ms ease, color 220ms ease, gap 220ms ease',
         }}
       >
         <span
           style={{
-            width: 28,
-            height: 28,
-            borderRadius: 8,
-            background: accentColor(current.accent),
+            width: collapsed ? 36 : 28,
+            height: collapsed ? 36 : 28,
+            borderRadius: collapsed ? 9 : 8,
+            background: collapsed ? 'transparent' : accentColor(current.accent),
             color: '#fff',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontFamily: 'var(--font-display, "Fraunces", Georgia, serif)',
             fontWeight: 900,
-            fontSize: 14,
+            fontSize: collapsed ? 15 : 14,
             flexShrink: 0,
+            transition:
+              'width 220ms ease, height 220ms ease, border-radius 220ms ease, background 220ms ease, font-size 220ms ease',
           }}
         >
           {current.name[0]?.toUpperCase()}
         </span>
-        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+        <div
+          style={{
+            flex: 1,
+            minWidth: 0,
+            opacity: collapsed ? 0 : 1,
+            maxWidth: collapsed ? 0 : 999,
+            overflow: 'hidden',
+            transition: 'opacity 160ms ease, max-width 220ms ease',
+          }}
+        >
           <div
             style={{
               fontSize: 13,
@@ -164,6 +133,9 @@ export function OrgDropdown({
                 fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
                 fontSize: 10,
                 color: 'var(--color-ink-3, #64748b)',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
               }}
             >
               {current.meta}
@@ -175,8 +147,12 @@ export function OrgDropdown({
           style={{
             color: 'var(--color-ink-3, #64748b)',
             fontSize: 10,
-            transition: 'transform 160ms',
+            flexShrink: 0,
+            opacity: collapsed ? 0 : 1,
+            maxWidth: collapsed ? 0 : 16,
+            overflow: 'hidden',
             transform: open ? 'rotate(180deg)' : 'none',
+            transition: 'transform 160ms, opacity 160ms ease, max-width 220ms ease',
           }}
         >
           ▾
@@ -199,6 +175,7 @@ export function OrgDropdown({
               : undefined
           }
           createLabel={createLabel}
+          collapsed={collapsed}
         />
       )}
     </div>
@@ -238,8 +215,15 @@ function Panel({
         boxShadow: '0 10px 30px rgba(15, 23, 42, 0.12)',
         padding: '6px',
         zIndex: 60,
+        animation: 'ferrlabs-org-panel-in 160ms ease-out',
       }}
     >
+      <style>{`
+        @keyframes ferrlabs-org-panel-in {
+          from { opacity: 0; transform: translateY(-4px); }
+          to { opacity: 1; transform: none; }
+        }
+      `}</style>
       <div
         className="mono"
         style={{
