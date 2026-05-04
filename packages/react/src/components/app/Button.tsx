@@ -6,7 +6,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 export interface ButtonProps {
   children: ReactNode;
   variant?: ButtonVariant;
-  /** Hex accent color override. Used as the bg on `primary`, the text on `ghost`. Defaults to `var(--color-fg)`. */
+  /** Hex accent color override. Used as the bg on `primary`, the text on `ghost`. Defaults to `var(--color-accent)` (with `var(--color-fg)` as ultimate fallback when no accent is in scope). */
   accent?: string;
   size?: ButtonSize;
   icon?: ReactNode;
@@ -73,7 +73,7 @@ export function Button({
     fg = '#fff';
     border = bg;
   } else if (isPrimary) {
-    bg = accent ?? 'var(--color-fg)';
+    bg = accent ?? 'var(--color-accent, var(--color-fg))';
     fg = '#fff';
     border = bg;
   } else {
