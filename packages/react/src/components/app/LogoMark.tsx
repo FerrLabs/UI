@@ -26,7 +26,7 @@ export function LogoMark({ size = 24, accent = 'currentColor', product }: Props)
       height={size}
       viewBox="0 0 32 32"
       aria-hidden="true"
-      style={{ display: 'block' }}
+      style={{ display: 'block', flexShrink: 0, width: size, height: size }}
     >
       {product === 'ferrflow' && (
         <g>

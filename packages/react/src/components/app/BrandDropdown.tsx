@@ -143,7 +143,7 @@ export function BrandDropdown({
       >
         <span
           style={{
-            flex: collapsed ? 'none' : 1,
+            flex: 1,
             minWidth: 0,
             display: 'inline-flex',
             alignItems: 'center',

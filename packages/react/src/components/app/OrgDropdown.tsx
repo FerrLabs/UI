@@ -89,7 +89,6 @@ export function OrgDropdown({
           cursor: 'pointer',
           color: 'var(--color-ink, #1e293b)',
           textAlign: 'left',
-          overflow: 'hidden',
           transition:
             'height 220ms ease, background 220ms ease, border-color 220ms ease, border-radius 220ms ease',
         }}
