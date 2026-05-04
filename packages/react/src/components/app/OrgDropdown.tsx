@@ -23,6 +23,7 @@ const TILE_INSET_LEFT = 12;
 const TILE_SIZE_EXPANDED = 28;
 const CARD_HEIGHT_EXPANDED = 48;
 const CARD_HEIGHT_COLLAPSED = 36;
+const CARD_WIDTH_COLLAPSED = 48;
 const CONTENT_LEFT = TILE_INSET_LEFT + TILE_SIZE_EXPANDED + 10;
 
 export function OrgDropdown({
@@ -63,9 +64,9 @@ export function OrgDropdown({
       className={className}
       style={{
         position: 'relative',
-        margin: collapsed ? '6px 14px 12px 14px' : '12px 12px 12px 8px',
+        margin: collapsed ? '6px 8px 12px 8px' : '12px 12px 12px 8px',
         width: '100%',
-        maxWidth: collapsed ? CARD_HEIGHT_COLLAPSED : 1000,
+        maxWidth: collapsed ? CARD_WIDTH_COLLAPSED : 1000,
         transition: 'margin 220ms ease, max-width 220ms ease',
       }}
     >
@@ -100,7 +101,7 @@ export function OrgDropdown({
             position: 'absolute',
             top: collapsed ? 0 : 10,
             left: collapsed ? 0 : TILE_INSET_LEFT,
-            width: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
+            width: collapsed ? CARD_WIDTH_COLLAPSED : TILE_SIZE_EXPANDED,
             height: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
             background: tileBg,
             borderRadius: collapsed ? 9 : 8,
