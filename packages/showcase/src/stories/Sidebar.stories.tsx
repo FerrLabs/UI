@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Sidebar, SidebarItem, SidebarSection } from '@ferrlabs/ui-primitives';
-import { Avatar, Button, LogoMark, Tag } from '@ferrlabs/ui-react';
+import { LogoMark, Tag } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Sidebar> = {
   title: 'Layout/Sidebar',
@@ -12,30 +12,21 @@ const meta: Meta<typeof Sidebar> = {
 export default meta;
 type Story = StoryObj<typeof Sidebar>;
 
-const Icon = ({ d }: { d: string }) => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-    <path
-      d={d}
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
+const Glyph = ({ char }: { char: string }) => (
+  <span style={{ fontSize: 14, lineHeight: 1, display: 'inline-block' }}>{char}</span>
 );
 
-const ICONS = {
-  overview: 'M3 12h7V3H3v9zm11 9h7v-9h-7v9zm0-18v6h7V3h-7zM3 21h7v-6H3v6z',
-  members: 'M12 12c2.5 0 4-2 4-4s-1.5-4-4-4-4 2-4 4 1.5 4 4 4zM4 20c0-3 4-5 8-5s8 2 8 5',
-  billing: 'M3 9h18M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z',
-  audit: 'M9 12h6m-6 4h6m-9-9h12v14H6V7zm3-4h6v4H9V3z',
-  settings:
-    'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0-12v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.5 8.5 2.2 2.2',
-};
-
-const FerrFlowBrand = ({ collapsed }: { collapsed: boolean }) => (
+const ProductBrand = ({
+  product,
+  accent,
+  collapsed,
+}: {
+  product: 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth' | 'ferrfleet' | 'ferrlabs';
+  accent: string;
+  collapsed: boolean;
+}) => (
   <>
-    <LogoMark product="ferrflow" accent="var(--color-ferrflow-orange)" />
+    <LogoMark product={product === 'ferrlabs' ? 'ferrflow' : product} accent={accent} />
     {!collapsed && (
       <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
         <span
@@ -44,9 +35,10 @@ const FerrFlowBrand = ({ collapsed }: { collapsed: boolean }) => (
             fontWeight: 900,
             fontSize: 17,
             letterSpacing: '-0.02em',
+            color: 'var(--color-ink)',
           }}
         >
-          ferrflow
+          {product}
         </span>
         <span
           className="mono"
@@ -57,91 +49,116 @@ const FerrFlowBrand = ({ collapsed }: { collapsed: boolean }) => (
             marginTop: 2,
           }}
         >
-          by ferrlabs
+          by ferrlabs ↗
         </span>
       </div>
     )}
   </>
 );
 
-function ControlledShell({ initialCollapsed = false }: { initialCollapsed?: boolean }) {
+function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean }) {
   const [collapsed, setCollapsed] = useState(initialCollapsed);
-  const [active, setActive] = useState('overview');
+  const [active, setActive] = useState('secrets');
+  const accent = '#10b981';
   return (
-    <div style={{ display: 'flex', minHeight: 600, background: 'var(--color-app-bg, #fafaf9)' }}>
+    <div style={{ display: 'flex', minHeight: 700, background: 'var(--color-paper, #fafaf9)' }}>
       <Sidebar
-        brand={<FerrFlowBrand collapsed={collapsed} />}
+        brand={<ProductBrand product="ferrvault" accent={accent} collapsed={collapsed} />}
+        project={{ name: 'acme/payments', meta: 'production', accent }}
         collapsed={collapsed}
-        footer={
-          <button
-            type="button"
-            onClick={() => setCollapsed((c) => !c)}
-            className="mono"
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 10,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: 'var(--color-ink-3)',
-              padding: '6px 10px',
-              border: 'none',
-              background: 'transparent',
-              cursor: 'pointer',
-              width: '100%',
-              textAlign: 'left',
-            }}
-          >
-            {collapsed ? '→ Expand' : '← Collapse'}
-          </button>
-        }
+        onCollapsedChange={setCollapsed}
       >
-        <SidebarSection title="Workspace" collapsed={collapsed}>
+        <SidebarSection collapsed={collapsed}>
           <SidebarItem
-            icon={<Icon d={ICONS.overview} />}
-            label="Overview"
-            active={active === 'overview'}
-            onClick={() => setActive('overview')}
-            collapsed={collapsed}
-          />
-          <SidebarItem
-            icon={<Icon d={ICONS.members} />}
-            label="Members"
-            active={active === 'members'}
-            onClick={() => setActive('members')}
+            icon={<Glyph char="◈" />}
+            label="Secrets"
             badge={
               <Tag size="sm" variant="neutral" soft>
-                12
+                127
               </Tag>
             }
+            active={active === 'secrets'}
+            onClick={() => setActive('secrets')}
             collapsed={collapsed}
+            accent={accent}
           />
           <SidebarItem
-            icon={<Icon d={ICONS.audit} />}
+            icon={<Glyph char="◇" />}
+            label="Environments"
+            badge={
+              <Tag size="sm" variant="neutral" soft>
+                4
+              </Tag>
+            }
+            active={active === 'envs'}
+            onClick={() => setActive('envs')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="↻" />}
+            label="Rotations"
+            badge={
+              <Tag size="sm" variant="warning" soft>
+                3
+              </Tag>
+            }
+            active={active === 'rotations'}
+            onClick={() => setActive('rotations')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+        </SidebarSection>
+        <SidebarSection title="Governance" collapsed={collapsed}>
+          <SidebarItem
+            icon={<Glyph char="◎" />}
             label="Audit log"
             active={active === 'audit'}
             onClick={() => setActive('audit')}
             collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="⌘" />}
+            label="Access policies"
+            active={active === 'access'}
+            onClick={() => setActive('access')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="⎈" />}
+            label="KMS keys"
+            active={active === 'keys'}
+            onClick={() => setActive('keys')}
+            collapsed={collapsed}
+            accent={accent}
           />
         </SidebarSection>
-        <SidebarSection title="Org" collapsed={collapsed}>
+        <SidebarSection title="Connect" collapsed={collapsed}>
           <SidebarItem
-            icon={<Icon d={ICONS.billing} />}
-            label="Billing"
-            active={active === 'billing'}
-            onClick={() => setActive('billing')}
-            badge={
-              <Tag size="sm" variant="warning" soft>
-                !
-              </Tag>
-            }
+            icon={<Glyph char="$" />}
+            label="CLI / SDK"
+            active={active === 'cli'}
+            onClick={() => setActive('cli')}
             collapsed={collapsed}
+            accent={accent}
           />
           <SidebarItem
-            icon={<Icon d={ICONS.settings} />}
-            label="Settings"
-            active={active === 'settings'}
-            onClick={() => setActive('settings')}
+            icon={<Glyph char="⬢" />}
+            label="K8s operator"
+            active={active === 'k8s'}
+            onClick={() => setActive('k8s')}
             collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="◔" />}
+            label="CI integrations"
+            active={active === 'ci'}
+            onClick={() => setActive('ci')}
+            collapsed={collapsed}
+            accent={accent}
           />
         </SidebarSection>
       </Sidebar>
@@ -150,89 +167,309 @@ function ControlledShell({ initialCollapsed = false }: { initialCollapsed?: bool
           style={{
             fontFamily: 'var(--font-display)',
             fontWeight: 900,
-            fontSize: 28,
+            fontSize: 36,
+            letterSpacing: '-0.025em',
             margin: 0,
             color: 'var(--color-ink)',
           }}
         >
           {active.charAt(0).toUpperCase() + active.slice(1)}
         </h1>
-        <p style={{ marginTop: 12, color: 'var(--color-ink-2)' }}>
-          Editorial sidebar with mono uppercase labels, accent-colored active state, and collapse
-          toggle. Same visual language as Shell.
+        <p
+          style={{
+            marginTop: 8,
+            color: 'var(--color-ink-2)',
+            fontSize: 15,
+            maxWidth: 600,
+          }}
+        >
+          Product app sidebar — project switcher under the brand, workspace-first sections, accent
+          left bar on the active item, built-in collapse toggle. Mirrors the AppShell from the v8
+          design bundle (FerrVault, FerrTrack, FerrGrowth, FerrFleet share the same chrome).
         </p>
       </main>
     </div>
   );
 }
 
-export const Default: Story = {
-  render: () => <ControlledShell />,
+function FerrTrackApp() {
+  const [collapsed, setCollapsed] = useState(false);
+  const [active, setActive] = useState('issues');
+  const accent = 'var(--color-ferrtrack-indigo, #6366f1)';
+  return (
+    <div style={{ display: 'flex', minHeight: 700, background: 'var(--color-paper, #fafaf9)' }}>
+      <Sidebar
+        brand={<ProductBrand product="ferrtrack" accent={accent} collapsed={collapsed} />}
+        project={{ name: 'acme/web-app', meta: 'cycle 14', accent }}
+        collapsed={collapsed}
+        onCollapsedChange={setCollapsed}
+      >
+        <SidebarSection collapsed={collapsed}>
+          <SidebarItem
+            icon={<Glyph char="◔" />}
+            label="Issues"
+            badge={
+              <Tag size="sm" variant="neutral" soft>
+                42
+              </Tag>
+            }
+            active={active === 'issues'}
+            onClick={() => setActive('issues')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="↻" />}
+            label="Cycles"
+            active={active === 'cycles'}
+            onClick={() => setActive('cycles')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="◎" />}
+            label="Roadmap"
+            active={active === 'roadmap'}
+            onClick={() => setActive('roadmap')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+        </SidebarSection>
+        <SidebarSection title="Workflows" collapsed={collapsed}>
+          <SidebarItem
+            icon={<Glyph char="⌘" />}
+            label="Triage"
+            badge={
+              <Tag size="sm" variant="danger" soft>
+                7
+              </Tag>
+            }
+            active={active === 'triage'}
+            onClick={() => setActive('triage')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="⊟" />}
+            label="Templates"
+            active={active === 'templates'}
+            onClick={() => setActive('templates')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+        </SidebarSection>
+      </Sidebar>
+      <main style={{ flex: 1, padding: 32 }}>
+        <h1
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontWeight: 900,
+            fontSize: 36,
+            letterSpacing: '-0.025em',
+            margin: 0,
+            color: 'var(--color-ink)',
+          }}
+        >
+          {active.charAt(0).toUpperCase() + active.slice(1)}
+        </h1>
+        <p
+          style={{
+            marginTop: 8,
+            color: 'var(--color-ink-2)',
+            fontSize: 15,
+            maxWidth: 600,
+          }}
+        >
+          Same Sidebar primitive, different accent (indigo) and product context. Project switcher +
+          workspace nav.
+        </p>
+      </main>
+    </div>
+  );
+}
+
+function FerrLabsAccount() {
+  const [collapsed, setCollapsed] = useState(false);
+  const [active, setActive] = useState('overview');
+  const accent = 'var(--color-ink, #1e293b)';
+  return (
+    <div style={{ display: 'flex', minHeight: 700, background: 'var(--color-paper, #fafaf9)' }}>
+      <Sidebar
+        brand={<ProductBrand product="ferrlabs" accent={accent} collapsed={collapsed} />}
+        project={{ name: 'Acme Inc.', meta: 'Business · 14 seats', accent }}
+        collapsed={collapsed}
+        onCollapsedChange={setCollapsed}
+      >
+        <SidebarSection collapsed={collapsed}>
+          <SidebarItem
+            icon={<Glyph char="◐" />}
+            label="Overview"
+            active={active === 'overview'}
+            onClick={() => setActive('overview')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="⊞" />}
+            label="Products"
+            badge={
+              <Tag size="sm" variant="neutral" soft>
+                5
+              </Tag>
+            }
+            active={active === 'products'}
+            onClick={() => setActive('products')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="⌇" />}
+            label="Usage"
+            active={active === 'usage'}
+            onClick={() => setActive('usage')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+        </SidebarSection>
+        <SidebarSection title="Organization" collapsed={collapsed}>
+          <SidebarItem
+            icon={<Glyph char="⌬" />}
+            label="Members"
+            badge={
+              <Tag size="sm" variant="neutral" soft>
+                14
+              </Tag>
+            }
+            active={active === 'members'}
+            onClick={() => setActive('members')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="⊟" />}
+            label="Teams"
+            badge={
+              <Tag size="sm" variant="neutral" soft>
+                4
+              </Tag>
+            }
+            active={active === 'teams'}
+            onClick={() => setActive('teams')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="◇" />}
+            label="Roles"
+            active={active === 'roles'}
+            onClick={() => setActive('roles')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="⌖" />}
+            label="Audit log"
+            active={active === 'audit'}
+            onClick={() => setActive('audit')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+        </SidebarSection>
+        <SidebarSection title="Billing" collapsed={collapsed}>
+          <SidebarItem
+            icon={<Glyph char="◧" />}
+            label="Plan & invoices"
+            active={active === 'billing'}
+            onClick={() => setActive('billing')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="⚖" />}
+            label="Tax & legal"
+            active={active === 'tax'}
+            onClick={() => setActive('tax')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+        </SidebarSection>
+        <SidebarSection title="Security" collapsed={collapsed}>
+          <SidebarItem
+            icon={<Glyph char="⚿" />}
+            label="SSO / SAML"
+            active={active === 'sso'}
+            onClick={() => setActive('sso')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="⌥" />}
+            label="API tokens"
+            badge={
+              <Tag size="sm" variant="neutral" soft>
+                7
+              </Tag>
+            }
+            active={active === 'tokens'}
+            onClick={() => setActive('tokens')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+          <SidebarItem
+            icon={<Glyph char="◉" />}
+            label="Sessions"
+            active={active === 'sessions'}
+            onClick={() => setActive('sessions')}
+            collapsed={collapsed}
+            accent={accent}
+          />
+        </SidebarSection>
+      </Sidebar>
+      <main style={{ flex: 1, padding: 32 }}>
+        <h1
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontWeight: 900,
+            fontSize: 36,
+            letterSpacing: '-0.025em',
+            margin: 0,
+            color: 'var(--color-ink)',
+          }}
+        >
+          {active.charAt(0).toUpperCase() + active.slice(1)}
+        </h1>
+        <p
+          style={{
+            marginTop: 8,
+            color: 'var(--color-ink-2)',
+            fontSize: 15,
+            maxWidth: 600,
+          }}
+        >
+          FerrLabs holding workspace — slate accent, settings-heavy sections (Org / Billing /
+          Security / Account). The org name replaces a per-project switcher.
+        </p>
+      </main>
+    </div>
+  );
+}
+
+export const FerrVaultProductApp: Story = {
+  name: 'Product app — FerrVault',
+  render: () => <FerrVaultApp />,
+};
+
+export const FerrTrackProductApp: Story = {
+  name: 'Product app — FerrTrack',
+  render: () => <FerrTrackApp />,
+};
+
+export const FerrLabsHoldingApp: Story = {
+  name: 'Holding workspace — FerrLabs',
+  render: () => <FerrLabsAccount />,
 };
 
 export const Collapsed: Story = {
-  render: () => <ControlledShell initialCollapsed />,
-};
-
-export const WithUserFooter: Story = {
-  render: () => {
-    const [collapsed, setCollapsed] = useState(false);
-    return (
-      <div style={{ display: 'flex', minHeight: 600, background: 'var(--color-app-bg, #fafaf9)' }}>
-        <Sidebar
-          brand={<FerrFlowBrand collapsed={collapsed} />}
-          collapsed={collapsed}
-          footer={
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 4 }}>
-              <Avatar name="Ada Lovelace" size={28} accent="var(--color-ferrflow-orange)" />
-              {!collapsed && (
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontWeight: 700,
-                      fontSize: 13,
-                      color: 'var(--color-ink)',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    Ada Lovelace
-                  </div>
-                  <div
-                    className="mono"
-                    style={{
-                      fontSize: 10,
-                      color: 'var(--color-ink-3)',
-                      letterSpacing: '0.04em',
-                    }}
-                  >
-                    ada@acme.com
-                  </div>
-                </div>
-              )}
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setCollapsed((c) => !c)}
-                aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-              >
-                {collapsed ? '→' : '←'}
-              </Button>
-            </div>
-          }
-        >
-          <SidebarItem
-            icon={<Icon d={ICONS.overview} />}
-            label="Overview"
-            active
-            collapsed={collapsed}
-          />
-          <SidebarItem icon={<Icon d={ICONS.members} />} label="Members" collapsed={collapsed} />
-        </Sidebar>
-        <main style={{ flex: 1, padding: 32, color: 'var(--color-ink-2)' }}>Body content</main>
-      </div>
-    );
-  },
+  name: 'Collapsed (FerrVault)',
+  render: () => <FerrVaultApp initialCollapsed />,
 };
