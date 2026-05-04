@@ -177,12 +177,21 @@ export function BrandDropdown({
             top: '100%',
             left: 0,
             right: 0,
+            height: 'calc(100vh - 64px)',
             background: 'var(--color-app-sidebar, #f7f7f5)',
             borderBottom: '1px solid var(--color-rule, rgba(30,41,59,0.10))',
             padding: '8px 8px 12px',
             zIndex: 60,
+            overflowY: 'auto',
+            animation: 'ferrlabs-brand-panel-in 200ms ease-out',
           }}
         >
+          <style>{`
+            @keyframes ferrlabs-brand-panel-in {
+              from { opacity: 0; transform: translateY(-4px); }
+              to { opacity: 1; transform: none; }
+            }
+          `}</style>
           {!collapsed && (
             <div
               className="mono"
