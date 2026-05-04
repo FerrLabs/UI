@@ -96,10 +96,10 @@ export function LogoMark({ size = 24, accent = 'currentColor', product }: Props)
       {product === 'ferrlabs' && (
         <g>
           <text
-            x="4"
+            x="3"
             y="22"
             fontFamily="DM Mono, ui-monospace, monospace"
-            fontSize="12"
+            fontSize="9"
             fill={accent}
             opacity="0.5"
           >
@@ -107,22 +107,22 @@ export function LogoMark({ size = 24, accent = 'currentColor', product }: Props)
           </text>
           <text
             x="16"
-            y="22"
+            y="23"
             textAnchor="middle"
             fontFamily="Fraunces, Georgia, serif"
             fontWeight="900"
-            fontSize="14"
+            fontSize="19"
             fill={accent}
-            letterSpacing="-0.02em"
+            letterSpacing="-0.04em"
           >
             FL
           </text>
           <text
-            x="28"
+            x="29"
             y="22"
             textAnchor="end"
             fontFamily="DM Mono, ui-monospace, monospace"
-            fontSize="12"
+            fontSize="9"
             fill={accent}
             opacity="0.5"
           >
