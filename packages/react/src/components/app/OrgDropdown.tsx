@@ -100,8 +100,8 @@ export function OrgDropdown({
           style={{
             position: 'absolute',
             top: collapsed ? 0 : 10,
-            left: collapsed ? 0 : TILE_INSET_LEFT,
-            width: collapsed ? CARD_WIDTH_COLLAPSED : TILE_SIZE_EXPANDED,
+            left: collapsed ? (CARD_WIDTH_COLLAPSED - CARD_HEIGHT_COLLAPSED) / 2 : TILE_INSET_LEFT,
+            width: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
             height: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
             background: tileBg,
             borderRadius: collapsed ? 9 : 8,
