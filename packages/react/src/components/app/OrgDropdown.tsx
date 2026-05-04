@@ -95,10 +95,10 @@ export function OrgDropdown({
           aria-hidden
           style={{
             position: 'absolute',
-            top: collapsed ? -1 : TILE_INSET_TOP,
-            left: collapsed ? -1 : TILE_INSET_LEFT,
-            width: collapsed ? 'calc(100% + 2px)' : TILE_SIZE_EXPANDED,
-            height: collapsed ? 'calc(100% + 2px)' : TILE_SIZE_EXPANDED,
+            top: collapsed ? 0 : TILE_INSET_TOP,
+            left: collapsed ? 0 : TILE_INSET_LEFT,
+            width: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
+            height: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
             background: tileBg,
             borderRadius: collapsed ? 9 : 8,
             color: '#fff',

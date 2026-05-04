@@ -326,7 +326,7 @@ export function SidebarItem({
     display: 'flex',
     alignItems: 'center',
     gap: 12,
-    padding: '10px 12px',
+    padding: collapsed ? '10px 16px' : '10px 12px',
     justifyContent: 'flex-start',
     margin: '1px 0',
     borderRadius: 8,
@@ -336,7 +336,7 @@ export function SidebarItem({
     color: active ? 'var(--color-ink, #1e293b)' : 'var(--color-ink-2, #475569)',
     fontSize: 13.5,
     fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
-    transition: 'background 120ms',
+    transition: 'background 120ms, padding 220ms ease',
     position: 'relative',
     textDecoration: 'none',
     textAlign: 'left',
@@ -374,7 +374,9 @@ export function SidebarItem({
         <span
           style={{
             width: 16,
+            flexShrink: 0,
             display: 'inline-flex',
+            alignItems: 'center',
             justifyContent: 'center',
             color: active ? accentColor : 'var(--color-ink-3, #64748b)',
             fontSize: 14,
