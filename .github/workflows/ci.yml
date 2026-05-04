@@ -9,7 +9,7 @@ on:
 
 jobs:
   check:
-    name: Typecheck + build
+    name: Typecheck
     runs-on: ferrlabs-k8s
     steps:
       - uses: actions/checkout@v6
@@ -44,7 +44,7 @@ jobs:
             echo "manual dispatch — full workspace"
           fi
       - name: Build library packages (deps for showcase typecheck)
-        run: pnpm --filter '@ferrlabs/ui-primitives' --filter '@ferrlabs/ui-react' build
+        run: pnpm --filter '@ferrlabs/ui-primitives' --filter '@ferrlabs/ui-react' --filter '@ferrlabs/ui-icons' build
       - name: Typecheck
         env:
           FILTER: ${{ steps.filter.outputs.filter }}
@@ -53,16 +53,6 @@ jobs:
             pnpm --filter "$FILTER" typecheck
           else
             pnpm -r typecheck
-          fi
-      - name: Build
-        env:
-          FILTER: ${{ steps.filter.outputs.filter }}
-          NODE_OPTIONS: --max-old-space-size=4096
-        run: |
-          if [ -n "$FILTER" ]; then
-            pnpm --filter "$FILTER" --filter '!@ferrlabs/ui-showcase' build
-          else
-            pnpm -r --filter '!@ferrlabs/ui-showcase' build
           fi
 
   release:
