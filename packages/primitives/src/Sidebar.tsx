@@ -10,7 +10,12 @@ export interface SidebarProps {
    * `<div style={{ padding: '0 20px' }}>`.
    */
   brand?: ReactNode;
-  /** Optional project switcher row directly below the brand cell. */
+  /**
+   * Optional project / org switcher row directly below the brand cell. For a static
+   * tile (just shows the current project, opens nothing on click — or fires `onClick`),
+   * pass the structured object form. For a real switcher dropdown listing multiple orgs,
+   * use `projectSlot` with an `<OrgDropdown>` from `@ferrlabs/ui-react`.
+   */
   project?: {
     name: string;
     meta?: ReactNode;
@@ -18,6 +23,12 @@ export interface SidebarProps {
     /** Hex accent for the leading initial tile. Defaults to var(--color-accent). */
     accent?: string;
   };
+  /**
+   * Custom node rendered in the project-switcher slot. Takes precedence over `project`.
+   * Use with `<OrgDropdown>` from `@ferrlabs/ui-react` to give users a real org picker.
+   * The component must handle its own outer margin (`OrgDropdown` already does).
+   */
+  projectSlot?: ReactNode;
   /** Nav items + section headers — pass `<SidebarSection>` and `<SidebarItem>` children. */
   children?: ReactNode;
   /** Custom footer slot. When omitted, a built-in "Collapse / Expand" toggle renders instead. */
@@ -41,6 +52,7 @@ export interface SidebarProps {
 export function Sidebar({
   brand,
   project,
+  projectSlot,
   children,
   footer,
   collapsed: collapsedProp,
@@ -98,99 +110,100 @@ export function Sidebar({
         </div>
       )}
 
-      {project &&
-        (collapsed ? (
-          <button
-            type="button"
-            onClick={project.onClick}
-            aria-label={project.name}
-            title={project.name}
-            data-project-switcher
-            style={{
-              margin: '6px auto 12px',
-              width: 36,
-              height: 36,
-              padding: 0,
-              background: project.accent ?? 'var(--color-accent, var(--color-fg))',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 9,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
-              fontWeight: 900,
-              fontSize: 15,
-              cursor: 'pointer',
-            }}
-          >
-            {project.name[0]?.toUpperCase()}
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={project.onClick}
-            data-project-switcher
-            style={{
-              margin: 12,
-              padding: '10px 12px',
-              background: 'var(--color-card, #fff)',
-              border: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
-              borderRadius: 10,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              cursor: 'pointer',
-              color: 'var(--color-ink, #1e293b)',
-              textAlign: 'left',
-            }}
-          >
-            <span
+      {projectSlot ??
+        (project &&
+          (collapsed ? (
+            <button
+              type="button"
+              onClick={project.onClick}
+              aria-label={project.name}
+              title={project.name}
+              data-project-switcher
               style={{
-                width: 28,
-                height: 28,
-                borderRadius: 8,
+                margin: '6px auto 12px',
+                width: 36,
+                height: 36,
+                padding: 0,
                 background: project.accent ?? 'var(--color-accent, var(--color-fg))',
                 color: '#fff',
+                border: 'none',
+                borderRadius: 9,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
                 fontWeight: 900,
-                fontSize: 14,
-                flexShrink: 0,
+                fontSize: 15,
+                cursor: 'pointer',
               }}
             >
               {project.name[0]?.toUpperCase()}
-            </span>
-            <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-              <div
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={project.onClick}
+              data-project-switcher
+              style={{
+                margin: 12,
+                padding: '10px 12px',
+                background: 'var(--color-card, #fff)',
+                border: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+                borderRadius: 10,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                cursor: 'pointer',
+                color: 'var(--color-ink, #1e293b)',
+                textAlign: 'left',
+              }}
+            >
+              <span
                 style={{
-                  fontSize: 13,
-                  fontWeight: 500,
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
+                  width: 28,
+                  height: 28,
+                  borderRadius: 8,
+                  background: project.accent ?? 'var(--color-accent, var(--color-fg))',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
+                  fontWeight: 900,
+                  fontSize: 14,
+                  flexShrink: 0,
                 }}
               >
-                {project.name}
-              </div>
-              {project.meta && (
+                {project.name[0]?.toUpperCase()}
+              </span>
+              <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                 <div
-                  className="mono"
                   style={{
-                    fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
-                    fontSize: 10,
-                    color: 'var(--color-ink-3, #64748b)',
+                    fontSize: 13,
+                    fontWeight: 500,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
                   }}
                 >
-                  {project.meta}
+                  {project.name}
                 </div>
-              )}
-            </div>
-            <span style={{ color: 'var(--color-ink-3, #64748b)', fontSize: 10 }}>▾</span>
-          </button>
-        ))}
+                {project.meta && (
+                  <div
+                    className="mono"
+                    style={{
+                      fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+                      fontSize: 10,
+                      color: 'var(--color-ink-3, #64748b)',
+                    }}
+                  >
+                    {project.meta}
+                  </div>
+                )}
+              </div>
+              <span style={{ color: 'var(--color-ink-3, #64748b)', fontSize: 10 }}>▾</span>
+            </button>
+          )))}
 
       <nav
         style={{

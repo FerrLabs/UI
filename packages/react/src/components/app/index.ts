@@ -23,6 +23,7 @@ export {
   type BrandDropdownApp,
   type BrandDropdownAppId,
 } from './BrandDropdown';
+export { OrgDropdown, type OrgDropdownProps, type OrgDropdownItem } from './OrgDropdown';
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './Button';
 /** @deprecated Renamed to `Button`. Will be removed in a future major. */
 export { Button as AppButton } from './Button';
