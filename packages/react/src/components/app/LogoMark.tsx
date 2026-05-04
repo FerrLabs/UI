@@ -107,13 +107,13 @@ export function LogoMark({ size = 24, accent = 'currentColor', product }: Props)
           </text>
           <text
             x="16"
-            y="25"
+            y="24"
             textAnchor="middle"
             fontFamily="Fraunces, Georgia, serif"
             fontWeight="900"
-            fontSize="19"
+            fontSize="15"
             fill={accent}
-            letterSpacing="-0.04em"
+            letterSpacing="-0.05em"
           >
             FL
           </text>

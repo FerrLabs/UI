@@ -125,7 +125,7 @@ export function BrandDropdown({
           minHeight: 'inherit',
           background: 'transparent',
           border: 'none',
-          padding: '0 20px',
+          padding: '0 18px',
           margin: 0,
           cursor: 'pointer',
           color: 'inherit',
