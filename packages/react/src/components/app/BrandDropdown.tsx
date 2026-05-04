@@ -76,6 +76,7 @@ export function BrandDropdown({
   collapsed = false,
 }: BrandDropdownProps) {
   const [open, setOpen] = useState(false);
+  const [switching, setSwitching] = useState<BrandDropdownApp | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -205,6 +206,19 @@ export function BrandDropdown({
                 role="menuitem"
                 aria-current={isCurrent ? 'page' : undefined}
                 title={collapsed ? `${a.label} — ${a.tag}` : undefined}
+                onClick={(e) => {
+                  if (isCurrent) {
+                    e.preventDefault();
+                    setOpen(false);
+                    return;
+                  }
+                  e.preventDefault();
+                  setOpen(false);
+                  setSwitching(a);
+                  window.setTimeout(() => {
+                    if (typeof window !== 'undefined') window.location.assign(a.href);
+                  }, 360);
+                }}
                 style={{
                   position: 'relative',
                   display: 'flex',
@@ -289,6 +303,70 @@ export function BrandDropdown({
               </a>
             );
           })}
+        </div>
+      )}
+      {switching && (
+        <div
+          aria-live="polite"
+          aria-label={`Switching to ${switching.label}`}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: `color-mix(in oklab, ${switching.accent} 4%, var(--color-paper, #faf8f4))`,
+            backdropFilter: 'blur(10px) saturate(140%)',
+            WebkitBackdropFilter: 'blur(10px) saturate(140%)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            animation: 'ferrlabs-brand-switch-in 200ms ease-out',
+          }}
+        >
+          <style>{`
+            @keyframes ferrlabs-brand-switch-in {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+            @keyframes ferrlabs-brand-switch-pulse {
+              0%, 100% { transform: scale(1); }
+              50% { transform: scale(1.06); }
+            }
+          `}</style>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 18,
+              animation: 'ferrlabs-brand-switch-pulse 1200ms ease-in-out infinite',
+            }}
+          >
+            <span
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 14,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: switching.accent,
+              }}
+            >
+              <LogoMark product={switching.id as ProductSlug} accent={switching.accent} size={64} />
+            </span>
+            <span
+              className="mono"
+              style={{
+                fontFamily: 'var(--font-mono, "DM Mono", monospace)',
+                fontSize: 11,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: 'var(--color-ink-3, #64748b)',
+              }}
+            >
+              Opening {switching.label}…
+            </span>
+          </div>
         </div>
       )}
     </div>
