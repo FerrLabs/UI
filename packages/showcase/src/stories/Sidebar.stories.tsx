@@ -35,7 +35,7 @@ const ProductBrand = ({
   collapsed: boolean;
 }) => (
   <>
-    <LogoMark product={product} accent={accent} />
+    <LogoMark product={product} accent={accent} size={28} />
     <div
       style={{
         display: 'flex',

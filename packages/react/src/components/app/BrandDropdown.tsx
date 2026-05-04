@@ -248,8 +248,8 @@ export function BrandDropdown({
                 )}
                 <span
                   style={{
-                    width: 22,
-                    height: 22,
+                    width: 28,
+                    height: 28,
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -261,7 +261,7 @@ export function BrandDropdown({
                     transition: 'background 120ms',
                   }}
                 >
-                  <LogoMark product={a.id as ProductSlug} accent={a.accent} size={18} />
+                  <LogoMark product={a.id as ProductSlug} accent={a.accent} size={22} />
                 </span>
                 {!collapsed && (
                   <>
