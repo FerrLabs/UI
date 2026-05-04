@@ -53,7 +53,7 @@ export function OrgDropdown({
       className={className}
       style={{
         position: 'relative',
-        margin: collapsed ? '6px auto 12px' : 12,
+        margin: collapsed ? '6px 8px 12px 20px' : '12px 12px 12px 8px',
         width: collapsed ? 36 : 'auto',
         transition: 'margin 220ms ease',
       }}
