@@ -63,7 +63,8 @@ export function OrgDropdown({
       className={className}
       style={{
         position: 'relative',
-        margin: collapsed ? '6px auto 12px' : '12px 12px 12px 8px',
+        margin: collapsed ? '6px 8px 12px 20px' : '12px 12px 12px 8px',
+        width: '100%',
         maxWidth: collapsed ? CARD_HEIGHT_COLLAPSED : 1000,
         transition: 'margin 220ms ease, max-width 220ms ease',
       }}
@@ -228,7 +229,8 @@ function Panel({
         right: collapsed ? 'auto' : 0,
         marginTop: 6,
         marginLeft: collapsed ? 8 : 0,
-        minWidth: collapsed ? 240 : undefined,
+        minWidth: collapsed ? 240 : 240,
+        maxWidth: 280,
         background: 'var(--color-card, #fff)',
         border: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
         borderRadius: 10,
