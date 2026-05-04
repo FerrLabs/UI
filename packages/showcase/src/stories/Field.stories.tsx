@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Field, Input } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Field> = {
-  title: 'Primitives/Field',
+  title: 'Forms/Field',
   component: Field,
   args: {
     label: 'Work email',

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Popover } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Popover> = {
-  title: 'Primitives/Popover',
+  title: 'Overlays/Popover',
   component: Popover,
 };
 

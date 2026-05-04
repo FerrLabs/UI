@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Menu, MenuItem, MenuLabel, MenuSeparator } from '@ferrlabs/ui-primitives';
 
 const meta: Meta = {
-  title: 'Disclosure/Menu',
+  title: 'Overlays/Menu',
 };
 
 export default meta;

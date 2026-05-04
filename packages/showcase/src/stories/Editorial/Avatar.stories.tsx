@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Avatar } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Avatar> = {
-  title: 'Editorial/Avatar',
+  title: 'Data Display/Avatar',
   component: Avatar,
   args: { name: 'Ada Lovelace', size: 'md' },
   argTypes: {

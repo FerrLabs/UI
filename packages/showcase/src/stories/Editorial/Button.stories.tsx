@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Button> = {
-  title: 'Editorial/Button',
+  title: 'Actions/Button',
   component: Button,
   args: { children: 'Click me', variant: 'primary', size: 'md', loading: false, disabled: false },
   argTypes: {

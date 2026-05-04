@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { BrandDropdown, LogoMark } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof BrandDropdown> = {
-  title: 'Editorial/BrandDropdown',
+  title: 'Brand/BrandDropdown',
   component: BrandDropdown,
 };
 

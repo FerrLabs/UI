@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Input } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Input> = {
-  title: 'Primitives/Input',
+  title: 'Forms/Input',
   component: Input,
   args: {
     placeholder: 'Type something…',

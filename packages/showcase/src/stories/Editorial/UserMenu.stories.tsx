@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { UserMenu } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof UserMenu> = {
-  title: 'Editorial/UserMenu',
+  title: 'Navigation/UserMenu',
   component: UserMenu,
 };
 

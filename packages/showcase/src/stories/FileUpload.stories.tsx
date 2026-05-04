@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { FileUpload } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof FileUpload> = {
-  title: 'Form/FileUpload',
+  title: 'Forms/FileUpload',
   component: FileUpload,
   decorators: [
     (Story) => (

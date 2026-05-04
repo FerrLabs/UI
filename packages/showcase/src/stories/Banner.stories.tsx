@@ -3,7 +3,7 @@ import { Banner } from '@ferrlabs/ui-primitives';
 import { Button } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Banner> = {
-  title: 'Primitives/Banner',
+  title: 'Feedback/Banner',
   component: Banner,
   decorators: [
     (Story) => (

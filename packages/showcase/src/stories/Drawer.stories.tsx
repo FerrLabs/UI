@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Drawer } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Drawer> = {
-  title: 'Primitives/Drawer',
+  title: 'Overlays/Drawer',
   component: Drawer,
 };
 
