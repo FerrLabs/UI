@@ -351,7 +351,7 @@ export function SidebarItem({
     display: 'flex',
     alignItems: 'center',
     gap: 12,
-    padding: '10px 16px',
+    padding: '10px 12px',
     justifyContent: 'flex-start',
     margin: '1px 0',
     borderRadius: 8,

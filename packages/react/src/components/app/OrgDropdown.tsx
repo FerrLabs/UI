@@ -15,9 +15,10 @@ export interface OrgDropdownProps {
   createLabel?: string;
   collapsed?: boolean;
   className?: string;
+  /** Force the panel open. Useful in stories / docs to inspect the menu state. Disables outside-click + ESC close. */
+  defaultOpen?: boolean;
 }
 
-const TILE_INSET_TOP = 10;
 const TILE_INSET_LEFT = 12;
 const TILE_SIZE_EXPANDED = 28;
 const CARD_HEIGHT_EXPANDED = 48;
@@ -32,12 +33,13 @@ export function OrgDropdown({
   createLabel = 'Create organization',
   collapsed = false,
   className,
+  defaultOpen = false,
 }: OrgDropdownProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || defaultOpen) return;
     const onClick = (e: MouseEvent) => {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     };
@@ -50,7 +52,7 @@ export function OrgDropdown({
       document.removeEventListener('mousedown', onClick);
       document.removeEventListener('keydown', onKey);
     };
-  }, [open]);
+  }, [open, defaultOpen]);
 
   const accentColor = (a?: string) => a ?? 'var(--color-accent, var(--color-fg))';
   const tileBg = accentColor(current.accent);
@@ -95,22 +97,22 @@ export function OrgDropdown({
           aria-hidden
           style={{
             position: 'absolute',
-            top: collapsed ? 0 : TILE_INSET_TOP,
-            left: collapsed ? 0 : TILE_INSET_LEFT,
-            width: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
-            height: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
+            top: '50%',
+            left: collapsed ? '50%' : TILE_INSET_LEFT,
+            transform: collapsed ? 'translate(-50%, -50%)' : 'translateY(-50%)',
+            width: TILE_SIZE_EXPANDED,
+            height: TILE_SIZE_EXPANDED,
             background: tileBg,
-            borderRadius: collapsed ? 9 : 8,
+            borderRadius: 8,
             color: '#fff',
             display: 'grid',
             placeItems: 'center',
             fontFamily: 'var(--font-display, "Fraunces", Georgia, serif)',
             fontWeight: 900,
-            fontSize: collapsed ? 15 : 14,
+            fontSize: 14,
             lineHeight: 1,
             paddingBottom: 2,
-            transition:
-              'top 220ms ease, left 220ms ease, width 220ms ease, height 220ms ease, border-radius 220ms ease, font-size 220ms ease',
+            transition: 'left 220ms ease, transform 220ms ease',
             pointerEvents: 'none',
           }}
         >

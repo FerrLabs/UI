@@ -19,8 +19,8 @@ export default meta;
 type Story = StoryObj<typeof Sidebar>;
 
 const DEMO_ORGS: OrgDropdownItem[] = [
-  { id: 'acme', name: 'acme', meta: '14 seats · Business', accent: '#1e293b' },
-  { id: 'lumen-labs', name: 'lumen labs', meta: '6 seats · Pro', accent: '#7c3aed' },
+  { id: 'acme', name: 'acme', meta: '14 seats · Business', accent: '#7c3aed' },
+  { id: 'lumen-labs', name: 'lumen labs', meta: '6 seats · Pro', accent: '#0ea5e9' },
   { id: 'odyssey', name: 'odyssey', meta: '38 seats · Enterprise', accent: '#dc2626' },
   { id: 'soliloquy', name: 'soliloquy', meta: '2 seats · Free', accent: '#10b981' },
 ];
@@ -92,6 +92,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
             current={DEMO_ORGS[0]!}
             orgs={DEMO_ORGS}
             collapsed={collapsed}
+            defaultOpen
             onSelect={(id) => console.log('switch org:', id)}
             onCreate={() => console.log('create new org')}
           />
@@ -228,6 +229,7 @@ function FerrTrackApp() {
             current={DEMO_ORGS[0]!}
             orgs={DEMO_ORGS}
             collapsed={collapsed}
+            defaultOpen
             onSelect={(id) => console.log('switch org:', id)}
             onCreate={() => console.log('create new org')}
           />
@@ -328,6 +330,7 @@ function FerrLabsAccount() {
             current={DEMO_ORGS[0]!}
             orgs={DEMO_ORGS}
             collapsed={collapsed}
+            defaultOpen
             onSelect={(id) => console.log('switch org:', id)}
             onCreate={() => console.log('create new org')}
           />
