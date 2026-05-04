@@ -17,6 +17,13 @@ export interface OrgDropdownProps {
   className?: string;
 }
 
+const TILE_INSET_TOP = 10;
+const TILE_INSET_LEFT = 12;
+const TILE_SIZE_EXPANDED = 28;
+const CARD_HEIGHT_EXPANDED = 48;
+const CARD_HEIGHT_COLLAPSED = 36;
+const CONTENT_LEFT = TILE_INSET_LEFT + TILE_SIZE_EXPANDED + 10;
+
 export function OrgDropdown({
   current,
   orgs,
@@ -46,6 +53,7 @@ export function OrgDropdown({
   }, [open]);
 
   const accentColor = (a?: string) => a ?? 'var(--color-accent, var(--color-fg))';
+  const tileBg = accentColor(current.accent);
 
   return (
     <div
@@ -54,8 +62,8 @@ export function OrgDropdown({
       style={{
         position: 'relative',
         margin: collapsed ? '6px 8px 12px 20px' : '12px 12px 12px 8px',
-        width: collapsed ? 36 : 'auto',
-        transition: 'margin 220ms ease',
+        width: collapsed ? CARD_HEIGHT_COLLAPSED : 'auto',
+        transition: 'margin 220ms ease, width 220ms ease',
       }}
     >
       <button
@@ -67,96 +75,106 @@ export function OrgDropdown({
         title={collapsed ? current.name : undefined}
         data-org-switcher
         style={{
-          width: collapsed ? 36 : '100%',
-          height: collapsed ? 36 : 'auto',
-          padding: collapsed ? 0 : '10px 12px',
-          background: collapsed ? accentColor(current.accent) : 'var(--color-card, #fff)',
-          border: collapsed ? 'none' : '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
+          position: 'relative',
+          width: '100%',
+          height: collapsed ? CARD_HEIGHT_COLLAPSED : CARD_HEIGHT_EXPANDED,
+          padding: 0,
+          background: collapsed ? 'transparent' : 'var(--color-card, #fff)',
+          border: '1px solid',
+          borderColor: collapsed ? 'transparent' : 'var(--color-rule, rgba(30, 41, 59, 0.14))',
           borderRadius: collapsed ? 9 : 10,
-          display: 'flex',
-          alignItems: 'center',
-          gap: collapsed ? 0 : 10,
-          justifyContent: collapsed ? 'center' : 'flex-start',
           cursor: 'pointer',
-          color: collapsed ? '#fff' : 'var(--color-ink, #1e293b)',
+          color: 'var(--color-ink, #1e293b)',
           textAlign: 'left',
           overflow: 'hidden',
           transition:
-            'width 220ms ease, height 220ms ease, padding 220ms ease, background 220ms ease, border-color 220ms ease, border-radius 220ms ease, color 220ms ease, gap 220ms ease',
+            'height 220ms ease, background 220ms ease, border-color 220ms ease, border-radius 220ms ease',
         }}
       >
         <span
+          aria-hidden
           style={{
-            width: collapsed ? 36 : 28,
-            height: collapsed ? 36 : 28,
+            position: 'absolute',
+            top: collapsed ? -1 : TILE_INSET_TOP,
+            left: collapsed ? -1 : TILE_INSET_LEFT,
+            width: collapsed ? 'calc(100% + 2px)' : TILE_SIZE_EXPANDED,
+            height: collapsed ? 'calc(100% + 2px)' : TILE_SIZE_EXPANDED,
+            background: tileBg,
             borderRadius: collapsed ? 9 : 8,
-            background: collapsed ? 'transparent' : accentColor(current.accent),
             color: '#fff',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontFamily: 'var(--font-display, "Fraunces", Georgia, serif)',
             fontWeight: 900,
-            fontSize: collapsed ? 15 : 14,
-            flexShrink: 0,
+            fontSize: collapsed ? 16 : 14,
+            lineHeight: 1,
             transition:
-              'width 220ms ease, height 220ms ease, border-radius 220ms ease, background 220ms ease, font-size 220ms ease',
+              'top 220ms ease, left 220ms ease, width 220ms ease, height 220ms ease, border-radius 220ms ease, font-size 220ms ease',
+            pointerEvents: 'none',
           }}
         >
           {current.name[0]?.toUpperCase()}
         </span>
         <div
           style={{
-            flex: 1,
-            minWidth: 0,
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: CONTENT_LEFT,
+            right: 12,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
             opacity: collapsed ? 0 : 1,
-            maxWidth: collapsed ? 0 : 999,
-            overflow: 'hidden',
-            transition: 'opacity 160ms ease, max-width 220ms ease',
+            transition: 'opacity 160ms ease',
+            pointerEvents: collapsed ? 'none' : undefined,
           }}
         >
-          <div
-            style={{
-              fontSize: 13,
-              fontWeight: 500,
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {current.name}
-          </div>
-          {current.meta && (
+          <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
             <div
-              className="mono"
               style={{
-                fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
-                fontSize: 10,
-                color: 'var(--color-ink-3, #64748b)',
+                fontSize: 13,
+                fontWeight: 500,
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
+                lineHeight: 1.2,
               }}
             >
-              {current.meta}
+              {current.name}
             </div>
-          )}
+            {current.meta && (
+              <div
+                className="mono"
+                style={{
+                  fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+                  fontSize: 10,
+                  color: 'var(--color-ink-3, #64748b)',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  lineHeight: 1.3,
+                  marginTop: 2,
+                }}
+              >
+                {current.meta}
+              </div>
+            )}
+          </div>
+          <span
+            aria-hidden
+            style={{
+              color: 'var(--color-ink-3, #64748b)',
+              fontSize: 10,
+              flexShrink: 0,
+              transform: open ? 'rotate(180deg)' : 'none',
+              transition: 'transform 160ms',
+            }}
+          >
+            ▾
+          </span>
         </div>
-        <span
-          aria-hidden
-          style={{
-            color: 'var(--color-ink-3, #64748b)',
-            fontSize: 10,
-            flexShrink: 0,
-            opacity: collapsed ? 0 : 1,
-            maxWidth: collapsed ? 0 : 16,
-            overflow: 'hidden',
-            transform: open ? 'rotate(180deg)' : 'none',
-            transition: 'transform 160ms, opacity 160ms ease, max-width 220ms ease',
-          }}
-        >
-          ▾
-        </span>
       </button>
       {open && (
         <Panel
@@ -284,6 +302,7 @@ function Panel({
                 fontFamily: 'var(--font-display, "Fraunces", Georgia, serif)',
                 fontWeight: 900,
                 fontSize: 12,
+                lineHeight: 1,
                 flexShrink: 0,
               }}
             >
