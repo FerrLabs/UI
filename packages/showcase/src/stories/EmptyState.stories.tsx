@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { EmptyState } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof EmptyState> = {
-  title: 'Primitives/EmptyState',
+  title: 'Data Display/EmptyState',
   component: EmptyState,
 };
 

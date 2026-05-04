@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button, PageHeader, Tag } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof PageHeader> = {
-  title: 'Editorial/PageHeader',
+  title: 'Layout/PageHeader',
   component: PageHeader,
   parameters: { layout: 'fullscreen' },
 };

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { CommandHint } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof CommandHint> = {
-  title: 'Editorial/CommandHint',
+  title: 'Actions/CommandHint',
   component: CommandHint,
 };
 

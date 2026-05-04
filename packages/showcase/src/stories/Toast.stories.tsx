@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ToastProvider, useToast } from '@ferrlabs/ui-primitives';
 
 const meta: Meta = {
-  title: 'Primitives/Toast',
+  title: 'Feedback/Toast',
   decorators: [
     (Story) => (
       <ToastProvider>

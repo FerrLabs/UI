@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { SearchField } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof SearchField> = {
-  title: 'Form/SearchField',
+  title: 'Forms/SearchField',
   component: SearchField,
   decorators: [
     (Story) => (

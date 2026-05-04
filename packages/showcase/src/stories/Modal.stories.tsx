@@ -4,7 +4,7 @@ import { Modal } from '@ferrlabs/ui-primitives';
 import { Button } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Modal> = {
-  title: 'Primitives/Modal',
+  title: 'Overlays/Modal',
   component: Modal,
 };
 

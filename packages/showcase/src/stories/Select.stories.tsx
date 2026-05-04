@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Field, Select } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Select> = {
-  title: 'Primitives/Select',
+  title: 'Forms/Select',
   component: Select,
   args: {
     size: 'md',

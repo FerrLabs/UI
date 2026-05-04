@@ -20,6 +20,20 @@ const preview: Preview = {
       ],
     },
     layout: 'centered',
+    options: {
+      storySort: {
+        order: [
+          'Brand',
+          'Layout',
+          'Navigation',
+          'Forms',
+          'Actions',
+          'Data Display',
+          'Feedback',
+          'Overlays',
+        ],
+      },
+    },
   },
   decorators: [
     withThemeByDataAttribute<ReactRenderer>({

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Tooltip } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Tooltip> = {
-  title: 'Primitives/Tooltip',
+  title: 'Feedback/Tooltip',
   component: Tooltip,
 };
 

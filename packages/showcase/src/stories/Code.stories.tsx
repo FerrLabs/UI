@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Code, CodeBlock } from '@ferrlabs/ui-primitives';
 
 const meta: Meta = {
-  title: 'Disclosure/Code',
+  title: 'Data Display/Code',
 };
 
 export default meta;

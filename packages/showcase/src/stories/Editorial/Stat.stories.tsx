@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Stat } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Stat> = {
-  title: 'Editorial/Stat',
+  title: 'Data Display/Stat',
   component: Stat,
 };
 

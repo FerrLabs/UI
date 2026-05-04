@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Radio, RadioGroup } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof RadioGroup> = {
-  title: 'Primitives/Radio',
+  title: 'Forms/Radio',
   component: RadioGroup,
 };
 

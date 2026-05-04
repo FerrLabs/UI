@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Textarea } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Textarea> = {
-  title: 'Primitives/Textarea',
+  title: 'Forms/Textarea',
   component: Textarea,
   args: {
     placeholder: 'Describe what changed…',

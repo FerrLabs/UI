@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Tag } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Tag> = {
-  title: 'Editorial/Tag',
+  title: 'Data Display/Tag',
   component: Tag,
   args: { children: 'Tag' },
   argTypes: {

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Slider } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Slider> = {
-  title: 'Form/Slider',
+  title: 'Forms/Slider',
   component: Slider,
   decorators: [
     (Story) => (

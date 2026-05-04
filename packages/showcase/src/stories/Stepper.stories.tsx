@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Stepper } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Stepper> = {
-  title: 'Form/Stepper',
+  title: 'Forms/Stepper',
   component: Stepper,
 };
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Checkbox } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Checkbox> = {
-  title: 'Primitives/Checkbox',
+  title: 'Forms/Checkbox',
   component: Checkbox,
   args: {
     label: 'Subscribe to release notes',

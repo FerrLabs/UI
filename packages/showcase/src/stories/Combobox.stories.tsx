@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Combobox, type ComboboxOption } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Combobox> = {
-  title: 'Form/Combobox',
+  title: 'Forms/Combobox',
   component: Combobox as never,
   decorators: [
     (Story) => (

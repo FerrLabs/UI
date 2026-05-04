@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Timeline } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Timeline> = {
-  title: 'Data/Timeline',
+  title: 'Data Display/Timeline',
   component: Timeline,
   decorators: [
     (Story) => (

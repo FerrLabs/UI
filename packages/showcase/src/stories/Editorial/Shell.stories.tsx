@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Shell, type NavGroup } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Shell> = {
-  title: 'Editorial/Shell',
+  title: 'Layout/Shell',
   component: Shell,
   parameters: { layout: 'fullscreen' },
 };

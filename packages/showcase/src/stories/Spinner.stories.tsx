@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Spinner } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof Spinner> = {
-  title: 'Primitives/Spinner',
+  title: 'Data Display/Spinner',
   component: Spinner,
   args: { size: 'md', color: 'accent' },
   argTypes: {

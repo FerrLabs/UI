@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { DataTable, type Column } from '@ferrlabs/ui-primitives';
 
 const meta: Meta<typeof DataTable> = {
-  title: 'Data/DataTable',
+  title: 'Data Display/DataTable',
   component: DataTable as never,
   parameters: { layout: 'fullscreen' },
 };
