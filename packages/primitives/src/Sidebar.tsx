@@ -297,6 +297,31 @@ export function SidebarSection({ title, collapsed = false, children }: SidebarSe
   );
 }
 
+/**
+ * Standard wrapper for nav-item icons. Renders content in a 16×16 grid cell,
+ * line-height stripped, perfectly centered. Use this around any glyph (Unicode
+ * char, SVG, emoji) so width / leading inconsistencies don't shift the icon
+ * relative to its row. Already applied internally by `<SidebarItem icon={...}>`,
+ * but exposed for consumers building custom rows or non-Sidebar surfaces.
+ */
+export function SidebarIcon({ children }: { children: ReactNode }) {
+  return (
+    <span
+      style={{
+        width: 16,
+        height: 16,
+        display: 'grid',
+        placeItems: 'center',
+        flexShrink: 0,
+        lineHeight: 1,
+        fontSize: 14,
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
 export interface SidebarItemProps {
   href?: string;
   icon?: ReactNode;
@@ -374,12 +399,13 @@ export function SidebarItem({
         <span
           style={{
             width: 16,
+            height: 16,
             flexShrink: 0,
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: 'grid',
+            placeItems: 'center',
             color: active ? accentColor : 'var(--color-ink-3, #64748b)',
             fontSize: 14,
+            lineHeight: 1,
           }}
         >
           {icon}

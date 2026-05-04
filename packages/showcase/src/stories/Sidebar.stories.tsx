@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Sidebar, SidebarItem, SidebarSection } from '@ferrlabs/ui-primitives';
-import { BrandDropdown, LogoMark, OrgDropdown, type OrgDropdownItem } from '@ferrlabs/ui-react';
+import {
+  BrandDropdown,
+  Icon,
+  LogoMark,
+  OrgDropdown,
+  type OrgDropdownItem,
+} from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Sidebar> = {
   title: 'Layout/Sidebar',
@@ -11,10 +17,6 @@ const meta: Meta<typeof Sidebar> = {
 
 export default meta;
 type Story = StoryObj<typeof Sidebar>;
-
-const Glyph = ({ char }: { char: string }) => (
-  <span style={{ fontSize: 14, lineHeight: 1, display: 'inline-block' }}>{char}</span>
-);
 
 const DEMO_ORGS: OrgDropdownItem[] = [
   { id: 'acme', name: 'acme', meta: '14 seats · Business', accent: '#1e293b' },
@@ -99,7 +101,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
       >
         <SidebarSection collapsed={collapsed}>
           <SidebarItem
-            icon={<Glyph char="◈" />}
+            icon={<Icon name="secrets" />}
             label="Secrets"
             badge={127}
             active={active === 'secrets'}
@@ -108,7 +110,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="◇" />}
+            icon={<Icon name="environments" />}
             label="Environments"
             badge={4}
             active={active === 'envs'}
@@ -117,7 +119,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="↻" />}
+            icon={<Icon name="rotations" />}
             label="Rotations"
             badge={3}
             active={active === 'rotations'}
@@ -128,7 +130,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
         </SidebarSection>
         <SidebarSection title="Governance" collapsed={collapsed}>
           <SidebarItem
-            icon={<Glyph char="◎" />}
+            icon={<Icon name="auditLog" />}
             label="Audit log"
             active={active === 'audit'}
             onClick={() => setActive('audit')}
@@ -136,7 +138,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="⌘" />}
+            icon={<Icon name="shield" />}
             label="Access policies"
             active={active === 'access'}
             onClick={() => setActive('access')}
@@ -144,7 +146,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="⎈" />}
+            icon={<Icon name="kms" />}
             label="KMS keys"
             active={active === 'keys'}
             onClick={() => setActive('keys')}
@@ -154,7 +156,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
         </SidebarSection>
         <SidebarSection title="Connect" collapsed={collapsed}>
           <SidebarItem
-            icon={<Glyph char="$" />}
+            icon={<Icon name="cli" />}
             label="CLI / SDK"
             active={active === 'cli'}
             onClick={() => setActive('cli')}
@@ -162,7 +164,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="⬢" />}
+            icon={<Icon name="k8s" />}
             label="K8s operator"
             active={active === 'k8s'}
             onClick={() => setActive('k8s')}
@@ -170,7 +172,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="◔" />}
+            icon={<Icon name="ci" />}
             label="CI integrations"
             active={active === 'ci'}
             onClick={() => setActive('ci')}
@@ -235,7 +237,7 @@ function FerrTrackApp() {
       >
         <SidebarSection collapsed={collapsed}>
           <SidebarItem
-            icon={<Glyph char="◔" />}
+            icon={<Icon name="issues" />}
             label="Issues"
             badge={42}
             active={active === 'issues'}
@@ -244,7 +246,7 @@ function FerrTrackApp() {
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="↻" />}
+            icon={<Icon name="cycles" />}
             label="Cycles"
             active={active === 'cycles'}
             onClick={() => setActive('cycles')}
@@ -252,7 +254,7 @@ function FerrTrackApp() {
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="◎" />}
+            icon={<Icon name="roadmap" />}
             label="Roadmap"
             active={active === 'roadmap'}
             onClick={() => setActive('roadmap')}
@@ -262,7 +264,7 @@ function FerrTrackApp() {
         </SidebarSection>
         <SidebarSection title="Workflows" collapsed={collapsed}>
           <SidebarItem
-            icon={<Glyph char="⌘" />}
+            icon={<Icon name="triage" />}
             label="Triage"
             badge={7}
             active={active === 'triage'}
@@ -271,7 +273,7 @@ function FerrTrackApp() {
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="⊟" />}
+            icon={<Icon name="templates" />}
             label="Templates"
             active={active === 'templates'}
             onClick={() => setActive('templates')}
@@ -335,7 +337,7 @@ function FerrLabsAccount() {
       >
         <SidebarSection collapsed={collapsed}>
           <SidebarItem
-            icon={<Glyph char="◐" />}
+            icon={<Icon name="overview" />}
             label="Overview"
             active={active === 'overview'}
             onClick={() => setActive('overview')}
@@ -343,7 +345,7 @@ function FerrLabsAccount() {
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="⊞" />}
+            icon={<Icon name="products" />}
             label="Products"
             badge={5}
             active={active === 'products'}
@@ -352,7 +354,7 @@ function FerrLabsAccount() {
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="⌇" />}
+            icon={<Icon name="usage" />}
             label="Usage"
             active={active === 'usage'}
             onClick={() => setActive('usage')}
@@ -362,7 +364,7 @@ function FerrLabsAccount() {
         </SidebarSection>
         <SidebarSection title="Organization" collapsed={collapsed}>
           <SidebarItem
-            icon={<Glyph char="⌬" />}
+            icon={<Icon name="members" />}
             label="Members"
             badge={14}
             active={active === 'members'}
@@ -371,7 +373,7 @@ function FerrLabsAccount() {
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="⊟" />}
+            icon={<Icon name="teams" />}
             label="Teams"
             badge={4}
             active={active === 'teams'}
@@ -380,7 +382,7 @@ function FerrLabsAccount() {
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="◇" />}
+            icon={<Icon name="roles" />}
             label="Roles"
             active={active === 'roles'}
             onClick={() => setActive('roles')}
@@ -388,7 +390,7 @@ function FerrLabsAccount() {
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="⌖" />}
+            icon={<Icon name="auditLog" />}
             label="Audit log"
             active={active === 'audit'}
             onClick={() => setActive('audit')}
@@ -398,7 +400,7 @@ function FerrLabsAccount() {
         </SidebarSection>
         <SidebarSection title="Billing" collapsed={collapsed}>
           <SidebarItem
-            icon={<Glyph char="◧" />}
+            icon={<Icon name="billing" />}
             label="Plan & invoices"
             active={active === 'billing'}
             onClick={() => setActive('billing')}
@@ -406,7 +408,7 @@ function FerrLabsAccount() {
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="⚖" />}
+            icon={<Icon name="tax" />}
             label="Tax & legal"
             active={active === 'tax'}
             onClick={() => setActive('tax')}
@@ -416,7 +418,7 @@ function FerrLabsAccount() {
         </SidebarSection>
         <SidebarSection title="Security" collapsed={collapsed}>
           <SidebarItem
-            icon={<Glyph char="⚿" />}
+            icon={<Icon name="sso" />}
             label="SSO / SAML"
             active={active === 'sso'}
             onClick={() => setActive('sso')}
@@ -424,7 +426,7 @@ function FerrLabsAccount() {
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="⌥" />}
+            icon={<Icon name="tokens" />}
             label="API tokens"
             badge={7}
             active={active === 'tokens'}
@@ -433,7 +435,7 @@ function FerrLabsAccount() {
             accent={accent}
           />
           <SidebarItem
-            icon={<Glyph char="◉" />}
+            icon={<Icon name="sessions" />}
             label="Sessions"
             active={active === 'sessions'}
             onClick={() => setActive('sessions')}
