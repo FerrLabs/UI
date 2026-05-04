@@ -64,8 +64,8 @@ export function OrgDropdown({
       style={{
         position: 'relative',
         margin: collapsed ? '6px auto 12px' : '12px 12px 12px 8px',
-        width: collapsed ? CARD_HEIGHT_COLLAPSED : 'auto',
-        transition: 'margin 220ms ease, width 220ms ease',
+        maxWidth: collapsed ? CARD_HEIGHT_COLLAPSED : 1000,
+        transition: 'margin 220ms ease, max-width 220ms ease',
       }}
     >
       <button
@@ -97,9 +97,8 @@ export function OrgDropdown({
           aria-hidden
           style={{
             position: 'absolute',
-            top: '50%',
-            left: collapsed ? '50%' : TILE_INSET_LEFT,
-            transform: collapsed ? 'translate(-50%, -50%)' : 'translateY(-50%)',
+            top: collapsed ? 0 : 10,
+            left: collapsed ? 0 : TILE_INSET_LEFT,
             width: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
             height: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
             background: tileBg,
@@ -113,7 +112,7 @@ export function OrgDropdown({
             lineHeight: 1,
             paddingBottom: 2,
             transition:
-              'left 220ms ease, transform 220ms ease, width 220ms ease, height 220ms ease, border-radius 220ms ease, font-size 220ms ease',
+              'top 220ms ease, left 220ms ease, width 220ms ease, height 220ms ease, border-radius 220ms ease, font-size 220ms ease',
             pointerEvents: 'none',
           }}
         >
