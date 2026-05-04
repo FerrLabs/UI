@@ -63,7 +63,7 @@ export function OrgDropdown({
       className={className}
       style={{
         position: 'relative',
-        margin: collapsed ? '6px 8px 12px 20px' : '12px 12px 12px 8px',
+        margin: collapsed ? '6px 14px 12px 14px' : '12px 12px 12px 8px',
         width: '100%',
         maxWidth: collapsed ? CARD_HEIGHT_COLLAPSED : 1000,
         transition: 'margin 220ms ease, max-width 220ms ease',
