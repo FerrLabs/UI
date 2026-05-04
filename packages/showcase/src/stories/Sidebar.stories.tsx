@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Sidebar, SidebarItem, SidebarSection } from '@ferrlabs/ui-primitives';
-import { LogoMark, Tag } from '@ferrlabs/ui-react';
+import { BrandDropdown, LogoMark, Tag } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Sidebar> = {
   title: 'Layout/Sidebar',
@@ -26,7 +26,7 @@ const ProductBrand = ({
   collapsed: boolean;
 }) => (
   <>
-    <LogoMark product={product === 'ferrlabs' ? 'ferrflow' : product} accent={accent} />
+    <LogoMark product={product} accent={accent} />
     {!collapsed && (
       <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
         <span
@@ -63,7 +63,11 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
   return (
     <div style={{ display: 'flex', minHeight: 700, background: 'var(--color-paper, #fafaf9)' }}>
       <Sidebar
-        brand={<ProductBrand product="ferrvault" accent={accent} collapsed={collapsed} />}
+        brand={
+          <BrandDropdown current="ferrvault" collapsed={collapsed}>
+            <ProductBrand product="ferrvault" accent={accent} collapsed={collapsed} />
+          </BrandDropdown>
+        }
         project={{ name: 'acme/payments', meta: 'production', accent }}
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
@@ -199,7 +203,11 @@ function FerrTrackApp() {
   return (
     <div style={{ display: 'flex', minHeight: 700, background: 'var(--color-paper, #fafaf9)' }}>
       <Sidebar
-        brand={<ProductBrand product="ferrtrack" accent={accent} collapsed={collapsed} />}
+        brand={
+          <BrandDropdown current="ferrtrack" collapsed={collapsed}>
+            <ProductBrand product="ferrtrack" accent={accent} collapsed={collapsed} />
+          </BrandDropdown>
+        }
         project={{ name: 'acme/web-app', meta: 'cycle 14', accent }}
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
@@ -295,7 +303,11 @@ function FerrLabsAccount() {
   return (
     <div style={{ display: 'flex', minHeight: 700, background: 'var(--color-paper, #fafaf9)' }}>
       <Sidebar
-        brand={<ProductBrand product="ferrlabs" accent={accent} collapsed={collapsed} />}
+        brand={
+          <BrandDropdown current="ferrlabs" collapsed={collapsed}>
+            <ProductBrand product="ferrlabs" accent={accent} collapsed={collapsed} />
+          </BrandDropdown>
+        }
         project={{ name: 'Acme Inc.', meta: 'Business · 14 seats', accent }}
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}

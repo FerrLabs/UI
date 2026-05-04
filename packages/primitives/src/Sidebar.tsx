@@ -1,7 +1,14 @@
 import { useState, type CSSProperties, type ReactNode } from 'react';
 
 export interface SidebarProps {
-  /** Brand cluster — typically a logo + product name. Sits in the 64px top cell. */
+  /**
+   * Brand cluster for the 64px top cell. For FerrLabs apps, pass a `<BrandDropdown>`
+   * from `@ferrlabs/ui-react` so users can switch between the suite (FerrFlow / Vault /
+   * Track / Growth / Fleet). The brand cell has zero horizontal padding — the brand
+   * component owns its own padding (BrandDropdown already provides `0 20px` extended
+   * and `0` collapsed). For a plain logo + name without dropdown, wrap content in a
+   * `<div style={{ padding: '0 20px' }}>`.
+   */
   brand?: ReactNode;
   /** Optional project switcher row directly below the brand cell. */
   project?: {
@@ -82,10 +89,8 @@ export function Sidebar({
             minHeight: 64,
             boxSizing: 'border-box',
             display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            padding: collapsed ? '20px 0' : '20px 20px',
-            justifyContent: collapsed ? 'center' : 'flex-start',
+            alignItems: 'stretch',
+            justifyContent: collapsed ? 'center' : 'stretch',
             borderBottom: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
           }}
         >
