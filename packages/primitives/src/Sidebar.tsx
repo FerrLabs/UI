@@ -406,6 +406,8 @@ export function SidebarItem({
             color: active ? accentColor : 'var(--color-ink-3, #64748b)',
             fontSize: 14,
             lineHeight: 1,
+            transform: collapsed ? 'translateX(4px)' : 'none',
+            transition: 'transform 220ms ease, color 160ms ease',
           }}
         >
           {icon}
