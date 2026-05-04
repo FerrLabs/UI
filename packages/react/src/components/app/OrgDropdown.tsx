@@ -15,7 +15,7 @@ export interface OrgDropdownProps {
   createLabel?: string;
   collapsed?: boolean;
   className?: string;
-  /** Force the panel open. Useful in stories / docs to inspect the menu state. Disables outside-click + ESC close. */
+  /** Open the panel on first render. Outside-click and ESC still close it as usual. */
   defaultOpen?: boolean;
 }
 
@@ -39,7 +39,7 @@ export function OrgDropdown({
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!open || defaultOpen) return;
+    if (!open) return;
     const onClick = (e: MouseEvent) => {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     };
@@ -52,7 +52,7 @@ export function OrgDropdown({
       document.removeEventListener('mousedown', onClick);
       document.removeEventListener('keydown', onKey);
     };
-  }, [open, defaultOpen]);
+  }, [open]);
 
   const accentColor = (a?: string) => a ?? 'var(--color-accent, var(--color-fg))';
   const tileBg = accentColor(current.accent);
