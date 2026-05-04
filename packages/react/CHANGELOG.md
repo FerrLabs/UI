@@ -4,6 +4,38 @@ All notable changes to `react` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.0.0] - 2026-05-04
+
+### Breaking Changes
+
+- fix(react)!: default Button primary background to var(--color-accent), not slate ink (#87)
+- refactor(primitives)!: rename AppFooter → Footer (App prefix dropped, deprecated alias kept) (#76)
+- refactor!: realign primitives + showcase to editorial @ferrlabs/ui-react design system (#74)
+
+### Features
+
+- feat(primitives,react): smooth Sidebar collapse animations (#92)
+- feat(react,primitives): add OrgDropdown + Sidebar projectSlot for org switching (#91)
+- feat(primitives,showcase): wire Sidebar brand cell for BrandDropdown by default (#89)
+- feat(primitives): Wave 8 menu/disclosure (Menu, Accordion, Breadcrumb, Chip, Code+CodeBlock) (#73)
+- feat(primitives): Wave 7 specialized form (SearchField, Slider, FileUpload, Combobox, DatePicker, Stepper) (#72)
+- feat(primitives): Wave 6 data display (DataTable, Pagination, KeyValue, StatCard, Timeline, ProgressBar) (#71)
+- feat(primitives): Wave 5 layout (PageHeader, Navbar, Sidebar, AppFooter, Container, Divider) (#70)
+- feat(primitives): Wave 4 display (Badge, Card, Skeleton, Spinner, EmptyState, Avatar, Tabs, Banner) (#69)
+- feat(primitives): Wave 3 overlays (Modal, Drawer, Toast, Tooltip, Popover) + ToastProvider hook (#68)
+- feat(primitives): Wave 2 form (Select, Checkbox, Switch, Radio, RadioGroup) + Button hover shadow + cursor across all (#67)
+- feat(showcase): Storybook 8 + Wave 1 stories + 6-product theme switcher (Refs FerrLabs/UI#63) (#65)
+- feat(primitives): add @ferrlabs/ui-primitives with Button, Field, Input, Textarea, Submit (Refs FerrLabs/UI#63) (#64)
+
+### Bug Fixes
+
+- fix(ci): drop redundant build step from PR CI (#93)
+- fix(ci): build library packages before showcase typecheck (#90)
+- fix(react): scale FerrLabs LogoMark brackets to match Footer.astro ratio (was 86%, now 47%) (#88)
+- fix(showcase): demo Sidebar with project switcher matching app-shell.jsx (#85)
+- fix(primitives): Sidebar matches Shell pixel-near (Fraunces serif items, accent left bar, project switcher built-in) (#78)
+- fix(showcase): wire @tailwindcss/vite into Storybook viteFinal so utilities compile (#66)
+
 ## [0.8.3] - 2026-05-03
 
 ### Bug Fixes
