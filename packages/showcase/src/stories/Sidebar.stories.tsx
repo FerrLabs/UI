@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Sidebar, SidebarItem, SidebarSection } from '@ferrlabs/ui-primitives';
-import { BrandDropdown, LogoMark, Tag } from '@ferrlabs/ui-react';
+import { BrandDropdown, LogoMark, OrgDropdown, type OrgDropdownItem } from '@ferrlabs/ui-react';
 
 const meta: Meta<typeof Sidebar> = {
   title: 'Layout/Sidebar',
@@ -15,6 +15,13 @@ type Story = StoryObj<typeof Sidebar>;
 const Glyph = ({ char }: { char: string }) => (
   <span style={{ fontSize: 14, lineHeight: 1, display: 'inline-block' }}>{char}</span>
 );
+
+const DEMO_ORGS: OrgDropdownItem[] = [
+  { id: 'acme', name: 'acme', meta: '14 seats · Business', accent: '#1e293b' },
+  { id: 'lumen-labs', name: 'lumen labs', meta: '6 seats · Pro', accent: '#7c3aed' },
+  { id: 'odyssey', name: 'odyssey', meta: '38 seats · Enterprise', accent: '#dc2626' },
+  { id: 'soliloquy', name: 'soliloquy', meta: '2 seats · Free', accent: '#10b981' },
+];
 
 const ProductBrand = ({
   product,
@@ -68,7 +75,15 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
             <ProductBrand product="ferrvault" accent={accent} collapsed={collapsed} />
           </BrandDropdown>
         }
-        project={{ name: 'acme/payments', meta: 'production', accent }}
+        projectSlot={
+          <OrgDropdown
+            current={DEMO_ORGS[0]!}
+            orgs={DEMO_ORGS}
+            collapsed={collapsed}
+            onSelect={(id) => console.log('switch org:', id)}
+            onCreate={() => console.log('create new org')}
+          />
+        }
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
       >
@@ -76,11 +91,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
           <SidebarItem
             icon={<Glyph char="◈" />}
             label="Secrets"
-            badge={
-              <Tag size="sm" variant="neutral" soft>
-                127
-              </Tag>
-            }
+            badge={127}
             active={active === 'secrets'}
             onClick={() => setActive('secrets')}
             collapsed={collapsed}
@@ -89,11 +100,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
           <SidebarItem
             icon={<Glyph char="◇" />}
             label="Environments"
-            badge={
-              <Tag size="sm" variant="neutral" soft>
-                4
-              </Tag>
-            }
+            badge={4}
             active={active === 'envs'}
             onClick={() => setActive('envs')}
             collapsed={collapsed}
@@ -102,11 +109,7 @@ function FerrVaultApp({ initialCollapsed = false }: { initialCollapsed?: boolean
           <SidebarItem
             icon={<Glyph char="↻" />}
             label="Rotations"
-            badge={
-              <Tag size="sm" variant="warning" soft>
-                3
-              </Tag>
-            }
+            badge={3}
             active={active === 'rotations'}
             onClick={() => setActive('rotations')}
             collapsed={collapsed}
@@ -208,7 +211,15 @@ function FerrTrackApp() {
             <ProductBrand product="ferrtrack" accent={accent} collapsed={collapsed} />
           </BrandDropdown>
         }
-        project={{ name: 'acme/web-app', meta: 'cycle 14', accent }}
+        projectSlot={
+          <OrgDropdown
+            current={DEMO_ORGS[0]!}
+            orgs={DEMO_ORGS}
+            collapsed={collapsed}
+            onSelect={(id) => console.log('switch org:', id)}
+            onCreate={() => console.log('create new org')}
+          />
+        }
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
       >
@@ -216,11 +227,7 @@ function FerrTrackApp() {
           <SidebarItem
             icon={<Glyph char="◔" />}
             label="Issues"
-            badge={
-              <Tag size="sm" variant="neutral" soft>
-                42
-              </Tag>
-            }
+            badge={42}
             active={active === 'issues'}
             onClick={() => setActive('issues')}
             collapsed={collapsed}
@@ -247,11 +254,7 @@ function FerrTrackApp() {
           <SidebarItem
             icon={<Glyph char="⌘" />}
             label="Triage"
-            badge={
-              <Tag size="sm" variant="danger" soft>
-                7
-              </Tag>
-            }
+            badge={7}
             active={active === 'triage'}
             onClick={() => setActive('triage')}
             collapsed={collapsed}
@@ -308,7 +311,15 @@ function FerrLabsAccount() {
             <ProductBrand product="ferrlabs" accent={accent} collapsed={collapsed} />
           </BrandDropdown>
         }
-        project={{ name: 'Acme Inc.', meta: 'Business · 14 seats', accent }}
+        projectSlot={
+          <OrgDropdown
+            current={DEMO_ORGS[0]!}
+            orgs={DEMO_ORGS}
+            collapsed={collapsed}
+            onSelect={(id) => console.log('switch org:', id)}
+            onCreate={() => console.log('create new org')}
+          />
+        }
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
       >
@@ -324,11 +335,7 @@ function FerrLabsAccount() {
           <SidebarItem
             icon={<Glyph char="⊞" />}
             label="Products"
-            badge={
-              <Tag size="sm" variant="neutral" soft>
-                5
-              </Tag>
-            }
+            badge={5}
             active={active === 'products'}
             onClick={() => setActive('products')}
             collapsed={collapsed}
@@ -347,11 +354,7 @@ function FerrLabsAccount() {
           <SidebarItem
             icon={<Glyph char="⌬" />}
             label="Members"
-            badge={
-              <Tag size="sm" variant="neutral" soft>
-                14
-              </Tag>
-            }
+            badge={14}
             active={active === 'members'}
             onClick={() => setActive('members')}
             collapsed={collapsed}
@@ -360,11 +363,7 @@ function FerrLabsAccount() {
           <SidebarItem
             icon={<Glyph char="⊟" />}
             label="Teams"
-            badge={
-              <Tag size="sm" variant="neutral" soft>
-                4
-              </Tag>
-            }
+            badge={4}
             active={active === 'teams'}
             onClick={() => setActive('teams')}
             collapsed={collapsed}
@@ -417,11 +416,7 @@ function FerrLabsAccount() {
           <SidebarItem
             icon={<Glyph char="⌥" />}
             label="API tokens"
-            badge={
-              <Tag size="sm" variant="neutral" soft>
-                7
-              </Tag>
-            }
+            badge={7}
             active={active === 'tokens'}
             onClick={() => setActive('tokens')}
             collapsed={collapsed}
