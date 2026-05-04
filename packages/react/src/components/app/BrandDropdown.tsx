@@ -254,11 +254,6 @@ export function BrandDropdown({
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
-                    borderRadius: 8,
-                    background: isCurrent
-                      ? `color-mix(in oklab, ${a.accent} 12%, transparent)`
-                      : 'transparent',
-                    transition: 'background 120ms',
                   }}
                 >
                   <LogoMark product={a.id as ProductSlug} accent={a.accent} size={36} />
