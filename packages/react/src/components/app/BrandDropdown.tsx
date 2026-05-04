@@ -211,7 +211,7 @@ export function BrandDropdown({
                   alignItems: 'center',
                   gap: collapsed ? 0 : 12,
                   justifyContent: collapsed ? 'center' : 'flex-start',
-                  padding: collapsed ? '8px 0' : '8px 12px',
+                  padding: collapsed ? '6px 0' : '6px 12px',
                   margin: '1px 0',
                   borderRadius: 8,
                   textDecoration: 'none',
@@ -248,20 +248,20 @@ export function BrandDropdown({
                 )}
                 <span
                   style={{
-                    width: 28,
-                    height: 28,
+                    width: 36,
+                    height: 36,
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
-                    borderRadius: 6,
+                    borderRadius: 8,
                     background: isCurrent
                       ? `color-mix(in oklab, ${a.accent} 12%, transparent)`
                       : 'transparent',
                     transition: 'background 120ms',
                   }}
                 >
-                  <LogoMark product={a.id as ProductSlug} accent={a.accent} size={22} />
+                  <LogoMark product={a.id as ProductSlug} accent={a.accent} size={36} />
                 </span>
                 {!collapsed && (
                   <>
