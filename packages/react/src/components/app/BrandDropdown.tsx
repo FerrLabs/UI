@@ -76,6 +76,7 @@ export function BrandDropdown({
   collapsed = false,
 }: BrandDropdownProps) {
   const [open, setOpen] = useState(false);
+  const [switching, setSwitching] = useState<BrandDropdownApp | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -118,14 +119,14 @@ export function BrandDropdown({
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: collapsed ? 0 : 12,
-          justifyContent: collapsed ? 'center' : 'flex-start',
+          gap: 12,
+          justifyContent: 'flex-start',
           width: '100%',
           height: '100%',
           minHeight: 'inherit',
           background: 'transparent',
           border: 'none',
-          padding: collapsed ? 0 : '0 20px',
+          padding: '0 18px',
           margin: 0,
           cursor: 'pointer',
           color: 'inherit',
@@ -134,6 +135,7 @@ export function BrandDropdown({
           borderRadius: 0,
           transition: 'background 140ms ease',
           boxSizing: 'border-box',
+          overflow: 'hidden',
         }}
         onMouseEnter={(e) =>
           (e.currentTarget.style.background = 'var(--color-app-nav-hover, rgba(30,41,59,0.03))')
@@ -142,7 +144,7 @@ export function BrandDropdown({
       >
         <span
           style={{
-            flex: collapsed ? 'none' : 1,
+            flex: 1,
             minWidth: 0,
             display: 'inline-flex',
             alignItems: 'center',
@@ -151,19 +153,20 @@ export function BrandDropdown({
         >
           {children}
         </span>
-        {!collapsed && (
-          <span
-            aria-hidden
-            style={{
-              color: 'var(--color-fg-3, #64748b)',
-              fontSize: 12,
-              opacity: 0.7,
-              flexShrink: 0,
-            }}
-          >
-            ▾
-          </span>
-        )}
+        <span
+          aria-hidden
+          style={{
+            color: 'var(--color-fg-3, #64748b)',
+            fontSize: 12,
+            flexShrink: 0,
+            opacity: collapsed ? 0 : 0.7,
+            maxWidth: collapsed ? 0 : 16,
+            overflow: 'hidden',
+            transition: 'opacity 160ms ease, max-width 220ms ease',
+          }}
+        >
+          ▾
+        </span>
       </button>
 
       {open && (
@@ -174,12 +177,21 @@ export function BrandDropdown({
             top: '100%',
             left: 0,
             right: 0,
+            height: 'calc(100vh - 64px)',
             background: 'var(--color-app-sidebar, #f7f7f5)',
             borderBottom: '1px solid var(--color-rule, rgba(30,41,59,0.10))',
             padding: '8px 8px 12px',
             zIndex: 60,
+            overflowY: 'auto',
+            animation: 'ferrlabs-brand-panel-in 200ms ease-out',
           }}
         >
+          <style>{`
+            @keyframes ferrlabs-brand-panel-in {
+              from { opacity: 0; transform: translateY(-4px); }
+              to { opacity: 1; transform: none; }
+            }
+          `}</style>
           {!collapsed && (
             <div
               className="mono"
@@ -203,13 +215,26 @@ export function BrandDropdown({
                 role="menuitem"
                 aria-current={isCurrent ? 'page' : undefined}
                 title={collapsed ? `${a.label} — ${a.tag}` : undefined}
+                onClick={(e) => {
+                  if (isCurrent) {
+                    e.preventDefault();
+                    setOpen(false);
+                    return;
+                  }
+                  e.preventDefault();
+                  setOpen(false);
+                  setSwitching(a);
+                  window.setTimeout(() => {
+                    if (typeof window !== 'undefined') window.location.assign(a.href);
+                  }, 360);
+                }}
                 style={{
                   position: 'relative',
                   display: 'flex',
                   alignItems: 'center',
                   gap: collapsed ? 0 : 12,
                   justifyContent: collapsed ? 'center' : 'flex-start',
-                  padding: collapsed ? '8px 0' : '8px 12px',
+                  padding: collapsed ? '6px 0' : '6px 12px',
                   margin: '1px 0',
                   borderRadius: 8,
                   textDecoration: 'none',
@@ -246,24 +271,28 @@ export function BrandDropdown({
                 )}
                 <span
                   style={{
-                    width: 22,
-                    height: 22,
+                    width: 36,
+                    height: 36,
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
-                    borderRadius: 6,
-                    background: isCurrent
-                      ? `color-mix(in oklab, ${a.accent} 12%, transparent)`
-                      : 'transparent',
-                    transition: 'background 120ms',
                   }}
                 >
-                  <LogoMark product={a.id as ProductSlug} accent={a.accent} size={18} />
+                  <LogoMark product={a.id as ProductSlug} accent={a.accent} size={36} />
                 </span>
                 {!collapsed && (
                   <>
-                    <span style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>{a.label}</span>
+                    <span
+                      style={{
+                        flex: 1,
+                        minWidth: 0,
+                        textAlign: 'left',
+                        fontWeight: 700,
+                      }}
+                    >
+                      {a.label}
+                    </span>
                     <span
                       className="mono"
                       style={{
@@ -283,6 +312,70 @@ export function BrandDropdown({
               </a>
             );
           })}
+        </div>
+      )}
+      {switching && (
+        <div
+          aria-live="polite"
+          aria-label={`Switching to ${switching.label}`}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: `color-mix(in oklab, ${switching.accent} 4%, var(--color-paper, #faf8f4))`,
+            backdropFilter: 'blur(10px) saturate(140%)',
+            WebkitBackdropFilter: 'blur(10px) saturate(140%)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            animation: 'ferrlabs-brand-switch-in 200ms ease-out',
+          }}
+        >
+          <style>{`
+            @keyframes ferrlabs-brand-switch-in {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+            @keyframes ferrlabs-brand-switch-pulse {
+              0%, 100% { transform: scale(1); }
+              50% { transform: scale(1.06); }
+            }
+          `}</style>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 18,
+              animation: 'ferrlabs-brand-switch-pulse 1200ms ease-in-out infinite',
+            }}
+          >
+            <span
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 14,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: switching.accent,
+              }}
+            >
+              <LogoMark product={switching.id as ProductSlug} accent={switching.accent} size={64} />
+            </span>
+            <span
+              className="mono"
+              style={{
+                fontFamily: 'var(--font-mono, "DM Mono", monospace)',
+                fontSize: 11,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: 'var(--color-ink-3, #64748b)',
+              }}
+            >
+              Opening {switching.label}…
+            </span>
+          </div>
         </div>
       )}
     </div>

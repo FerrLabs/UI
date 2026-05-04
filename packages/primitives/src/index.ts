@@ -32,6 +32,7 @@ export {
   Sidebar,
   SidebarSection,
   SidebarItem,
+  SidebarIcon,
   type SidebarProps,
   type SidebarSectionProps,
   type SidebarItemProps,

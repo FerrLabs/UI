@@ -15,7 +15,16 @@ export interface OrgDropdownProps {
   createLabel?: string;
   collapsed?: boolean;
   className?: string;
+  /** Open the panel on first render. Outside-click and ESC still close it as usual. */
+  defaultOpen?: boolean;
 }
+
+const TILE_INSET_LEFT = 12;
+const TILE_SIZE_EXPANDED = 28;
+const CARD_HEIGHT_EXPANDED = 48;
+const CARD_HEIGHT_COLLAPSED = 36;
+const CARD_WIDTH_COLLAPSED = 48;
+const CONTENT_LEFT = TILE_INSET_LEFT + TILE_SIZE_EXPANDED + 10;
 
 export function OrgDropdown({
   current,
@@ -25,8 +34,9 @@ export function OrgDropdown({
   createLabel = 'Create organization',
   collapsed = false,
   className,
+  defaultOpen = false,
 }: OrgDropdownProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -46,141 +56,127 @@ export function OrgDropdown({
   }, [open]);
 
   const accentColor = (a?: string) => a ?? 'var(--color-accent, var(--color-fg))';
-
-  if (collapsed) {
-    return (
-      <div
-        ref={rootRef}
-        className={className}
-        style={{ position: 'relative', margin: '6px auto 12px' }}
-      >
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          aria-haspopup="menu"
-          aria-expanded={open}
-          aria-label={current.name}
-          title={current.name}
-          data-org-switcher
-          style={{
-            width: 36,
-            height: 36,
-            padding: 0,
-            background: accentColor(current.accent),
-            color: '#fff',
-            border: 'none',
-            borderRadius: 9,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontFamily: 'var(--font-display, "Fraunces", Georgia, serif)',
-            fontWeight: 900,
-            fontSize: 15,
-            cursor: 'pointer',
-          }}
-        >
-          {current.name[0]?.toUpperCase()}
-        </button>
-        {open && (
-          <Panel
-            orgs={orgs}
-            current={current}
-            onSelect={(id) => {
-              setOpen(false);
-              onSelect?.(id);
-            }}
-            onCreate={
-              onCreate
-                ? () => {
-                    setOpen(false);
-                    onCreate();
-                  }
-                : undefined
-            }
-            createLabel={createLabel}
-            collapsed
-          />
-        )}
-      </div>
-    );
-  }
+  const tileBg = accentColor(current.accent);
 
   return (
-    <div ref={rootRef} className={className} style={{ position: 'relative', margin: 12 }}>
+    <div
+      ref={rootRef}
+      className={className}
+      style={{
+        position: 'relative',
+        margin: collapsed ? '6px 8px 12px 8px' : '12px 12px 12px 8px',
+        maxWidth: collapsed ? CARD_WIDTH_COLLAPSED : 1000,
+        transition: 'margin 220ms ease, max-width 220ms ease',
+      }}
+    >
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
+        aria-label={collapsed ? current.name : undefined}
+        title={collapsed ? current.name : undefined}
         data-org-switcher
         style={{
+          position: 'relative',
           width: '100%',
-          padding: '10px 12px',
-          background: 'var(--color-card, #fff)',
-          border: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
-          borderRadius: 10,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
+          height: collapsed ? CARD_HEIGHT_COLLAPSED : CARD_HEIGHT_EXPANDED,
+          padding: 0,
+          background: collapsed ? 'transparent' : 'var(--color-card, #fff)',
+          border: '1px solid',
+          borderColor: collapsed ? 'transparent' : 'var(--color-rule, rgba(30, 41, 59, 0.14))',
+          borderRadius: collapsed ? 9 : 10,
           cursor: 'pointer',
           color: 'var(--color-ink, #1e293b)',
           textAlign: 'left',
+          transition:
+            'height 220ms ease, background 220ms ease, border-color 220ms ease, border-radius 220ms ease',
         }}
       >
         <span
+          aria-hidden
           style={{
-            width: 28,
-            height: 28,
-            borderRadius: 8,
-            background: accentColor(current.accent),
+            position: 'absolute',
+            top: collapsed ? 0 : 10,
+            left: collapsed ? (CARD_WIDTH_COLLAPSED - CARD_HEIGHT_COLLAPSED) / 2 : TILE_INSET_LEFT,
+            width: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
+            height: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
+            background: tileBg,
+            borderRadius: collapsed ? 9 : 8,
             color: '#fff',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: 'grid',
+            placeItems: 'center',
             fontFamily: 'var(--font-display, "Fraunces", Georgia, serif)',
             fontWeight: 900,
-            fontSize: 14,
-            flexShrink: 0,
+            fontSize: collapsed ? 16 : 14,
+            lineHeight: 1,
+            paddingBottom: 2,
+            transition:
+              'top 220ms ease, left 220ms ease, width 220ms ease, height 220ms ease, border-radius 220ms ease, font-size 220ms ease',
+            pointerEvents: 'none',
           }}
         >
           {current.name[0]?.toUpperCase()}
         </span>
-        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-          <div
-            style={{
-              fontSize: 13,
-              fontWeight: 500,
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {current.name}
-          </div>
-          {current.meta && (
-            <div
-              className="mono"
-              style={{
-                fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
-                fontSize: 10,
-                color: 'var(--color-ink-3, #64748b)',
-              }}
-            >
-              {current.meta}
-            </div>
-          )}
-        </div>
-        <span
-          aria-hidden
+        <div
           style={{
-            color: 'var(--color-ink-3, #64748b)',
-            fontSize: 10,
-            transition: 'transform 160ms',
-            transform: open ? 'rotate(180deg)' : 'none',
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: CONTENT_LEFT,
+            right: 12,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            opacity: collapsed ? 0 : 1,
+            transition: 'opacity 160ms ease',
+            pointerEvents: collapsed ? 'none' : undefined,
           }}
         >
-          ▾
-        </span>
+          <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 500,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                lineHeight: 1.2,
+              }}
+            >
+              {current.name}
+            </div>
+            {current.meta && (
+              <div
+                className="mono"
+                style={{
+                  fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+                  fontSize: 10,
+                  color: 'var(--color-ink-3, #64748b)',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  lineHeight: 1.3,
+                  marginTop: 2,
+                }}
+              >
+                {current.meta}
+              </div>
+            )}
+          </div>
+          <span
+            aria-hidden
+            style={{
+              color: 'var(--color-ink-3, #64748b)',
+              fontSize: 10,
+              flexShrink: 0,
+              transform: open ? 'rotate(180deg)' : 'none',
+              transition: 'transform 160ms',
+            }}
+          >
+            ▾
+          </span>
+        </div>
       </button>
       {open && (
         <Panel
@@ -199,6 +195,7 @@ export function OrgDropdown({
               : undefined
           }
           createLabel={createLabel}
+          collapsed={collapsed}
         />
       )}
     </div>
@@ -231,15 +228,23 @@ function Panel({
         right: collapsed ? 'auto' : 0,
         marginTop: 6,
         marginLeft: collapsed ? 8 : 0,
-        minWidth: collapsed ? 240 : undefined,
+        minWidth: collapsed ? 240 : 240,
+        maxWidth: 280,
         background: 'var(--color-card, #fff)',
         border: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
         borderRadius: 10,
         boxShadow: '0 10px 30px rgba(15, 23, 42, 0.12)',
         padding: '6px',
         zIndex: 60,
+        animation: 'ferrlabs-org-panel-in 160ms ease-out',
       }}
     >
+      <style>{`
+        @keyframes ferrlabs-org-panel-in {
+          from { opacity: 0; transform: translateY(-4px); }
+          to { opacity: 1; transform: none; }
+        }
+      `}</style>
       <div
         className="mono"
         style={{
@@ -300,6 +305,7 @@ function Panel({
                 fontFamily: 'var(--font-display, "Fraunces", Georgia, serif)',
                 fontWeight: 900,
                 fontSize: 12,
+                lineHeight: 1,
                 flexShrink: 0,
               }}
             >

@@ -26,7 +26,7 @@ export function LogoMark({ size = 24, accent = 'currentColor', product }: Props)
       height={size}
       viewBox="0 0 32 32"
       aria-hidden="true"
-      style={{ display: 'block' }}
+      style={{ display: 'block', flexShrink: 0, width: size, height: size }}
     >
       {product === 'ferrflow' && (
         <g>
@@ -41,9 +41,9 @@ export function LogoMark({ size = 24, accent = 'currentColor', product }: Props)
       )}
       {product === 'ferrvault' && (
         <g>
-          <circle cx="16" cy="14" r="9" stroke={accent} strokeWidth="2" fill="none" />
-          <circle cx="16" cy="13" r="3" fill={accent} />
-          <rect x="14.5" y="14" width="3" height="7" fill={accent} />
+          <circle cx="16" cy="17" r="9" stroke={accent} strokeWidth="2" fill="none" />
+          <circle cx="16" cy="16" r="3" fill={accent} />
+          <rect x="14.5" y="17" width="3" height="7" fill={accent} />
         </g>
       )}
       {product === 'ferrtrack' && (
@@ -97,7 +97,7 @@ export function LogoMark({ size = 24, accent = 'currentColor', product }: Props)
         <g>
           <text
             x="3"
-            y="22"
+            y="24"
             fontFamily="DM Mono, ui-monospace, monospace"
             fontSize="9"
             fill={accent}
@@ -107,19 +107,19 @@ export function LogoMark({ size = 24, accent = 'currentColor', product }: Props)
           </text>
           <text
             x="16"
-            y="23"
+            y="24"
             textAnchor="middle"
             fontFamily="Fraunces, Georgia, serif"
             fontWeight="900"
-            fontSize="19"
+            fontSize="15"
             fill={accent}
-            letterSpacing="-0.04em"
+            letterSpacing="-0.05em"
           >
             FL
           </text>
           <text
             x="29"
-            y="22"
+            y="24"
             textAnchor="end"
             fontFamily="DM Mono, ui-monospace, monospace"
             fontSize="9"
