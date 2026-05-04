@@ -60,9 +60,9 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=4096
         run: |
           if [ -n "$FILTER" ]; then
-            pnpm --filter "$FILTER" build
+            pnpm --filter "$FILTER" --filter '!@ferrlabs/ui-showcase' build
           else
-            pnpm -r build
+            pnpm -r --filter '!@ferrlabs/ui-showcase' build
           fi
 
   release:
