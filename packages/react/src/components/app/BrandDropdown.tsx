@@ -265,7 +265,16 @@ export function BrandDropdown({
                 </span>
                 {!collapsed && (
                   <>
-                    <span style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>{a.label}</span>
+                    <span
+                      style={{
+                        flex: 1,
+                        minWidth: 0,
+                        textAlign: 'left',
+                        fontWeight: 700,
+                      }}
+                    >
+                      {a.label}
+                    </span>
                     <span
                       className="mono"
                       style={{
