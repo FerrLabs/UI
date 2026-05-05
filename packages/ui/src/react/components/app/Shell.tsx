@@ -1,7 +1,8 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Sidebar, SidebarSection, SidebarItem } from '../../../primitives';
 import { LogoMark, type ProductSlug } from './LogoMark';
 import { BrandDropdown, type BrandDropdownAppId, type BrandDropdownApp } from './BrandDropdown';
+import { UserMenu, type UserMenuItem } from './UserMenu';
 
 export interface NavItem {
   id: string;
@@ -36,6 +37,27 @@ export interface ShellProps {
 
   appSwitcher?: { current: BrandDropdownAppId; apps?: BrandDropdownApp[] };
 
+  /**
+   * When present, the topbar renders a clickable search trigger styled as
+   * a `⌘K` hint button. The handler is the consumer's responsibility — it
+   * typically opens a command palette / search modal. The same handler is
+   * also bound to the cmd/ctrl+K keyboard shortcut globally on the Shell.
+   */
+  onSearch?: () => void;
+
+  /**
+   * When present, an avatar + name button appears at the far right of the
+   * topbar. Clicking opens a dropdown with the supplied items (Profile,
+   * Sign out, etc.). Pass `null` to omit on auth/login surfaces.
+   */
+  userMenu?: {
+    name: string;
+    email?: string;
+    avatarSrc?: string | null;
+    items: UserMenuItem[];
+    showName?: boolean;
+  };
+
   children: ReactNode;
 }
 
@@ -53,9 +75,24 @@ export function Shell({
   breadcrumb,
   topbarRight,
   appSwitcher,
+  onSearch,
+  userMenu,
   children,
 }: ShellProps) {
   const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    if (!onSearch) return;
+    const handler = (e: KeyboardEvent) => {
+      const isK = e.key === 'k' || e.key === 'K';
+      if (isK && (e.metaKey || e.ctrlKey) && !e.altKey && !e.shiftKey) {
+        e.preventDefault();
+        onSearch();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onSearch]);
 
   const isActive = (href: string) => {
     if (href === '/') return currentPath === '/';
@@ -208,7 +245,65 @@ export function Shell({
             ))}
           </div>
           <div style={{ flex: 1 }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>{topbarRight}</div>
+          {onSearch && (
+            <button
+              type="button"
+              onClick={onSearch}
+              aria-label="Open search (Cmd+K)"
+              className="mono"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '6px 10px 6px 12px',
+                borderRadius: 8,
+                border: '1px solid var(--color-rule)',
+                background: 'var(--color-bg-2, #f4f4f2)',
+                color: 'var(--color-fg-3)',
+                fontSize: 12,
+                cursor: 'pointer',
+                transition: 'background 120ms, border-color 120ms',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--color-card, #fff)';
+                e.currentTarget.style.borderColor = 'var(--color-rule-strong)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'var(--color-bg-2, #f4f4f2)';
+                e.currentTarget.style.borderColor = 'var(--color-rule)';
+              }}
+            >
+              <span style={{ opacity: 0.7 }}>Search</span>
+              <kbd
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '1px 5px',
+                  borderRadius: 4,
+                  border: '1px solid var(--color-rule)',
+                  background: 'var(--color-card, #fff)',
+                  fontFamily: 'inherit',
+                  fontSize: 10.5,
+                  letterSpacing: '0.04em',
+                }}
+              >
+                ⌘K
+              </kbd>
+            </button>
+          )}
+          {topbarRight && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>{topbarRight}</div>
+          )}
+          {userMenu && (
+            <UserMenu
+              name={userMenu.name}
+              email={userMenu.email}
+              avatarSrc={userMenu.avatarSrc}
+              accent={accent}
+              items={userMenu.items}
+              showName={userMenu.showName}
+            />
+          )}
         </header>
         <main style={{ flex: 1, overflowY: 'auto', background: 'var(--color-bg)' }}>
           {children}
