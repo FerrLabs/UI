@@ -4,6 +4,8 @@ All notable changes to `react` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.0.1] - 2026-05-05
+
 ## [1.0.0] - 2026-05-04
 
 ### Breaking Changes
