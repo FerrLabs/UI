@@ -79,10 +79,10 @@ importers:
   packages/react:
     dependencies:
       '@ferrlabs/ui-icons':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../icons
       '@ferrlabs/ui-primitives':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../primitives
     devDependencies:
       '@types/react':
