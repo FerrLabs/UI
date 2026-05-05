@@ -1,1 +1,1 @@
-export * from '@ferrlabs/ui-react';
+export * from './react/index';

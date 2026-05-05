@@ -3,8 +3,7 @@
     "url": "https://github.com/FerrLabs/UI/issues"
   },
   "dependencies": {
-    "@ferrlabs/ui-primitives": "workspace:*",
-    "@ferrlabs/ui-react": "workspace:*"
+    "@ferrlabs/ui-foundation": "workspace:*"
   },
   "description": "FerrLabs React UI library — meta-package re-exporting primitives, composed components, and auth via subpath exports. Tracked in UI#105.",
   "devDependencies": {
@@ -27,6 +26,10 @@
     "./react": {
       "default": "./dist/react.js",
       "types": "./dist/react.d.ts"
+    },
+    "./auth": {
+      "default": "./dist/auth.js",
+      "types": "./dist/auth.d.ts"
     }
   },
   "files": [

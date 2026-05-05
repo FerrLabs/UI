@@ -1,1 +1,1 @@
-export * from '@ferrlabs/ui-primitives';
+export * from './primitives/index';

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Button } from '@ferrlabs/ui-react';
+import { Button } from '../react';
 
 export interface LoginSubmitPayload {
   email: string;
