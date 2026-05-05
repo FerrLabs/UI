@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Sidebar, SidebarSection, SidebarItem } from '@ferrlabs/ui-primitives';
+import { Sidebar, SidebarSection, SidebarItem } from '../../../primitives';
 import { LogoMark, type ProductSlug } from './LogoMark';
 import { BrandDropdown, type BrandDropdownAppId, type BrandDropdownApp } from './BrandDropdown';
 
