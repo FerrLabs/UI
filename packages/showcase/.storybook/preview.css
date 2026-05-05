@@ -1,7 +1,7 @@
 @import '@ferrlabs/ui-foundation/styles/global.css';
 
-@source "../../primitives/dist/**/*.js";
-@source "../../react/dist/**/*.js";
+@source "../../ui/dist/**/*.js";
+@source "../../foundation/dist/**/*.js";
 @source "../src/**/*.{ts,tsx}";
 
 @theme {
