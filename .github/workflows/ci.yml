@@ -44,7 +44,13 @@ jobs:
             echo "manual dispatch — full workspace"
           fi
       - name: Build library packages (deps for showcase typecheck)
-        run: pnpm --filter '@ferrlabs/ui-primitives' --filter '@ferrlabs/ui-react' --filter '@ferrlabs/ui-icons' build
+        # Build foundation first — ui-icons / ui-styles / ui-tailwind are now
+        # re-export shells that depend on it. ui (meta-package) re-exports
+        # primitives + react. Use `pnpm -r --workspace-concurrency=1` so the
+        # topological order is respected end-to-end without enumerating each
+        # filter (which is what historically broke whenever a new package
+        # landed — UI#105).
+        run: pnpm -r --workspace-concurrency=1 build
       - name: Typecheck
         env:
           FILTER: ${{ steps.filter.outputs.filter }}
