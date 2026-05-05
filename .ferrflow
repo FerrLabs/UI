@@ -5,6 +5,8 @@
     "skipCi": true
   },
   "package": [
+    { "name": "foundation", "path": "packages/foundation", "changelog": "packages/foundation/CHANGELOG.md", "versionedFiles": [{ "path": "packages/foundation/package.json", "format": "json" }] },
+    { "name": "ui", "path": "packages/ui", "changelog": "packages/ui/CHANGELOG.md", "versionedFiles": [{ "path": "packages/ui/package.json", "format": "json" }] },
     { "name": "tailwind", "path": "packages/tailwind", "changelog": "packages/tailwind/CHANGELOG.md", "versionedFiles": [{ "path": "packages/tailwind/package.json", "format": "json" }] },
     { "name": "icons", "path": "packages/icons", "changelog": "packages/icons/CHANGELOG.md", "versionedFiles": [{ "path": "packages/icons/package.json", "format": "json" }] },
     { "name": "primitives", "path": "packages/primitives", "changelog": "packages/primitives/CHANGELOG.md", "versionedFiles": [{ "path": "packages/primitives/package.json", "format": "json" }] },
