@@ -4,6 +4,16 @@ All notable changes to `react` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.0] - 2026-05-05
+
+### Features
+
+- feat(primitives): add Sparkline component (#96)
+
+### Bug Fixes
+
+- fix(react): pin workspace primitives + icons via workspace:^ to avoid stale-version publish (#98)
+
 ## [1.0.1] - 2026-05-05
 
 ## [1.0.0] - 2026-05-04
