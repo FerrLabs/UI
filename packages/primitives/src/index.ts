@@ -14,6 +14,7 @@ export { Tooltip, type TooltipProps, type TooltipSide } from './Tooltip';
 export { Popover, type PopoverProps, type PopoverSide, type PopoverAlign } from './Popover';
 export { Card, CardHeader, type CardProps, type CardHeaderProps } from './Card';
 export { Skeleton, type SkeletonProps } from './Skeleton';
+export { Sparkline, type SparklineProps } from './Sparkline';
 export { Spinner, type SpinnerProps } from './Spinner';
 export { EmptyState, type EmptyStateProps } from './EmptyState';
 export {
