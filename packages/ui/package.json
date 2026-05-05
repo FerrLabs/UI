@@ -1,52 +1,12 @@
 {
-  "name": "@ferrlabs/ui",
-  "version": "1.0.0",
-  "description": "FerrLabs React UI library — meta-package re-exporting primitives, composed components, and auth via subpath exports. Tracked in UI#105.",
-  "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./primitives": {
-      "default": "./dist/primitives.js",
-      "types": "./dist/primitives.d.ts"
-    },
-    "./react": {
-      "default": "./dist/react.js",
-      "types": "./dist/react.d.ts"
-    },
-    "./package.json": "./package.json"
-  },
-  "files": [
-    "src",
-    "dist",
-    "README.md"
-  ],
-  "license": "MPL-2.0",
   "bugs": {
     "url": "https://github.com/FerrLabs/UI/issues"
-  },
-  "homepage": "https://github.com/FerrLabs/UI#readme",
-  "repository": {
-    "directory": "packages/ui",
-    "type": "git",
-    "url": "git+https://github.com/FerrLabs/UI.git"
-  },
-  "publishConfig": {
-    "access": "restricted",
-    "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
     "@ferrlabs/ui-primitives": "workspace:*",
     "@ferrlabs/ui-react": "workspace:*"
   },
-  "peerDependencies": {
-    "react": ">=19.0.0",
-    "react-dom": ">=19.0.0"
-  },
+  "description": "FerrLabs React UI library — meta-package re-exporting primitives, composed components, and auth via subpath exports. Tracked in UI#105.",
   "devDependencies": {
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
@@ -54,8 +14,48 @@
     "react-dom": "^19.0.0",
     "typescript": "^6.0.0"
   },
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./primitives": {
+      "default": "./dist/primitives.js",
+      "types": "./dist/primitives.d.ts"
+    },
+    "./react": {
+      "default": "./dist/react.js",
+      "types": "./dist/react.d.ts"
+    }
+  },
+  "files": [
+    "src",
+    "dist",
+    "README.md"
+  ],
+  "homepage": "https://github.com/FerrLabs/UI#readme",
+  "license": "MPL-2.0",
+  "main": "./dist/index.js",
+  "name": "@ferrlabs/ui",
+  "peerDependencies": {
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
+  },
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "directory": "packages/ui",
+    "type": "git",
+    "url": "git+https://github.com/FerrLabs/UI.git"
+  },
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit"
-  }
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "version": "2.0.0"
 }
