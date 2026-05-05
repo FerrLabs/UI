@@ -2,7 +2,10 @@
   "bugs": {
     "url": "https://github.com/FerrLabs/UI/issues"
   },
-  "description": "SVG icon set shared across FerrLabs products.",
+  "description": "DEPRECATED — re-export shell, use @ferrlabs/ui-foundation/icons. See UI#105.",
+  "dependencies": {
+    "@ferrlabs/ui-foundation": "workspace:*"
+  },
   "devDependencies": {
     "typescript": "^6.0.0"
   },

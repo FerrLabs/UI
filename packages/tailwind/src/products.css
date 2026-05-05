@@ -1,40 +1,5 @@
-/**
- * Product-specific accent palettes. Each site imports ONE of these.
- *
- *   FerrLabs (holding):  slate-800  (neutral, sober — already in tokens.css)
- *   FerrFlow:            orange     (#e8733a primary-600)
- *   FerrVault:           emerald    (#10b981 emerald-500)
- *
- * To opt a site in, import tokens.css + the product palette:
- *   @import "@ferrlabs/ui-tailwind/tokens";
- *   @import "@ferrlabs/ui-tailwind/products" layer(product-emerald);
- *   /* ... or product-orange, product-slate ... *\/
+/*
+ * DEPRECATED — re-export shell. Use @ferrlabs/ui-foundation/tailwind/products
+ * directly. See UI#105.
  */
-
-@theme {
-  /* FerrFlow — warm orange */
-  --color-primary-50: #fff8f2;
-  --color-primary-100: #ffe8d2;
-  --color-primary-200: #ffcba4;
-  --color-primary-300: #ffa870;
-  --color-primary-400: #ff7c40;
-  --color-primary-500: #e8733a;
-  --color-primary-600: #e8733a;
-  --color-primary-700: #b8591e;
-  --color-primary-800: #8f4315;
-  --color-primary-900: #6b2d07;
-  --color-primary-950: #2d1b0e;
-
-  /* FerrVault — emerald */
-  --color-emerald-50: #ecfdf5;
-  --color-emerald-100: #d1fae5;
-  --color-emerald-200: #a7f3d0;
-  --color-emerald-300: #6ee7b7;
-  --color-emerald-400: #34d399;
-  --color-emerald-500: #10b981;
-  --color-emerald-600: #059669;
-  --color-emerald-700: #047857;
-  --color-emerald-800: #065f46;
-  --color-emerald-900: #064e3b;
-  --color-emerald-950: #022c22;
-}
+@import '@ferrlabs/ui-foundation/tailwind/products';

@@ -3,11 +3,12 @@
     "url": "https://github.com/FerrLabs/UI/issues"
   },
   "dependencies": {
+    "@ferrlabs/ui-foundation": "workspace:*",
     "@fontsource/dm-mono": "^5.0.0",
     "@fontsource/fraunces": "^5.0.0",
     "tailwindcss": "^4.0.0"
   },
-  "description": "Shared base stylesheet for every FerrLabs product — fonts, Tailwind import, brand tokens. Import once at the top of each app's global.css.",
+  "description": "DEPRECATED — re-export shell, use @ferrlabs/ui-foundation/styles/* directly. See UI#105.",
   "exports": {
     "./global.css": "./src/global.css",
     "./package.json": "./package.json",
