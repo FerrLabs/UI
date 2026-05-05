@@ -4,6 +4,18 @@ All notable changes to `react` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.0] - 2026-05-05
+
+### Features
+
+- feat(ui): meta-package re-exporting primitives + react via subpath exports (UI#105 phase 1.2) (#107)
+- feat(ui-foundation): merge icons + styles + tailwind into single package (UI#105) (#106)
+
+### Bug Fixes
+
+- fix(ci/publish): include foundation + ui in publish matrix and FerrFlow versioning (#109)
+- fix(ci): build all packages topologically (was missing ui-foundation + ui) (#108)
+
 ## [1.1.0] - 2026-05-05
 
 ### Features
