@@ -81,6 +81,9 @@ importers:
       '@ferrlabs/ui-icons':
         specifier: workspace:*
         version: link:../icons
+      '@ferrlabs/ui-primitives':
+        specifier: workspace:*
+        version: link:../primitives
     devDependencies:
       '@types/react':
         specifier: ^19.0.0
