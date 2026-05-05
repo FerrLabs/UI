@@ -1,6 +1,6 @@
-import { Button, Tag } from '@ferrlabs/ui-react';
+import { Button, Tag } from '@ferrlabs/ui/react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardHeader } from '@ferrlabs/ui-primitives';
+import { Card, CardHeader } from '@ferrlabs/ui/primitives';
 
 const meta: Meta<typeof Card> = {
   title: 'Data Display/Card',

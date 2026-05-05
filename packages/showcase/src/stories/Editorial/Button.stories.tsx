@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '@ferrlabs/ui-react';
+import { Button } from '@ferrlabs/ui/react';
 
 const meta: Meta<typeof Button> = {
   title: 'Actions/Button',

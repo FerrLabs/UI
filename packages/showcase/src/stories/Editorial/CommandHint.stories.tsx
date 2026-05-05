@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { CommandHint } from '@ferrlabs/ui-react';
+import { CommandHint } from '@ferrlabs/ui/react';
 
 const meta: Meta<typeof CommandHint> = {
   title: 'Actions/CommandHint',

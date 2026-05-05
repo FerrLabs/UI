@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Breadcrumb } from '@ferrlabs/ui-primitives';
+import { Breadcrumb } from '@ferrlabs/ui/primitives';
 
 const meta: Meta<typeof Breadcrumb> = {
   title: 'Navigation/Breadcrumb',

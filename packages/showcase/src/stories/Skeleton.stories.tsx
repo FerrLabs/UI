@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Skeleton } from '@ferrlabs/ui-primitives';
+import { Skeleton } from '@ferrlabs/ui/primitives';
 
 const meta: Meta<typeof Skeleton> = {
   title: 'Data Display/Skeleton',
