@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { icons, type IconName } from '@ferrlabs/ui-icons';
+import { icons, type IconName } from '@ferrlabs/ui-foundation/icons';
 
 export interface IconProps {
   name: IconName;

@@ -11,10 +11,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ferrlabs/styles": "workspace:*",
-    "@ferrlabs/ui-primitives": "workspace:*",
-    "@ferrlabs/ui-react": "workspace:*",
-    "@ferrlabs/ui-tailwind": "workspace:*",
+    "@ferrlabs/ui": "workspace:*",
+    "@ferrlabs/ui-foundation": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

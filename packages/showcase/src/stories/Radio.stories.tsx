@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Radio, RadioGroup } from '@ferrlabs/ui-primitives';
+import { Radio, RadioGroup } from '@ferrlabs/ui/primitives';
 
 const meta: Meta<typeof RadioGroup> = {
   title: 'Forms/Radio',

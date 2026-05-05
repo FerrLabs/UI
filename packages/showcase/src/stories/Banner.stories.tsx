@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Banner } from '@ferrlabs/ui-primitives';
-import { Button } from '@ferrlabs/ui-react';
+import { Banner } from '@ferrlabs/ui/primitives';
+import { Button } from '@ferrlabs/ui/react';
 
 const meta: Meta<typeof Banner> = {
   title: 'Feedback/Banner',

@@ -1,4 +1,4 @@
-@import '@ferrlabs/styles/global.css';
+@import '@ferrlabs/ui-foundation/styles/global.css';
 
 @source "../../primitives/dist/**/*.js";
 @source "../../react/dist/**/*.js";
@@ -11,7 +11,7 @@
    */
   --color-accent: var(--color-ferrflow-orange);
 
-  /* Aliases so the existing @ferrlabs/ui-react components (which reach
+  /* Aliases so the existing @ferrlabs/ui/react components (which reach
    * for var(--color-fg), var(--color-fg-2), etc.) render correctly inside
    * the showcase. The styles package defines paper/ink; map them here.
    */

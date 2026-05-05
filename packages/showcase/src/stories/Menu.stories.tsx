@@ -1,6 +1,6 @@
-import { Avatar, Button } from '@ferrlabs/ui-react';
+import { Avatar, Button } from '@ferrlabs/ui/react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Menu, MenuItem, MenuLabel, MenuSeparator } from '@ferrlabs/ui-primitives';
+import { Menu, MenuItem, MenuLabel, MenuSeparator } from '@ferrlabs/ui/primitives';
 
 const meta: Meta = {
   title: 'Overlays/Menu',

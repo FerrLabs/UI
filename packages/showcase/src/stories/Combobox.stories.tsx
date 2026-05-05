@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Combobox, type ComboboxOption } from '@ferrlabs/ui-primitives';
+import { Combobox, type ComboboxOption } from '@ferrlabs/ui/primitives';
 
 const meta: Meta<typeof Combobox> = {
   title: 'Forms/Combobox',

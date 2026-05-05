@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Sidebar, SidebarItem, SidebarSection } from '@ferrlabs/ui-primitives';
+import { Sidebar, SidebarItem, SidebarSection } from '@ferrlabs/ui/primitives';
 import {
   BrandDropdown,
   Icon,
   LogoMark,
   OrgDropdown,
   type OrgDropdownItem,
-} from '@ferrlabs/ui-react';
+} from '@ferrlabs/ui/react';
 
 const meta: Meta<typeof Sidebar> = {
   title: 'Layout/Sidebar',

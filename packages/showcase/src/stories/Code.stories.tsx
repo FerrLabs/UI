@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Code, CodeBlock } from '@ferrlabs/ui-primitives';
+import { Code, CodeBlock } from '@ferrlabs/ui/primitives';
 
 const meta: Meta = {
   title: 'Data Display/Code',
@@ -22,13 +22,13 @@ export const Block: Story = {
     <div className="w-[640px]">
       <CodeBlock filename="global.css" language="css">
         {`@import 'tailwindcss';
-@import '@ferrlabs/ui-tailwind/tokens';
+@import '@ferrlabs/ui-foundation/tailwind/tokens';
 
 @theme {
   --color-accent: var(--color-primary-600);
 }
 
-@source '../node_modules/@ferrlabs/ui-primitives/dist/**/*.js';`}
+@source '../node_modules/@ferrlabs/ui/primitives/dist/**/*.js';`}
       </CodeBlock>
     </div>
   ),

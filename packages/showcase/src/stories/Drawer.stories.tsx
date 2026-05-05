@@ -1,7 +1,7 @@
-import { Button } from '@ferrlabs/ui-react';
+import { Button } from '@ferrlabs/ui/react';
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Drawer } from '@ferrlabs/ui-primitives';
+import { Drawer } from '@ferrlabs/ui/primitives';
 
 const meta: Meta<typeof Drawer> = {
   title: 'Overlays/Drawer',

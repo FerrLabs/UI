@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Slider } from '@ferrlabs/ui-primitives';
+import { Slider } from '@ferrlabs/ui/primitives';
 
 const meta: Meta<typeof Slider> = {
   title: 'Forms/Slider',
