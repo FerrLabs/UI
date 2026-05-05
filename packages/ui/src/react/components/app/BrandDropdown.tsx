@@ -7,14 +7,22 @@ export type BrandDropdownAppId =
   | 'ferrtrack'
   | 'ferrgrowth'
   | 'ferrfleet'
-  | 'ferrlabs';
+  | 'ferrlabs'
+  | 'admin';
 
 export interface BrandDropdownApp {
   id: BrandDropdownAppId;
   label: string;
-  tag: string;
+  /** Kept for backwards compat — no longer rendered. */
+  tag?: string;
   href: string;
   accent: string;
+  /**
+   * Visual grouping. When set on multiple apps with different values, the
+   * dropdown renders a divider + uppercase header between groups in entry
+   * order. Omit on single-section dropdowns to keep the flat layout.
+   */
+  section?: string;
 }
 
 export interface BrandDropdownProps {
@@ -29,39 +37,56 @@ export const DEFAULT_APPS: BrandDropdownApp[] = [
   {
     id: 'ferrlabs',
     label: 'FerrLabs',
-    tag: 'Org & holding',
     href: 'https://app.ferrlabs.com',
     accent: '#1e293b',
   },
   {
     id: 'ferrgrowth',
     label: 'FerrGrowth',
-    tag: 'Growth tooling',
     href: 'https://app.ferrgrowth.com',
     accent: '#7c3aed',
   },
   {
     id: 'ferrfleet',
     label: 'FerrFleet',
-    tag: 'Agent fleet runtime',
     href: 'https://app.ferrfleet.com',
     accent: '#f59e0b',
   },
   {
     id: 'ferrtrack',
     label: 'FerrTrack',
-    tag: 'Issue tracker',
     href: 'https://app.ferrtrack.com',
     accent: '#6366f1',
   },
   {
     id: 'ferrvault',
     label: 'FerrVault',
-    tag: 'Secrets management',
     href: 'https://app.ferrvault.com',
     accent: '#10b981',
   },
 ];
+
+/**
+ * Staff-only entry. Consumers append this to `apps` ONLY when the current
+ * user has staff access — every other user must not see it. Section header
+ * "Staff" auto-renders before this row when at least one preceding app
+ * carries a different (or no) section.
+ *
+ * Example (FerrLabs portal):
+ *
+ *     const me = useMe();
+ *     <Shell appSwitcher={{
+ *       current: 'ferrlabs',
+ *       apps: me?.is_staff ? [...DEFAULT_APPS, ADMIN_APP] : DEFAULT_APPS,
+ *     }} ... />
+ */
+export const ADMIN_APP: BrandDropdownApp = {
+  id: 'admin',
+  label: 'Admin',
+  href: 'https://admin.ferrlabs.com',
+  accent: '#e11d48',
+  section: 'Staff',
+};
 
 /**
  * Clickable brand area that opens a dropdown to switch between FerrLabs apps.
@@ -206,11 +231,31 @@ export function BrandDropdown({
               Switch app
             </div>
           )}
-          {apps.map((a) => {
+          {apps.map((a, i) => {
             const isCurrent = a.id === current;
+            const prevSection = i > 0 ? apps[i - 1].section : undefined;
+            const showSectionHeader =
+              !collapsed && a.section !== undefined && a.section !== prevSection;
             return (
+              <div key={a.id} style={{ display: 'contents' }}>
+                {showSectionHeader && (
+                  <div
+                    className="mono"
+                    style={{
+                      padding: '10px 12px 4px',
+                      marginTop: i === 0 ? 0 : 4,
+                      borderTop:
+                        i === 0 ? 'none' : '1px solid var(--color-rule, rgba(30,41,59,0.10))',
+                      fontSize: 10,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      color: 'var(--color-fg-3, #64748b)',
+                    }}
+                  >
+                    {a.section}
+                  </div>
+                )}
               <a
-                key={a.id}
                 href={a.href}
                 role="menuitem"
                 aria-current={isCurrent ? 'page' : undefined}
@@ -294,6 +339,7 @@ export function BrandDropdown({
                   </span>
                 )}
               </a>
+              </div>
             );
           })}
         </div>
