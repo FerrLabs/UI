@@ -214,7 +214,7 @@ export function BrandDropdown({
                 href={a.href}
                 role="menuitem"
                 aria-current={isCurrent ? 'page' : undefined}
-                title={collapsed ? `${a.label} — ${a.tag}` : undefined}
+                title={collapsed ? a.label : undefined}
                 onClick={(e) => {
                   if (isCurrent) {
                     e.preventDefault();
@@ -282,32 +282,16 @@ export function BrandDropdown({
                   <LogoMark product={a.id as ProductSlug} accent={a.accent} size={36} />
                 </span>
                 {!collapsed && (
-                  <>
-                    <span
-                      style={{
-                        flex: 1,
-                        minWidth: 0,
-                        textAlign: 'left',
-                        fontWeight: 700,
-                      }}
-                    >
-                      {a.label}
-                    </span>
-                    <span
-                      className="mono"
-                      style={{
-                        fontSize: 10,
-                        color: 'var(--color-fg-3, #64748b)',
-                        letterSpacing: '0.04em',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        maxWidth: 110,
-                      }}
-                    >
-                      {a.tag}
-                    </span>
-                  </>
+                  <span
+                    style={{
+                      flex: 1,
+                      minWidth: 0,
+                      textAlign: 'left',
+                      fontWeight: 700,
+                    }}
+                  >
+                    {a.label}
+                  </span>
                 )}
               </a>
             );
