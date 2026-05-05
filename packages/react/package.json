@@ -3,8 +3,8 @@
     "url": "https://github.com/FerrLabs/UI/issues"
   },
   "dependencies": {
-    "@ferrlabs/ui-icons": "workspace:*",
-    "@ferrlabs/ui-primitives": "workspace:*"
+    "@ferrlabs/ui-icons": "workspace:^",
+    "@ferrlabs/ui-primitives": "workspace:^"
   },
   "description": "React components shared across FerrLabs product apps.",
   "devDependencies": {
