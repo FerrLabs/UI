@@ -1,10 +1,15 @@
 {
-  "name": "@ferrlabs/ui-foundation",
-  "version": "1.0.0",
+  "bugs": {
+    "url": "https://github.com/FerrLabs/UI/issues"
+  },
+  "dependencies": {
+    "@fontsource/dm-mono": "^5.0.0",
+    "@fontsource/fraunces": "^5.0.0"
+  },
   "description": "Framework-agnostic FerrLabs design foundation: SVG icons, base CSS + fonts, Tailwind preset tokens. Consumed by both @ferrlabs/ui (React) and @ferrlabs/ui-astro.",
-  "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "typescript": "^6.0.0"
+  },
   "exports": {
     ".": {
       "default": "./dist/index.js",
@@ -14,35 +19,21 @@
       "default": "./dist/icons.js",
       "types": "./dist/icons.d.ts"
     },
+    "./package.json": "./package.json",
     "./styles/global.css": "./src/styles/global.css",
     "./styles/tokens.css": "./src/styles/tokens.css",
     "./tailwind/products": "./src/tailwind/products.css",
-    "./tailwind/tokens": "./src/tailwind/tokens.css",
-    "./package.json": "./package.json"
+    "./tailwind/tokens": "./src/tailwind/tokens.css"
   },
   "files": [
     "src",
     "dist",
     "README.md"
   ],
-  "license": "MPL-2.0",
-  "bugs": {
-    "url": "https://github.com/FerrLabs/UI/issues"
-  },
   "homepage": "https://github.com/FerrLabs/UI#readme",
-  "repository": {
-    "directory": "packages/foundation",
-    "type": "git",
-    "url": "git+https://github.com/FerrLabs/UI.git"
-  },
-  "publishConfig": {
-    "access": "restricted",
-    "registry": "https://npm.pkg.github.com"
-  },
-  "dependencies": {
-    "@fontsource/dm-mono": "^5.0.0",
-    "@fontsource/fraunces": "^5.0.0"
-  },
+  "license": "MPL-2.0",
+  "main": "./dist/index.js",
+  "name": "@ferrlabs/ui-foundation",
   "peerDependencies": {
     "tailwindcss": "^4.0.0"
   },
@@ -51,11 +42,20 @@
       "optional": false
     }
   },
-  "devDependencies": {
-    "typescript": "^6.0.0"
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "directory": "packages/foundation",
+    "type": "git",
+    "url": "git+https://github.com/FerrLabs/UI.git"
   },
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit"
-  }
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "version": "2.0.0"
 }
