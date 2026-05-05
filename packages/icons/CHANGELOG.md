@@ -4,6 +4,19 @@ All notable changes to `icons` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.0] - 2026-05-05
+
+### Features
+
+- feat(ui): meta-package re-exporting primitives + react via subpath exports (UI#105 phase 1.2) (#107)
+- feat(ui-foundation): merge icons + styles + tailwind into single package (UI#105) (#106)
+- feat(primitives): add Sparkline component (#96)
+
+### Bug Fixes
+
+- fix(ci): build all packages topologically (was missing ui-foundation + ui) (#108)
+- fix(react): pin workspace primitives + icons via workspace:^ to avoid stale-version publish (#98)
+
 ## [1.0.0] - 2026-05-04
 
 ### Breaking Changes

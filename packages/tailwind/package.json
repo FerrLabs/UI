@@ -2,10 +2,10 @@
   "bugs": {
     "url": "https://github.com/FerrLabs/UI/issues"
   },
-  "description": "DEPRECATED — re-export shell, use @ferrlabs/ui-foundation/tailwind/* directly. See UI#105.",
   "dependencies": {
     "@ferrlabs/ui-foundation": "workspace:*"
   },
+  "description": "DEPRECATED — re-export shell, use @ferrlabs/ui-foundation/tailwind/* directly. See UI#105.",
   "exports": {
     "./products": "./src/products.css",
     "./tokens": "./src/tokens.css"
@@ -30,5 +30,5 @@
     "typecheck": "echo 'no TypeScript in this package'"
   },
   "type": "module",
-  "version": "0.2.0"
+  "version": "1.0.0"
 }
