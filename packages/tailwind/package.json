@@ -2,7 +2,10 @@
   "bugs": {
     "url": "https://github.com/FerrLabs/UI/issues"
   },
-  "description": "Shared Tailwind CSS 4 theme tokens for FerrLabs products (FerrFlow orange, FerrVault emerald, FerrLabs slate).",
+  "description": "DEPRECATED — re-export shell, use @ferrlabs/ui-foundation/tailwind/* directly. See UI#105.",
+  "dependencies": {
+    "@ferrlabs/ui-foundation": "workspace:*"
+  },
   "exports": {
     "./products": "./src/products.css",
     "./tokens": "./src/tokens.css"

@@ -1,0 +1,219 @@
+/*
+ * FerrLabs base stylesheet.
+ *
+ * Drop-in replacement for the `@import "tailwindcss";` line at the top of
+ * every product's global.css. Loads:
+ *   1. Self-hosted Fraunces + DM Mono (no Google Fonts CDN, no tracking)
+ *   2. Tailwind CSS v4
+ *   3. FerrLabs design tokens (brand accents, font vars) as a @theme
+ *   4. Minimal base layer that wires font-family + antialiasing
+ *
+ * Usage in each consuming app's global.css:
+ *
+ *     @import "@ferrlabs/styles/global.css";
+ *     [ ...your product-specific overrides... ]
+ *
+ * Do not @import tailwindcss yourself — this file already does it. If you
+ * do, you'll generate utilities twice and bloat the final CSS.
+ */
+
+/* 1. Fonts — only the weights we actually use, to keep the payload down.
+ *    Fraunces: 400 body / 700 semibold / 900 display.
+ *    DM Mono: 400 regular / 500 medium.
+ *    Reviewed in DESIGN.md §2.
+ */
+@import "@fontsource/fraunces/400.css";
+@import "@fontsource/fraunces/700.css";
+@import "@fontsource/fraunces/900.css";
+@import "@fontsource/dm-mono/400.css";
+@import "@fontsource/dm-mono/500.css";
+
+/* 2. Tailwind v4 — consumers do NOT @import this themselves. */
+@import "tailwindcss";
+
+/* 3. Design tokens. Keep this after the tailwindcss import so that @theme
+ *    overrides the defaults rather than the other way round.
+ */
+@import "./tokens.css";
+
+/* 4. Base layer. Scoped under @layer base so product-level rules still
+ *    win when they want to override the brand defaults (admin uses a
+ *    sans system font for density; that's fine — it can override here).
+ */
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  /*
+   * Sticky-footer layout. Vitrine Astro pages use <body> as the flex
+   * container; the <header> (Navbar) sits at the top, a <main> takes
+   * remaining space via `flex: 1`, and the <footer> (with
+   * `margin-top: auto`) is pinned to the bottom regardless of page
+   * content height. Combined with <html, body { height: 100% }>, short
+   * pages stop leaving a gap between the content and the footer.
+   */
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  body > main {
+    flex: 1;
+    min-height: 0;
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-mono);
+  }
+
+  /*
+   * Editorial features — the Fraunces stylistic sets that give the
+   * marketing prose its character. Pulled into the base because every
+   * vitrine surface wants them; admin chrome that needs the plain
+   * forms can opt out with `font-feature-settings: normal`.
+   */
+  body {
+    font-feature-settings: "ss01", "ss02";
+  }
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-rule-strong);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-2);
+  }
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-rule-strong) transparent;
+  }
+}
+
+/*
+ * Editorial component primitives. These are utility classes — not
+ * Tailwind utilities — for the high-frequency patterns that recur on
+ * every marketing page. Kept out of @layer base so a product-level
+ * override (different button radius, eyebrow color) wins by simple
+ * specificity without `@layer` ordering surprises.
+ *
+ * Contract:
+ *   .container       — 1440 max, 40 / 20 px gutter
+ *   .section         — vertical rhythm (96 px on desktop, 56 px mobile)
+ *   .eyebrow         — mono uppercase tracking, used as section markers
+ *   .btn-primary     — filled CTA, picks up the page's --accent
+ *   .btn-ghost       — outlined CTA, ink on transparent
+ *   .mono            — DM Mono with feature settings off
+ *
+ * Pages set `--accent` once at the top of their global.css (or via an
+ * inline <style>) and the buttons inherit. Default falls back to the
+ * holding slate so an unsuspecting page doesn't render colorless.
+ */
+:root {
+  --accent: var(--color-ferrlabs-slate);
+  --accent-soft: rgba(30, 41, 59, 0.08);
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+@media (max-width: 768px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+.section {
+  padding: 96px 0;
+}
+@media (max-width: 768px) {
+  .section {
+    padding: 56px 0;
+  }
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-feature-settings: normal;
+}
+
+.btn-primary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 180ms, opacity 180ms, background 180ms;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--color-ink);
+  border-color: var(--color-rule-strong);
+}
+.btn-ghost:hover {
+  background: var(--color-paper-2);
+  transform: translateY(-1px);
+}
+
+/* Hairline rule helpers, used by editorial dividers between sections. */
+.rule {
+  border-top: 1px solid var(--color-rule);
+}
+.rule-strong {
+  border-top: 1px solid var(--color-rule-strong);
+}
+
+/* Theme transition — every surface that swaps via `data-theme` should
+ * fade rather than flash. Scoped to color/border so layout properties
+ * don't jitter while transitioning. */
+html,
+body,
+[data-theme-aware] {
+  transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease;
+}
