@@ -18,6 +18,10 @@
       "default": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
+    "./auth": {
+      "default": "./dist/auth.js",
+      "types": "./dist/auth.d.ts"
+    },
     "./package.json": "./package.json",
     "./primitives": {
       "default": "./dist/primitives.js",
@@ -26,10 +30,6 @@
     "./react": {
       "default": "./dist/react.js",
       "types": "./dist/react.d.ts"
-    },
-    "./auth": {
-      "default": "./dist/auth.js",
-      "types": "./dist/auth.d.ts"
     }
   },
   "files": [
@@ -60,5 +60,5 @@
   },
   "type": "module",
   "types": "./dist/index.d.ts",
-  "version": "3.0.0"
+  "version": "3.1.0"
 }

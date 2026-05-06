@@ -4,6 +4,19 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.1.0] - 2026-05-06
+
+### Features
+
+- feat(ui): Shell topbar — onSearch button (⌘K) + global cmd+K shortcut + userMenu slot (#115)
+- feat(ui): add 'admin' to BrandDropdown, ADMIN_APP export + section grouping (#114)
+- feat!(ui): merge primitives + react + auth source into ui package, drop sub-packages (UI#105) (#111)
+
+### Bug Fixes
+
+- fix(showcase): pin storybook addon-themes + react-vite to v8 (was 10, broke builder-vite resolution) (#116)
+- fix(showcase): update @source paths to ui/foundation (post-merge of primitives/react) (#112)
+
 ## [3.0.0] - 2026-05-05
 
 ### Breaking Changes
