@@ -25,13 +25,13 @@ jobs:
           if [ -n "$TAG" ]; then
             pkg="${TAG%%@*}"
             echo "packages=[\"$pkg\"]" >> "$GITHUB_OUTPUT"
-            echo "Release tag $TAG → publish $pkg"
+            echo "Release tag $TAG â†’ publish $pkg"
           elif [ -n "$INPUT" ]; then
             echo "packages=[\"$INPUT\"]" >> "$GITHUB_OUTPUT"
-            echo "Manual dispatch → publish $INPUT"
+            echo "Manual dispatch â†’ publish $INPUT"
           else
             echo 'packages=["foundation","astro","ui"]' >> "$GITHUB_OUTPUT"
-            echo "Manual dispatch (no input) → publish all"
+            echo "Manual dispatch (no input) â†’ publish all"
           fi
 
   publish:
@@ -63,8 +63,8 @@ jobs:
       - name: Build package (with workspace deps)
         # Use --filter '...^@ferrlabs/ui-foo' to build the package AND its
         # workspace dependencies first. Required since UI#105 introduced
-        # re-export shells (ui-icons → ui-foundation, ui → primitives + react)
-        # — building the shell alone fails without the upstream's dist.
+        # re-export shells (ui-icons â†’ ui-foundation, ui â†’ primitives + react)
+        # â€” building the shell alone fails without the upstream's dist.
         run: |
           pkg_name=$(node -p "require('./packages/${{ matrix.package }}/package.json').name")
           pnpm --filter "...$pkg_name" build || echo "no build step"
@@ -76,7 +76,7 @@ jobs:
           current=$(node -p "require('./package.json').version")
           name=$(node -p "require('./package.json').name")
           if npm view "$name@$current" version --registry https://npm.pkg.github.com >/dev/null 2>&1; then
-            echo "Already published: $name@$current — skipping"
+            echo "Already published: $name@$current â€” skipping"
             exit 0
           fi
           pnpm publish --no-git-checks --access restricted
@@ -85,7 +85,7 @@ jobs:
     name: Trigger Renovate scan on consumers
     needs: publish
     if: github.event_name == 'release'
-    runs-on: ubuntu-latest
+    runs-on: ferrlabs-k8s
     steps:
       - name: Dispatch Renovate workflow
         env:
@@ -93,7 +93,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "${GH_TOKEN:-}" ]; then
-            echo "RENOVATE_TOKEN / FERRLABS_DISPATCH_TOKEN not set — skipping ad-hoc Renovate trigger."
+            echo "RENOVATE_TOKEN / FERRLABS_DISPATCH_TOKEN not set â€” skipping ad-hoc Renovate trigger."
             exit 0
           fi
           gh workflow run renovate.yml -R FerrLabs/.github
