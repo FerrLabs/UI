@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.1.1] - 2026-05-06
+
+### Bug Fixes
+
+- fix(ui): document subpath exports + collision rationale on the top-level index (#117)
+
 ## [3.1.0] - 2026-05-06
 
 ### Features
