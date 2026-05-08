@@ -104,7 +104,7 @@ importers:
   packages/ui:
     dependencies:
       '@ferrlabs/ui-foundation':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../foundation
     devDependencies:
       '@types/react':
