@@ -4,6 +4,18 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.2.0] - 2026-05-08
+
+### Features
+
+- feat(icons): add sidebar icons for product apps (#133)
+- feat(ci): trigger ad-hoc Renovate scan after publish (#126)
+
+### Bug Fixes
+
+- fix(deps): regen lockfile after workspace:^ change in #135 (#137)
+- fix(ui): use workspace:^ for ui-foundation dep so consumers can pull patches (#135)
+
 ## [3.1.1] - 2026-05-06
 
 ### Bug Fixes
