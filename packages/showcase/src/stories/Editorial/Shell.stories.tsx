@@ -126,3 +126,58 @@ export const FerrVault: Story = {
 export const FerrTrack: Story = {
   render: () => <ShellDemo product="ferrtrack" productName="FerrTrack" accent="#6366f1" />,
 };
+
+export const WithActions: Story = {
+  render: () => {
+    const [path, setPath] = useState('/overview');
+    return (
+      <div style={{ height: '600px' }}>
+        <Shell
+          product="ferrtrack"
+          productName="FerrTrack"
+          marketingHref="https://ferrtrack.com"
+          accent="#6366f1"
+          sections={sections}
+          currentPath={path}
+          onNavigate={(href) => setPath(href)}
+          onSearch={() => alert('open command palette')}
+          actions={[
+            {
+              id: 'new-issue',
+              label: 'New issue',
+              shortcut: 'C',
+              onClick: () => alert('create issue'),
+            },
+            {
+              id: 'new-project',
+              label: 'New project',
+              variant: 'ghost',
+              onClick: () => alert('create project'),
+            },
+          ]}
+          userMenu={{
+            name: 'Bryan',
+            email: 'bryan@ferrlabs.com',
+            items: [
+              { label: 'Profile', href: '#profile', icon: '◯' },
+              { label: 'Sign out', onClick: () => alert('signed out'), danger: true },
+            ],
+          }}
+        >
+          <main style={{ padding: 32 }}>
+            <h1
+              style={{ fontFamily: 'var(--font-serif)', fontWeight: 900, margin: 0, fontSize: 32 }}
+            >
+              Topbar with actions
+            </h1>
+            <p style={{ color: 'var(--color-fg-2)', marginTop: 12 }}>
+              Two configurable actions in the topbar — first one defaults to <code>primary</code>,
+              the rest default to <code>ghost</code>. Optional <code>shortcut</code> renders inside
+              a kbd tag (you bind the keyboard event).
+            </p>
+          </main>
+        </Shell>
+      </div>
+    );
+  },
+};
