@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.3.0] - 2026-05-10
+
+### Features
+
+- feat(ui): Shell actions[] + projectSlot for sidebar OrgDropdown (#138)
+
 ## [3.2.0] - 2026-05-08
 
 ### Features
