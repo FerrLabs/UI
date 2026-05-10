@@ -3,6 +3,29 @@ import { Sidebar, SidebarSection, SidebarItem } from '../../../primitives';
 import { LogoMark, type ProductSlug } from './LogoMark';
 import { BrandDropdown, type BrandDropdownAppId, type BrandDropdownApp } from './BrandDropdown';
 import { UserMenu, type UserMenuItem } from './UserMenu';
+import { Button } from './Button';
+
+/**
+ * One topbar action — typically a "+ New <thing>" button. Each product
+ * declares 1–3 of these so the right side of the topbar (between
+ * `onSearch` and `userMenu`) lays out the same way across products.
+ *
+ * The first action defaults to `primary`, the rest to `ghost` so a single
+ * call site looks like "+ New ticket" with one prominent button. Override
+ * `variant` per-action when you want two equally weighted CTAs.
+ */
+export interface ShellAction {
+  id: string;
+  label: string;
+  /** Defaults to `'+'` for primary actions when omitted. Pass `null` to suppress. */
+  icon?: ReactNode | string | null;
+  onClick: () => void;
+  variant?: 'primary' | 'ghost';
+  /** Displayed inside a kbd next to the label; bind the actual shortcut yourself. */
+  shortcut?: string;
+  disabled?: boolean;
+  ariaLabel?: string;
+}
 
 export interface NavItem {
   id: string;
@@ -32,7 +55,23 @@ export interface ShellProps {
   projectMeta?: string;
   onProjectClick?: () => void;
 
+  /**
+   * Custom node rendered in the sidebar's project-switcher slot, taking
+   * precedence over the static `projectName`/`projectMeta` tile. Designed
+   * for `<OrgDropdown>` from this same package — drop it in here to put
+   * the org switcher in the sidebar instead of the topbar.
+   */
+  projectSlot?: ReactNode;
+
   breadcrumb?: ReactNode[];
+  /**
+   * Primary topbar actions — typically "+ New <thing>". Renders between
+   * the search button and `topbarRight`. The first action gets the
+   * `primary` style (accent-filled), the rest go `ghost` unless overridden.
+   * Prefer this over hand-composing buttons in `topbarRight`; that slot
+   * stays available for unusual cases (custom switchers, badges, etc).
+   */
+  actions?: ShellAction[];
   topbarRight?: ReactNode;
 
   appSwitcher?: { current: BrandDropdownAppId; apps?: BrandDropdownApp[] };
@@ -72,7 +111,9 @@ export function Shell({
   projectName,
   projectMeta,
   onProjectClick,
+  projectSlot,
   breadcrumb,
+  actions,
   topbarRight,
   appSwitcher,
   onSearch,
@@ -186,6 +227,7 @@ export function Shell({
             ? { name: projectName, meta: projectMeta, onClick: onProjectClick, accent }
             : undefined
         }
+        projectSlot={projectSlot}
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
       >
@@ -291,6 +333,18 @@ export function Shell({
               </kbd>
             </button>
           )}
+          {actions && actions.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {actions.map((action, i) => (
+                <ShellActionButton
+                  key={action.id}
+                  action={action}
+                  accent={accent}
+                  defaultVariant={i === 0 ? 'primary' : 'ghost'}
+                />
+              ))}
+            </div>
+          )}
           {topbarRight && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>{topbarRight}</div>
           )}
@@ -317,5 +371,59 @@ export function Shell({
         }
       `}</style>
     </div>
+  );
+}
+
+function ShellActionButton({
+  action,
+  accent,
+  defaultVariant,
+}: {
+  action: ShellAction;
+  accent: string;
+  defaultVariant: 'primary' | 'ghost';
+}) {
+  const variant = action.variant ?? defaultVariant;
+  const icon =
+    action.icon === null
+      ? undefined
+      : action.icon === undefined
+        ? variant === 'primary'
+          ? '+'
+          : undefined
+        : action.icon;
+  return (
+    <Button
+      variant={variant}
+      accent={accent}
+      size="sm"
+      icon={icon}
+      onClick={action.onClick}
+      disabled={action.disabled}
+      aria-label={action.ariaLabel ?? action.label}
+      trailingIcon={
+        action.shortcut ? (
+          <kbd
+            className="mono"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '0 4px',
+              borderRadius: 3,
+              border: '1px solid currentColor',
+              opacity: 0.6,
+              fontSize: 9.5,
+              letterSpacing: '0.04em',
+              background: 'transparent',
+              fontFamily: 'inherit',
+            }}
+          >
+            {action.shortcut}
+          </kbd>
+        ) : undefined
+      }
+    >
+      {action.label}
+    </Button>
   );
 }

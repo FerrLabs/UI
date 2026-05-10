@@ -14,7 +14,7 @@
  *   --font-serif, --font-mono.
  */
 
-export { Shell, type ShellProps, type NavGroup, type NavItem } from './Shell';
+export { Shell, type ShellProps, type NavGroup, type NavItem, type ShellAction } from './Shell';
 export { LogoMark, type ProductSlug } from './LogoMark';
 export {
   BrandDropdown,
