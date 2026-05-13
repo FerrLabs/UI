@@ -202,7 +202,7 @@ export function BrandDropdown({
             top: '100%',
             left: 0,
             right: 0,
-            height: 'calc(100vh - 64px)',
+            height: 'calc(100vh - 64px - 56px)',
             background: 'var(--color-app-sidebar, #f7f7f5)',
             borderBottom: '1px solid var(--color-rule, rgba(30,41,59,0.10))',
             padding: '8px 8px 12px',
@@ -255,90 +255,90 @@ export function BrandDropdown({
                     {a.section}
                   </div>
                 )}
-              <a
-                href={a.href}
-                role="menuitem"
-                aria-current={isCurrent ? 'page' : undefined}
-                title={collapsed ? a.label : undefined}
-                onClick={(e) => {
-                  if (isCurrent) {
+                <a
+                  href={a.href}
+                  role="menuitem"
+                  aria-current={isCurrent ? 'page' : undefined}
+                  title={collapsed ? a.label : undefined}
+                  onClick={(e) => {
+                    if (isCurrent) {
+                      e.preventDefault();
+                      setOpen(false);
+                      return;
+                    }
                     e.preventDefault();
                     setOpen(false);
-                    return;
-                  }
-                  e.preventDefault();
-                  setOpen(false);
-                  setSwitching(a);
-                  window.setTimeout(() => {
-                    if (typeof window !== 'undefined') window.location.assign(a.href);
-                  }, 360);
-                }}
-                style={{
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: collapsed ? 0 : 12,
-                  justifyContent: collapsed ? 'center' : 'flex-start',
-                  padding: collapsed ? '6px 0' : '6px 12px',
-                  margin: '1px 0',
-                  borderRadius: 8,
-                  textDecoration: 'none',
-                  color: isCurrent ? 'var(--color-fg, #1e293b)' : 'var(--color-fg-2, #475569)',
-                  background: isCurrent
-                    ? 'var(--color-app-nav-active, rgba(30,41,59,0.06))'
-                    : 'transparent',
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: 13.5,
-                  transition: 'background 120ms',
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCurrent)
-                    e.currentTarget.style.background =
-                      'var(--color-app-nav-hover, rgba(30,41,59,0.03))';
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCurrent) e.currentTarget.style.background = 'transparent';
-                }}
-              >
-                {isCurrent && !collapsed && (
-                  <span
-                    aria-hidden
-                    style={{
-                      position: 'absolute',
-                      left: 0,
-                      top: 8,
-                      bottom: 8,
-                      width: 2,
-                      background: a.accent,
-                      borderRadius: 2,
-                    }}
-                  />
-                )}
-                <span
+                    setSwitching(a);
+                    window.setTimeout(() => {
+                      if (typeof window !== 'undefined') window.location.assign(a.href);
+                    }, 360);
+                  }}
                   style={{
-                    width: 36,
-                    height: 36,
-                    display: 'inline-flex',
+                    position: 'relative',
+                    display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
+                    gap: collapsed ? 0 : 12,
+                    justifyContent: collapsed ? 'center' : 'flex-start',
+                    padding: collapsed ? '6px 0' : '6px 12px',
+                    margin: '1px 0',
+                    borderRadius: 8,
+                    textDecoration: 'none',
+                    color: isCurrent ? 'var(--color-fg, #1e293b)' : 'var(--color-fg-2, #475569)',
+                    background: isCurrent
+                      ? 'var(--color-app-nav-active, rgba(30,41,59,0.06))'
+                      : 'transparent',
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: 13.5,
+                    transition: 'background 120ms',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isCurrent)
+                      e.currentTarget.style.background =
+                        'var(--color-app-nav-hover, rgba(30,41,59,0.03))';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isCurrent) e.currentTarget.style.background = 'transparent';
                   }}
                 >
-                  <LogoMark product={a.id as ProductSlug} accent={a.accent} size={36} />
-                </span>
-                {!collapsed && (
+                  {isCurrent && !collapsed && (
+                    <span
+                      aria-hidden
+                      style={{
+                        position: 'absolute',
+                        left: 0,
+                        top: 8,
+                        bottom: 8,
+                        width: 2,
+                        background: a.accent,
+                        borderRadius: 2,
+                      }}
+                    />
+                  )}
                   <span
                     style={{
-                      flex: 1,
-                      minWidth: 0,
-                      textAlign: 'left',
-                      fontWeight: 700,
+                      width: 36,
+                      height: 36,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
                     }}
                   >
-                    {a.label}
+                    <LogoMark product={a.id as ProductSlug} accent={a.accent} size={36} />
                   </span>
-                )}
-              </a>
+                  {!collapsed && (
+                    <span
+                      style={{
+                        flex: 1,
+                        minWidth: 0,
+                        textAlign: 'left',
+                        fontWeight: 700,
+                      }}
+                    >
+                      {a.label}
+                    </span>
+                  )}
+                </a>
               </div>
             );
           })}
