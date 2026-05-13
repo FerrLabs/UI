@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.3.1] - 2026-05-13
+
+### Bug Fixes
+
+- fix(ui): prevent brand cluster text from wrapping during sidebar collapse (#139)
+
 ## [3.3.0] - 2026-05-10
 
 ### Features
