@@ -144,13 +144,24 @@ export function Shell({
     <BrandDropdown current={appSwitcher.current} apps={appSwitcher.apps} collapsed={collapsed}>
       <LogoMark accent={accent} product={product} />
       {!collapsed && (
-        <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
+        <span
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            lineHeight: 1.1,
+            minWidth: 0,
+            overflow: 'hidden',
+          }}
+        >
           <span
             style={{
               fontFamily: 'var(--font-serif)',
               fontWeight: 900,
               fontSize: 17,
               letterSpacing: '-0.02em',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           >
             {productName.toLowerCase()}
@@ -162,6 +173,9 @@ export function Shell({
               color: 'var(--color-fg-3)',
               letterSpacing: '0.08em',
               marginTop: 2,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           >
             by ferrlabs
@@ -182,13 +196,24 @@ export function Shell({
     >
       <LogoMark accent={accent} product={product} />
       {!collapsed && (
-        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1, minWidth: 0 }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            lineHeight: 1.1,
+            minWidth: 0,
+            overflow: 'hidden',
+          }}
+        >
           <span
             style={{
               fontFamily: 'var(--font-serif)',
               fontWeight: 900,
               fontSize: 17,
               letterSpacing: '-0.02em',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           >
             {productName.toLowerCase()}
@@ -201,6 +226,9 @@ export function Shell({
               color: 'var(--color-fg-3)',
               letterSpacing: '0.08em',
               marginTop: 2,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           >
             by ferrlabs ↗
