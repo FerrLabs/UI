@@ -60,8 +60,14 @@ export interface ShellProps {
    * precedence over the static `projectName`/`projectMeta` tile. Designed
    * for `<OrgDropdown>` from this same package — drop it in here to put
    * the org switcher in the sidebar instead of the topbar.
+   *
+   * If a React element is passed, the sidebar's collapse state is auto-injected
+   * as a `collapsed` prop — so `<OrgDropdown>` shrinks to its 48px compact tile
+   * when the sidebar collapses without the caller wiring anything. Pass a
+   * function (`(collapsed) => <OrgDropdown collapsed={collapsed} />`) for
+   * explicit control.
    */
-  projectSlot?: ReactNode;
+  projectSlot?: ReactNode | ((collapsed: boolean) => ReactNode);
 
   breadcrumb?: ReactNode[];
   /**

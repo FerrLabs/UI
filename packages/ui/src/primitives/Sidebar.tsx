@@ -1,4 +1,11 @@
-import { useState, type CSSProperties, type ReactNode } from 'react';
+import {
+  cloneElement,
+  isValidElement,
+  useState,
+  type CSSProperties,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
 
 export interface SidebarProps {
   /**
@@ -27,8 +34,13 @@ export interface SidebarProps {
    * Custom node rendered in the project-switcher slot. Takes precedence over `project`.
    * Use with `<OrgDropdown>` from `@ferrlabs/ui-react` to give users a real org picker.
    * The component must handle its own outer margin (`OrgDropdown` already does).
+   *
+   * When passed a React element, the Sidebar will clone it with a `collapsed` prop
+   * matching the current sidebar state — so an `<OrgDropdown>` automatically shrinks
+   * to its 48px compact tile when the sidebar collapses. Pass a function form
+   * (`(collapsed) => <OrgDropdown collapsed={collapsed} />`) for explicit control.
    */
-  projectSlot?: ReactNode;
+  projectSlot?: ReactNode | ((collapsed: boolean) => ReactNode);
   /** Nav items + section headers — pass `<SidebarSection>` and `<SidebarItem>` children. */
   children?: ReactNode;
   /** Custom footer slot. When omitted, a built-in "Collapse / Expand" toggle renders instead. */
@@ -110,7 +122,7 @@ export function Sidebar({
         </div>
       )}
 
-      {projectSlot ??
+      {resolveProjectSlot(projectSlot, collapsed) ??
         (project &&
           (collapsed ? (
             <button
@@ -482,4 +494,34 @@ export function SidebarItem({
       {content}
     </button>
   );
+}
+
+/**
+ * Resolve `projectSlot` into a renderable node. Three input shapes:
+ * - Function `(collapsed) => ReactNode` — call with current collapse state.
+ * - React element (e.g. `<OrgDropdown />`) — clone with a `collapsed` prop
+ *   injected so components like OrgDropdown shrink to their compact tile
+ *   when the sidebar collapses, without the caller wiring it manually.
+ *   We only inject if the element doesn't already define `collapsed`, so
+ *   explicit overrides win.
+ * - Any other ReactNode — returned as-is (text, fragments, arrays).
+ */
+function resolveProjectSlot(
+  projectSlot: SidebarProps['projectSlot'],
+  collapsed: boolean,
+): ReactNode {
+  if (projectSlot === undefined) return undefined;
+  if (typeof projectSlot === 'function') {
+    return (projectSlot as (collapsed: boolean) => ReactNode)(collapsed);
+  }
+  if (isValidElement(projectSlot)) {
+    const props = (projectSlot as ReactElement<{ collapsed?: boolean }>).props;
+    if (props && 'collapsed' in props && props.collapsed !== undefined) {
+      return projectSlot;
+    }
+    return cloneElement(projectSlot as ReactElement<{ collapsed?: boolean }>, {
+      collapsed,
+    });
+  }
+  return projectSlot;
 }
