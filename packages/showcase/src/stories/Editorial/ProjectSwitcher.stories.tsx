@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { SiteSwitcher, SiteFavicon } from '@ferrlabs/ui/react';
+import { ProjectSwitcher, SiteFavicon } from '@ferrlabs/ui/react';
 
-const meta: Meta<typeof SiteSwitcher> = {
-  title: 'App/SiteSwitcher',
-  component: SiteSwitcher,
+const meta: Meta<typeof ProjectSwitcher> = {
+  title: 'App/ProjectSwitcher',
+
+  component: ProjectSwitcher,
   parameters: { layout: 'centered' },
   decorators: [
     (Story) => (
@@ -21,7 +22,7 @@ const meta: Meta<typeof SiteSwitcher> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof SiteSwitcher>;
+type Story = StoryObj<typeof ProjectSwitcher>;
 
 const fgItems = [
   {
