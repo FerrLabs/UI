@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.3.4] - 2026-05-15
+
+### Bug Fixes
+
+- fix(brand-dropdown): instant navigation + portal overlay shown only on slow connection (#143)
+
 ## [3.3.3] - 2026-05-13
 
 ### Bug Fixes
