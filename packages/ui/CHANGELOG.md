@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.6.0] - 2026-05-15
+
+### Features
+
+- feat(ui): rename SiteSwitcher to ProjectSwitcher and add OrgSwitcher (#147)
+
 ## [3.5.0] - 2026-05-15
 
 ### Features
