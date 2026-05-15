@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { LogoMark, type ProductSlug } from './LogoMark';
 
 export type BrandDropdownAppId =
@@ -269,9 +270,7 @@ export function BrandDropdown({
                     e.preventDefault();
                     setOpen(false);
                     setSwitching(a);
-                    window.setTimeout(() => {
-                      if (typeof window !== 'undefined') window.location.assign(a.href);
-                    }, 360);
+                    if (typeof window !== 'undefined') window.location.assign(a.href);
                   }}
                   style={{
                     position: 'relative',
@@ -344,70 +343,86 @@ export function BrandDropdown({
           })}
         </div>
       )}
-      {switching && (
-        <div
-          aria-live="polite"
-          aria-label={`Switching to ${switching.label}`}
+      {switching && <BrandSwitchOverlay app={switching} />}
+    </div>
+  );
+}
+
+const SWITCH_OVERLAY_DELAY_MS = 200;
+
+function BrandSwitchOverlay({ app }: { app: BrandDropdownApp }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const t = window.setTimeout(() => setVisible(true), SWITCH_OVERLAY_DELAY_MS);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  if (!visible || typeof document === 'undefined') return null;
+
+  return createPortal(
+    <div
+      aria-live="polite"
+      aria-label={`Switching to ${app.label}`}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: `color-mix(in oklab, ${app.accent} 4%, var(--color-paper, #faf8f4))`,
+        backdropFilter: 'blur(10px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(10px) saturate(140%)',
+        zIndex: 2147483600,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        animation: 'ferrlabs-brand-switch-in 200ms ease-out',
+      }}
+    >
+      <style>{`
+        @keyframes ferrlabs-brand-switch-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes ferrlabs-brand-switch-pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.06); }
+        }
+      `}</style>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 18,
+          animation: 'ferrlabs-brand-switch-pulse 1200ms ease-in-out infinite',
+        }}
+      >
+        <span
           style={{
-            position: 'fixed',
-            inset: 0,
-            background: `color-mix(in oklab, ${switching.accent} 4%, var(--color-paper, #faf8f4))`,
-            backdropFilter: 'blur(10px) saturate(140%)',
-            WebkitBackdropFilter: 'blur(10px) saturate(140%)',
-            zIndex: 9999,
-            display: 'flex',
+            width: 64,
+            height: 64,
+            borderRadius: 14,
+            display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            animation: 'ferrlabs-brand-switch-in 200ms ease-out',
+            color: app.accent,
           }}
         >
-          <style>{`
-            @keyframes ferrlabs-brand-switch-in {
-              from { opacity: 0; }
-              to { opacity: 1; }
-            }
-            @keyframes ferrlabs-brand-switch-pulse {
-              0%, 100% { transform: scale(1); }
-              50% { transform: scale(1.06); }
-            }
-          `}</style>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 18,
-              animation: 'ferrlabs-brand-switch-pulse 1200ms ease-in-out infinite',
-            }}
-          >
-            <span
-              style={{
-                width: 64,
-                height: 64,
-                borderRadius: 14,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: switching.accent,
-              }}
-            >
-              <LogoMark product={switching.id as ProductSlug} accent={switching.accent} size={64} />
-            </span>
-            <span
-              className="mono"
-              style={{
-                fontFamily: 'var(--font-mono, "DM Mono", monospace)',
-                fontSize: 11,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: 'var(--color-ink-3, #64748b)',
-              }}
-            >
-              Opening {switching.label}…
-            </span>
-          </div>
-        </div>
-      )}
-    </div>
+          <LogoMark product={app.id as ProductSlug} accent={app.accent} size={64} />
+        </span>
+        <span
+          className="mono"
+          style={{
+            fontFamily: 'var(--font-mono, "DM Mono", monospace)',
+            fontSize: 11,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: 'var(--color-ink-3, #64748b)',
+          }}
+        >
+          Opening {app.label}…
+        </span>
+      </div>
+    </div>,
+    document.body,
   );
 }
