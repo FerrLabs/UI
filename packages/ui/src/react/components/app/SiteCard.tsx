@@ -82,16 +82,26 @@ export function SiteCard({
         ) : null}
       </div>
       {showChevron ? (
-        <span
+        <svg
           aria-hidden
+          width={12}
+          height={12}
+          viewBox="0 0 12 12"
+          fill="none"
           style={{
             color: 'var(--color-fg-3, #94a3b8)',
-            fontSize: 12,
             flexShrink: 0,
+            display: 'block',
           }}
         >
-          ⌄
-        </span>
+          <path
+            d="M3 4.5L6 7.5L9 4.5"
+            stroke="currentColor"
+            strokeWidth={1.4}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       ) : null}
     </div>
   );
