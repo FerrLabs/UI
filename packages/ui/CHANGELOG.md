@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.5.0] - 2026-05-15
+
+### Features
+
+- feat(ui): add SiteSwitcher popover and replace unicode chevron with svg in SiteCard (#146)
+
 ## [3.4.0] - 2026-05-15
 
 ### Features
