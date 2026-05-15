@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.4.0] - 2026-05-15
+
+### Features
+
+- feat(ui): add SiteCard and SiteFavicon for site-first sidebars (#145)
+
 ## [3.3.4] - 2026-05-15
 
 ### Bug Fixes
