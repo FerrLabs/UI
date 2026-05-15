@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { SiteCard } from './SiteCard';
 
-export interface SiteSwitcherItem {
+export interface ProjectSwitcherItem {
   id: string;
   label: string;
   icon: ReactNode;
@@ -17,21 +17,21 @@ export interface SiteSwitcherItem {
   searchTerms?: string;
 }
 
-export interface SiteSwitcherPlaceholder {
+export interface ProjectSwitcherPlaceholder {
   label: string;
   icon: ReactNode;
   meta?: ReactNode;
 }
 
-export interface SiteSwitcherProps {
-  current: SiteSwitcherItem | null;
-  items: SiteSwitcherItem[];
+export interface ProjectSwitcherProps {
+  current: ProjectSwitcherItem | null;
+  items: ProjectSwitcherItem[];
   onSelect: (id: string) => void;
   onCreate?: () => void;
   createLabel?: string;
   onViewAll?: () => void;
   viewAllLabel?: string;
-  placeholder?: SiteSwitcherPlaceholder;
+  placeholder?: ProjectSwitcherPlaceholder;
   title?: string;
   searchPlaceholder?: string;
   defaultOpen?: boolean;
@@ -45,7 +45,7 @@ function isMod(e: KeyboardEvent | ReactKeyboardEvent): boolean {
   return e.metaKey || e.ctrlKey;
 }
 
-export function SiteSwitcher({
+export function ProjectSwitcher({
   current,
   items,
   onSelect,
@@ -59,7 +59,7 @@ export function SiteSwitcher({
   defaultOpen = false,
   shortcut = DEFAULT_SHORTCUT,
   emptyState,
-}: SiteSwitcherProps) {
+}: ProjectSwitcherProps) {
   const [open, setOpen] = useState(defaultOpen);
   const [query, setQuery] = useState('');
   const [highlight, setHighlight] = useState(0);
@@ -179,11 +179,11 @@ export function SiteSwitcher({
             flexDirection: 'column',
             gap: 2,
             maxHeight: 360,
-            animation: 'ferrlabs-site-switcher-in 140ms ease-out',
+            animation: 'ferrlabs-project-switcher-in 140ms ease-out',
           }}
         >
           <style>{`
-            @keyframes ferrlabs-site-switcher-in {
+            @keyframes ferrlabs-project-switcher-in {
               from { opacity: 0; transform: translateY(-4px); }
               to { opacity: 1; transform: none; }
             }

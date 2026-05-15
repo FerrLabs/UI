@@ -27,11 +27,25 @@ export { OrgDropdown, type OrgDropdownProps, type OrgDropdownItem } from './OrgD
 export { SiteFavicon, type SiteFaviconProps } from './SiteFavicon';
 export { SiteCard, type SiteCardProps } from './SiteCard';
 export {
-  SiteSwitcher,
-  type SiteSwitcherProps,
-  type SiteSwitcherItem,
-  type SiteSwitcherPlaceholder,
-} from './SiteSwitcher';
+  ProjectSwitcher,
+  type ProjectSwitcherProps,
+  type ProjectSwitcherItem,
+  type ProjectSwitcherPlaceholder,
+} from './ProjectSwitcher';
+export {
+  OrgSwitcher,
+  type OrgSwitcherProps,
+  type OrgSwitcherItem,
+  type OrgSwitcherPlaceholder,
+} from './OrgSwitcher';
+/** @deprecated Renamed to `ProjectSwitcher`. Will be removed in a future major. */
+export { ProjectSwitcher as SiteSwitcher } from './ProjectSwitcher';
+/** @deprecated Renamed to `ProjectSwitcherProps`. Will be removed in a future major. */
+export type { ProjectSwitcherProps as SiteSwitcherProps } from './ProjectSwitcher';
+/** @deprecated Renamed to `ProjectSwitcherItem`. Will be removed in a future major. */
+export type { ProjectSwitcherItem as SiteSwitcherItem } from './ProjectSwitcher';
+/** @deprecated Renamed to `ProjectSwitcherPlaceholder`. Will be removed in a future major. */
+export type { ProjectSwitcherPlaceholder as SiteSwitcherPlaceholder } from './ProjectSwitcher';
 export { Icon, type IconProps, type IconName } from './Icon';
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './Button';
 /** @deprecated Renamed to `Button`. Will be removed in a future major. */
