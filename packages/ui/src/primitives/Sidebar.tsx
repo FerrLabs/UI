@@ -476,6 +476,21 @@ export function SidebarItem({
         style={baseStyle}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
+        onClick={(e) => {
+          if (!onClick) return;
+          if (
+            e.defaultPrevented ||
+            e.metaKey ||
+            e.ctrlKey ||
+            e.shiftKey ||
+            e.altKey ||
+            e.button !== 0
+          ) {
+            return;
+          }
+          e.preventDefault();
+          onClick();
+        }}
       >
         {content}
       </a>
