@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.0.0] - 2026-05-16
+
+### Breaking Changes
+
+- feat(ui)!: drop org initial badge from OrgDropdown trigger in expanded mode (#148)
+
 ## [3.6.0] - 2026-05-15
 
 ### Features
