@@ -19,12 +19,11 @@ export interface OrgDropdownProps {
   defaultOpen?: boolean;
 }
 
-const TILE_INSET_LEFT = 12;
-const TILE_SIZE_EXPANDED = 28;
 const CARD_HEIGHT_EXPANDED = 48;
 const CARD_HEIGHT_COLLAPSED = 36;
 const CARD_WIDTH_COLLAPSED = 48;
-const CONTENT_LEFT = TILE_INSET_LEFT + TILE_SIZE_EXPANDED + 10;
+const CONTENT_LEFT_EXPANDED = 14;
+const CONTENT_LEFT_COLLAPSED = 50;
 
 export function OrgDropdown({
   current,
@@ -93,37 +92,37 @@ export function OrgDropdown({
             'height 220ms ease, background 220ms ease, border-color 220ms ease, border-radius 220ms ease',
         }}
       >
-        <span
-          aria-hidden
-          style={{
-            position: 'absolute',
-            top: collapsed ? 0 : 10,
-            left: collapsed ? (CARD_WIDTH_COLLAPSED - CARD_HEIGHT_COLLAPSED) / 2 : TILE_INSET_LEFT,
-            width: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
-            height: collapsed ? CARD_HEIGHT_COLLAPSED : TILE_SIZE_EXPANDED,
-            background: tileBg,
-            borderRadius: collapsed ? 9 : 8,
-            color: '#fff',
-            display: 'grid',
-            placeItems: 'center',
-            fontFamily: 'var(--font-display, "Fraunces", Georgia, serif)',
-            fontWeight: 900,
-            fontSize: collapsed ? 16 : 14,
-            lineHeight: 1,
-            paddingBottom: 2,
-            transition:
-              'top 220ms ease, left 220ms ease, width 220ms ease, height 220ms ease, border-radius 220ms ease, font-size 220ms ease',
-            pointerEvents: 'none',
-          }}
-        >
-          {current.name[0]?.toUpperCase()}
-        </span>
+        {collapsed && (
+          <span
+            aria-hidden
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: (CARD_WIDTH_COLLAPSED - CARD_HEIGHT_COLLAPSED) / 2,
+              width: CARD_HEIGHT_COLLAPSED,
+              height: CARD_HEIGHT_COLLAPSED,
+              background: tileBg,
+              borderRadius: 9,
+              color: '#fff',
+              display: 'grid',
+              placeItems: 'center',
+              fontFamily: 'var(--font-display, "Fraunces", Georgia, serif)',
+              fontWeight: 900,
+              fontSize: 16,
+              lineHeight: 1,
+              paddingBottom: 2,
+              pointerEvents: 'none',
+            }}
+          >
+            {current.name[0]?.toUpperCase()}
+          </span>
+        )}
         <div
           style={{
             position: 'absolute',
             top: 0,
             bottom: 0,
-            left: CONTENT_LEFT,
+            left: collapsed ? CONTENT_LEFT_COLLAPSED : CONTENT_LEFT_EXPANDED,
             right: 12,
             display: 'flex',
             alignItems: 'center',
