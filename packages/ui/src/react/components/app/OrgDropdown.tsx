@@ -163,18 +163,6 @@ export function OrgDropdown({
               </div>
             )}
           </div>
-          <span
-            aria-hidden
-            style={{
-              color: 'var(--color-ink-3, #64748b)',
-              fontSize: 10,
-              flexShrink: 0,
-              transform: open ? 'rotate(180deg)' : 'none',
-              transition: 'transform 160ms',
-            }}
-          >
-            ▾
-          </span>
         </div>
       </button>
       {open && (
