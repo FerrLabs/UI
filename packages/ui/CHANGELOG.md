@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.0.1] - 2026-05-16
+
+### Bug Fixes
+
+- fix(sidebar): intercept SidebarItem click for SPA nav (preserve cmd/ctrl/shift for new tab) (#149)
+
 ## [4.0.0] - 2026-05-16
 
 ### Breaking Changes
