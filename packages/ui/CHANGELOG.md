@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.0.2] - 2026-05-16
+
+### Bug Fixes
+
+- fix(orgdropdown): drop trigger chevron — card affordance is enough (#150)
+
 ## [4.0.1] - 2026-05-16
 
 ### Bug Fixes
