@@ -3,8 +3,12 @@
     "url": "https://github.com/FerrLabs/UI/issues"
   },
   "description": "Astro components shared across FerrLabs marketing sites (ferrlabs.com, ferrflow.com, ferrvault.com, ferrtrack.com, ferrgrowth.com).",
+  "dependencies": {
+    "@ferrlabs/ui-foundation": "workspace:^"
+  },
   "exports": {
     "./Footer.astro": "./src/Footer.astro",
+    "./Icon.astro": "./src/Icon.astro",
     "./LanguageSelect.astro": "./src/LanguageSelect.astro",
     "./Navbar.astro": "./src/Navbar.astro",
     "./PreFooterCTA.astro": "./src/PreFooterCTA.astro"
