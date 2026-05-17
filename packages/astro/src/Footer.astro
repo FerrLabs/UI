@@ -1,6 +1,13 @@
 ---
-type LegacyAccent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet' | 'amber';
-type Product = 'ferrlabs' | 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth' | 'ferrfleet';
+type LegacyAccent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet' | 'amber' | 'teal';
+type Product =
+  | 'ferrlabs'
+  | 'ferrflow'
+  | 'ferrvault'
+  | 'ferrtrack'
+  | 'ferrgrowth'
+  | 'ferrfleet'
+  | 'ferrlens';
 type Lang = 'en' | 'fr';
 
 export interface Link {
@@ -65,7 +72,8 @@ const legacySlug = (a: LegacyAccent | undefined) =>
   a === 'orange' ? 'flow-orange' :
   a === 'emerald' ? 'vault-emerald' :
   a === 'indigo' ? 'track-indigo' :
-  a === 'amber' ? 'fleet-amber' : 'growth-violet';
+  a === 'amber' ? 'fleet-amber' :
+  a === 'teal' ? 'lens-teal' : 'growth-violet';
 
 const accentCssValue = isHexAccent ? (accent as string) : `var(--color-ferr${legacySlug(legacyAccentName)})`;
 
@@ -78,6 +86,7 @@ const allProducts: { id: Product; label: string; href: string; accent: LegacyAcc
   { id: 'ferrfleet',  label: 'FerrFleet',  href: 'https://ferrfleet.com',  accent: 'amber' },
   { id: 'ferrtrack',  label: 'FerrTrack',  href: 'https://ferrtrack.com',  accent: 'indigo' },
   { id: 'ferrvault',  label: 'FerrVault',  href: 'https://ferrvault.com',  accent: 'emerald' },
+  { id: 'ferrlens',   label: 'FerrLens',   href: 'https://ferrlens.com',   accent: 'teal' },
   { id: 'ferrflow',   label: 'FerrFlow',   href: 'https://ferrflow.com',   accent: 'orange' },
 ];
 const otherProducts = allProducts.filter((p) => p.id !== currentProduct);

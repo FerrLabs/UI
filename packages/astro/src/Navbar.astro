@@ -1,8 +1,15 @@
 ---
 import LanguageSelect from './LanguageSelect.astro';
 
-type LegacyAccent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet' | 'amber';
-type Product = 'ferrlabs' | 'ferrflow' | 'ferrvault' | 'ferrtrack' | 'ferrgrowth' | 'ferrfleet';
+type LegacyAccent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet' | 'amber' | 'teal';
+type Product =
+  | 'ferrlabs'
+  | 'ferrflow'
+  | 'ferrvault'
+  | 'ferrtrack'
+  | 'ferrgrowth'
+  | 'ferrfleet'
+  | 'ferrlens';
 type Lang = 'en' | 'fr';
 
 export interface Link {
@@ -85,7 +92,8 @@ const legacySlug = (a: LegacyAccent | undefined) =>
   a === 'orange' ? 'flow-orange' :
   a === 'emerald' ? 'vault-emerald' :
   a === 'indigo' ? 'track-indigo' :
-  a === 'amber' ? 'fleet-amber' : 'growth-violet';
+  a === 'amber' ? 'fleet-amber' :
+  a === 'teal' ? 'lens-teal' : 'growth-violet';
 
 const accentCssValue = isHexAccent ? (accent as string) : `var(--color-ferr${legacySlug(legacyAccentName)})`;
 
@@ -102,6 +110,8 @@ const allProducts: { id: Product; label: string; href: string; accent: LegacyAcc
     tagline: 'Issue tracker',                    taglineFr: 'Suivi d’issues' },
   { id: 'ferrvault',  label: 'FerrVault',  href: 'https://ferrvault.com',  accent: 'emerald',
     tagline: 'Secrets management',               taglineFr: 'Gestion des secrets' },
+  { id: 'ferrlens',   label: 'FerrLens',   href: 'https://ferrlens.com',   accent: 'teal',
+    tagline: 'Free web tools',                   taglineFr: 'Outils web gratuits' },
   { id: 'ferrflow',   label: 'FerrFlow',   href: 'https://ferrflow.com',   accent: 'orange',
     tagline: 'Versioning CLI (open source)',     taglineFr: 'CLI de versioning (open source)' },
 ];
