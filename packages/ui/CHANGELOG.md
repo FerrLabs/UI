@@ -4,6 +4,16 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.2.0] - 2026-05-17
+
+### Features
+
+- feat(ui): rebuild Icon against foundation@4 + accept title prop, re-export icons map (#157)
+- feat(astro): add Icon.astro that renders any foundation IconName (#156)
+- feat(astro,foundation): register ferrlens as a product (teal accent, between vault and flow) (#155)
+- feat(foundation): add zap, sparkles, bookmark, mail, dns, circleSlash, arrowRight icons (#154)
+- feat(foundation): expose ferrlens loupe mark as both icon registry entry + standalone svg (#153)
+
 ## [4.1.1] - 2026-05-17
 
 ### Bug Fixes
