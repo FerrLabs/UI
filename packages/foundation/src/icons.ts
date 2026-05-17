@@ -11,6 +11,11 @@ const stroke = (paths: string) =>
 export const icons = {
   ferrlabsLogo: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="4" fill="currentColor"/><circle cx="16" cy="16" r="8" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.7"/><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1" fill="none" opacity="0.4"/></svg>`,
 
+  // FerrLens — "loupe over pixel grid" mark (design bundle logos.html, option 03/Loupe).
+  // currentColor on stroke + 25% opacity fill on the grid cells, so the icon
+  // adapts to the surrounding text color when no accent is set.
+  ferrlensLogo: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><g fill="currentColor" opacity="0.25"><rect x="2" y="3" width="3" height="3"/><rect x="6" y="3" width="3" height="3"/><rect x="10" y="3" width="3" height="3"/><rect x="14" y="3" width="3" height="3"/><rect x="2" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="2" y="11" width="3" height="3"/><rect x="14" y="11" width="3" height="3"/><rect x="2" y="15" width="3" height="3"/><rect x="6" y="15" width="3" height="3"/><rect x="10" y="15" width="3" height="3"/><rect x="14" y="15" width="3" height="3"/></g><circle cx="19" cy="19" r="8" stroke="currentColor" stroke-width="2" fill="none"/><line x1="25" y1="25" x2="30" y2="30" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>`,
+
   // Layout & overview
   overview: stroke(
     `<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>`,
