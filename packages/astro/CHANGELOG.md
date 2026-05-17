@@ -4,6 +4,12 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.0] - 2026-05-17
+
+### Features
+
+- feat(astro): add Icon.astro that renders any foundation IconName (#156)
+
 ## [1.0.0] - 2026-05-17
 
 ### Breaking Changes
