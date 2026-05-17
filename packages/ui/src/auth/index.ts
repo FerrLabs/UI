@@ -13,5 +13,5 @@
  * Tracked under UI#105 follow-up.
  */
 
-export { LoginForm } from './LoginForm';
-export type { LoginFormProps, LoginSubmitPayload } from './LoginForm';
+export { LoginForm } from './LoginForm.js';
+export type { LoginFormProps, LoginSubmitPayload } from './LoginForm.js';

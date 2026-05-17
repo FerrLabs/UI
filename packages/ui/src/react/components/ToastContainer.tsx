@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { subscribeToasts, type Toast } from '../lib/toast';
+import { subscribeToasts, type Toast } from '../lib/toast.js';
 
 // Bottom-right stack, newest at the bottom. Auto-dismiss uses a per-toast
 // timer map keyed by id so we can clear individual entries when the user

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { LogoMark } from '../app/LogoMark';
-import { AUTH_CLIENTS, type AuthClientKey } from './clients';
+import { LogoMark } from '../app/LogoMark.js';
+import { AUTH_CLIENTS, type AuthClientKey } from './clients.js';
 
 export type AuthMode = 'login' | 'signup';
 

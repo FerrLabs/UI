@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from './lib/api';
+import { api } from './lib/api.js';
 
 // The request endpoint always returns 202 — it leaks nothing about whether an
 // account exists, so the page shows the same success copy unconditionally.
@@ -29,11 +29,30 @@ export default function ForgotPassword() {
     <div className="min-h-screen flex items-center justify-center px-6 bg-orange-50/30">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <a href="https://ferrflow.com" className="inline-flex items-center gap-2 no-underline mb-6">
+          <a
+            href="https://ferrflow.com"
+            className="inline-flex items-center gap-2 no-underline mb-6"
+          >
             <svg width="32" height="32" viewBox="0 0 32 32" style={{ color: '#e8733a' }}>
               <circle cx="16" cy="16" r="4" fill="currentColor" />
-              <circle cx="16" cy="16" r="8" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.7" />
-              <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.4" />
+              <circle
+                cx="16"
+                cy="16"
+                r="8"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                fill="none"
+                opacity="0.7"
+              />
+              <circle
+                cx="16"
+                cy="16"
+                r="12"
+                stroke="currentColor"
+                strokeWidth="1"
+                fill="none"
+                opacity="0.4"
+              />
             </svg>
             <span className="text-xl font-black tracking-tight text-gray-900">
               Ferr<span style={{ color: '#e8733a' }}>Flow</span>
@@ -82,7 +101,10 @@ export default function ForgotPassword() {
         </form>
         <p className="mt-6 text-center text-sm text-gray-500">
           Remembered it?{' '}
-          <Link to="/login" className="text-orange-600 font-medium hover:text-orange-800 no-underline">
+          <Link
+            to="/login"
+            className="text-orange-600 font-medium hover:text-orange-800 no-underline"
+          >
             Back to log in
           </Link>
         </p>

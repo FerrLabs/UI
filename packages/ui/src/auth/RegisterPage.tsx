@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { api, ApiError } from './lib/api';
-import PasswordStrengthBar from '../react';
-import type { StrengthScore } from './lib/passwordStrength';
+import { api, ApiError } from './lib/api.js';
+import PasswordStrengthBar from '../react.js';
+import type { StrengthScore } from './lib/passwordStrength.js';
 
 /// Minimum zxcvbn score we'll allow before enabling submit. Score 3
 /// ("strong") corresponds to roughly 10^8 guesses — comfortably out of reach
@@ -52,13 +52,34 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center px-6 bg-orange-50/30">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <a href="https://ferrflow.com" className="inline-flex items-center gap-2 no-underline mb-6">
+          <a
+            href="https://ferrflow.com"
+            className="inline-flex items-center gap-2 no-underline mb-6"
+          >
             <svg width="32" height="32" viewBox="0 0 32 32" style={{ color: '#e8733a' }}>
-              <circle cx="16" cy="16" r="4" fill="currentColor"/>
-              <circle cx="16" cy="16" r="8" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.7"/>
-              <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.4"/>
+              <circle cx="16" cy="16" r="4" fill="currentColor" />
+              <circle
+                cx="16"
+                cy="16"
+                r="8"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                fill="none"
+                opacity="0.7"
+              />
+              <circle
+                cx="16"
+                cy="16"
+                r="12"
+                stroke="currentColor"
+                strokeWidth="1"
+                fill="none"
+                opacity="0.4"
+              />
             </svg>
-            <span className="text-xl font-black tracking-tight text-gray-900">Ferr<span style={{ color: '#e8733a' }}>Flow</span></span>
+            <span className="text-xl font-black tracking-tight text-gray-900">
+              Ferr<span style={{ color: '#e8733a' }}>Flow</span>
+            </span>
           </a>
           <h1 className="text-2xl font-bold text-gray-900">Create your account</h1>
           <p className="mt-2 text-sm text-gray-500">Start managing your projects with FerrFlow</p>
@@ -72,7 +93,9 @@ export default function Register() {
 
         <form className="space-y-4" onSubmit={onSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
             <input
               id="email"
               type="email"
@@ -85,7 +108,9 @@ export default function Register() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
             <input
               id="password"
               type="password"
@@ -112,7 +137,13 @@ export default function Register() {
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-gray-500">
-          Already have an account? <Link to="/login" className="text-orange-600 font-medium hover:text-orange-800 no-underline">Log in</Link>
+          Already have an account?{' '}
+          <Link
+            to="/login"
+            className="text-orange-600 font-medium hover:text-orange-800 no-underline"
+          >
+            Log in
+          </Link>
         </p>
       </div>
     </div>

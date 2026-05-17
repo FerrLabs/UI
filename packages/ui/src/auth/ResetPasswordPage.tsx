@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { api, ApiError } from './lib/api';
-import PasswordStrengthBar from '../react';
-import type { StrengthScore } from './lib/passwordStrength';
+import { api, ApiError } from './lib/api.js';
+import PasswordStrengthBar from '../react.js';
+import type { StrengthScore } from './lib/passwordStrength.js';
 
 /// Gate submit on score >= 3 ("strong"). Same threshold as Register — keeps
 /// the UX consistent and prevents users from walking out of a reset with a
@@ -110,11 +110,30 @@ export default function ResetPassword() {
     <div className="min-h-screen flex items-center justify-center px-6 bg-orange-50/30">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <a href="https://ferrflow.com" className="inline-flex items-center gap-2 no-underline mb-6">
+          <a
+            href="https://ferrflow.com"
+            className="inline-flex items-center gap-2 no-underline mb-6"
+          >
             <svg width="32" height="32" viewBox="0 0 32 32" style={{ color: '#e8733a' }}>
               <circle cx="16" cy="16" r="4" fill="currentColor" />
-              <circle cx="16" cy="16" r="8" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.7" />
-              <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.4" />
+              <circle
+                cx="16"
+                cy="16"
+                r="8"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                fill="none"
+                opacity="0.7"
+              />
+              <circle
+                cx="16"
+                cy="16"
+                r="12"
+                stroke="currentColor"
+                strokeWidth="1"
+                fill="none"
+                opacity="0.4"
+              />
             </svg>
             <span className="text-xl font-black tracking-tight text-gray-900">
               Ferr<span style={{ color: '#e8733a' }}>Flow</span>

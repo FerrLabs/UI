@@ -6,15 +6,15 @@
  * docs for wiring.
  */
 
-export { default as ConfirmDialog } from './components/ConfirmDialog';
-export { default as FormDialog } from './components/FormDialog';
-export { default as ErrorBoundary } from './components/ErrorBoundary';
-export { Spinner, LoadingPage, ErrorBox } from './components/Loading';
-export { default as PasswordStrengthBar } from './components/PasswordStrengthBar';
-export { default as ToastContainer } from './components/ToastContainer';
+export { default as ConfirmDialog } from './components/ConfirmDialog.js';
+export { default as FormDialog } from './components/FormDialog.js';
+export { default as ErrorBoundary } from './components/ErrorBoundary.js';
+export { Spinner, LoadingPage, ErrorBox } from './components/Loading.js';
+export { default as PasswordStrengthBar } from './components/PasswordStrengthBar.js';
+export { default as ToastContainer } from './components/ToastContainer.js';
 
-export * from './lib/toast';
-export * from './lib/passwordStrength';
+export * from './lib/toast.js';
+export * from './lib/passwordStrength.js';
 
 /**
  * Product-app chrome (Shell, LogoMark, PageHeader, Stat, Tag, Avatar,
@@ -22,11 +22,11 @@ export * from './lib/passwordStrength';
  * `./components/app/index.ts` for the token contract every consuming app
  * must satisfy in its global stylesheet.
  */
-export * from './components/app';
+export * from './components/app/index.js';
 
 /**
  * Auth chrome — used by `auth.ferrlabs.com` to render the sign-in /
  * register screens with a per-product accent driven by the OAuth
  * `client_id` query param.
  */
-export * from './components/auth';
+export * from './components/auth/index.js';

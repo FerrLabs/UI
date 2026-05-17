@@ -4,7 +4,7 @@ import {
   labelForScore,
   type StrengthResult,
   type StrengthScore,
-} from '../lib/passwordStrength';
+} from '../lib/passwordStrength.js';
 
 interface Props {
   password: string;
@@ -51,7 +51,13 @@ export default function PasswordStrengthBar({
 
   return (
     <div aria-live="polite" className="mt-2">
-      <div className="flex gap-1" role="progressbar" aria-valuemin={0} aria-valuemax={4} aria-valuenow={result.score}>
+      <div
+        className="flex gap-1"
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={4}
+        aria-valuenow={result.score}
+      >
         {[0, 1, 2, 3].map((i) => (
           <div
             key={i}

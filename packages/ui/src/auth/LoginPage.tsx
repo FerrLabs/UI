@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { api, ApiError } from './lib/api';
+import { api, ApiError } from './lib/api.js';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -31,10 +31,12 @@ export default function Login() {
         // Per-email lockout kicked in server-side. Distinct banner so the
         // user understands waiting won't help as fast as resetting.
         setLocked(true);
-        setError(
-          'Too many failed attempts. Please wait a few minutes or use Forgot password.',
-        );
-      } else if (err instanceof ApiError && err.status === 403 && err.message === 'email_not_verified') {
+        setError('Too many failed attempts. Please wait a few minutes or use Forgot password.');
+      } else if (
+        err instanceof ApiError &&
+        err.status === 403 &&
+        err.message === 'email_not_verified'
+      ) {
         // Backend tells us the password was correct but email is still
         // pending verification. Surface a resend option instead of the
         // generic wrong-password message.
@@ -79,13 +81,34 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center px-6 bg-orange-50/30">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <a href="https://ferrflow.com" className="inline-flex items-center gap-2 no-underline mb-6">
+          <a
+            href="https://ferrflow.com"
+            className="inline-flex items-center gap-2 no-underline mb-6"
+          >
             <svg width="32" height="32" viewBox="0 0 32 32" style={{ color: '#e8733a' }}>
-              <circle cx="16" cy="16" r="4" fill="currentColor"/>
-              <circle cx="16" cy="16" r="8" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.7"/>
-              <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.4"/>
+              <circle cx="16" cy="16" r="4" fill="currentColor" />
+              <circle
+                cx="16"
+                cy="16"
+                r="8"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                fill="none"
+                opacity="0.7"
+              />
+              <circle
+                cx="16"
+                cy="16"
+                r="12"
+                stroke="currentColor"
+                strokeWidth="1"
+                fill="none"
+                opacity="0.4"
+              />
             </svg>
-            <span className="text-xl font-black tracking-tight text-gray-900">Ferr<span style={{ color: '#e8733a' }}>Flow</span></span>
+            <span className="text-xl font-black tracking-tight text-gray-900">
+              Ferr<span style={{ color: '#e8733a' }}>Flow</span>
+            </span>
           </a>
           <h1 className="text-2xl font-bold text-gray-900">Log in to your account</h1>
           <p className="mt-2 text-sm text-gray-500">Access your projects and issues</p>
@@ -140,7 +163,9 @@ export default function Login() {
 
         <form className="space-y-4" onSubmit={onSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
             <input
               id="email"
               type="email"
@@ -153,7 +178,9 @@ export default function Login() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
             <input
               id="password"
               type="password"
@@ -183,7 +210,13 @@ export default function Login() {
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-gray-500">
-          No account? <Link to="/register" className="text-orange-600 font-medium hover:text-orange-800 no-underline">Sign up</Link>
+          No account?{' '}
+          <Link
+            to="/register"
+            className="text-orange-600 font-medium hover:text-orange-800 no-underline"
+          >
+            Sign up
+          </Link>
         </p>
       </div>
     </div>
