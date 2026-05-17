@@ -8,6 +8,7 @@ export type BrandDropdownAppId =
   | 'ferrtrack'
   | 'ferrgrowth'
   | 'ferrfleet'
+  | 'ferrlens'
   | 'ferrlabs'
   | 'admin';
 
@@ -64,6 +65,14 @@ export const DEFAULT_APPS: BrandDropdownApp[] = [
     label: 'FerrVault',
     href: 'https://app.ferrvault.com',
     accent: '#10b981',
+  },
+  {
+    id: 'ferrlens',
+    label: 'FerrLens',
+    // FerrLens has no app subdomain — Astro SSR serves both marketing and
+    // tool pages on the apex. Point the dropdown at the apex.
+    href: 'https://ferrlens.com',
+    accent: '#14b8a6',
   },
 ];
 
