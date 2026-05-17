@@ -5,6 +5,7 @@ export type ProductSlug =
   | 'ferrgrowth'
   | 'ferragents'
   | 'ferrfleet'
+  | 'ferrlens'
   | 'ferrlabs';
 
 interface Props {
@@ -128,6 +129,24 @@ export function LogoMark({ size = 24, accent = 'currentColor', product }: Props)
           >
             ]
           </text>
+        </g>
+      )}
+      {product === 'ferrlens' && (
+        <g>
+          {/* Magnifying-glass / lens: a circle + diagonal handle, the
+              FerrLens brand mark. Distinct from FerrTrack's concentric
+              circles by the explicit grip. */}
+          <circle cx="13" cy="13" r="8" stroke={accent} strokeWidth="2" fill="none" />
+          <circle cx="13" cy="13" r="3" fill={accent} opacity="0.4" />
+          <line
+            x1="19"
+            y1="19"
+            x2="27"
+            y2="27"
+            stroke={accent}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
         </g>
       )}
       {(product === 'ferragents' || product === 'ferrfleet') && (
