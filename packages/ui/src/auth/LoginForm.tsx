@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Button } from '../react';
+import { Button } from '../react.js';
 
 export interface LoginSubmitPayload {
   email: string;

@@ -3,7 +3,7 @@ import {
   type ProjectSwitcherItem,
   type ProjectSwitcherPlaceholder,
   type ProjectSwitcherProps,
-} from './ProjectSwitcher';
+} from './ProjectSwitcher.js';
 
 export type OrgSwitcherItem = ProjectSwitcherItem;
 export type OrgSwitcherPlaceholder = ProjectSwitcherPlaceholder;

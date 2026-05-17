@@ -1,9 +1,9 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Sidebar, SidebarSection, SidebarItem } from '../../../primitives';
-import { LogoMark, type ProductSlug } from './LogoMark';
-import { BrandDropdown, type BrandDropdownAppId, type BrandDropdownApp } from './BrandDropdown';
-import { UserMenu, type UserMenuItem } from './UserMenu';
-import { Button } from './Button';
+import { Sidebar, SidebarSection, SidebarItem } from '../../../primitives.js';
+import { LogoMark, type ProductSlug } from './LogoMark.js';
+import { BrandDropdown, type BrandDropdownAppId, type BrandDropdownApp } from './BrandDropdown.js';
+import { UserMenu, type UserMenuItem } from './UserMenu.js';
+import { Button } from './Button.js';
 
 /**
  * One topbar action — typically a "+ New <thing>" button. Each product

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Avatar } from './Avatar';
+import { Avatar } from './Avatar.js';
 
 export interface UserMenuItem {
   label: string;
@@ -19,7 +19,14 @@ export interface UserMenuProps {
   showName?: boolean;
 }
 
-export function UserMenu({ name, email, avatarSrc, accent, items, showName = true }: UserMenuProps) {
+export function UserMenu({
+  name,
+  email,
+  avatarSrc,
+  accent,
+  items,
+  showName = true,
+}: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
@@ -28,7 +35,9 @@ export function UserMenu({ name, email, avatarSrc, accent, items, showName = tru
     const onClick = (e: MouseEvent) => {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     };
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
     document.addEventListener('mousedown', onClick);
     document.addEventListener('keydown', onKey);
     return () => {
@@ -41,7 +50,7 @@ export function UserMenu({ name, email, avatarSrc, accent, items, showName = tru
     <div ref={rootRef} style={{ position: 'relative', display: 'inline-flex' }}>
       <button
         type="button"
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
         title={name}
@@ -59,27 +68,38 @@ export function UserMenu({ name, email, avatarSrc, accent, items, showName = tru
           borderRadius: 8,
           transition: 'background 140ms ease',
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-app-nav-hover, rgba(30,41,59,0.03))')}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.background = 'var(--color-app-nav-hover, rgba(30,41,59,0.03))')
+        }
         onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
       >
         <Avatar name={name} src={avatarSrc} accent={accent} size={28} />
         {showName && (
-          <span style={{
-            fontSize: 13,
-            color: 'var(--color-fg-2, #475569)',
-            fontFamily: 'var(--font-serif)',
-            maxWidth: 160,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}>{name}</span>
+          <span
+            style={{
+              fontSize: 13,
+              color: 'var(--color-fg-2, #475569)',
+              fontFamily: 'var(--font-serif)',
+              maxWidth: 160,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {name}
+          </span>
         )}
-        <span aria-hidden style={{
-          color: 'var(--color-fg-3, #64748b)',
-          fontSize: 10,
-          opacity: 0.7,
-          marginLeft: 2,
-        }}>▾</span>
+        <span
+          aria-hidden
+          style={{
+            color: 'var(--color-fg-3, #64748b)',
+            fontSize: 10,
+            opacity: 0.7,
+            marginLeft: 2,
+          }}
+        >
+          ▾
+        </span>
       </button>
 
       {open && (
@@ -98,29 +118,40 @@ export function UserMenu({ name, email, avatarSrc, accent, items, showName = tru
             zIndex: 60,
           }}
         >
-          <div style={{
-            padding: '8px 12px 10px',
-            borderBottom: '1px solid var(--color-rule, rgba(30,41,59,0.10))',
-            marginBottom: 4,
-          }}>
-            <div style={{
-              fontSize: 13,
-              fontWeight: 500,
-              color: 'var(--color-fg, #1e293b)',
-              fontFamily: 'var(--font-serif)',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}>{name}</div>
-            {email && (
-              <div className="mono" style={{
-                fontSize: 11,
-                color: 'var(--color-fg-3, #64748b)',
-                marginTop: 2,
+          <div
+            style={{
+              padding: '8px 12px 10px',
+              borderBottom: '1px solid var(--color-rule, rgba(30,41,59,0.10))',
+              marginBottom: 4,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 500,
+                color: 'var(--color-fg, #1e293b)',
+                fontFamily: 'var(--font-serif)',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-              }}>{email}</div>
+              }}
+            >
+              {name}
+            </div>
+            {email && (
+              <div
+                className="mono"
+                style={{
+                  fontSize: 11,
+                  color: 'var(--color-fg-3, #64748b)',
+                  marginTop: 2,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {email}
+              </div>
             )}
           </div>
           {items.map((item, i) => {
@@ -140,7 +171,9 @@ export function UserMenu({ name, email, avatarSrc, accent, items, showName = tru
               width: '100%',
               textAlign: 'left' as const,
               marginTop: item.separatorAbove ? 6 : 0,
-              borderTop: item.separatorAbove ? '1px solid var(--color-rule, rgba(30,41,59,0.10))' : 'none',
+              borderTop: item.separatorAbove
+                ? '1px solid var(--color-rule, rgba(30,41,59,0.10))'
+                : 'none',
               paddingTop: item.separatorAbove ? 12 : 8,
             };
             const onMouseEnter = (e: { currentTarget: HTMLElement }) => {
@@ -153,7 +186,18 @@ export function UserMenu({ name, email, avatarSrc, accent, items, showName = tru
             };
             const inner = (
               <>
-                {item.icon && <span style={{ width: 14, display: 'inline-flex', justifyContent: 'center', flexShrink: 0 }}>{item.icon}</span>}
+                {item.icon && (
+                  <span
+                    style={{
+                      width: 14,
+                      display: 'inline-flex',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {item.icon}
+                  </span>
+                )}
                 <span style={{ flex: 1 }}>{item.label}</span>
               </>
             );
@@ -167,7 +211,9 @@ export function UserMenu({ name, email, avatarSrc, accent, items, showName = tru
                   onMouseEnter={onMouseEnter}
                   onMouseLeave={onMouseLeave}
                   onClick={() => setOpen(false)}
-                >{inner}</a>
+                >
+                  {inner}
+                </a>
               );
             }
             return (
@@ -178,8 +224,13 @@ export function UserMenu({ name, email, avatarSrc, accent, items, showName = tru
                 style={baseStyle}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
-                onClick={() => { item.onClick?.(); setOpen(false); }}
-              >{inner}</button>
+                onClick={() => {
+                  item.onClick?.();
+                  setOpen(false);
+                }}
+              >
+                {inner}
+              </button>
             );
           })}
         </div>

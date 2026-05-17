@@ -9,13 +9,8 @@
  * is set per-instance by `AuthLayout` from the `client` prop.
  */
 
-export { AuthLayout, type AuthLayoutProps, type AuthMode } from './AuthLayout';
-export { AuthField } from './AuthField';
-export { AuthSubmit } from './AuthSubmit';
-export { AuthDivider } from './AuthDivider';
-export {
-  AUTH_CLIENTS,
-  clientFromOauthId,
-  type AuthClient,
-  type AuthClientKey,
-} from './clients';
+export { AuthLayout, type AuthLayoutProps, type AuthMode } from './AuthLayout.js';
+export { AuthField } from './AuthField.js';
+export { AuthSubmit } from './AuthSubmit.js';
+export { AuthDivider } from './AuthDivider.js';
+export { AUTH_CLIENTS, clientFromOauthId, type AuthClient, type AuthClientKey } from './clients.js';

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { LogoMark, type ProductSlug } from './LogoMark';
+import { LogoMark, type ProductSlug } from './LogoMark.js';
 
 export type BrandDropdownAppId =
   | 'ferrflow'

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { api, ApiError } from './lib/api';
+import { api, ApiError } from './lib/api.js';
 
 // Shared "enter your 6-digit code" step for both the register flow (right after
 // POST /auth/register) and the login flow (when the backend reports
@@ -75,7 +75,10 @@ export default function VerifyEmail() {
       <div className="min-h-screen flex items-center justify-center px-6 bg-orange-50/30">
         <div className="text-center">
           <p className="text-sm text-gray-700 mb-4">Missing email for verification.</p>
-          <Link to="/login" className="text-orange-600 font-medium hover:text-orange-800 no-underline">
+          <Link
+            to="/login"
+            className="text-orange-600 font-medium hover:text-orange-800 no-underline"
+          >
             Back to log in
           </Link>
         </div>
@@ -87,11 +90,30 @@ export default function VerifyEmail() {
     <div className="min-h-screen flex items-center justify-center px-6 bg-orange-50/30">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <a href="https://ferrflow.com" className="inline-flex items-center gap-2 no-underline mb-6">
+          <a
+            href="https://ferrflow.com"
+            className="inline-flex items-center gap-2 no-underline mb-6"
+          >
             <svg width="32" height="32" viewBox="0 0 32 32" style={{ color: '#e8733a' }}>
               <circle cx="16" cy="16" r="4" fill="currentColor" />
-              <circle cx="16" cy="16" r="8" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.7" />
-              <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.4" />
+              <circle
+                cx="16"
+                cy="16"
+                r="8"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                fill="none"
+                opacity="0.7"
+              />
+              <circle
+                cx="16"
+                cy="16"
+                r="12"
+                stroke="currentColor"
+                strokeWidth="1"
+                fill="none"
+                opacity="0.4"
+              />
             </svg>
             <span className="text-xl font-black tracking-tight text-gray-900">
               Ferr<span style={{ color: '#e8733a' }}>Flow</span>

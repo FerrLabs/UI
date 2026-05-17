@@ -6,7 +6,7 @@ import {
   type ReactNode,
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
-import { SiteCard } from './SiteCard';
+import { SiteCard } from './SiteCard.js';
 
 export interface ProjectSwitcherItem {
   id: string;

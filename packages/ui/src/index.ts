@@ -13,6 +13,6 @@
  *
  * Tracked under UI#105 (8 → 3 packages consolidation).
  */
-export * from './primitives';
-export * as ReactComposed from './react';
-export * as Auth from './auth';
+export * from './primitives.js';
+export * as ReactComposed from './react.js';
+export * as Auth from './auth.js';
