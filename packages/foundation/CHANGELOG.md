@@ -4,6 +4,12 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.1.0] - 2026-05-17
+
+### Features
+
+- feat(foundation): add zap, sparkles, bookmark, mail, dns, circleSlash, arrowRight icons (#154)
+
 ## [4.0.0] - 2026-05-17
 
 ### Breaking Changes
