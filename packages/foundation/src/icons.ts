@@ -222,6 +222,23 @@ export const icons = {
   dictionaries: stroke(
     `<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="16" y2="7"/><line x1="9" y1="11" x2="14" y2="11"/>`,
   ),
+
+  // Generic toolkit
+  zap: stroke(`<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>`),
+  sparkles: stroke(
+    `<path d="m12 3-1.9 5.8a2 2 0 0 1-1.288 1.288L3 12l5.812 1.9a2 2 0 0 1 1.288 1.288L12 21l1.9-5.812a2 2 0 0 1 1.288-1.288L21 12l-5.812-1.9a2 2 0 0 1-1.288-1.288z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>`,
+  ),
+  bookmark: stroke(`<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>`),
+  circleSlash: stroke(
+    `<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>`,
+  ),
+  mail: stroke(
+    `<rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 7 12 13 2 7"/>`,
+  ),
+  dns: stroke(
+    `<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>`,
+  ),
+  arrowRight: stroke(`<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>`),
 } as const;
 
 export type IconName = keyof typeof icons;
