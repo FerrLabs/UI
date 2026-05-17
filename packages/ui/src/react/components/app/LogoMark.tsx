@@ -133,19 +133,35 @@ export function LogoMark({ size = 24, accent = 'currentColor', product }: Props)
       )}
       {product === 'ferrlens' && (
         <g>
-          {/* Magnifying-glass / lens: a circle + diagonal handle, the
-              FerrLens brand mark. Distinct from FerrTrack's concentric
-              circles by the explicit grip. */}
-          <circle cx="13" cy="13" r="8" stroke={accent} strokeWidth="2" fill="none" />
-          <circle cx="13" cy="13" r="3" fill={accent} opacity="0.4" />
+          {/* "Loupe over pixel grid" — bundle logos.html option 03.
+              A hollow rectangle of teal pixels (the "grid", the
+              representation of your stack), magnifying glass overlapping
+              the bottom-right corner with its handle extending to the
+              corner of the viewBox. Distinct from FerrTrack's concentric
+              circles thanks to the grid + explicit grip. */}
+          <g fill={accent} opacity="0.25">
+            <rect x="2" y="3" width="3" height="3" />
+            <rect x="6" y="3" width="3" height="3" />
+            <rect x="10" y="3" width="3" height="3" />
+            <rect x="14" y="3" width="3" height="3" />
+            <rect x="2" y="7" width="3" height="3" />
+            <rect x="14" y="7" width="3" height="3" />
+            <rect x="2" y="11" width="3" height="3" />
+            <rect x="14" y="11" width="3" height="3" />
+            <rect x="2" y="15" width="3" height="3" />
+            <rect x="6" y="15" width="3" height="3" />
+            <rect x="10" y="15" width="3" height="3" />
+            <rect x="14" y="15" width="3" height="3" />
+          </g>
+          <circle cx="19" cy="19" r="8" stroke={accent} strokeWidth="2" fill="none" />
           <line
-            x1="19"
-            y1="19"
-            x2="27"
-            y2="27"
+            x1="25"
+            y1="25"
+            x2="30"
+            y2="30"
             stroke={accent}
-            strokeWidth="2.5"
-            strokeLinecap="round"
+            strokeWidth="2"
+            strokeLinecap="square"
           />
         </g>
       )}
