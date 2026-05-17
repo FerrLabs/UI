@@ -23,7 +23,8 @@
     "./styles/global.css": "./src/styles/global.css",
     "./styles/tokens.css": "./src/styles/tokens.css",
     "./tailwind/products": "./src/tailwind/products.css",
-    "./tailwind/tokens": "./src/tailwind/tokens.css"
+    "./tailwind/tokens": "./src/tailwind/tokens.css",
+    "./svg/*.svg": "./src/svg/*.svg"
   },
   "files": [
     "src",
