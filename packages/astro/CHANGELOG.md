@@ -4,6 +4,73 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.0.0] - 2026-05-17
+
+### Breaking Changes
+
+- feat(ui)!: drop org initial badge from OrgDropdown trigger in expanded mode (#148)
+- fix(react)!: default Button primary background to var(--color-accent), not slate ink (#87)
+- refactor(primitives)!: rename AppFooter → Footer (App prefix dropped, deprecated alias kept) (#76)
+- refactor!: realign primitives + showcase to editorial @ferrlabs/ui-react design system (#74)
+
+### Features
+
+- feat(astro,foundation): register ferrlens as a product (teal accent, between vault and flow) (#155)
+- feat(foundation): add zap, sparkles, bookmark, mail, dns, circleSlash, arrowRight icons (#154)
+- feat(foundation): expose ferrlens loupe mark as both icon registry entry + standalone svg (#153)
+- feat(brand): add FerrLens (teal #14b8a6) to BrandDropdown + LogoMark (#151)
+- feat(ui): rename SiteSwitcher to ProjectSwitcher and add OrgSwitcher (#147)
+- feat(ui): add SiteSwitcher popover and replace unicode chevron with svg in SiteCard (#146)
+- feat(ui): add SiteCard and SiteFavicon for site-first sidebars (#145)
+- feat(ui): Shell actions[] + projectSlot for sidebar OrgDropdown (#138)
+- feat(icons): add sidebar icons for product apps (#133)
+- feat(ci): trigger ad-hoc Renovate scan after publish (#126)
+- feat(ui): Shell topbar — onSearch button (⌘K) + global cmd+K shortcut + userMenu slot (#115)
+- feat(ui): add 'admin' to BrandDropdown, ADMIN_APP export + section grouping (#114)
+- feat!(ui): merge primitives + react + auth source into ui package, drop sub-packages (UI#105) (#111)
+- feat(ui): meta-package re-exporting primitives + react via subpath exports (UI#105 phase 1.2) (#107)
+- feat(ui-foundation): merge icons + styles + tailwind into single package (UI#105) (#106)
+- feat(primitives): add Sparkline component (#96)
+- feat(primitives,react): smooth Sidebar collapse animations (#92)
+- feat(react,primitives): add OrgDropdown + Sidebar projectSlot for org switching (#91)
+- feat(primitives,showcase): wire Sidebar brand cell for BrandDropdown by default (#89)
+- feat(primitives): Wave 8 menu/disclosure (Menu, Accordion, Breadcrumb, Chip, Code+CodeBlock) (#73)
+- feat(primitives): Wave 7 specialized form (SearchField, Slider, FileUpload, Combobox, DatePicker, Stepper) (#72)
+- feat(primitives): Wave 6 data display (DataTable, Pagination, KeyValue, StatCard, Timeline, ProgressBar) (#71)
+- feat(primitives): Wave 5 layout (PageHeader, Navbar, Sidebar, AppFooter, Container, Divider) (#70)
+- feat(primitives): Wave 4 display (Badge, Card, Skeleton, Spinner, EmptyState, Avatar, Tabs, Banner) (#69)
+- feat(primitives): Wave 3 overlays (Modal, Drawer, Toast, Tooltip, Popover) + ToastProvider hook (#68)
+- feat(primitives): Wave 2 form (Select, Checkbox, Switch, Radio, RadioGroup) + Button hover shadow + cursor across all (#67)
+- feat(showcase): Storybook 8 + Wave 1 stories + 6-product theme switcher (Refs FerrLabs/UI#63) (#65)
+- feat(primitives): add @ferrlabs/ui-primitives with Button, Field, Input, Textarea, Submit (Refs FerrLabs/UI#63) (#64)
+
+### Bug Fixes
+
+- fix(logomark): use the loupe+pixel-grid mark for ferrlens (matches design bundle 03/Loupe) (#152)
+- fix(orgdropdown): drop trigger chevron — card affordance is enough (#150)
+- fix(sidebar): intercept SidebarItem click for SPA nav (preserve cmd/ctrl/shift for new tab) (#149)
+- fix(brand-dropdown): instant navigation + portal overlay shown only on slow connection (#143)
+- fix(brand-dropdown): preserve collapse footer when app switcher is open (#141)
+- fix(ui): pass sidebar collapsed state into projectSlot (#140)
+- fix(ui): prevent brand cluster text from wrapping during sidebar collapse (#139)
+- fix(deps): regen lockfile after workspace:^ change in #135 (#137)
+- fix(ui): use workspace:^ for ui-foundation dep so consumers can pull patches (#135)
+- fix(ui): document subpath exports + collision rationale on the top-level index (#117)
+- fix(showcase): pin storybook addon-themes + react-vite to v8 (was 10, broke builder-vite resolution) (#116)
+- fix(showcase): update @source paths to ui/foundation (post-merge of primitives/react) (#112)
+- fix(ci/publish): include foundation + ui in publish matrix and FerrFlow versioning (#109)
+- fix(ci): build all packages topologically (was missing ui-foundation + ui) (#108)
+- fix(react): pin workspace primitives + icons via workspace:^ to avoid stale-version publish (#98)
+- fix(ci): drop redundant build step from PR CI (#93)
+- fix(ci): build library packages before showcase typecheck (#90)
+- fix(react): scale FerrLabs LogoMark brackets to match Footer.astro ratio (was 86%, now 47%) (#88)
+- fix(showcase): demo Sidebar with project switcher matching app-shell.jsx (#85)
+- fix(primitives): Sidebar matches Shell pixel-near (Fraunces serif items, accent left bar, project switcher built-in) (#78)
+- fix(showcase): wire @tailwindcss/vite into Storybook viteFinal so utilities compile (#66)
+- fix(react): BrandDropdown hover area fills the full sidebar header height (#61)
+- fix(react): keep AppShell project switcher visible (icon-only) when sidebar is collapsed (#59)
+- fix(react): rebalance FerrLabs [FL] mark so the closing bracket no longer overlaps FL (#57)
+
 ## [0.12.0] - 2026-05-02
 
 ### Features
