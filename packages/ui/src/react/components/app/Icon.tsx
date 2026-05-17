@@ -6,14 +6,17 @@ export interface IconProps {
   size?: number;
   className?: string;
   style?: CSSProperties;
+  title?: string;
 }
 
-export function Icon({ name, size = 16, className, style }: IconProps) {
+export function Icon({ name, size = 16, className, style, title }: IconProps) {
   const svg = icons[name];
   return (
     <span
       className={className}
-      aria-hidden="true"
+      aria-hidden={title ? undefined : true}
+      aria-label={title}
+      role={title ? 'img' : undefined}
       style={{
         width: size,
         height: size,
@@ -34,4 +37,5 @@ export function Icon({ name, size = 16, className, style }: IconProps) {
   );
 }
 
+export { icons };
 export type { IconName };
