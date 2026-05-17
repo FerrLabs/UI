@@ -4,6 +4,33 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.0.0] - 2026-05-17
+
+### Breaking Changes
+
+- feat(ui)!: drop org initial badge from OrgDropdown trigger in expanded mode (#148)
+
+### Features
+
+- feat(foundation): expose ferrlens loupe mark as both icon registry entry + standalone svg (#153)
+- feat(brand): add FerrLens (teal #14b8a6) to BrandDropdown + LogoMark (#151)
+- feat(ui): rename SiteSwitcher to ProjectSwitcher and add OrgSwitcher (#147)
+- feat(ui): add SiteSwitcher popover and replace unicode chevron with svg in SiteCard (#146)
+- feat(ui): add SiteCard and SiteFavicon for site-first sidebars (#145)
+- feat(ui): Shell actions[] + projectSlot for sidebar OrgDropdown (#138)
+
+### Bug Fixes
+
+- fix(logomark): use the loupe+pixel-grid mark for ferrlens (matches design bundle 03/Loupe) (#152)
+- fix(orgdropdown): drop trigger chevron — card affordance is enough (#150)
+- fix(sidebar): intercept SidebarItem click for SPA nav (preserve cmd/ctrl/shift for new tab) (#149)
+- fix(brand-dropdown): instant navigation + portal overlay shown only on slow connection (#143)
+- fix(brand-dropdown): preserve collapse footer when app switcher is open (#141)
+- fix(ui): pass sidebar collapsed state into projectSlot (#140)
+- fix(ui): prevent brand cluster text from wrapping during sidebar collapse (#139)
+- fix(deps): regen lockfile after workspace:^ change in #135 (#137)
+- fix(ui): use workspace:^ for ui-foundation dep so consumers can pull patches (#135)
+
 ## [3.1.0] - 2026-05-07
 
 ### Features
