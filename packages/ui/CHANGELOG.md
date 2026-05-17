@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.1.0] - 2026-05-17
+
+### Features
+
+- feat(brand): add FerrLens (teal #14b8a6) to BrandDropdown + LogoMark (#151)
+
 ## [4.0.2] - 2026-05-16
 
 ### Bug Fixes
