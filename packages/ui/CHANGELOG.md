@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.1.1] - 2026-05-17
+
+### Bug Fixes
+
+- fix(logomark): use the loupe+pixel-grid mark for ferrlens (matches design bundle 03/Loupe) (#152)
+
 ## [4.1.0] - 2026-05-17
 
 ### Features
