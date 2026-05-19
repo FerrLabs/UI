@@ -4,6 +4,17 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.0] - 2026-05-19
+
+### Features
+
+- feat(astro/navbar): add 'trailing' slot to editorial mode for user menus (#159)
+- feat(ui): rebuild Icon against foundation@4 + accept title prop, re-export icons map (#157)
+
+### Bug Fixes
+
+- fix(ui): add .js extensions to relative imports for Node ESM resolution (#158)
+
 ## [1.1.0] - 2026-05-17
 
 ### Features
