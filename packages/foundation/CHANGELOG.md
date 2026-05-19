@@ -4,6 +4,21 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.3.0] - 2026-05-19
+
+### Features
+
+- feat(foundation): two-tone the FerrLens logo (loupe in accent teal, grid in slate) (#164)
+- feat(astro/PreFooterCTA): reshape bold variant to dark slate card (#163)
+- feat(astro/PreFooterCTA): variant='bold' + teal accent (#161)
+- feat(astro/navbar): add 'trailing' slot to editorial mode for user menus (#159)
+- feat(ui): rebuild Icon against foundation@4 + accept title prop, re-export icons map (#157)
+- feat(astro): add Icon.astro that renders any foundation IconName (#156)
+
+### Bug Fixes
+
+- fix(ui): add .js extensions to relative imports for Node ESM resolution (#158)
+
 ## [4.2.0] - 2026-05-17
 
 ### Features
