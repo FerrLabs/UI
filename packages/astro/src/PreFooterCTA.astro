@@ -17,8 +17,9 @@
  * the end of each. See the copy matrix in `DESIGN.md` §4.1.
  */
 
-type Accent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet' | 'amber';
+type Accent = 'slate' | 'orange' | 'emerald' | 'indigo' | 'violet' | 'amber' | 'teal';
 type Lang = 'en' | 'fr';
+type Variant = 'soft' | 'bold';
 
 interface CtaAction {
   type: 'cta';
@@ -55,22 +56,34 @@ interface Props {
   title: string;
   subtitle: string;
   action: Action;
+  /**
+   * `soft` (default) — white background, accent only on the italic subtitle
+   * line and on the CTA button. Quiet, doesn't compete with the footer.
+   *
+   * `bold` — full accent background, white text, white CTA pill with accent
+   * text. Matches the FerrLens hero-CTA pattern. Use it when the page wants
+   * a louder closing beat (product-marketing pages, landing pages with a
+   * clear conversion goal).
+   */
+  variant?: Variant;
 }
 
-const { lang, accent, title, subtitle, action } = Astro.props;
+const { lang, accent, title, subtitle, action, variant = 'soft' } = Astro.props;
 
 const accentSlug = (a: Accent) =>
   a === 'slate' ? 'labs-slate' :
   a === 'orange' ? 'flow-orange' :
   a === 'emerald' ? 'vault-emerald' :
   a === 'indigo' ? 'track-indigo' :
-  a === 'amber' ? 'fleet-amber' : 'growth-violet';
+  a === 'amber' ? 'fleet-amber' :
+  a === 'teal' ? 'lens-teal' : 'growth-violet';
 
 const t = (en: string, fr: string) => (lang === 'fr' ? fr : en);
 ---
 
 <section
   class="ferrlabs-prefooter"
+  data-variant={variant}
   style={`--accent: var(--color-ferr${accentSlug(accent)});`}
   aria-labelledby="ferrlabs-prefooter-title"
 >
@@ -303,5 +316,53 @@ const t = (en: string, fr: string) => (lang === 'fr' ? fr : en);
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+
+  /* ---- variant=bold ---- */
+  .ferrlabs-prefooter[data-variant='bold'] {
+    background: var(--accent);
+    border-top: none;
+    padding: 6rem 1.5rem;
+  }
+  .ferrlabs-prefooter[data-variant='bold'] .ferrlabs-prefooter-title {
+    color: #ffffff;
+    font-size: clamp(2.25rem, 5.6vw, 3.75rem);
+    font-weight: 700;
+  }
+  .ferrlabs-prefooter[data-variant='bold'] .ferrlabs-prefooter-subtitle {
+    color: rgba(255, 255, 255, 0.85);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .ferrlabs-prefooter[data-variant='bold'] .ferrlabs-prefooter-cta {
+    background: #ffffff;
+    color: var(--accent);
+    padding: 0.875rem 1.75rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  }
+  .ferrlabs-prefooter[data-variant='bold'] .ferrlabs-prefooter-cta:hover {
+    background: rgba(255, 255, 255, 0.94);
+  }
+  .ferrlabs-prefooter[data-variant='bold'] .ferrlabs-prefooter-code {
+    background: rgba(0, 0, 0, 0.28);
+    color: #ffffff;
+  }
+  .ferrlabs-prefooter[data-variant='bold'] .ferrlabs-prefooter-waitlist input {
+    background: rgba(255, 255, 255, 0.96);
+    border-color: transparent;
+    color: #0f172a;
+  }
+  .ferrlabs-prefooter[data-variant='bold'] .ferrlabs-prefooter-waitlist input:focus {
+    border-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+  }
+  .ferrlabs-prefooter[data-variant='bold'] .ferrlabs-prefooter-waitlist button {
+    background: #ffffff;
+    color: var(--accent);
+  }
+  .ferrlabs-prefooter[data-variant='bold'] .ferrlabs-prefooter-waitlist button:hover {
+    background: rgba(255, 255, 255, 0.94);
   }
 </style>
