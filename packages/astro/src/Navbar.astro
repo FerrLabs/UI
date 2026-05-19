@@ -118,6 +118,7 @@ const allProducts: { id: Product; label: string; href: string; accent: LegacyAcc
 
 const initial = resolvedBrandName.replace(/[^A-Za-z]/g, '').charAt(0).toUpperCase() || 'F';
 const hasLogoSlot = Astro.slots.has('logo');
+const hasTrailingSlot = Astro.slots.has('trailing');
 ---
 
 {isEditorialMode ? (
@@ -163,7 +164,9 @@ const hasLogoSlot = Astro.slots.has('logo');
             </a>
           )}
 
-          {cta && (
+          {hasTrailingSlot ? (
+            <div class="edi-trailing-slot"><slot name="trailing" /></div>
+          ) : cta ? (
             <a
               href={cta.href}
               class="edi-cta mono"
@@ -173,7 +176,7 @@ const hasLogoSlot = Astro.slots.has('logo');
               {cta.label}
               <span aria-hidden>→</span>
             </a>
-          )}
+          ) : null}
         </nav>
 
         <button class="edi-mobile-toggle mono" id="ferrlabs-edi-mobile-toggle" type="button" aria-label={t('Open menu', 'Ouvrir le menu')}>
@@ -201,12 +204,14 @@ const hasLogoSlot = Astro.slots.has('logo');
             {l.label}
           </a>
         ))}
-        {cta && (
+        {hasTrailingSlot ? (
+          <div class="edi-mobile-trailing-slot"><slot name="trailing" /></div>
+        ) : cta ? (
           <a href={cta.href} class="edi-mobile-cta mono">
             {cta.label}
             <span aria-hidden>→</span>
           </a>
-        )}
+        ) : null}
         {!hideLanguageToggle && (
           <div class="edi-mobile-lang mono">
             <a href={enEquiv} class:list={['edi-lang-opt', lang === 'en' && 'active']}>EN</a>
@@ -390,6 +395,9 @@ const hasLogoSlot = Astro.slots.has('logo');
         transition: opacity 180ms, transform 180ms;
       }
       .edi-cta:hover { opacity: 0.92; transform: translateY(-1px); }
+
+      .edi-trailing-slot { display: inline-flex; align-items: center; }
+      .edi-mobile-trailing-slot { margin-top: 32px; align-self: flex-start; }
 
       .edi-mobile-toggle {
         display: none;
