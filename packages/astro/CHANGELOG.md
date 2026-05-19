@@ -4,6 +4,12 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.3.0] - 2026-05-19
+
+### Features
+
+- feat(astro/PreFooterCTA): variant='bold' + teal accent (#161)
+
 ## [1.2.0] - 2026-05-19
 
 ### Features
