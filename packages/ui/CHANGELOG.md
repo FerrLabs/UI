@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.5.0] - 2026-05-27
+
+### Features
+
+- feat(react): NavItem onClick/danger/disabled + AsyncOrgSelect (#178)
+
 ## [4.4.0] - 2026-05-27
 
 ### Features
