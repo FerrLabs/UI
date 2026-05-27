@@ -37,6 +37,39 @@ export interface ProjectSwitcherProps {
   defaultOpen?: boolean;
   shortcut?: { mod?: boolean; key: string } | null;
   emptyState?: ReactNode;
+  /**
+   * Static eyebrow caption rendered on the trigger card (e.g. `VAULT`, `SITE`,
+   * `PROJECT`, `WORKSPACE`). Disambiguates the kind of entity the switcher
+   * manages in a multi-product chrome — same shape, different label per
+   * product. Omit to keep the trigger un-labelled (legacy behaviour).
+   */
+  triggerEyebrow?: ReactNode;
+  /**
+   * Escape hatch to fully replace the trigger card. When provided, the default
+   * `SiteCard` is not rendered. Use this when the standard card layout
+   * (icon + label + meta + chevron) doesn't fit — e.g. a compact pill, a
+   * gradient hero tile, or an icon-only collapsed state.
+   *
+   * The function receives the resolved `current` / `placeholder` / `eyebrow`
+   * plus an `onClick` that toggles the dropdown — wire it on whichever
+   * element should open the panel. Also receives `collapsed` so a single
+   * trigger can adapt to both states.
+   */
+  renderTrigger?: (args: {
+    current: ProjectSwitcherItem | null;
+    placeholder?: ProjectSwitcherPlaceholder;
+    eyebrow?: ReactNode;
+    onClick: () => void;
+    collapsed: boolean;
+  }) => ReactNode;
+  /**
+   * Collapsed sidebar mode — renders just the current item's icon as a 32×32
+   * tile instead of the full SiteCard. Click opens the same dropdown (anchored
+   * to a 240px panel so it isn't cropped by the narrow sidebar). When
+   * `renderTrigger` is also set, the prop is forwarded and the consumer
+   * decides how the collapsed trigger looks.
+   */
+  collapsed?: boolean;
 }
 
 const DEFAULT_SHORTCUT = { mod: true, key: 'k' };
@@ -59,6 +92,9 @@ export function ProjectSwitcher({
   defaultOpen = false,
   shortcut = DEFAULT_SHORTCUT,
   emptyState,
+  triggerEyebrow,
+  renderTrigger,
+  collapsed = false,
 }: ProjectSwitcherProps) {
   const [open, setOpen] = useState(defaultOpen);
   const [query, setQuery] = useState('');
@@ -155,20 +191,57 @@ export function ProjectSwitcher({
 
   return (
     <div ref={rootRef} style={{ position: 'relative' }}>
-      <SiteCard
-        icon={displayedIcon}
-        label={displayedLabel}
-        meta={displayedMeta}
-        onClick={() => setOpen((o) => !o)}
-      />
+      {renderTrigger ? (
+        renderTrigger({
+          current: trigger,
+          placeholder,
+          eyebrow: triggerEyebrow,
+          onClick: () => setOpen((o) => !o),
+          collapsed,
+        })
+      ) : collapsed ? (
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-label={displayedLabel}
+          title={displayedLabel}
+          style={{
+            all: 'unset',
+            boxSizing: 'border-box',
+            width: 32,
+            height: 32,
+            borderRadius: 7,
+            display: 'grid',
+            placeItems: 'center',
+            margin: '8px auto',
+            background: 'var(--color-card, #fff)',
+            border: '1px solid var(--color-rule, rgba(30,41,59,0.14))',
+            cursor: 'pointer',
+            transition: 'border-color 0.15s',
+          }}
+        >
+          {displayedIcon}
+        </button>
+      ) : (
+        <SiteCard
+          icon={displayedIcon}
+          label={displayedLabel}
+          meta={displayedMeta}
+          eyebrow={triggerEyebrow}
+          onClick={() => setOpen((o) => !o)}
+        />
+      )}
       {open ? (
         <div
           role="menu"
           style={{
             position: 'absolute',
             top: 'calc(100% + 4px)',
-            left: 12,
-            right: 12,
+            left: collapsed ? 0 : 12,
+            right: collapsed ? undefined : 12,
+            width: collapsed ? 260 : undefined,
             background: 'var(--color-card, #fff)',
             border: '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
             borderRadius: 10,
