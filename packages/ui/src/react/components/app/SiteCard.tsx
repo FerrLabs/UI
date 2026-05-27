@@ -4,6 +4,13 @@ export interface SiteCardProps {
   icon: ReactNode;
   label: string;
   meta?: ReactNode;
+  /**
+   * Small uppercase mono caption rendered above the label, e.g. `VAULT`, `SITE`,
+   * `PROJECT`, `WORKSPACE`. Optional — when omitted the card renders exactly as
+   * before (no semantic disambiguation). Used by `ProjectSwitcher.triggerEyebrow`
+   * to label the kind of entity the switcher manages.
+   */
+  eyebrow?: ReactNode;
   onClick?: (e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => void;
   showChevron?: boolean;
   className?: string;
@@ -14,6 +21,7 @@ export function SiteCard({
   icon,
   label,
   meta,
+  eyebrow,
   onClick,
   showChevron = true,
   className,
@@ -51,6 +59,24 @@ export function SiteCard({
     >
       {icon}
       <div style={{ flex: 1, minWidth: 0 }}>
+        {eyebrow ? (
+          <div
+            style={{
+              fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
+              fontSize: 9.5,
+              fontWeight: 600,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--color-fg-3, #94a3b8)',
+              marginBottom: 2,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {eyebrow}
+          </div>
+        ) : null}
         <div
           style={{
             fontSize: 13,

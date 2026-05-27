@@ -24,6 +24,7 @@ export {
   type BrandDropdownAppId,
 } from './BrandDropdown.js';
 export { OrgDropdown, type OrgDropdownProps, type OrgDropdownItem } from './OrgDropdown.js';
+export { OrgChip, type OrgChipProps, type OrgChipItem } from './OrgChip.js';
 export { SiteFavicon, type SiteFaviconProps } from './SiteFavicon.js';
 export { SiteCard, type SiteCardProps } from './SiteCard.js';
 export {
@@ -38,6 +39,12 @@ export {
   type OrgSwitcherItem,
   type OrgSwitcherPlaceholder,
 } from './OrgSwitcher.js';
+export {
+  EntitySwitcher,
+  type EntitySwitcherProps,
+  type EntitySwitcherItem,
+  type EntitySwitcherPlaceholder,
+} from './EntitySwitcher.js';
 /** @deprecated Renamed to `ProjectSwitcher`. Will be removed in a future major. */
 export { ProjectSwitcher as SiteSwitcher } from './ProjectSwitcher.js';
 /** @deprecated Renamed to `ProjectSwitcherProps`. Will be removed in a future major. */
