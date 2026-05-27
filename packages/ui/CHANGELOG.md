@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.4.0] - 2026-05-27
+
+### Features
+
+- feat(react): add EntitySwitcher, OrgChip, renderTrigger + collapsed on ProjectSwitcher (#175)
+
 ## [4.3.0] - 2026-05-27
 
 ### Features
