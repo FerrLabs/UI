@@ -31,8 +31,30 @@ export interface NavItem {
   id: string;
   label: string;
   icon: ReactNode;
-  href: string;
+  /**
+   * Target route. Required unless `onClick` is set — at least one of
+   * `href` / `onClick` must be present so the item is actually actionable.
+   * If both are set, `onClick` runs first; the shell falls back to navigating
+   * to `href` only when the click handler doesn't call `preventDefault()`.
+   */
+  href?: string;
+  /**
+   * Direct action handler. Use for entity-settings rows that open a modal
+   * (e.g. "Change organization") rather than navigating to a page.
+   */
+  onClick?: () => void;
   badge?: string | number | null;
+  /**
+   * Renders the item with a destructive accent (red label + hover). Use for
+   * "Delete vault", "Leave workspace", etc.
+   */
+  danger?: boolean;
+  /**
+   * Greys out the item and stops click events. Use to gate admin-only rows
+   * for non-admin users without removing them from the nav entirely (they
+   * still see them, just can't trigger them).
+   */
+  disabled?: boolean;
 }
 
 export interface NavGroup {
@@ -273,11 +295,16 @@ export function Shell({
                 icon={item.icon}
                 label={item.label}
                 href={item.href}
-                active={isActive(item.href)}
+                active={item.href ? isActive(item.href) : false}
                 collapsed={collapsed}
                 accent={accent}
                 badge={item.badge ?? undefined}
-                onClick={() => onNavigate(item.href)}
+                danger={item.danger}
+                disabled={item.disabled}
+                onClick={() => {
+                  if (item.onClick) item.onClick();
+                  else if (item.href) onNavigate(item.href);
+                }}
               />
             ))}
           </SidebarSection>

@@ -25,6 +25,7 @@ export {
 } from './BrandDropdown.js';
 export { OrgDropdown, type OrgDropdownProps, type OrgDropdownItem } from './OrgDropdown.js';
 export { OrgChip, type OrgChipProps, type OrgChipItem } from './OrgChip.js';
+export { AsyncOrgSelect, type AsyncOrgSelectProps, type AsyncOrgOption } from './AsyncOrgSelect.js';
 export { SiteFavicon, type SiteFaviconProps } from './SiteFavicon.js';
 export { SiteCard, type SiteCardProps } from './SiteCard.js';
 export {
