@@ -344,6 +344,18 @@ export interface SidebarItemProps {
   /** Override the accent used for the active state (defaults to var(--color-accent)). */
   accent?: string;
   onClick?: () => void;
+  /**
+   * Renders the item with a destructive red accent (label, icon, hover). Use
+   * for "Delete vault", "Leave workspace", "Sign out of all sessions". Pairs
+   * naturally with a confirm dialog on `onClick`.
+   */
+  danger?: boolean;
+  /**
+   * Greys out the item and intercepts clicks. Use to keep an admin-only row
+   * visible to non-admins (so the surface is discoverable) while preventing
+   * the action.
+   */
+  disabled?: boolean;
 }
 
 export function SidebarItem({
@@ -355,8 +367,13 @@ export function SidebarItem({
   collapsed = false,
   accent,
   onClick,
+  danger = false,
+  disabled = false,
 }: SidebarItemProps) {
   const accentColor = accent ?? 'var(--color-accent, var(--color-fg))';
+  const dangerColor = 'var(--color-danger, #dc2626)';
+  const idleColor = danger ? dangerColor : 'var(--color-ink-2, #475569)';
+  const activeColor = danger ? dangerColor : 'var(--color-ink, #1e293b)';
 
   const baseStyle: CSSProperties = {
     width: '100%',
@@ -369,8 +386,9 @@ export function SidebarItem({
     borderRadius: 8,
     background: active ? 'var(--color-app-nav-active, rgba(30, 41, 59, 0.06))' : 'transparent',
     border: 'none',
-    cursor: 'pointer',
-    color: active ? 'var(--color-ink, #1e293b)' : 'var(--color-ink-2, #475569)',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    color: active ? activeColor : idleColor,
+    opacity: disabled ? 0.45 : 1,
     fontSize: 13.5,
     fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
     transition: 'background 120ms',
@@ -381,14 +399,14 @@ export function SidebarItem({
   };
 
   const onMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
-    if (!active) {
-      e.currentTarget.style.background = 'var(--color-app-nav-hover, rgba(30, 41, 59, 0.03))';
-    }
+    if (active || disabled) return;
+    e.currentTarget.style.background = danger
+      ? 'color-mix(in oklab, var(--color-danger, #dc2626) 8%, transparent)'
+      : 'var(--color-app-nav-hover, rgba(30, 41, 59, 0.03))';
   };
   const onMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    if (!active) {
-      e.currentTarget.style.background = 'transparent';
-    }
+    if (active || disabled) return;
+    e.currentTarget.style.background = 'transparent';
   };
 
   const content = (
@@ -470,13 +488,18 @@ export function SidebarItem({
   if (href) {
     return (
       <a
-        href={href}
+        href={disabled ? undefined : href}
         title={collapsed && typeof label === 'string' ? label : undefined}
         aria-current={active ? 'page' : undefined}
+        aria-disabled={disabled || undefined}
         style={baseStyle}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onClick={(e) => {
+          if (disabled) {
+            e.preventDefault();
+            return;
+          }
           if (!onClick) return;
           if (
             e.defaultPrevented ||
@@ -500,6 +523,7 @@ export function SidebarItem({
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
       title={collapsed && typeof label === 'string' ? label : undefined}
       aria-current={active ? 'page' : undefined}
       style={baseStyle}
