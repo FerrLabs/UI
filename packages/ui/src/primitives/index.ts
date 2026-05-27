@@ -1,5 +1,6 @@
 export { Field, type FieldProps } from './Field.js';
 export { Input, type InputProps } from './Input.js';
+export { InputGroup, type InputGroupProps } from './InputGroup.js';
 export { Textarea, type TextareaProps } from './Textarea.js';
 export { Submit, type SubmitProps } from './Submit.js';
 export { Select, type SelectProps } from './Select.js';
