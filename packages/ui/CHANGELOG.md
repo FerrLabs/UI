@@ -4,6 +4,16 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.3.0] - 2026-05-27
+
+### Features
+
+- feat(primitives): add InputGroup to glue form controls into one bordered unit (#174)
+- feat(foundation): two-tone the FerrLens logo (loupe in accent teal, grid in slate) (#164)
+- feat(astro/PreFooterCTA): reshape bold variant to dark slate card (#163)
+- feat(astro/PreFooterCTA): variant='bold' + teal accent (#161)
+- feat(astro/navbar): add 'trailing' slot to editorial mode for user menus (#159)
+
 ## [4.2.1] - 2026-05-17
 
 ### Bug Fixes
