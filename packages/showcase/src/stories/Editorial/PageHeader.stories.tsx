@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button, PageHeader, Tag } from '@ferrlabs/ui/react';
+import { Button, PageHeader, Tag } from '@ferrlabs/ui-react/react';
 
 const meta: Meta<typeof PageHeader> = {
   title: 'Layout/PageHeader',

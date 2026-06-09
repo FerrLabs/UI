@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Sidebar, SidebarItem, SidebarSection } from '@ferrlabs/ui/primitives';
+import { Sidebar, SidebarItem, SidebarSection } from '@ferrlabs/ui-react/primitives';
 import {
   AsyncOrgSelect,
   BrandDropdown,
@@ -11,7 +11,7 @@ import {
   type AsyncOrgOption,
   type EntitySwitcherItem,
   type OrgChipItem,
-} from '@ferrlabs/ui/react';
+} from '@ferrlabs/ui-react/react';
 
 const meta: Meta = {
   title: 'App/EntitySettings (Sidebar + AsyncOrgSelect)',

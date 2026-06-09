@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { SiteCard, SiteFavicon } from '@ferrlabs/ui/react';
+import { SiteCard, SiteFavicon } from '@ferrlabs/ui-react/react';
 
 const meta: Meta<typeof SiteCard> = {
   title: 'App/SiteCard',

@@ -7,12 +7,12 @@ package instead of three. Tracked under UI#105.
 
 ## Subpaths
 
-| Import path | What |
-|---|---|
-| `@ferrlabs/ui/primitives` | Generic primitives — Field, Input, Modal, Drawer, Tooltip, Card, Sidebar, Tabs, … |
-| `@ferrlabs/ui/react` | Composed React components — Shell, BrandDropdown, OrgDropdown, Avatar, UserMenu, PageHeader, … |
+| Import path                     | What                                                                                           |
+| ------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `@ferrlabs/ui-react/primitives` | Generic primitives — Field, Input, Modal, Drawer, Tooltip, Card, Sidebar, Tabs, …              |
+| `@ferrlabs/ui-react/react`      | Composed React components — Shell, BrandDropdown, OrgDropdown, Avatar, UserMenu, PageHeader, … |
 
-`@ferrlabs/ui/auth` will be added when `@ferrlabs/ui-auth` (currently a
+`@ferrlabs/ui-react/auth` will be added when `@ferrlabs/ui-auth` (currently a
 WIP scaffold without a build) ships its first stable release.
 
 ## Why subpaths and not a single flat export
@@ -25,8 +25,8 @@ collision.
 ## Usage
 
 ```tsx
-import { Field, Input } from '@ferrlabs/ui/primitives';
-import { Shell, type NavGroup } from '@ferrlabs/ui/react';
+import { Field, Input } from '@ferrlabs/ui-react/primitives';
+import { Shell, type NavGroup } from '@ferrlabs/ui-react/react';
 ```
 
 `package.json` deps section drops from this:
@@ -49,7 +49,7 @@ To this (combined with `@ferrlabs/ui-foundation`):
 ```json
 {
   "dependencies": {
-    "@ferrlabs/ui": "^1.0.0",
+    "@ferrlabs/ui-react": "^1.0.0",
     "@ferrlabs/ui-foundation": "^1.0.0"
   }
 }
@@ -63,7 +63,8 @@ The three underlying packages stay alive — `@ferrlabs/ui-primitives`,
 swapping import paths.
 
 Old → new:
+
 ```
-@ferrlabs/ui-primitives  →  @ferrlabs/ui/primitives
-@ferrlabs/ui-react       →  @ferrlabs/ui/react
+@ferrlabs/ui-primitives  →  @ferrlabs/ui-react/primitives
+@ferrlabs/ui-react       →  @ferrlabs/ui-react/react
 ```

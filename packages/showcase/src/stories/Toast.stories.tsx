@@ -1,6 +1,6 @@
-import { Button } from '@ferrlabs/ui/react';
+import { Button } from '@ferrlabs/ui-react/react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { ToastProvider, useToast } from '@ferrlabs/ui/primitives';
+import { ToastProvider, useToast } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta = {
   title: 'Feedback/Toast',

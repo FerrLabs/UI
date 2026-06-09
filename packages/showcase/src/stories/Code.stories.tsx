@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Code, CodeBlock } from '@ferrlabs/ui/primitives';
+import { Code, CodeBlock } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta = {
   title: 'Data Display/Code',
@@ -28,7 +28,7 @@ export const Block: Story = {
   --color-accent: var(--color-primary-600);
 }
 
-@source '../node_modules/@ferrlabs/ui/primitives/dist/**/*.js';`}
+@source '../node_modules/@ferrlabs/ui-react/primitives/dist/**/*.js';`}
       </CodeBlock>
     </div>
   ),

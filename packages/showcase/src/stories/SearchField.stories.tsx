@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { SearchField } from '@ferrlabs/ui/primitives';
+import { SearchField } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof SearchField> = {
   title: 'Forms/SearchField',

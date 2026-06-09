@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Accordion, AccordionItem } from '@ferrlabs/ui/primitives';
+import { Accordion, AccordionItem } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof Accordion> = {
   title: 'Navigation/Accordion',

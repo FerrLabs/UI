@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Shell, type NavGroup } from '@ferrlabs/ui/react';
+import { Shell, type NavGroup } from '@ferrlabs/ui-react/react';
 
 const meta: Meta<typeof Shell> = {
   title: 'Layout/Shell',

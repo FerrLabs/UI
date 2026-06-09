@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Footer } from '@ferrlabs/ui/primitives';
+import { Footer } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof Footer> = {
   title: 'Layout/Footer',

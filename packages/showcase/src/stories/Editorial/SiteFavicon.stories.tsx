@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { SiteFavicon } from '@ferrlabs/ui/react';
+import { SiteFavicon } from '@ferrlabs/ui-react/react';
 
 const meta: Meta<typeof SiteFavicon> = {
   title: 'App/SiteFavicon',

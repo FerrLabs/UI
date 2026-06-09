@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Field, Input } from '@ferrlabs/ui/primitives';
+import { Field, Input } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof Field> = {
   title: 'Forms/Field',
