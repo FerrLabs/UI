@@ -40,7 +40,7 @@
   "homepage": "https://github.com/FerrLabs/UI#readme",
   "license": "MPL-2.0",
   "main": "./dist/index.js",
-  "name": "@ferrlabs/ui",
+  "name": "@ferrlabs/ui-react",
   "peerDependencies": {
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"

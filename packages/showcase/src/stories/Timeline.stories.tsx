@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Timeline } from '@ferrlabs/ui/primitives';
+import { Timeline } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof Timeline> = {
   title: 'Data Display/Timeline',

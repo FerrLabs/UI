@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { FileUpload } from '@ferrlabs/ui/primitives';
+import { FileUpload } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof FileUpload> = {
   title: 'Forms/FileUpload',

@@ -48,12 +48,12 @@ importers:
 
   packages/showcase:
     dependencies:
-      '@ferrlabs/ui':
-        specifier: workspace:*
-        version: link:../ui
       '@ferrlabs/ui-foundation':
         specifier: workspace:*
         version: link:../foundation
+      '@ferrlabs/ui-react':
+        specifier: workspace:*
+        version: link:../ui
       react:
         specifier: ^19.0.0
         version: 19.2.5

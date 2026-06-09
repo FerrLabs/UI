@@ -1,6 +1,6 @@
-import { Tag } from '@ferrlabs/ui/react';
+import { Tag } from '@ferrlabs/ui-react/react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { KeyValue } from '@ferrlabs/ui/primitives';
+import { KeyValue } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof KeyValue> = {
   title: 'Data Display/KeyValue',

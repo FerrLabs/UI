@@ -1,5 +1,5 @@
 /**
- * @ferrlabs/ui/auth — React auth helpers shared across FerrLabs product apps.
+ * @ferrlabs/ui-react/auth — React auth helpers shared across FerrLabs product apps.
  *
  * Currently exports:
  *   - LoginForm — simple email/password form that calls your onSubmit

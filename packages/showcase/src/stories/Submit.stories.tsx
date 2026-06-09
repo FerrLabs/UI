@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Field, Input, Submit } from '@ferrlabs/ui/primitives';
+import { Field, Input, Submit } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof Submit> = {
   title: 'Forms/Submit',

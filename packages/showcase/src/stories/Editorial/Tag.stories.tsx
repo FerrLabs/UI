@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Tag } from '@ferrlabs/ui/react';
+import { Tag } from '@ferrlabs/ui-react/react';
 
 const meta: Meta<typeof Tag> = {
   title: 'Data Display/Tag',

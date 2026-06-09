@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Stat } from '@ferrlabs/ui/react';
+import { Stat } from '@ferrlabs/ui-react/react';
 
 const meta: Meta<typeof Stat> = {
   title: 'Data Display/Stat',

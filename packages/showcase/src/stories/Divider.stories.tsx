@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Divider } from '@ferrlabs/ui/primitives';
+import { Divider } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof Divider> = {
   title: 'Layout/Divider',

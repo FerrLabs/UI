@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Textarea } from '@ferrlabs/ui/primitives';
+import { Textarea } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof Textarea> = {
   title: 'Forms/Textarea',

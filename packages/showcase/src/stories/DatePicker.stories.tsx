@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { DatePicker, Field } from '@ferrlabs/ui/primitives';
+import { DatePicker, Field } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof DatePicker> = {
   title: 'Forms/DatePicker',

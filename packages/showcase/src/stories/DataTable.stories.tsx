@@ -1,7 +1,7 @@
-import { Button, Avatar, Tag } from '@ferrlabs/ui/react';
+import { Button, Avatar, Tag } from '@ferrlabs/ui-react/react';
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { DataTable, type Column } from '@ferrlabs/ui/primitives';
+import { DataTable, type Column } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof DataTable> = {
   title: 'Data Display/DataTable',

@@ -1,7 +1,7 @@
-import { Button } from '@ferrlabs/ui/react';
+import { Button } from '@ferrlabs/ui-react/react';
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Stepper } from '@ferrlabs/ui/primitives';
+import { Stepper } from '@ferrlabs/ui-react/primitives';
 
 const meta: Meta<typeof Stepper> = {
   title: 'Forms/Stepper',

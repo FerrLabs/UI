@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { LogoMark } from '@ferrlabs/ui/react';
+import { LogoMark } from '@ferrlabs/ui-react/react';
 
 const meta: Meta<typeof LogoMark> = {
   title: 'Brand/LogoMark',

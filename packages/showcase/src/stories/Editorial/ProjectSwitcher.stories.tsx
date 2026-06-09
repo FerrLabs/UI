@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ProjectSwitcher, SiteFavicon } from '@ferrlabs/ui/react';
+import { ProjectSwitcher, SiteFavicon } from '@ferrlabs/ui-react/react';
 
 const meta: Meta<typeof ProjectSwitcher> = {
   title: 'App/ProjectSwitcher',
