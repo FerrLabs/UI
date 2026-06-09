@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.0.0] - 2026-06-09
+
+### Breaking Changes
+
+- refactor(ui)!: rename @ferrlabs/ui package to @ferrlabs/ui-react (#190)
+
 ## [4.5.0] - 2026-05-27
 
 ### Features
