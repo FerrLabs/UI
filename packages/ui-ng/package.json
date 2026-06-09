@@ -27,7 +27,7 @@
     "@angular/compiler-cli": "^22.0.0",
     "@angular/core": "^22.0.0",
     "ng-packagr": "^22.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "~6.0.0"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
