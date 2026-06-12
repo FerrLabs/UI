@@ -1,4 +1,4 @@
-import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type CSSProperties, type ReactNode } from 'react';
 
 export interface DrawerProps {
   open: boolean;
@@ -30,6 +30,7 @@ export function Drawer({
   style,
 }: DrawerProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -59,6 +60,9 @@ export function Drawer({
       onClick={(e) => {
         if (e.target === dialogRef.current) onClose();
       }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={title ? titleId : undefined}
       className={className}
       style={{
         padding: 0,
@@ -106,6 +110,7 @@ export function Drawer({
             }}
           >
             <h2
+              id={titleId}
               style={{
                 fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
                 fontSize: 16,
