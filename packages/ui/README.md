@@ -1,9 +1,10 @@
-# @ferrlabs/ui
+# @ferrlabs/ui-react
 
-Single React UI package for FerrLabs product apps. Re-exports everything
-from the underlying `@ferrlabs/ui-primitives`, `@ferrlabs/ui-react`, and
-`@ferrlabs/ui-auth` packages via subpath exports — apps install one
-package instead of three. Tracked under UI#105.
+The React UI package for FerrLabs product apps. Exposes the generic
+primitives and the composed app chrome through subpath exports, so apps
+install one package instead of several. Consolidated from the former
+`@ferrlabs/ui-primitives`, `@ferrlabs/ui-react`, and `@ferrlabs/ui-auth`
+packages under UI#105.
 
 ## Subpaths
 
@@ -11,9 +12,7 @@ package instead of three. Tracked under UI#105.
 | ------------------------------- | ---------------------------------------------------------------------------------------------- |
 | `@ferrlabs/ui-react/primitives` | Generic primitives — Field, Input, Modal, Drawer, Tooltip, Card, Sidebar, Tabs, …              |
 | `@ferrlabs/ui-react/react`      | Composed React components — Shell, BrandDropdown, OrgDropdown, Avatar, UserMenu, PageHeader, … |
-
-`@ferrlabs/ui-react/auth` will be added when `@ferrlabs/ui-auth` (currently a
-WIP scaffold without a build) ships its first stable release.
+| `@ferrlabs/ui-react/auth`       | Auth forms — LoginForm and friends                                                             |
 
 ## Why subpaths and not a single flat export
 
@@ -29,42 +28,14 @@ import { Field, Input } from '@ferrlabs/ui-react/primitives';
 import { Shell, type NavGroup } from '@ferrlabs/ui-react/react';
 ```
 
-`package.json` deps section drops from this:
+Tokens, fonts, and icons come from `@ferrlabs/ui-foundation`, so a
+consuming app depends on two packages:
 
 ```json
 {
   "dependencies": {
-    "@ferrlabs/ui-primitives": "^1.0.0",
-    "@ferrlabs/ui-react": "^1.0.0",
-    "@ferrlabs/ui-auth": "^1.0.0",
-    "@ferrlabs/ui-icons": "^1.0.0",
-    "@ferrlabs/styles": "^0.4.0",
-    "@ferrlabs/ui-tailwind": "^0.2.0"
+    "@ferrlabs/ui-react": "workspace:*",
+    "@ferrlabs/ui-foundation": "workspace:*"
   }
 }
-```
-
-To this (combined with `@ferrlabs/ui-foundation`):
-
-```json
-{
-  "dependencies": {
-    "@ferrlabs/ui-react": "^1.0.0",
-    "@ferrlabs/ui-foundation": "^1.0.0"
-  }
-}
-```
-
-## Migration from old packages
-
-The three underlying packages stay alive — `@ferrlabs/ui-primitives`,
-`@ferrlabs/ui-react`, `@ferrlabs/ui-auth` keep working unchanged.
-`@ferrlabs/ui` is purely additive. Migrate consumers at your own pace by
-swapping import paths.
-
-Old → new:
-
-```
-@ferrlabs/ui-primitives  →  @ferrlabs/ui-react/primitives
-@ferrlabs/ui-react       →  @ferrlabs/ui-react/react
 ```
