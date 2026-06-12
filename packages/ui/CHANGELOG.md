@@ -4,6 +4,16 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.1.0] - 2026-06-12
+
+### Features
+
+- feat(ui-ng): scaffold the Angular 22 design-system library with Button (#192)
+
+### Bug Fixes
+
+- fix(ci): set @parcel/watcher allowBuilds to false so pnpm stops failing on ignored build scripts (#193)
+
 ## [5.0.0] - 2026-06-09
 
 ### Breaking Changes
