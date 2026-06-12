@@ -257,9 +257,23 @@ export function DataTable<Row>({
                 <tr
                   key={k}
                   data-selected={isSelected || undefined}
+                  role={onRowClick ? 'button' : undefined}
+                  tabIndex={onRowClick ? 0 : undefined}
                   onClick={onRowClick ? () => onRowClick(row) : undefined}
+                  onKeyDown={
+                    onRowClick
+                      ? (e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            onRowClick(row);
+                          }
+                        }
+                      : undefined
+                  }
                   onMouseEnter={onRowClick ? () => setHoverKey(k) : undefined}
                   onMouseLeave={onRowClick ? () => setHoverKey(null) : undefined}
+                  onFocus={onRowClick ? () => setHoverKey(k) : undefined}
+                  onBlur={onRowClick ? () => setHoverKey(null) : undefined}
                   style={{
                     cursor: onRowClick ? 'pointer' : undefined,
                     background: rowBg,
