@@ -16,41 +16,49 @@
    * DM Mono is the code face; chosen over JetBrains Mono because its
    * metrics sit better against Fraunces.
    */
-  --font-sans: "Fraunces", Georgia, ui-serif, serif;
-  --font-display: "Fraunces", Georgia, ui-serif, serif;
-  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: 'Fraunces', Georgia, ui-serif, serif;
+  --font-display: 'Fraunces', Georgia, ui-serif, serif;
+  --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Brand accents per product. One product = one accent — never mix.
    * See DESIGN.md §1 for the "when to use which" matrix.
    */
-  --color-ferrlabs-slate: #1e293b;   /* Holding (sober, neutral) */
-  --color-ferrflow-orange: #e8733a;  /* FerrFlow (warm, CLI-tool voice) */
-  --color-ferrvault-emerald: #10b981;/* FerrVault (calm, security) */
+  --color-ferrlabs-slate: #1e293b; /* Holding (sober, neutral) */
+  --color-ferrflow-orange: #e8733a; /* FerrFlow (warm, CLI-tool voice) */
+  --color-ferrvault-emerald: #10b981; /* FerrVault (calm, security) */
   --color-ferrtrack-indigo: #6366f1; /* FerrTrack (analytic, data) */
-  --color-ferrgrowth-violet: #8b5cf6;/* FerrGrowth (energetic) */
-  --color-ferrfleet-amber: #f59e0b;  /* FerrFleet (operational, runtime) */
-  --color-ferrlens-teal: #14b8a6;    /* FerrLens (free web tools, clarity) */
+  --color-ferrgrowth-violet: #8b5cf6; /* FerrGrowth (energetic) */
+  --color-ferrfleet-amber: #f59e0b; /* FerrFleet (operational, runtime) */
+  --color-ferrlens-teal: #14b8a6; /* FerrLens (free web tools, clarity) */
 
   /* Editorial surface palette — the cream/parchment family the marketing
    * sites are designed against. Cooler greys for app dashboards live in
    * `--color-app-*` so a single page never has to negotiate which palette
    * applies. See DESIGN.md §1.3.
    */
-  --color-paper: #faf8f4;            /* Page background (parchment) */
-  --color-paper-2: #f3efe7;          /* Cards, alt rows, subtle panels */
-  --color-ink: #1e293b;              /* Headings, primary text */
-  --color-ink-2: #475569;            /* Body text */
-  --color-ink-3: #64748b;            /* Captions, mono labels */
+  --color-paper: #faf8f4; /* Page background (parchment) */
+  --color-paper-2: #f3efe7; /* Cards, alt rows, subtle panels */
+  --color-ink: #1e293b; /* Headings, primary text */
+  --color-ink-2: #475569; /* Body text */
+  --color-ink-3: #64748b; /* Captions, mono labels */
   --color-rule: rgba(30, 41, 59, 0.14);
   --color-rule-strong: rgba(30, 41, 59, 0.28);
   --color-card: #ffffff;
-  --color-card-rule: rgba(30, 41, 59, 0.10);
+  --color-card-rule: rgba(30, 41, 59, 0.1);
+
+  /* Component token contract — the names the JS/TSX primitives consume,
+   * aliased onto the accent and ink tokens the foundation ships.
+   */
+  --color-accent: var(--accent, var(--color-ferrlabs-slate));
+  --color-fg: var(--color-ink);
+  --color-fg-2: var(--color-ink-2);
+  --color-fg-3: var(--color-ink-3);
 
   /* App dashboards — same ink, lighter neutrals for sidebar density. */
   --color-app-bg: #fafaf9;
   --color-app-bg-2: #f4f4f2;
   --color-app-sidebar: #f7f7f5;
-  --color-app-rule: rgba(30, 41, 59, 0.10);
+  --color-app-rule: rgba(30, 41, 59, 0.1);
   --color-app-rule-strong: rgba(30, 41, 59, 0.24);
   --color-app-nav-active: rgba(30, 41, 59, 0.06);
   --color-app-nav-hover: rgba(30, 41, 59, 0.03);
@@ -64,7 +72,7 @@
  * generate `dark:bg-…` utilities for these — components reference
  * `var(--color-paper)` directly so the dark variant is automatic.
  */
-html[data-theme="dark"] {
+html[data-theme='dark'] {
   --color-paper: #0c1322;
   --color-paper-2: #131c30;
   --color-ink: #f1f5f9;
@@ -73,12 +81,12 @@ html[data-theme="dark"] {
   --color-rule: rgba(241, 245, 249, 0.14);
   --color-rule-strong: rgba(241, 245, 249, 0.32);
   --color-card: #131c30;
-  --color-card-rule: rgba(241, 245, 249, 0.10);
+  --color-card-rule: rgba(241, 245, 249, 0.1);
 
   --color-app-bg: #0c1322;
   --color-app-bg-2: #131c30;
   --color-app-sidebar: #131c30;
-  --color-app-rule: rgba(241, 245, 249, 0.10);
+  --color-app-rule: rgba(241, 245, 249, 0.1);
   --color-app-rule-strong: rgba(241, 245, 249, 0.24);
   --color-app-nav-active: rgba(241, 245, 249, 0.08);
   --color-app-nav-hover: rgba(241, 245, 249, 0.04);
