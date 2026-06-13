@@ -21,11 +21,10 @@ export const Block: Story = {
   render: () => (
     <div className="w-[640px]">
       <CodeBlock filename="global.css" language="css">
-        {`@import 'tailwindcss';
-@import '@ferrlabs/ui-foundation/tailwind/tokens';
+        {`@import '@ferrlabs/ui-foundation/styles/global.css';
 
-@theme {
-  --color-accent: var(--color-primary-600);
+:root {
+  --accent: var(--color-ferrflow-orange);
 }
 
 @source '../node_modules/@ferrlabs/ui-react/primitives/dist/**/*.js';`}
