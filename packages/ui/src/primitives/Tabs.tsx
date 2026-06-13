@@ -4,6 +4,7 @@ import {
   useId,
   type CSSProperties,
   type HTMLAttributes,
+  type KeyboardEvent,
   type ReactNode,
 } from 'react';
 
@@ -76,6 +77,29 @@ export function Tab({ value, children, disabled }: TabProps) {
   const id = `${ctx.baseId}-tab-${value}`;
   const panelId = `${ctx.baseId}-panel-${value}`;
 
+  const onKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    const keys = ['ArrowRight', 'ArrowLeft', 'Home', 'End'];
+    if (!keys.includes(event.key)) return;
+    const list = event.currentTarget.closest('[role="tablist"]');
+    if (!list) return;
+    const tabs = Array.from(
+      list.querySelectorAll<HTMLButtonElement>('[role="tab"]:not([disabled])'),
+    );
+    const current = tabs.indexOf(event.currentTarget);
+    if (current === -1) return;
+    let next = current;
+    if (event.key === 'ArrowRight') next = (current + 1) % tabs.length;
+    else if (event.key === 'ArrowLeft') next = (current - 1 + tabs.length) % tabs.length;
+    else if (event.key === 'Home') next = 0;
+    else if (event.key === 'End') next = tabs.length - 1;
+    const target = tabs[next];
+    if (!target || target === event.currentTarget) return;
+    event.preventDefault();
+    target.focus();
+    const nextValue = target.dataset.tabValue;
+    if (nextValue !== undefined) ctx.onChange(nextValue);
+  };
+
   const baseStyle: CSSProperties = {
     fontFamily: 'var(--font-mono, "DM Mono", ui-monospace, monospace)',
     fontSize: 11,
@@ -118,7 +142,9 @@ export function Tab({ value, children, disabled }: TabProps) {
       aria-controls={panelId}
       tabIndex={selected ? 0 : -1}
       disabled={disabled}
+      data-tab-value={value}
       onClick={() => ctx.onChange(value)}
+      onKeyDown={onKeyDown}
       className="mono"
       style={{ ...baseStyle, ...variantStyle }}
     >
