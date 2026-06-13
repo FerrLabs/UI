@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useId,
   useRef,
   type CSSProperties,
   type ReactNode,
@@ -40,6 +41,9 @@ export function Modal({
   style,
 }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const baseId = useId();
+  const titleId = `${baseId}-title`;
+  const descriptionId = `${baseId}-description`;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -71,6 +75,9 @@ export function Modal({
     <dialog
       ref={dialogRef}
       onClick={handleBackdropClick}
+      aria-modal="true"
+      aria-labelledby={title ? titleId : undefined}
+      aria-describedby={description ? descriptionId : undefined}
       className={className}
       style={{
         padding: 0,
@@ -107,6 +114,7 @@ export function Modal({
           <div style={{ padding: '24px 24px 12px' }}>
             {title && (
               <h2
+                id={titleId}
                 style={{
                   fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
                   fontSize: 18,
@@ -121,6 +129,7 @@ export function Modal({
             )}
             {description && (
               <p
+                id={descriptionId}
                 style={{
                   marginTop: 4,
                   marginBottom: 0,
