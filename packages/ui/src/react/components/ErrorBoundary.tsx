@@ -1,4 +1,4 @@
-import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { Component, type CSSProperties, type ErrorInfo, type ReactNode } from 'react';
 
 // Root-of-tree error boundary. Uncaught render/effect errors bubble here
 // and render a full-page fallback. Kept intentionally class-based: React
@@ -7,12 +7,104 @@ import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
+  homeHref?: string;
 }
 
 interface ErrorBoundaryState {
   error: Error | null;
   expanded: boolean;
 }
+
+const pageStyle: CSSProperties = {
+  minHeight: '100vh',
+  background: 'var(--color-paper, #faf8f4)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 24,
+};
+
+const cardStyle: CSSProperties = {
+  width: '100%',
+  maxWidth: 512,
+  borderRadius: 14,
+  border: '1px solid var(--color-card-rule, rgba(30, 41, 59, 0.10))',
+  background: 'var(--color-card, #fff)',
+  boxShadow: '0 20px 48px rgba(15, 23, 42, 0.12)',
+  padding: 24,
+};
+
+const titleStyle: CSSProperties = {
+  fontFamily: 'var(--font-display, "Fraunces", Georgia, ui-serif, serif)',
+  fontSize: 20,
+  fontWeight: 600,
+  color: 'var(--color-ink, #1e293b)',
+  margin: 0,
+};
+
+const messageStyle: CSSProperties = {
+  marginTop: 8,
+  marginBottom: 0,
+  fontSize: 14,
+  lineHeight: 1.5,
+  color: 'var(--color-ink-2, #475569)',
+  overflowWrap: 'break-word',
+};
+
+const detailsToggleStyle: CSSProperties = {
+  marginTop: 16,
+  background: 'transparent',
+  border: 'none',
+  padding: 0,
+  fontSize: 12,
+  fontWeight: 500,
+  color: 'var(--color-accent, var(--color-ink, #1e293b))',
+  cursor: 'pointer',
+  textDecoration: 'underline',
+};
+
+const stackStyle: CSSProperties = {
+  marginTop: 8,
+  maxHeight: 256,
+  overflow: 'auto',
+  borderRadius: 10,
+  background: 'var(--color-ink, #1e293b)',
+  color: 'var(--color-paper, #faf8f4)',
+  padding: 12,
+  fontSize: 12,
+  fontFamily: 'var(--font-mono, ui-monospace, monospace)',
+  whiteSpace: 'pre-wrap',
+  overflowWrap: 'break-word',
+};
+
+const actionsStyle: CSSProperties = {
+  marginTop: 24,
+  display: 'flex',
+  gap: 8,
+  justifyContent: 'flex-end',
+};
+
+const ghostActionStyle: CSSProperties = {
+  padding: '8px 16px',
+  borderRadius: 10,
+  border: '1px solid var(--color-rule-strong, rgba(30, 41, 59, 0.28))',
+  background: 'transparent',
+  fontSize: 14,
+  fontWeight: 500,
+  color: 'var(--color-ink, #1e293b)',
+  textDecoration: 'none',
+};
+
+const primaryActionStyle: CSSProperties = {
+  padding: '8px 16px',
+  borderRadius: 10,
+  border: 'none',
+  background: 'var(--color-accent, var(--color-ink, #1e293b))',
+  color: '#fff',
+  fontSize: 14,
+  fontWeight: 500,
+  cursor: 'pointer',
+};
 
 export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = { error: null, expanded: false };
@@ -33,37 +125,28 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
     if (!error) return this.props.children;
 
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-        <div className="w-full max-w-lg rounded-xl border border-gray-200 bg-white shadow-sm p-6">
-          <h1 className="text-xl font-bold text-gray-900">Something went wrong</h1>
-          <p className="mt-2 text-sm text-gray-600 break-words">
-            {error.message || 'An unexpected error occurred.'}
-          </p>
+      <div style={pageStyle}>
+        <div style={cardStyle}>
+          <h1 style={titleStyle}>Something went wrong</h1>
+          <p style={messageStyle}>{error.message || 'An unexpected error occurred.'}</p>
 
           <button
             type="button"
             onClick={() => this.setState({ expanded: !expanded })}
-            className="mt-4 text-xs font-medium text-orange-600 hover:underline cursor-pointer"
+            style={detailsToggleStyle}
           >
             {expanded ? 'Hide technical details' : 'Show technical details'}
           </button>
-          {expanded && (
-            <pre className="mt-2 max-h-64 overflow-auto rounded-lg bg-gray-900 text-gray-100 p-3 text-xs whitespace-pre-wrap break-words">
-              {error.stack ?? String(error)}
-            </pre>
-          )}
+          {expanded && <pre style={stackStyle}>{error.stack ?? String(error)}</pre>}
 
-          <div className="mt-6 flex gap-2 justify-end">
-            <a
-              href="/"
-              className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
+          <div style={actionsStyle}>
+            <a href={this.props.homeHref ?? '/'} style={ghostActionStyle}>
               Go home
             </a>
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium cursor-pointer"
+              style={primaryActionStyle}
             >
               Reload
             </button>
