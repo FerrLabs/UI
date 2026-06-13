@@ -4,6 +4,26 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.0.0] - 2026-06-13
+
+### Breaking Changes
+
+- refactor(ui)!: rename @ferrlabs/ui package to @ferrlabs/ui-react (#190)
+
+### Features
+
+- feat(ui-ng): scaffold the Angular 22 design-system library with Button (#192)
+- feat(react): NavItem onClick/danger/disabled + AsyncOrgSelect (#178)
+- feat(react): add EntitySwitcher, OrgChip, renderTrigger + collapsed on ProjectSwitcher (#175)
+- feat(primitives): add InputGroup to glue form controls into one bordered unit (#174)
+
+### Bug Fixes
+
+- fix(foundation): define --color-accent and --color-fg token contract (#201)
+- fix(tabs): add arrow-key roving focus per WAI-ARIA tabs pattern (#203)
+- fix(errorboundary): theme fallback from design tokens with configurable home href (#206)
+- fix(ci): set @parcel/watcher allowBuilds to false so pnpm stops failing on ignored build scripts (#193)
+
 ## [4.3.0] - 2026-05-19
 
 ### Features
