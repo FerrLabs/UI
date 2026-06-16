@@ -53,3 +53,14 @@ export { SubmitComponent } from './lib/submit/submit.component';
 
 export { SearchFieldComponent } from './lib/search-field/search-field.component';
 export type { SearchFieldSize } from './lib/search-field/search-field.component';
+
+export { ModalComponent } from './lib/modal/modal.component';
+export type { ModalSize } from './lib/modal/modal.component';
+
+export { DrawerComponent } from './lib/drawer/drawer.component';
+export type { DrawerSide, DrawerSize } from './lib/drawer/drawer.component';
+
+export { ToastService } from './lib/toast/toast.service';
+export type { ToastVariant, ToastInput, ToastItem } from './lib/toast/toast.service';
+
+export { ToastContainerComponent } from './lib/toast/toast-container.component';
