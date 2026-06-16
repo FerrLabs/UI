@@ -4,6 +4,12 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.2.0] - 2026-06-16
+
+### Features
+
+- feat(ui-ng): port core and form primitives to Angular (#213)
+
 ## [5.1.1] - 2026-06-13
 
 ### Bug Fixes
