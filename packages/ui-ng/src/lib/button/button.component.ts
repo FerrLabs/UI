@@ -81,7 +81,10 @@ const DANGER = '#dc2626';
       justify-content: center;
       text-decoration: none;
       cursor: pointer;
-      transition: background 160ms ease-out, opacity 160ms, box-shadow 160ms;
+      transition:
+        background 160ms ease-out,
+        opacity 160ms,
+        box-shadow 160ms;
     }
     .flr-btn:disabled,
     .flr-btn[aria-disabled='true'] {
