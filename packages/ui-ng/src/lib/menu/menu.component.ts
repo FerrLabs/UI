@@ -169,6 +169,11 @@ export class MenuComponent {
     .flr-menu-item__icon:empty {
       display: none;
     }
+    .flr-menu-item__icon ::ng-deep svg:not([width]) {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
     .flr-menu-item__label {
       flex: 1;
       min-width: 0;

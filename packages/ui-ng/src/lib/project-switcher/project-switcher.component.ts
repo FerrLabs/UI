@@ -129,6 +129,12 @@ export interface ProjectSwitcherPlaceholder {
       align-items: center;
       flex-shrink: 0;
     }
+    .flr-ps__trigger-icon ::ng-deep svg:not([width]),
+    .flr-ps__item-icon ::ng-deep svg:not([width]) {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
     .flr-ps__panel {
       position: absolute;
       top: calc(100% + 4px);
