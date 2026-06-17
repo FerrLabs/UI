@@ -100,3 +100,14 @@ export type {
   BrandDropdownAppId,
   BrandDropdownApp,
 } from './lib/brand-dropdown/brand-dropdown.component';
+
+export { SiteCardComponent } from './lib/site-card/site-card.component';
+
+export { ProjectSwitcherComponent } from './lib/project-switcher/project-switcher.component';
+export type {
+  ProjectSwitcherItem,
+  ProjectSwitcherPlaceholder,
+} from './lib/project-switcher/project-switcher.component';
+
+export { PageHeaderComponent } from './lib/page-header/page-header.component';
+export type { BreadcrumbCrumb } from './lib/page-header/page-header.component';
