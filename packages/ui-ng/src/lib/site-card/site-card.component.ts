@@ -61,6 +61,11 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       align-items: center;
       flex-shrink: 0;
     }
+    .flr-sc__icon ::ng-deep svg:not([width]) {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
     .flr-sc__body {
       flex: 1;
       min-width: 0;

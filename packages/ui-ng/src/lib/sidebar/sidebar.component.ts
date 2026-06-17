@@ -281,6 +281,11 @@ export class SidebarSectionComponent {
         transform 220ms ease,
         color 160ms ease;
     }
+    .flr-sb-item__icon ::ng-deep svg:not([width]) {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
     .flr-sb-item--active .flr-sb-item__icon {
       color: var(--flr-sb-accent, var(--color-accent, var(--color-ink)));
     }
