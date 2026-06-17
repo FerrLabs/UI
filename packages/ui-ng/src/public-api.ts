@@ -64,3 +64,39 @@ export { ToastService } from './lib/toast/toast.service';
 export type { ToastVariant, ToastInput, ToastItem } from './lib/toast/toast.service';
 
 export { ToastContainerComponent } from './lib/toast/toast-container.component';
+
+export {
+  SidebarComponent,
+  SidebarSectionComponent,
+  SidebarItemComponent,
+} from './lib/sidebar/sidebar.component';
+
+export { ShellComponent } from './lib/shell/shell.component';
+export type { ShellNavItem, ShellNavGroup } from './lib/shell/shell.component';
+
+export { AvatarComponent } from './lib/avatar/avatar.component';
+export type { AvatarSize, AvatarShape } from './lib/avatar/avatar.component';
+
+export { LogoMarkComponent } from './lib/logo-mark/logo-mark.component';
+export type { ProductSlug } from './lib/logo-mark/logo-mark.component';
+
+export {
+  MenuComponent,
+  MenuItemComponent,
+  MenuSeparatorComponent,
+  MenuLabelComponent,
+} from './lib/menu/menu.component';
+export type { MenuAlign } from './lib/menu/menu.component';
+
+export { UserMenuComponent } from './lib/user-menu/user-menu.component';
+export type { UserMenuItem } from './lib/user-menu/user-menu.component';
+
+export {
+  BrandDropdownComponent,
+  DEFAULT_APPS,
+  ADMIN_APP,
+} from './lib/brand-dropdown/brand-dropdown.component';
+export type {
+  BrandDropdownAppId,
+  BrandDropdownApp,
+} from './lib/brand-dropdown/brand-dropdown.component';
