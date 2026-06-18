@@ -1,13 +1,18 @@
 {
   "name": "@ferrlabs/ui-ng",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "FerrLabs design system — Angular 22 components (standalone, signals, zoneless). Mirrors @ferrlabs/ui-react; consumes tokens from @ferrlabs/ui-foundation.",
   "license": "UNLICENSED",
   "private": false,
   "sideEffects": false,
+  "exports": {
+    "./docs/styles.css": {
+      "default": "./docs/styles.css"
+    }
+  },
   "scripts": {
-    "build": "ng-packagr -p ng-package.json",
-    "watch": "ng-packagr -p ng-package.json --watch",
+    "build": "ng-packagr -p ng-package.json -c tsconfig.lib.json",
+    "watch": "ng-packagr -p ng-package.json -c tsconfig.lib.json --watch",
     "typecheck": "tsc -p tsconfig.lib.json --noEmit --inlineSources false --declarationMap false"
   },
   "peerDependencies": {

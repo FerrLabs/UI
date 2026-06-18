@@ -41,6 +41,44 @@ import { ButtonComponent } from '@ferrlabs/ui-ng';
 export class Demo {}
 ```
 
+## Versioned docs (`@ferrlabs/ui-ng/docs`)
+
+Brand-agnostic versioned-documentation layout, shared across product sites.
+`DocsLayoutComponent` renders the docs grid only (sidebar + version switcher,
+scrollable main with prev/next pager, on-this-page TOC) and projects rendered
+markdown into a `.ferr-prose` article via `<ng-content>`. It is shell-free — wrap
+it in your own product shell. The nav, versions, language, and URL segment are
+inputs, so the content stays in the consumer; only the structure ships here.
+
+```ts
+import { DocsLayoutComponent, DocSection, DocVersion } from '@ferrlabs/ui-ng/docs';
+
+const NAV: readonly DocSection[] = [
+  { label: 'Getting started', items: [{ label: 'Introduction', slug: 'introduction' }] },
+];
+const VERSIONS: readonly DocVersion[] = [{ slug: 'current', label: 'v5' }];
+
+@Component({
+  imports: [DocsLayoutComponent],
+  template: `
+    <flr-docs-layout [nav]="nav" [versions]="versions" slug="introduction" lang="en">
+      <!-- rendered markdown -->
+    </flr-docs-layout>
+  `,
+})
+export class DocsPage {
+  protected readonly nav = NAV;
+  protected readonly versions = VERSIONS;
+}
+```
+
+Import the markdown-content stylesheet once (it styles `.ferr-prose`,
+`.ferr-aside`, `.ferr-card`, `.ferr-tabs` — all CSS-var driven):
+
+```css
+@import '@ferrlabs/ui-ng/docs/styles.css';
+```
+
 ## Conventions
 
 - **Standalone** components, no NgModules.
