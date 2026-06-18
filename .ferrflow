@@ -7,6 +7,7 @@
   "package": [
     { "name": "foundation", "path": "packages/foundation", "changelog": "packages/foundation/CHANGELOG.md", "versionedFiles": [{ "path": "packages/foundation/package.json", "format": "json" }] },
     { "name": "ui", "path": "packages/ui", "changelog": "packages/ui/CHANGELOG.md", "versionedFiles": [{ "path": "packages/ui/package.json", "format": "json" }] },
-    { "name": "astro", "path": "packages/astro", "changelog": "packages/astro/CHANGELOG.md", "versionedFiles": [{ "path": "packages/astro/package.json", "format": "json" }] }
+    { "name": "astro", "path": "packages/astro", "changelog": "packages/astro/CHANGELOG.md", "versionedFiles": [{ "path": "packages/astro/package.json", "format": "json" }] },
+    { "name": "ui-ng", "path": "packages/ui-ng", "changelog": "packages/ui-ng/CHANGELOG.md", "versionedFiles": [{ "path": "packages/ui-ng/package.json", "format": "json" }] }
   ]
 }
