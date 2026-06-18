@@ -18,6 +18,7 @@
     "skipLibCheck": true
   },
   "angularCompilerOptions": {
+    "compilationMode": "partial",
     "strictTemplates": true,
     "strictInjectionParameters": true,
     "enableI18nLegacyMessageIdFormat": false
