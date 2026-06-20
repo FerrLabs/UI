@@ -29,11 +29,16 @@ jobs:
       - name: Build and push
         run: |
           SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          # build-<run_number> : tag monotone trié numériquement par la Flux
+          # ImagePolicy (auto-update). main-<sha> + latest : référence humaine.
+          BUILD="${{ github.run_number }}"
           IMAGE=ghcr.io/ferrlabs/ui/showcase
           buildah login -u ${{ github.actor }} -p ${GITHUB_TOKEN} ghcr.io
           buildah build --isolation=chroot \
-            -t ${IMAGE}:main-${SHA} \
+            -t ${IMAGE}:build-${BUILD} \
             -f packages/showcase/Dockerfile .
-          buildah tag ${IMAGE}:main-${SHA} ${IMAGE}:latest
+          buildah tag ${IMAGE}:build-${BUILD} ${IMAGE}:main-${SHA}
+          buildah tag ${IMAGE}:build-${BUILD} ${IMAGE}:latest
+          buildah push ${IMAGE}:build-${BUILD}
           buildah push ${IMAGE}:main-${SHA}
           buildah push ${IMAGE}:latest
