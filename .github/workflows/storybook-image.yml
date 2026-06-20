@@ -1,0 +1,39 @@
+name: Storybook image
+
+# @ferrlabs/ui-showcase n'est pas publié sur npm (pas dans .ferrflow) : on
+# construit son image Storybook sur push main (ou manuellement) et on pousse
+# sur GHCR. Déployée en interne sur storybook.ferrlabs.internal (VPN-only).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/showcase/**'
+      - 'packages/ui/**'
+      - 'packages/foundation/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/storybook-image.yml'
+  workflow_dispatch:
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    name: Build & Push Storybook
+    runs-on: ferrlabs-k8s-large
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build and push
+        run: |
+          SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          IMAGE=ghcr.io/ferrlabs/ui/showcase
+          buildah login -u ${{ github.actor }} -p ${GITHUB_TOKEN} ghcr.io
+          buildah build --isolation=chroot \
+            -t ${IMAGE}:main-${SHA} \
+            -f packages/showcase/Dockerfile .
+          buildah tag ${IMAGE}:main-${SHA} ${IMAGE}:latest
+          buildah push ${IMAGE}:main-${SHA}
+          buildah push ${IMAGE}:latest
