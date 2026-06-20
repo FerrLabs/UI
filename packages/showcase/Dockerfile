@@ -19,7 +19,12 @@ COPY packages ./packages
 # déclarées par showcase (ex. @fontsource/* via preview.css), hissées par un
 # install complet en local. Un install filtré les manquerait. Build filtré.
 RUN pnpm install --frozen-lockfile
-RUN pnpm --filter "...@ferrlabs/ui-showcase" build
+# Les exports de @ferrlabs/ui-react pointent vers dist/ (build tsc) : il faut
+# builder les deps workspace AVANT le storybook, sinon les sous-chemins
+# (@ferrlabs/ui-react/react) ne résolvent pas. Ordre explicite (vérifié).
+RUN pnpm --filter @ferrlabs/ui-foundation build \
+ && pnpm --filter @ferrlabs/ui-react build \
+ && pnpm --filter @ferrlabs/ui-showcase build
 
 # Runtime stage — nginx non-privilégié servant le bundle statique.
 FROM docker.io/nginxinc/nginx-unprivileged:alpine
