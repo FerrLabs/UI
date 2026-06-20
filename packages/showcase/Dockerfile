@@ -10,8 +10,9 @@ WORKDIR /app
 
 RUN npm install -g pnpm@10
 
-# Manifests racine + toutes les packages (pnpm résout le graphe workspace).
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
+# Manifests racine + tsconfig de base (showcase/tsconfig.json l'étend) +
+# toutes les packages (pnpm résout le graphe workspace).
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc tsconfig.base.json ./
 COPY packages ./packages
 
 # Installe showcase + ses dépendances workspace, puis build (deps d'abord).
