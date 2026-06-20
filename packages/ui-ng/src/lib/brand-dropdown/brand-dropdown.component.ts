@@ -34,7 +34,6 @@ export const DEFAULT_APPS: readonly BrandDropdownApp[] = [
   { id: 'ferrfleet', label: 'FerrFleet', href: 'https://app.ferrfleet.com', accent: '#f59e0b' },
   { id: 'ferrtrack', label: 'FerrTrack', href: 'https://app.ferrtrack.com', accent: '#6366f1' },
   { id: 'ferrvault', label: 'FerrVault', href: 'https://app.ferrvault.com', accent: '#10b981' },
-  { id: 'ferrlens', label: 'FerrLens', href: 'https://ferrlens.com', accent: '#14b8a6' },
 ];
 
 export const ADMIN_APP: BrandDropdownApp = {
