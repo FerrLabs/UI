@@ -15,8 +15,10 @@ RUN npm install -g pnpm@10
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc tsconfig.base.json ./
 COPY packages ./packages
 
-# Installe showcase + ses dépendances workspace, puis build (deps d'abord).
-RUN pnpm install --frozen-lockfile --filter "...@ferrlabs/ui-showcase"
+# Install complet du workspace : le build Storybook importe des deps non
+# déclarées par showcase (ex. @fontsource/* via preview.css), hissées par un
+# install complet en local. Un install filtré les manquerait. Build filtré.
+RUN pnpm install --frozen-lockfile
 RUN pnpm --filter "...@ferrlabs/ui-showcase" build
 
 # Runtime stage — nginx non-privilégié servant le bundle statique.
