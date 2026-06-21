@@ -4,6 +4,19 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.0] - 2026-06-21
+
+### Features
+
+- feat(docs): replace version chip row with a select dropdown (#242)
+- feat: containerize storybook showcase for internal hosting (#236)
+
+### Bug Fixes
+
+- fix: build workspace deps before storybook (dist exports) (#239)
+- fix: full pnpm install for storybook image (phantom font deps) (#238)
+- fix: copy tsconfig.base.json into storybook image build (#237)
+
 ## [1.0.1] - 2026-06-20
 
 ### Bug Fixes
