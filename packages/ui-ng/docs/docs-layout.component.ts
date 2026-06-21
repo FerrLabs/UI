@@ -40,14 +40,18 @@ interface SiblingLink {
       <aside class="docs__sidebar" [class.is-open]="sidebarOpen()">
         @if (versions().length) {
           <div class="docs__versions mono" translate="no">
-            @for (v of versions(); track v.slug) {
-              <a
-                [href]="versionHref(v.slug)"
-                class="docs__version"
-                [class.is-active]="v.slug === version()"
-                >{{ v.label }}</a
-              >
-            }
+            <label class="docs__versions-label" for="flr-docs-version">{{ versionLabel() }}</label>
+            <select
+              id="flr-docs-version"
+              class="docs__version-select"
+              (change)="onVersionChange($event)"
+            >
+              @for (v of versions(); track v.slug) {
+                <option [value]="versionHref(v.slug)" [selected]="v.slug === version()">
+                  {{ v.label }}
+                </option>
+              }
+            </select>
           </div>
         }
 
@@ -147,31 +151,41 @@ interface SiblingLink {
     }
     .docs__versions {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+      align-items: center;
+      gap: 10px;
       margin-bottom: 28px;
     }
-    .docs__version {
+    .docs__versions-label {
       font-size: 11px;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      padding: 4px 10px;
+      color: var(--paper-ink-3);
+    }
+    .docs__version-select {
+      flex: 1;
+      appearance: none;
+      -webkit-appearance: none;
+      font: inherit;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--paper-ink);
+      background-color: transparent;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
       border: 1px solid var(--paper-rule);
-      border-radius: 999px;
-      color: var(--paper-ink-2);
-      text-decoration: none;
+      border-radius: 8px;
+      padding: 7px 30px 7px 12px;
+      cursor: pointer;
       transition:
-        color 160ms ease,
-        border-color 160ms ease;
+        border-color 160ms ease,
+        color 160ms ease;
     }
-    .docs__version:hover {
+    .docs__version-select:hover,
+    .docs__version-select:focus-visible {
+      border-color: var(--accent);
       color: var(--accent);
-      border-color: var(--accent);
-    }
-    .docs__version.is-active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
+      outline: none;
     }
     .docs__section {
       margin-bottom: 28px;
@@ -416,6 +430,17 @@ export class DocsLayoutComponent {
   protected readonly pagerLabel = 'Pagination';
   protected readonly prevLabel = computed(() => (this.isFr() ? 'Précédent' : 'Previous'));
   protected readonly nextLabel = computed(() => (this.isFr() ? 'Suivant' : 'Next'));
+  protected readonly versionLabel = computed(() => (this.isFr() ? 'Version' : 'Version'));
+
+  protected onVersionChange(event: Event): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    const target = event.target as HTMLSelectElement;
+    if (target.value) {
+      window.location.assign(target.value);
+    }
+  }
 
   protected docHref(slug: string): string {
     return `${this.base()}/${slug}`;
