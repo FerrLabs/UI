@@ -4,6 +4,30 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.1.0] - 2026-06-25
+
+### Features
+
+- feat(foundation): add bell icon for notifications (#247)
+- feat(showcase): brand + dark-mode selectors in Storybook toolbar (#246)
+- feat(docs): replace version chip row with a select dropdown (#242)
+- feat: containerize storybook showcase for internal hosting (#236)
+- feat(docs): add @ferrlabs/ui-ng/docs versioned-docs layout (#227)
+- feat(ui-ng): add entity-switcher and page chrome (ProjectSwitcher, SiteCard, PageHeader) (#220)
+- feat(ui-ng): add app-chrome tier (Shell, Sidebar, Avatar, LogoMark, Menu, UserMenu, BrandDropdown) (#218)
+- feat(ui-ng): add overlay tier (Modal, Drawer, Toast) on @angular/cdk (#215)
+- feat(ui-ng): port core and form primitives to Angular (#213)
+
+### Bug Fixes
+
+- fix: build workspace deps before storybook (dist exports) (#239)
+- fix: full pnpm install for storybook image (phantom font deps) (#238)
+- fix: copy tsconfig.base.json into storybook image build (#237)
+- fix(brand-dropdown): remove FerrLens from app switcher (#235)
+- fix(ui-ng): build library in partial compilation mode (#231)
+- fix(ui-ng): auto-size projected icon SVGs in sidebar/menu/switcher/site-card slots (#224)
+- fix(ci): publish ng-packagr libs (ui-ng) from dist/ (#222)
+
 ## [5.0.0] - 2026-06-13
 
 ### Breaking Changes
