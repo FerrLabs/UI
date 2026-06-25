@@ -2,7 +2,7 @@
   "name": "@ferrlabs/ui-showcase",
   "version": "0.1.0",
   "private": true,
-  "description": "Storybook showcase for FerrLabs primitives + editorial brand components. Themable across slate / orange / emerald / indigo / violet / amber.",
+  "description": "Storybook showcase for FerrLabs primitives + editorial brand components. Brand selector across FerrLabs / FerrFlow / FerrVault / FerrTrack / FerrGrowth / FerrFleet / FerrLens, with a light/dark toggle.",
   "type": "module",
   "scripts": {
     "storybook": "storybook dev -p 6006 --no-open",
