@@ -38,6 +38,9 @@
 [data-accent='amber'] {
   --color-accent: var(--color-ferrfleet-amber);
 }
+[data-accent='teal'] {
+  --color-accent: var(--color-ferrlens-teal);
+}
 
 body {
   background: var(--color-paper);
