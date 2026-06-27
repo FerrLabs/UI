@@ -4,6 +4,14 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.3.0] - 2026-06-27
+
+### Features
+
+- feat(site-chrome): shared marketing Navbar/Footer/Shell (#251)
+- feat(foundation): add bell icon for notifications (#247)
+- feat(showcase): brand + dark-mode selectors in Storybook toolbar (#246)
+
 ## [1.1.0] - 2026-06-21
 
 ### Features
