@@ -40,7 +40,6 @@ export interface SiteChromeLabels {
 }
 
 export interface SiteChromeConfig {
-  readonly locale: SiteLocale;
   readonly origin: string;
   readonly logoSvg: string;
   readonly wordmark: string;
@@ -74,9 +73,19 @@ export function withLocaleBase(locale: SiteLocale, href: string): string {
   return `${base}${href}`;
 }
 
-export function localeSwitchHref(target: SiteLocale, barePath: string): string {
+export function stripLocalePrefix(path: string): string {
+  if (path === '/fr' || path === '/fr/') return '/';
+  if (path.startsWith('/fr/')) return path.slice(3);
+  return path || '/';
+}
+
+export function localeSwitchHref(target: SiteLocale, path: string): string {
+  const bare = stripLocalePrefix(path);
   const base = localeBase(target);
-  const path = barePath && barePath !== '' ? barePath : '/';
-  if (path === '/') return base ? `${base}/` : '/';
-  return `${base}${path}`;
+  if (bare === '/' || bare === '') return base ? `${base}/` : '/';
+  return `${base}${bare}`;
+}
+
+export function resolveLocale(localeId: string | null | undefined): SiteLocale {
+  return localeId && localeId.toLowerCase().startsWith('fr') ? 'fr' : 'en';
 }

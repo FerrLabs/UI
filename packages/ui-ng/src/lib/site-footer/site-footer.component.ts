@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, LOCALE_ID } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
-import { SITE_CHROME, withLocaleBase } from '../site-chrome/site-chrome.model';
+import { SITE_CHROME, resolveLocale, withLocaleBase } from '../site-chrome/site-chrome.model';
 
 @Component({
   selector: 'flr-site-footer',
@@ -169,12 +169,14 @@ export class SiteFooterComponent {
   protected readonly wordmark = this.chrome.wordmark;
   protected readonly wordmarkAccent = this.chrome.wordmarkAccent ?? '';
 
+  private readonly locale = resolveLocale(inject(LOCALE_ID));
+
   protected readonly footer = this.chrome.footer;
   protected readonly columns = this.chrome.footer.columns.map((col) => ({
     title: col.title,
     links: col.links.map((link) => ({
       label: link.label,
-      href: link.external ? link.href : withLocaleBase(this.chrome.locale, link.href),
+      href: link.external ? link.href : withLocaleBase(this.locale, link.href),
       external: link.external ?? false,
     })),
   }));
