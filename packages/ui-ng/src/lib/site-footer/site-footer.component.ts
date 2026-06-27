@@ -12,12 +12,8 @@ import { SITE_CHROME, withLocaleBase } from '../site-chrome/site-chrome.model';
           <div class="footer__brand">
             <div class="footer__brand-row" translate="no">
               <span class="footer__logo" [innerHTML]="logo"></span>
-              <span class="footer__wordmark"
-                >{{ wordmark }}
-                @if (wordmarkAccent) {
-                  <span class="footer__wordmark-accent">{{ wordmarkAccent }}</span>
-                }
-              </span>
+              <!-- prettier-ignore -->
+              <span class="footer__wordmark">{{ wordmark }}@if (wordmarkAccent) {<span class="footer__wordmark-accent">{{ wordmarkAccent }}</span>}</span>
             </div>
             <p class="footer__colophon">{{ footer.tagline }}</p>
             <a [href]="footer.backHref" class="mono footer__back">{{ footer.backLabel }}</a>

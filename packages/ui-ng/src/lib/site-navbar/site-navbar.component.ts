@@ -19,12 +19,8 @@ import {
       <div class="nav__container">
         <a [href]="homeHref" class="nav__brand" translate="no">
           <span class="nav__logo" [innerHTML]="logo"></span>
-          <span class="nav__wordmark"
-            >{{ wordmark }}
-            @if (wordmarkAccent) {
-              <span class="nav__wordmark-accent">{{ wordmarkAccent }}</span>
-            }
-          </span>
+          <!-- prettier-ignore -->
+          <span class="nav__wordmark">{{ wordmark }}@if (wordmarkAccent) {<span class="nav__wordmark-accent">{{ wordmarkAccent }}</span>}</span>
         </a>
 
         <nav class="nav__desktop">
@@ -69,12 +65,8 @@ import {
           <div class="nav__container nav__mobile-bar">
             <a [href]="homeHref" class="nav__brand" translate="no">
               <span class="nav__logo" [innerHTML]="logo"></span>
-              <span class="nav__wordmark"
-                >{{ wordmark }}
-                @if (wordmarkAccent) {
-                  <span class="nav__wordmark-accent">{{ wordmarkAccent }}</span>
-                }
-              </span>
+              <!-- prettier-ignore -->
+              <span class="nav__wordmark">{{ wordmark }}@if (wordmarkAccent) {<span class="nav__wordmark-accent">{{ wordmarkAccent }}</span>}</span>
             </a>
             <button class="nav__toggle mono" type="button" (click)="mobileOpen.set(false)">
               {{ labels.close }}
