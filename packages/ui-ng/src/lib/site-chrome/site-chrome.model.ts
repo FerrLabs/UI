@@ -40,6 +40,11 @@ export interface SiteChromeLabels {
 }
 
 export interface SiteChromeConfig {
+  /**
+   * @deprecated The active locale is read from Angular's `LOCALE_ID` at runtime;
+   * this field is ignored. Kept optional for backward compatibility.
+   */
+  readonly locale?: SiteLocale;
   readonly origin: string;
   readonly logoSvg: string;
   readonly wordmark: string;
@@ -57,11 +62,15 @@ export const SITE_CHROME = new InjectionToken<SiteChromeConfig>('SITE_CHROME');
 /**
  * Provides the site chrome configuration.
  *
- * Accepts a factory rather than a value so that any `$localize` strings in the
- * config are evaluated at injection time — after the active locale's
- * translations have been loaded — rather than once at module load.
+ * Prefer passing a factory: any `$localize` strings in the config are then
+ * evaluated at injection time — after the active locale's translations have
+ * been loaded — rather than once at module load. A plain config object is also
+ * accepted for static (non-localized) chrome.
  */
-export function provideSiteChrome(factory: () => SiteChromeConfig): EnvironmentProviders {
+export function provideSiteChrome(
+  config: SiteChromeConfig | (() => SiteChromeConfig),
+): EnvironmentProviders {
+  const factory = typeof config === 'function' ? config : () => config;
   return makeEnvironmentProviders([{ provide: SITE_CHROME, useFactory: factory }]);
 }
 
