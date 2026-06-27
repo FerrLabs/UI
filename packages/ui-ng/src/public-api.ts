@@ -111,3 +111,25 @@ export type {
 
 export { PageHeaderComponent } from './lib/page-header/page-header.component';
 export type { BreadcrumbCrumb } from './lib/page-header/page-header.component';
+
+export { SiteNavbarComponent } from './lib/site-navbar/site-navbar.component';
+export { SiteFooterComponent } from './lib/site-footer/site-footer.component';
+export { SiteShellComponent } from './lib/site-shell/site-shell.component';
+export {
+  SITE_CHROME,
+  SITE_LOCALES,
+  provideSiteChrome,
+  localeBase,
+  withLocaleBase,
+  localeSwitchHref,
+} from './lib/site-chrome/site-chrome.model';
+export type {
+  SiteLocale,
+  SiteNavLink,
+  SiteFooterLink,
+  SiteFooterColumn,
+  SiteCta,
+  SiteFooterConfig,
+  SiteChromeLabels,
+  SiteChromeConfig,
+} from './lib/site-chrome/site-chrome.model';
