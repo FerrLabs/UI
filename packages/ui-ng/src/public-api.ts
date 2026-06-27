@@ -122,6 +122,8 @@ export {
   localeBase,
   withLocaleBase,
   localeSwitchHref,
+  stripLocalePrefix,
+  resolveLocale,
 } from './lib/site-chrome/site-chrome.model';
 export type {
   SiteLocale,

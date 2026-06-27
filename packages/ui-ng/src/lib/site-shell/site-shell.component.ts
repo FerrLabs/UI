@@ -1,9 +1,21 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  LOCALE_ID,
+} from '@angular/core';
 import { DOCUMENT, Location } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { SiteNavbarComponent } from '../site-navbar/site-navbar.component';
 import { SiteFooterComponent } from '../site-footer/site-footer.component';
-import { SITE_CHROME, SITE_LOCALES, localeSwitchHref } from '../site-chrome/site-chrome.model';
+import {
+  SITE_CHROME,
+  SITE_LOCALES,
+  localeSwitchHref,
+  resolveLocale,
+} from '../site-chrome/site-chrome.model';
 
 @Component({
   selector: 'flr-site-shell',
@@ -35,15 +47,15 @@ export class SiteShellComponent {
   private readonly titleService = inject(Title);
   private readonly meta = inject(Meta);
   private readonly document = inject(DOCUMENT);
+  private readonly locale = resolveLocale(inject(LOCALE_ID));
 
   constructor() {
     effect(() => {
       const title = this.title();
       const description = this.description();
-      const barePath = this.location.path() || '/';
+      const path = this.location.path() || '/';
       const canonical =
-        this.canonical() ??
-        `${this.chrome.origin}${localeSwitchHref(this.chrome.locale, barePath)}`;
+        this.canonical() ?? `${this.chrome.origin}${localeSwitchHref(this.locale, path)}`;
 
       if (title) {
         this.titleService.setTitle(title);
@@ -57,7 +69,7 @@ export class SiteShellComponent {
       }
       this.setLink('canonical', canonical);
       this.meta.updateTag({ property: 'og:url', content: canonical });
-      this.setAlternates(barePath);
+      this.setAlternates(path);
     });
   }
 

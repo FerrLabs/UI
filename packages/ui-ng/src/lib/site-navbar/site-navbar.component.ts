@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, LOCALE_ID, signal } from '@angular/core';
 import { Location } from '@angular/common';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import {
   SITE_CHROME,
   type SiteLocale,
   localeSwitchHref,
+  resolveLocale,
   withLocaleBase,
 } from '../site-chrome/site-chrome.model';
 
@@ -284,7 +285,7 @@ export class SiteNavbarComponent {
   private readonly sanitizer = inject(DomSanitizer);
 
   protected readonly logo: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(this.chrome.logoSvg);
-  protected readonly locale = this.chrome.locale;
+  protected readonly locale: SiteLocale = resolveLocale(inject(LOCALE_ID));
   protected readonly wordmark = this.chrome.wordmark;
   protected readonly wordmarkAccent = this.chrome.wordmarkAccent ?? '';
   protected readonly labels = this.chrome.labels;
