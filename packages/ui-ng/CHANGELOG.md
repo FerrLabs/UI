@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.4.0] - 2026-06-27
+
+### Features
+
+- feat(site-chrome): runtime locale (LOCALE_ID) + factory provider + export locale helpers (#253)
+
 ## [1.3.0] - 2026-06-27
 
 ### Features
