@@ -54,8 +54,15 @@ export const SITE_LOCALES: readonly SiteLocale[] = ['en', 'fr'];
 
 export const SITE_CHROME = new InjectionToken<SiteChromeConfig>('SITE_CHROME');
 
-export function provideSiteChrome(config: SiteChromeConfig): EnvironmentProviders {
-  return makeEnvironmentProviders([{ provide: SITE_CHROME, useValue: config }]);
+/**
+ * Provides the site chrome configuration.
+ *
+ * Accepts a factory rather than a value so that any `$localize` strings in the
+ * config are evaluated at injection time — after the active locale's
+ * translations have been loaded — rather than once at module load.
+ */
+export function provideSiteChrome(factory: () => SiteChromeConfig): EnvironmentProviders {
+  return makeEnvironmentProviders([{ provide: SITE_CHROME, useFactory: factory }]);
 }
 
 export function localeBase(locale: SiteLocale): string {
