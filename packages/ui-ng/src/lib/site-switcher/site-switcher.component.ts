@@ -39,6 +39,7 @@ export class SiteSwitcherComponent {
   readonly searchPlaceholder = input('Search…');
   readonly createLabel = input<string | null>(null);
   readonly emptyState = input('No results');
+  readonly showTriggerMeta = input(true);
 
   readonly select = output<string>();
   readonly create = output<void>();
@@ -54,7 +55,9 @@ export class SiteSwitcherComponent {
   });
 
   protected readonly triggerLabel = computed(() => this.active()?.label ?? this.placeholder());
-  protected readonly triggerMeta = computed(() => this.active()?.meta ?? null);
+  protected readonly triggerMeta = computed(() =>
+    this.showTriggerMeta() ? (this.active()?.meta ?? null) : null,
+  );
 
   protected readonly filtered = computed(() => {
     const q = this.query().trim().toLowerCase();
