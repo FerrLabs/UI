@@ -27,9 +27,11 @@ export interface ShellNavGroup {
  * Composes `<flr-sidebar>` (data-driven nav from `sections`) + a sticky topbar
  * (breadcrumb, ⌘K search, action/user slots) + a scrollable main outlet.
  * Brand, topbar actions, and the user menu are projection slots
- * (`[shell-brand]`, `[shell-breadcrumb-actions]`, `[shell-actions]`,
- * `[shell-topbar-right]`, `[shell-user]`) so the consumer drops in `LogoMark` /
- * a site switcher next to the breadcrumb / dropdowns. Page content is the
+ * (`[shell-brand]`, `[shell-breadcrumb-lead]`, `[shell-breadcrumb-actions]`,
+ * `[shell-actions]`, `[shell-topbar-right]`, `[shell-user]`) so the consumer
+ * drops in `LogoMark` / a site switcher leading or trailing the breadcrumb /
+ * dropdowns. `[shell-breadcrumb-lead]` renders before the crumb trail (a `/`
+ * separates it from the first crumb). Page content is the
  * default slot. Reads `--color-app-*` / `--color-rule` / `--font-mono` tokens.
  */
 @Component({
@@ -69,6 +71,9 @@ export interface ShellNavGroup {
 
       <div class="flr-shell__body">
         <header class="flr-shell__topbar">
+          <div class="flr-shell__slot flr-shell__slot--crumb-lead">
+            <ng-content select="[shell-breadcrumb-lead]" />
+          </div>
           @if (breadcrumb().length) {
             <div class="mono flr-shell__crumbs">
               @for (crumb of breadcrumb(); track $index; let last = $last) {
@@ -193,6 +198,12 @@ export interface ShellNavGroup {
     }
     .flr-shell__slot--crumb {
       margin-left: 4px;
+    }
+    .flr-shell__slot--crumb-lead:not(:empty) + .flr-shell__crumbs::before {
+      content: '/';
+      margin-right: 6px;
+      color: var(--color-ink-3, #64748b);
+      opacity: 0.5;
     }
     .flr-shell__main {
       flex: 1;
