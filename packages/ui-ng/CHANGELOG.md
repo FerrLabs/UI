@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.6.0] - 2026-07-04
+
+### Features
+
+- feat(ui-ng): navbar site switcher component + breadcrumb-level shell slot (#272)
+
 ## [1.4.1] - 2026-07-04
 
 ### Bug Fixes
