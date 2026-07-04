@@ -196,8 +196,8 @@ import {
         color 180ms;
     }
     .nav__lang-opt.is-active {
-      background: var(--accent);
-      color: #fff;
+      background: var(--color-ink);
+      color: var(--color-paper);
     }
     .nav__cta {
       display: inline-flex;
