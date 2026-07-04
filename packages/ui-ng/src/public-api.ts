@@ -109,6 +109,9 @@ export type {
   ProjectSwitcherPlaceholder,
 } from './lib/project-switcher/project-switcher.component';
 
+export { SiteSwitcherComponent } from './lib/site-switcher/site-switcher.component';
+export type { SiteSwitcherItem } from './lib/site-switcher/site-switcher.component';
+
 export { PageHeaderComponent } from './lib/page-header/page-header.component';
 export type { BreadcrumbCrumb } from './lib/page-header/page-header.component';
 

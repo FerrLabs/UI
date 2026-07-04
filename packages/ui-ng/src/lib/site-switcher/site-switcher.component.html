@@ -1,0 +1,85 @@
+<button
+  type="button"
+  class="flr-ss__trigger mono"
+  [class.flr-ss__trigger--open]="open()"
+  aria-haspopup="menu"
+  [attr.aria-expanded]="open()"
+  (click)="toggle()"
+>
+  <span class="flr-ss__trigger-body">
+    <span class="flr-ss__trigger-label">{{ triggerLabel() }}</span>
+    @if (triggerMeta(); as meta) {
+      <span class="flr-ss__trigger-meta">{{ meta }}</span>
+    }
+  </span>
+  <svg
+    class="flr-ss__chev"
+    aria-hidden="true"
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="none"
+  >
+    <path
+      d="M3 4.5L6 7.5L9 4.5"
+      stroke="currentColor"
+      stroke-width="1.4"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</button>
+
+@if (open()) {
+  <div class="flr-ss__panel" role="menu">
+    <div class="flr-ss__search-wrap">
+      <input
+        #searchInput
+        type="text"
+        class="flr-ss__search"
+        [value]="query()"
+        [placeholder]="searchPlaceholder()"
+        (input)="query.set($any($event.target).value)"
+        (keydown)="onInputKey($event)"
+      />
+    </div>
+    <div class="flr-ss__list">
+      @if (filtered().length === 0) {
+        <div class="flr-ss__empty">{{ emptyState() }}</div>
+      } @else {
+        @for (item of filtered(); track item.id; let idx = $index) {
+          <button
+            type="button"
+            role="menuitem"
+            class="flr-ss__item"
+            [class.flr-ss__item--hl]="idx === highlight()"
+            [attr.aria-current]="item.id === activeId() ? 'true' : null"
+            (mouseenter)="highlight.set(idx)"
+            (click)="onSelect(item)"
+          >
+            <span class="flr-ss__item-body">
+              <span
+                class="flr-ss__item-label"
+                [class.flr-ss__item-label--current]="item.id === activeId()"
+                >{{ item.label }}</span
+              >
+              @if (item.meta) {
+                <span class="flr-ss__item-meta">{{ item.meta }}</span>
+              }
+            </span>
+            @if (item.id === activeId()) {
+              <span class="flr-ss__check" aria-hidden="true">✓</span>
+            }
+          </button>
+        }
+      }
+    </div>
+    @if (createLabel(); as label) {
+      <div class="flr-ss__sep"></div>
+      <button type="button" class="flr-ss__footer-btn" (click)="onCreate()">
+        <span aria-hidden="true">+</span>
+        <span class="flr-ss__footer-label">{{ label }}</span>
+      </button>
+    }
+  </div>
+}

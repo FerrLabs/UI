@@ -27,9 +27,10 @@ export interface ShellNavGroup {
  * Composes `<flr-sidebar>` (data-driven nav from `sections`) + a sticky topbar
  * (breadcrumb, ⌘K search, action/user slots) + a scrollable main outlet.
  * Brand, topbar actions, and the user menu are projection slots
- * (`[shell-brand]`, `[shell-actions]`, `[shell-topbar-right]`, `[shell-user]`)
- * so the consumer drops in `LogoMark` / dropdowns. Page content is the default
- * slot. Reads `--color-app-*` / `--color-rule` / `--font-mono` tokens.
+ * (`[shell-brand]`, `[shell-breadcrumb-actions]`, `[shell-actions]`,
+ * `[shell-topbar-right]`, `[shell-user]`) so the consumer drops in `LogoMark` /
+ * a site switcher next to the breadcrumb / dropdowns. Page content is the
+ * default slot. Reads `--color-app-*` / `--color-rule` / `--font-mono` tokens.
  */
 @Component({
   selector: 'flr-shell',
@@ -80,6 +81,9 @@ export interface ShellNavGroup {
               }
             </div>
           }
+          <div class="flr-shell__slot flr-shell__slot--crumb">
+            <ng-content select="[shell-breadcrumb-actions]" />
+          </div>
           <div class="flr-shell__spacer"></div>
           @if (searchEnabled()) {
             <button
@@ -186,6 +190,9 @@ export interface ShellNavGroup {
     }
     .flr-shell__slot:empty {
       display: none;
+    }
+    .flr-shell__slot--crumb {
+      margin-left: 4px;
     }
     .flr-shell__main {
       flex: 1;
