@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.4.1] - 2026-07-04
+
+### Bug Fixes
+
+- fix(site-navbar): neutral ink for active language option instead of brand accent (#271)
+
 ## [1.4.0] - 2026-06-27
 
 ### Features
