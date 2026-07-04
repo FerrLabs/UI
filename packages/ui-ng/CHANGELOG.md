@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.7.0] - 2026-07-04
+
+### Features
+
+- feat(ui-ng): shell breadcrumb-lead slot + site-switcher showTriggerMeta toggle (#275)
+
 ## [1.6.0] - 2026-07-04
 
 ### Features
