@@ -1,6 +1,14 @@
 export { ButtonComponent } from './lib/button/button.component';
 export type { ButtonVariant, ButtonSize } from './lib/button/button.component';
 
+export { ComparisonTableComponent } from './lib/comparison-table/comparison-table.component';
+export type {
+  ComparisonCell,
+  ComparisonColumn,
+  ComparisonRow,
+  ComparisonGroup,
+} from './lib/comparison-table/comparison-table.component';
+
 export { CardComponent, CardHeaderComponent } from './lib/card/card.component';
 export type { CardPadding, CardVariant } from './lib/card/card.component';
 
