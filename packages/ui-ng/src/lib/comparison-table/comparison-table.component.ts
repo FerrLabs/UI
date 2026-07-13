@@ -192,6 +192,9 @@ export class ComparisonTableComponent {
   readonly columns = input.required<ComparisonColumn[]>();
   readonly groups = input.required<ComparisonGroup[]>();
   readonly caption = input('');
+  readonly yesLabel = input('Yes');
+  readonly noLabel = input('No');
+  readonly partialLabel = input('Partial');
 
   protected readonly oursIndex = computed(() => this.columns().findIndex((c) => c.ours));
   protected readonly accent = computed(
@@ -199,9 +202,9 @@ export class ComparisonTableComponent {
   );
 
   protected cell(value: ComparisonCell): RenderCell {
-    if (value === true) return { kind: 'yes', text: '✓', label: 'Yes' };
-    if (value === false) return { kind: 'no', text: '—', label: 'No' };
-    if (value === 'partial') return { kind: 'partial', text: '~', label: 'Partial' };
+    if (value === true) return { kind: 'yes', text: '✓', label: this.yesLabel() };
+    if (value === false) return { kind: 'no', text: '—', label: this.noLabel() };
+    if (value === 'partial') return { kind: 'partial', text: '~', label: this.partialLabel() };
     return { kind: 'text', text: value, label: value };
   }
 }
