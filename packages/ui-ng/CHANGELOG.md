@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.9.0] - 2026-07-13
+
+### Features
+
+- feat(ui-ng): make ComparisonTable cell aria-labels translatable (#292)
+
 ## [1.8.0] - 2026-07-13
 
 ### Features
