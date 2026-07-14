@@ -112,6 +112,15 @@ interface RenderCell {
     .flr-cmp__table {
       width: 100%;
       border-collapse: collapse;
+      font-family: var(
+        --font-mono,
+        'DM Mono',
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Consolas,
+        monospace
+      );
       font-size: 14px;
       color: var(--color-ink, #1e293b);
     }
