@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.9.1] - 2026-07-14
+
+### Bug Fixes
+
+- fix(ui-ng): render ComparisonTable in the mono font token (#293)
+
 ## [1.9.0] - 2026-07-13
 
 ### Features
