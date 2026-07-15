@@ -134,33 +134,35 @@ interface RenderCell {
       display: block;
     }
     .flr-cmp__header {
-      margin-bottom: 40px;
+      margin-bottom: 56px;
     }
     .flr-cmp__eyebrow {
       margin: 0 0 12px;
       font-family: var(--font-mono, 'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace);
       font-size: 11px;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--color-ink-3, #64748b);
     }
     .flr-cmp__heading {
-      margin: 0 0 16px;
+      margin: 0 0 20px;
       font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
-      font-size: clamp(32px, 5vw, 52px);
+      font-size: clamp(40px, 5vw, 64px);
+      font-weight: 700;
       line-height: 1.05;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.025em;
     }
     .flr-cmp__heading em {
-      font-style: normal;
+      font-style: italic;
+      font-weight: 600;
       color: var(--ours-accent, var(--color-ink, #1e293b));
     }
     .flr-cmp__lead {
       margin: 0;
-      max-width: 60ch;
+      max-width: 680px;
       font-family: var(--font-sans, 'Fraunces', Georgia, ui-serif, serif);
-      font-size: 17px;
-      line-height: 1.6;
+      font-size: 18px;
+      line-height: 1.55;
       color: var(--color-ink-2, #475569);
     }
     .flr-cmp {
