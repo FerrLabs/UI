@@ -35,15 +35,39 @@ interface RenderCell {
 }
 
 /**
- * Feature-comparison table for "Why <product>" pages: features down the side,
- * the FerrLabs product plus competitors across the top, and a check / dash /
+ * Feature-comparison section for "Why <product>" pages: an optional header
+ * (eyebrow / heading / lead) above a table with features down the side, the
+ * FerrLabs product plus competitors across the top, and a check / dash /
  * partial / text mark per cell. The `ours` column is highlighted with the
- * product accent. Theme-aware, horizontally scrollable on narrow viewports.
+ * product accent. Owning the header here keeps the type scale identical across
+ * every product site — pass content, not styles. Theme-aware, horizontally
+ * scrollable on narrow viewports.
  */
 @Component({
   selector: 'flr-comparison-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    @if (hasHeader()) {
+      <header class="flr-cmp__header">
+        @if (eyebrow()) {
+          <p class="flr-cmp__eyebrow">{{ eyebrow() }}</p>
+        }
+        @if (heading()) {
+          <h1 class="flr-cmp__heading" [style.--ours-accent]="accent()">
+            @for (part of headingParts(); track $index) {
+              @if (part.accent) {
+                <em>{{ part.text }}</em>
+              } @else {
+                <span>{{ part.text }}</span>
+              }
+            }
+          </h1>
+        }
+        @if (lead()) {
+          <p class="flr-cmp__lead">{{ lead() }}</p>
+        }
+      </header>
+    }
     <div class="flr-cmp">
       <table class="flr-cmp__table">
         @if (caption()) {
@@ -106,6 +130,39 @@ interface RenderCell {
     </div>
   `,
   styles: `
+    :host {
+      display: block;
+    }
+    .flr-cmp__header {
+      margin-bottom: 40px;
+    }
+    .flr-cmp__eyebrow {
+      margin: 0 0 12px;
+      font-family: var(--font-mono, 'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-ink-3, #64748b);
+    }
+    .flr-cmp__heading {
+      margin: 0 0 16px;
+      font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+    .flr-cmp__heading em {
+      font-style: normal;
+      color: var(--ours-accent, var(--color-ink, #1e293b));
+    }
+    .flr-cmp__lead {
+      margin: 0;
+      max-width: 60ch;
+      font-family: var(--font-sans, 'Fraunces', Georgia, ui-serif, serif);
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--color-ink-2, #475569);
+    }
     .flr-cmp {
       overflow-x: auto;
     }
@@ -204,6 +261,30 @@ export class ComparisonTableComponent {
   readonly yesLabel = input('Yes');
   readonly noLabel = input('No');
   readonly partialLabel = input('Partial');
+  /** Small uppercase marker above the heading. Omit to hide the header block. */
+  readonly eyebrow = input('');
+  /** Page heading, e.g. `Why FerrFlow?`. */
+  readonly heading = input('');
+  /** Substring of `heading` to render in the product accent, e.g. `FerrFlow`. */
+  readonly headingAccent = input('');
+  /** Intro paragraph under the heading. */
+  readonly lead = input('');
+
+  protected readonly hasHeader = computed(
+    () => !!(this.eyebrow() || this.heading() || this.lead()),
+  );
+
+  protected readonly headingParts = computed(() => {
+    const heading = this.heading();
+    const accent = this.headingAccent();
+    const at = accent ? heading.indexOf(accent) : -1;
+    if (at === -1) return [{ text: heading, accent: false }];
+    return [
+      { text: heading.slice(0, at), accent: false },
+      { text: accent, accent: true },
+      { text: heading.slice(at + accent.length), accent: false },
+    ].filter((part) => part.text.length > 0);
+  });
 
   protected readonly oursIndex = computed(() => this.columns().findIndex((c) => c.ours));
   protected readonly accent = computed(
