@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.10.0] - 2026-07-15
+
+### Features
+
+- feat(ui-ng): own the comparison section header (eyebrow, heading, lead) (#294)
+
 ## [1.9.1] - 2026-07-14
 
 ### Bug Fixes
