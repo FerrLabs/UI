@@ -4,6 +4,16 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.11.0] - 2026-07-15
+
+### Features
+
+- feat(ci): dispatch Renovate when the rebase box is ticked (#295)
+
+### Bug Fixes
+
+- fix(ui-ng): align the comparison header with the site page-title scale (#297)
+
 ## [1.10.0] - 2026-07-15
 
 ### Features
