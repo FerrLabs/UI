@@ -4,6 +4,26 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.2.0] - 2026-07-16
+
+### Features
+
+- feat(foundation): explicit cursor affordance in @layer base for buttons, inputs, ARIA roles (#286)
+- feat(ci): dispatch Renovate when the rebase box is ticked (#295)
+- feat(ui-ng): own the comparison section header (eyebrow, heading, lead) (#294)
+- feat(ui-ng): make ComparisonTable cell aria-labels translatable (#292)
+- feat(ui-ng): add ComparisonTable for Why-<product> feature comparisons (#288)
+- feat(ui-ng): shell breadcrumb-lead slot + site-switcher showTriggerMeta toggle (#275)
+- feat(ui-ng): navbar site switcher component + breadcrumb-level shell slot (#272)
+- feat(site-chrome): runtime locale (LOCALE_ID) + factory provider + export locale helpers (#253)
+- feat(site-chrome): shared marketing Navbar/Footer/Shell (#251)
+
+### Bug Fixes
+
+- fix(ui-ng): align the comparison header with the site page-title scale (#297)
+- fix(ui-ng): render ComparisonTable in the mono font token (#293)
+- fix(site-navbar): neutral ink for active language option instead of brand accent (#271)
+
 ## [5.1.0] - 2026-06-25
 
 ### Features
