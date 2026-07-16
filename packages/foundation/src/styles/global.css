@@ -22,19 +22,19 @@
  *    DM Mono: 400 regular / 500 medium.
  *    Reviewed in DESIGN.md §2.
  */
-@import "@fontsource/fraunces/400.css";
-@import "@fontsource/fraunces/700.css";
-@import "@fontsource/fraunces/900.css";
-@import "@fontsource/dm-mono/400.css";
-@import "@fontsource/dm-mono/500.css";
+@import '@fontsource/fraunces/400.css';
+@import '@fontsource/fraunces/700.css';
+@import '@fontsource/fraunces/900.css';
+@import '@fontsource/dm-mono/400.css';
+@import '@fontsource/dm-mono/500.css';
 
 /* 2. Tailwind v4 — consumers do NOT @import this themselves. */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* 3. Design tokens. Keep this after the tailwindcss import so that @theme
  *    overrides the defaults rather than the other way round.
  */
-@import "./tokens.css";
+@import './tokens.css';
 
 /* 4. Base layer. Scoped under @layer base so product-level rules still
  *    win when they want to override the brand defaults (admin uses a
@@ -86,7 +86,7 @@
    * forms can opt out with `font-feature-settings: normal`.
    */
   body {
-    font-feature-settings: "ss01", "ss02";
+    font-feature-settings: 'ss01', 'ss02';
   }
   ::selection {
     background: var(--color-ink);
@@ -109,6 +109,67 @@
   html {
     scrollbar-width: thin;
     scrollbar-color: var(--color-rule-strong) transparent;
+  }
+
+  /*
+   * Cursor affordance. UA stylesheets give <button>, <select>, <summary>,
+   * <label for>, most non-text <input> types and ARIA role elements
+   * `cursor: default` / `auto`, so nothing tells the user they are
+   * interactive. Setting the cursor once here means every product's tools
+   * and chrome read correctly without each component having to remember to
+   * set it. Kept inside @layer base so any product-level `cursor:` rule wins
+   * on simple specificity.
+   */
+  button,
+  select,
+  summary,
+  label[for],
+  input[type='button'],
+  input[type='submit'],
+  input[type='reset'],
+  input[type='checkbox'],
+  input[type='radio'],
+  input[type='file'],
+  input[type='range'],
+  input[type='color'],
+  input[type='date'],
+  input[type='time'],
+  input[type='datetime-local'],
+  input[type='month'],
+  input[type='week'],
+  [role='button'],
+  [role='link'],
+  [role='tab'],
+  [role='switch'],
+  [role='checkbox'],
+  [role='radio'],
+  [role='menuitem'],
+  [role='menuitemcheckbox'],
+  [role='menuitemradio'],
+  [role='option'] {
+    cursor: pointer;
+  }
+
+  textarea,
+  input[type='text'],
+  input[type='email'],
+  input[type='url'],
+  input[type='password'],
+  input[type='search'],
+  input[type='tel'],
+  input[type='number'],
+  [contenteditable='true'],
+  [contenteditable='plaintext-only'] {
+    cursor: text;
+  }
+
+  button:disabled,
+  select:disabled,
+  textarea:disabled,
+  input:disabled,
+  [aria-disabled='true'],
+  [aria-disabled='true'] * {
+    cursor: not-allowed;
   }
 }
 
@@ -181,7 +242,10 @@
   letter-spacing: 0.04em;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: transform 180ms, opacity 180ms, background 180ms;
+  transition:
+    transform 180ms,
+    opacity 180ms,
+    background 180ms;
 }
 .btn-primary {
   background: var(--accent);
@@ -215,5 +279,8 @@
 html,
 body,
 [data-theme-aware] {
-  transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease;
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease;
 }
