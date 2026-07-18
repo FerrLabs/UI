@@ -8,7 +8,7 @@ FROM docker.io/library/node:24-alpine AS builder
 
 WORKDIR /app
 
-RUN npm install -g pnpm@10
+RUN npm install -g pnpm@11
 
 # Manifests racine + tsconfig de base (showcase/tsconfig.json l'étend) +
 # toutes les packages (pnpm résout le graphe workspace).
