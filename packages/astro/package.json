@@ -36,5 +36,5 @@
     "typecheck": "echo 'astro check runs at the consuming site level'"
   },
   "type": "module",
-  "version": "1.4.0"
+  "version": "2.0.0"
 }

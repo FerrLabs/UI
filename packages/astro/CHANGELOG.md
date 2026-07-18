@@ -4,6 +4,57 @@ All notable changes to `astro` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.0.0] - 2026-07-18
+
+### Breaking Changes
+
+- refactor(foundation)!: drop legacy Inter/JetBrains tailwind token files (#202)
+- refactor(ui)!: rename @ferrlabs/ui package to @ferrlabs/ui-react (#190)
+
+### Features
+
+- feat(foundation): explicit cursor affordance in @layer base for buttons, inputs, ARIA roles (#286)
+- feat(ci): dispatch Renovate when the rebase box is ticked (#295)
+- feat(ui-ng): own the comparison section header (eyebrow, heading, lead) (#294)
+- feat(ui-ng): make ComparisonTable cell aria-labels translatable (#292)
+- feat(ui-ng): add ComparisonTable for Why-<product> feature comparisons (#288)
+- feat(ui-ng): shell breadcrumb-lead slot + site-switcher showTriggerMeta toggle (#275)
+- feat(ui-ng): navbar site switcher component + breadcrumb-level shell slot (#272)
+- feat(site-chrome): runtime locale (LOCALE_ID) + factory provider + export locale helpers (#253)
+- feat(site-chrome): shared marketing Navbar/Footer/Shell (#251)
+- feat(foundation): add bell icon for notifications (#247)
+- feat(showcase): brand + dark-mode selectors in Storybook toolbar (#246)
+- feat(docs): replace version chip row with a select dropdown (#242)
+- feat: containerize storybook showcase for internal hosting (#236)
+- feat(docs): add @ferrlabs/ui-ng/docs versioned-docs layout (#227)
+- feat(ui-ng): add entity-switcher and page chrome (ProjectSwitcher, SiteCard, PageHeader) (#220)
+- feat(ui-ng): add app-chrome tier (Shell, Sidebar, Avatar, LogoMark, Menu, UserMenu, BrandDropdown) (#218)
+- feat(ui-ng): add overlay tier (Modal, Drawer, Toast) on @angular/cdk (#215)
+- feat(ui-ng): port core and form primitives to Angular (#213)
+- feat(ui-ng): scaffold the Angular 22 design-system library with Button (#192)
+- feat(react): NavItem onClick/danger/disabled + AsyncOrgSelect (#178)
+- feat(react): add EntitySwitcher, OrgChip, renderTrigger + collapsed on ProjectSwitcher (#175)
+- feat(primitives): add InputGroup to glue form controls into one bordered unit (#174)
+- feat(foundation): two-tone the FerrLens logo (loupe in accent teal, grid in slate) (#164)
+
+### Bug Fixes
+
+- fix(ci): install pnpm 11 in the showcase Dockerfile to satisfy engines.pnpm (#304)
+- fix(ui-ng): align the comparison header with the site page-title scale (#297)
+- fix(ui-ng): render ComparisonTable in the mono font token (#293)
+- fix(site-navbar): neutral ink for active language option instead of brand accent (#271)
+- fix: build workspace deps before storybook (dist exports) (#239)
+- fix: full pnpm install for storybook image (phantom font deps) (#238)
+- fix: copy tsconfig.base.json into storybook image build (#237)
+- fix(brand-dropdown): remove FerrLens from app switcher (#235)
+- fix(ui-ng): build library in partial compilation mode (#231)
+- fix(ui-ng): auto-size projected icon SVGs in sidebar/menu/switcher/site-card slots (#224)
+- fix(ci): publish ng-packagr libs (ui-ng) from dist/ (#222)
+- fix(foundation): define --color-accent and --color-fg token contract (#201)
+- fix(tabs): add arrow-key roving focus per WAI-ARIA tabs pattern (#203)
+- fix(errorboundary): theme fallback from design tokens with configurable home href (#206)
+- fix(ci): set @parcel/watcher allowBuilds to false so pnpm stops failing on ignored build scripts (#193)
+
 ## [1.4.0] - 2026-05-19
 
 ### Features
