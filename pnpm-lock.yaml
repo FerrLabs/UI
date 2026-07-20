@@ -34,10 +34,10 @@ importers:
     dependencies:
       '@fontsource/dm-mono':
         specifier: ^5.0.0
-        version: 5.2.7
+        version: 5.3.0
       '@fontsource/fraunces':
         specifier: ^5.0.0
-        version: 5.2.9
+        version: 5.3.0
       tailwindcss:
         specifier: ^4.0.0
         version: 4.3.2
@@ -620,11 +620,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fontsource/dm-mono@5.2.7':
-    resolution: {integrity: sha512-Ma1az2atTVgQWuOWwjuxx26p/6A6CU9HBNKq1CFV6YKpKhpswnf9ry9Ql4+T6bTZzkdtSfS6tjJvqZOljVzIFQ==}
+  '@fontsource/dm-mono@5.3.0':
+    resolution: {integrity: sha512-OINjI8C1S/wpchhQxl7njZdMn4+hnDCpQ4YtvvOpKNARo+0J8O1x1IcrChxNjHOhfVv1by8C/FQoy3hXK+C1Ug==}
 
-  '@fontsource/fraunces@5.2.9':
-    resolution: {integrity: sha512-XDzuddBtoC7BZgZdBn6b7hsFZY2+V1hgN7yca5fBTKuHjb/lOd45a0Ji8dTUgFhPoL7RdGupo+bC2BFSt6UH8Q==}
+  '@fontsource/fraunces@5.3.0':
+    resolution: {integrity: sha512-LEHTOBiZufQzAvnAe2rZ8ZknbDS28Q9kzwb0L+gZJEmjLGr8hhZ/5NuHXwDuHBWhVXYoiGGXmrb0H6Ko/RrHTg==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -3692,9 +3692,9 @@ snapshots:
   '@esbuild/win32-x64@0.28.1':
     optional: true
 
-  '@fontsource/dm-mono@5.2.7': {}
+  '@fontsource/dm-mono@5.3.0': {}
 
-  '@fontsource/fraunces@5.2.9': {}
+  '@fontsource/fraunces@5.3.0': {}
 
   '@img/colour@1.1.0':
     optional: true
