@@ -146,3 +146,17 @@ export type {
   SiteChromeLabels,
   SiteChromeConfig,
 } from './lib/site-chrome/site-chrome.model';
+
+// Runtime-resolved cross-product links. Lets one image serve the public SaaS,
+// a VPN-only internal instance and a self-hosted one, each declaring only the
+// surfaces it can actually reach.
+export {
+  readRuntimeEnv,
+  runtimeUrl,
+  accountUrl,
+  marketingUrl,
+  orgCreateUrl,
+  brandApps,
+  userMenuItems,
+} from './lib/runtime-links/runtime-links';
+export type { RuntimeEnv } from './lib/runtime-links/runtime-links';
