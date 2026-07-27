@@ -102,7 +102,6 @@ export type { UserMenuItem } from './lib/user-menu/user-menu.component';
 export {
   BrandDropdownComponent,
   DEFAULT_APPS,
-  ADMIN_APP,
 } from './lib/brand-dropdown/brand-dropdown.component';
 export type {
   BrandDropdownAppId,

@@ -21,8 +21,6 @@ export interface RuntimeEnv {
   readonly bffUrl?: string;
   /** FerrLabs account base — profile, preferences, org creation. */
   readonly accountUrl?: string;
-  /** Admin app, shown to staff only. */
-  readonly adminUrl?: string;
   /** Marketing site behind the shell's product name. */
   readonly marketingUrl?: string;
   /** Sibling products, keyed by product id. Absent or empty means "not here". */
@@ -38,8 +36,6 @@ const PRODUCTS: readonly (Omit<BrandDropdownApp, 'href'>)[] = [
   { id: 'ferrvault', label: 'FerrVault', accent: '#10b981' },
   { id: 'ferrlens', label: 'FerrLens', accent: '#0ea5e9' },
 ];
-
-const ADMIN_ACCENT = '#e11d48';
 
 export function readRuntimeEnv(): RuntimeEnv {
   return (globalThis as { __ENV?: RuntimeEnv }).__ENV ?? {};
@@ -83,11 +79,6 @@ export function brandApps(
     if (href) {
       apps.push({ ...product, href });
     }
-  }
-
-  const admin = runtimeUrl(env.adminUrl);
-  if (options.isStaff && admin) {
-    apps.push({ id: 'admin', label: 'Admin', href: admin, accent: ADMIN_ACCENT, section: 'Staff' });
   }
 
   return apps;
