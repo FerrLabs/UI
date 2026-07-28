@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.13.0] - 2026-07-28
+
+### Features
+
+- feat(ui-ng): composant multi-select filtrable (#330)
+
 ## [1.12.0] - 2026-07-28
 
 ### Features
