@@ -9,8 +9,7 @@ export type BrandDropdownAppId =
   | 'ferrgrowth'
   | 'ferrfleet'
   | 'ferrlens'
-  | 'ferrlabs'
-  | 'admin';
+  | 'ferrlabs';
 
 export interface BrandDropdownApp {
   id: BrandDropdownAppId;
@@ -75,17 +74,9 @@ export const DEFAULT_APPS: BrandDropdownApp[] = [
  *     const me = useMe();
  *     <Shell appSwitcher={{
  *       current: 'ferrlabs',
- *       apps: me?.is_staff ? [...DEFAULT_APPS, ADMIN_APP] : DEFAULT_APPS,
+ *       apps: DEFAULT_APPS,
  *     }} ... />
  */
-export const ADMIN_APP: BrandDropdownApp = {
-  id: 'admin',
-  label: 'Admin',
-  href: 'https://admin.ferrlabs.com',
-  accent: '#e11d48',
-  section: 'Staff',
-};
-
 /**
  * Clickable brand area that opens a dropdown to switch between FerrLabs apps.
  * Wraps arbitrary brand content (logo + name + tagline). The whole wrapped

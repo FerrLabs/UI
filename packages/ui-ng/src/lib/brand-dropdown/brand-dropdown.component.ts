@@ -16,8 +16,7 @@ export type BrandDropdownAppId =
   | 'ferrgrowth'
   | 'ferrfleet'
   | 'ferrlens'
-  | 'ferrlabs'
-  | 'admin';
+  | 'ferrlabs';
 
 export interface BrandDropdownApp {
   readonly id: BrandDropdownAppId;
@@ -35,14 +34,6 @@ export const DEFAULT_APPS: readonly BrandDropdownApp[] = [
   { id: 'ferrtrack', label: 'FerrTrack', href: 'https://app.ferrtrack.com', accent: '#6366f1' },
   { id: 'ferrvault', label: 'FerrVault', href: 'https://app.ferrvault.com', accent: '#10b981' },
 ];
-
-export const ADMIN_APP: BrandDropdownApp = {
-  id: 'admin',
-  label: 'Admin',
-  href: 'https://admin.ferrlabs.com',
-  accent: '#e11d48',
-  section: 'Staff',
-};
 
 const SWITCH_OVERLAY_DELAY_MS = 200;
 
