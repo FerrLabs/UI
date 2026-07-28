@@ -207,9 +207,6 @@ export class SidebarSectionComponent {
     }
 
     <ng-template #body>
-      @if (active() && !collapsed()) {
-        <span class="flr-sb-item__bar" aria-hidden="true"></span>
-      }
       <span class="flr-sb-item__icon"><ng-content select="[item-icon]" /></span>
       <span class="flr-sb-item__label">{{ label() }}</span>
       @if (badge() != null) {
@@ -258,15 +255,6 @@ export class SidebarSectionComponent {
     .flr-sb-item:disabled {
       cursor: not-allowed;
       opacity: 0.45;
-    }
-    .flr-sb-item__bar {
-      position: absolute;
-      left: 0;
-      top: 8px;
-      bottom: 8px;
-      width: 2px;
-      background: var(--flr-sb-accent, var(--color-accent, var(--color-ink)));
-      border-radius: 2px;
     }
     .flr-sb-item__icon {
       width: 16px;
