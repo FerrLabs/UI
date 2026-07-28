@@ -4,6 +4,18 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.12.0] - 2026-07-28
+
+### Features
+
+- feat(foundation): explicit cursor affordance in @layer base for buttons, inputs, ARIA roles (#286)
+
+### Bug Fixes
+
+- fix(ui-ng): drop the active sidebar item's left bar (#328)
+- fix(ci): repair renovate-rebase.yml truncated by the pin sweep (#316)
+- fix(ci): install pnpm 11 in the showcase Dockerfile to satisfy engines.pnpm (#304)
+
 ## [1.11.0] - 2026-07-15
 
 ### Features

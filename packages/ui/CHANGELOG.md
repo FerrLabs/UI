@@ -4,6 +4,13 @@ All notable changes to `ui` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.3.1] - 2026-07-28
+
+### Bug Fixes
+
+- fix(ui-ng): drop the active sidebar item's left bar (#328)
+- fix(ci): repair renovate-rebase.yml truncated by the pin sweep (#316)
+
 ## [5.3.0] - 2026-07-18
 
 ### Features
