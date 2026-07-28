@@ -52,6 +52,8 @@ export { SwitchComponent } from './lib/switch/switch.component';
 export type { SwitchSize } from './lib/switch/switch.component';
 
 export { SelectComponent } from './lib/select/select.component';
+export { MultiSelectComponent } from './lib/multi-select/multi-select.component';
+export type { MultiSelectOption } from './lib/multi-select/multi-select.component';
 export type { SelectSize } from './lib/select/select.component';
 
 export { RadioGroupComponent, RadioComponent } from './lib/radio/radio.component';
