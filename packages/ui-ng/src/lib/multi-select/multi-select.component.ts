@@ -74,7 +74,11 @@ export interface MultiSelectOption {
 
         @if (visible().length === 0) {
           <p class="flr-ms__empty">
-            {{ options().length === 0 ? emptyText() : noMatchText() }}
+            @if (loading()) {
+              {{ loadingText() }}
+            } @else {
+              {{ options().length === 0 ? emptyText() : noMatchText() }}
+            }
           </p>
         }
       </div>
@@ -186,6 +190,14 @@ export class MultiSelectComponent implements ControlValueAccessor {
   readonly searchable = input<boolean>(true);
   readonly searchPlaceholder = input<string>('Filter…');
   readonly searchLabel = input<string>('Filter options');
+  /**
+   * True while the consumer is still fetching `options`. Without this an async
+   * list spends its whole load claiming "Nothing to choose from." — an empty
+   * list and an unfinished one look identical, and only one of them is a
+   * reason to give up waiting.
+   */
+  readonly loading = input<boolean>(false);
+  readonly loadingText = input<string>('Loading…');
   /** Shown when the list itself is empty — distinct from "no match". */
   readonly emptyText = input<string>('Nothing to choose from.');
   readonly noMatchText = input<string>('No match.');
