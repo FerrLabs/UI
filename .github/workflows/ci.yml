@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
         with:
-          version: 11.17.0
+          version: 11.18.0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: '24'
@@ -68,5 +68,5 @@ jobs:
     permissions:
       contents: write
       id-token: write
-    uses: FerrLabs/.github/.github/workflows/reusable-ferrflow-release.yml@5d33e5b2108483ee8769a57b1105a612fd8a9e67 # main
+    uses: FerrLabs/.github/.github/workflows/reusable-ferrflow-release.yml@d3ce80b43af8b567b503ab4c3ee44d6e33c246f5 # main
     secrets: inherit
