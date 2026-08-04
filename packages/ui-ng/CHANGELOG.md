@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.16.1] - 2026-08-04
+
+### Bug Fixes
+
+- fix(ui-ng): relaie l'attribut form du bouton et espace les actions de modale (#346)
+
 ## [1.16.0] - 2026-07-31
 
 ### Features
