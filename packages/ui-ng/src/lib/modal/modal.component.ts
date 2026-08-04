@@ -127,6 +127,16 @@ let modalCounter = 0;
       justify-content: flex-end;
       gap: 8px;
     }
+    /* Consumers project their actions inside a div carrying the modal-footer
+       attribute. Without this rule the footer's flex layout applies to that
+       single wrapper, so the gap above governs nothing and the buttons sit
+       flush against each other. display:contents promotes the wrapper's
+       children to be the footer's own flex items, which is what the rules
+       above already assume. Scoped to the slot attribute so a footer that
+       projects buttons directly is unaffected. */
+    .flr-modal__footer > [modal-footer] {
+      display: contents;
+    }
     .flr-modal__footer:empty {
       display: none;
     }
