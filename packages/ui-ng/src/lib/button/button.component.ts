@@ -48,6 +48,7 @@ const DANGER = '#dc2626';
       <button
         class="flr-btn"
         [type]="type()"
+        [attr.form]="form()"
         [disabled]="inactive()"
         [attr.aria-busy]="loading() || null"
         [attr.aria-label]="ariaLabel()"
@@ -114,6 +115,16 @@ export class ButtonComponent {
   readonly fullWidth = input(false);
   readonly disabled = input(false);
   readonly type = input<'button' | 'submit' | 'reset'>('button');
+  /**
+   * `id` of the form this button submits, for a submit button rendered outside
+   * its `<form>` — a modal footer being the usual case.
+   *
+   * Needed as a real input: written as a bare attribute it stays on the
+   * `<flr-button>` host and never reaches the `<button>` below, so the click
+   * silently does nothing. That is not a styling detail — it is the difference
+   * between a Save button that saves and one that looks identical and doesn't.
+   */
+  readonly form = input<string | null>(null);
   readonly href = input<string | null>(null);
   readonly target = input<string | null>(null);
   readonly rel = input<string | null>(null);
