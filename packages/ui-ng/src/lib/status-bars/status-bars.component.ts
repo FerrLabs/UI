@@ -62,7 +62,7 @@ export class StatusBarsComponent {
     const when = new Date(bucket.at);
     const stamp = Number.isNaN(when.getTime()) ? bucket.at : when.toLocaleString(locale);
     const parts = [stamp, LABEL[bucket.status]];
-    if (bucket.uptimePct !== undefined) {
+    if (bucket.status !== 'unknown' && bucket.uptimePct !== undefined) {
       parts.push(`${bucket.uptimePct.toFixed(2)}% uptime`);
     }
     return parts.join(' · ');
