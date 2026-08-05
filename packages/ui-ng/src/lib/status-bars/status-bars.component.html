@@ -1,0 +1,12 @@
+<div class="flr-status-bars" role="img" [attr.aria-label]="summary()">
+  @for (bar of bars(); track $index) {
+    <span
+      class="flr-status-bars__bar"
+      [class.flr-status-bars__bar--up]="bar.status === 'up'"
+      [class.flr-status-bars__bar--degraded]="bar.status === 'degraded'"
+      [class.flr-status-bars__bar--down]="bar.status === 'down'"
+      [attr.title]="bar.title"
+      aria-hidden="true"
+    ></span>
+  }
+</div>
