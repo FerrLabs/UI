@@ -165,3 +165,6 @@ export {
   userMenuItems,
 } from './lib/runtime-links/runtime-links';
 export type { RuntimeEnv } from './lib/runtime-links/runtime-links';
+
+export { StatusBarsComponent } from './lib/status-bars/status-bars.component';
+export type { StatusLevel, StatusBucket } from './lib/status-bars/status-bars.component';
