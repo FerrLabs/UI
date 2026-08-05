@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.17.0] - 2026-08-05
+
+### Features
+
+- feat(ui-ng): add flr-status-bars for uptime timelines (#348)
+
 ## [1.16.1] - 2026-08-04
 
 ### Bug Fixes
