@@ -1,0 +1,34 @@
+name: SonarQube
+
+# Analyse statique sur le SonarQube auto-hébergé (https://sonar.ferrlabs.com),
+# via le workflow réutilisable de l'organisation.
+#
+# Pas de `projectVersion` ici, contrairement à Infra : ce dépôt tague par
+# paquet (`ui-ng@v1.17.0`), il n'existe donc pas de version unique à
+# laquelle rattacher une analyse. Le glob `v[0-9]*.[0-9]*.[0-9]*` d'Infra ne
+# matcherait rien et rapporterait 0.0.0 en silence.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: SonarQube analysis
+    # Le workflow appelé demande `pull-requests: write` pour commenter le delta
+    # sur les PR, et un workflow appelé ne peut pas obtenir plus que ce que son
+    # appelant lui accorde. Le défaut du dépôt étant `read`, omettre ce bloc
+    # fait échouer le run entier au démarrage — startup_failure, aucun job créé,
+    # aucun message exploitable. Les appels existants ailleurs dans l'org n'ont
+    # pas ce bloc et casseront à leur prochain bump de digest.
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: FerrLabs/.github/.github/workflows/reusable-sonarqube-scan.yml@7f994033306b689b26a9e36e5a3901e7b93cb374 # main
+    with:
+      project-key: UI
+    secrets: inherit
