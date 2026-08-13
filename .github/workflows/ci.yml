@@ -43,13 +43,12 @@ jobs:
             echo "filter=" >> "$GITHUB_OUTPUT"
             echo "manual dispatch — full workspace"
           fi
-      - name: Build library packages (deps for showcase typecheck)
-        # Build foundation first — ui-icons / ui-styles / ui-tailwind are now
-        # re-export shells that depend on it. ui (meta-package) re-exports
-        # primitives + react. Use `pnpm -r --workspace-concurrency=1` so the
-        # topological order is respected end-to-end without enumerating each
-        # filter (which is what historically broke whenever a new package
-        # landed — UI#105).
+      - name: Build library packages
+        # ui-ng and ui-astro both resolve @ferrlabs/ui-foundation through its
+        # dist/ exports, so the topological order matters. Use
+        # `pnpm -r --workspace-concurrency=1` rather than enumerating filters
+        # (which is what historically broke whenever a new package landed —
+        # UI#105).
         run: pnpm -r --workspace-concurrency=1 build
       - name: Typecheck
         env:

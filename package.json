@@ -1,5 +1,5 @@
 {
-  "name": "@ferrlabs/ui-react",
+  "name": "@ferrlabs/ui-workspace",
   "version": "0.1.0",
   "private": true,
   "description": "Shared UI components, Astro components, Tailwind tokens, icons, and auth forms for FerrLabs products.",

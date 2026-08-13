@@ -2,33 +2,6 @@
   "name": "@ferrlabs/ui-showcase",
   "version": "0.1.0",
   "private": true,
-  "description": "Storybook showcase for FerrLabs primitives + editorial brand components. Brand selector across FerrLabs / FerrFlow / FerrVault / FerrTrack / FerrGrowth / FerrFleet / FerrLens, with a light/dark toggle.",
-  "type": "module",
-  "scripts": {
-    "storybook": "storybook dev -p 6006 --no-open",
-    "build": "storybook build -o dist",
-    "build-storybook": "storybook build -o dist",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@ferrlabs/ui-react": "workspace:*",
-    "@ferrlabs/ui-foundation": "workspace:*",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
-  "devDependencies": {
-    "@storybook/addon-a11y": "^10.0.0",
-    "@storybook/addon-docs": "^10.0.0",
-    "@storybook/addon-themes": "^10.0.0",
-    "@storybook/react": "^10.0.0",
-    "@storybook/react-vite": "^10.0.0",
-    "@tailwindcss/vite": "^4.1.13",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^6.0.1",
-    "storybook": "^10.0.0",
-    "tailwindcss": "^4.1.13",
-    "typescript": "^6.0.0",
-    "vite": "^8.0.0"
-  }
+  "description": "Storybook showcase for the FerrLabs design system. Awaiting a rebuild on @storybook/angular against @ferrlabs/ui-ng — see README.",
+  "type": "module"
 }
