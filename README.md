@@ -11,7 +11,7 @@ pnpm workspace consolidated into a small set of published packages: Angular comp
 | [`packages/ui-ng`](packages/ui-ng)           | `@ferrlabs/ui-ng`         | Angular components — app chrome, form and surface primitives, plus a `docs` entry point   |
 | [`packages/astro`](packages/astro)           | `@ferrlabs/ui-astro`      | Astro components for marketing sites (Navbar, Footer, PreFooterCTA, Icon, LanguageSelect) |
 | [`packages/foundation`](packages/foundation) | `@ferrlabs/ui-foundation` | Framework-agnostic foundation — base CSS + self-hosted fonts, design tokens, SVG icons    |
-| [`packages/showcase`](packages/showcase)     | `@ferrlabs/ui-showcase`   | Storybook showcase (private, awaiting an Angular rebuild)                                 |
+| [`packages/showcase`](packages/showcase)     | `@ferrlabs/ui-showcase`   | Storybook showcase on `@storybook/angular` (private, not published)                       |
 
 `@ferrlabs/ui-react` was removed once every product frontend had migrated to Angular — no repo imported it any more. Its history is in git; `@ferrlabs/ui-ng` is the component surface.
 

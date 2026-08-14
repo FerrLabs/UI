@@ -2,6 +2,39 @@
   "name": "@ferrlabs/ui-showcase",
   "version": "0.1.0",
   "private": true,
-  "description": "Storybook showcase for the FerrLabs design system. Awaiting a rebuild on @storybook/angular against @ferrlabs/ui-ng — see README.",
-  "type": "module"
+  "description": "Storybook showcase for @ferrlabs/ui-ng. Brand selector across FerrLabs / FerrFlow / FerrVault / FerrTrack / FerrGrowth / FerrFleet / FerrLens, with a light/dark toggle.",
+  "type": "module",
+  "scripts": {
+    "styles": "node scripts/fonts.mjs && tailwindcss -i .storybook/preview.src.css -o .storybook/preview.css",
+    "storybook": "pnpm styles && ng run showcase:storybook",
+    "build": "pnpm styles && ng run showcase:build-storybook",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@ferrlabs/ui-foundation": "workspace:*",
+    "@ferrlabs/ui-ng": "workspace:*",
+    "rxjs": "^7.8.0",
+    "tslib": "^2.8.1",
+    "zone.js": "^0.16.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^22.0.0",
+    "@angular/cli": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.0",
+    "@storybook/addon-a11y": "^10.0.0",
+    "@storybook/addon-docs": "^10.0.0",
+    "@storybook/addon-themes": "^10.0.0",
+    "@fontsource/dm-mono": "^5.3.0",
+    "@fontsource/fraunces": "^5.3.0",
+    "@storybook/angular": "^10.0.0",
+    "@tailwindcss/cli": "^4.1.13",
+    "storybook": "^10.0.0",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^6.0.0"
+  }
 }

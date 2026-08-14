@@ -1,8 +1,17 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "declaration": false,
+    "declarationMap": false,
+    "experimentalDecorators": true,
+    "moduleResolution": "bundler",
+    "paths": {
+      "@ferrlabs/ui-ng": ["../ui-ng/dist"]
+    }
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true
   },
   "include": [".storybook/**/*", "src/**/*"]
 }
