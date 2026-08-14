@@ -1,8 +1,8 @@
 @import '@ferrlabs/ui-foundation/styles/global.css';
 
-@source "../../ui/dist/**/*.js";
+@source "../../ui-ng/dist/**/*.mjs";
 @source "../../foundation/dist/**/*.js";
-@source "../src/**/*.{ts,tsx}";
+@source "../src/**/*.ts";
 
 @theme {
   /* Per-theme accent override — used by the Storybook toolbar to swap the
@@ -11,9 +11,9 @@
    */
   --color-accent: var(--color-ferrflow-orange);
 
-  /* Aliases so the existing @ferrlabs/ui/react components (which reach
-   * for var(--color-fg), var(--color-fg-2), etc.) render correctly inside
-   * the showcase. The styles package defines paper/ink; map them here.
+  /* Aliases so the @ferrlabs/ui-ng components (which reach for
+   * var(--color-fg), var(--color-fg-2), etc.) render correctly inside the
+   * showcase. The foundation defines paper/ink; map them here.
    */
   --color-fg: var(--color-ink);
   --color-fg-2: var(--color-ink-2);

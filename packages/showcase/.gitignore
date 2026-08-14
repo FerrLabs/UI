@@ -1,0 +1,4 @@
+dist/
+.angular/
+.storybook/preview.css
+.storybook/files/
