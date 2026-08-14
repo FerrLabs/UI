@@ -1,23 +1,33 @@
+<div align="center">
+
 # UI
 
-Shared UI primitives for [FerrLabs](https://github.com/FerrLabs) products.
+**The FerrLabs design system.**
 
-pnpm workspace consolidated into a small set of published packages: Angular components, Astro components, and the framework-agnostic design foundation (tokens, fonts, icons). Consumed by every product frontend.
+Angular components, Astro site chrome, and the framework-agnostic foundation of tokens,<br />
+fonts and icons. One source for every product surface, so nothing gets rebuilt per app.
+
+[![CI](https://github.com/FerrLabs/UI/actions/workflows/ci.yml/badge.svg)](https://github.com/FerrLabs/UI/actions/workflows/ci.yml)
+[![Storybook](https://img.shields.io/badge/storybook-internal-ff4785)](https://storybook.ferrlabs)
+
+[Storybook](https://storybook.ferrlabs) (VPN-only) | [Changelog](https://ferrlabs.com/changelog/) | [FerrLabs](https://github.com/FerrLabs)
+
+</div>
 
 ## Packages
 
-| Package                                      | Name                      | Role                                                                                      |
-| -------------------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------- |
-| [`packages/ui-ng`](packages/ui-ng)           | `@ferrlabs/ui-ng`         | Angular components — app chrome, form and surface primitives, plus a `docs` entry point   |
-| [`packages/astro`](packages/astro)           | `@ferrlabs/ui-astro`      | Astro components for marketing sites (Navbar, Footer, PreFooterCTA, Icon, LanguageSelect) |
-| [`packages/foundation`](packages/foundation) | `@ferrlabs/ui-foundation` | Framework-agnostic foundation — base CSS + self-hosted fonts, design tokens, SVG icons    |
-| [`packages/showcase`](packages/showcase)     | `@ferrlabs/ui-showcase`   | Storybook showcase on `@storybook/angular` (private, not published)                       |
+| Package                                      | Name                      | Role                                                                                                                    |
+| -------------------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| [`packages/ui-ng`](packages/ui-ng)           | `@ferrlabs/ui-ng`         | Angular components: app chrome, forms, surfaces, overlays, plus a `docs` entry point carrying the versioned-docs engine |
+| [`packages/astro`](packages/astro)           | `@ferrlabs/ui-astro`      | Marketing-site chrome: Navbar, Footer, PreFooterCTA, Icon, LanguageSelect                                               |
+| [`packages/foundation`](packages/foundation) | `@ferrlabs/ui-foundation` | Design tokens, self-hosted Fraunces and DM Mono, SVG icons. Framework-agnostic                                          |
+| [`packages/showcase`](packages/showcase)     | `@ferrlabs/ui-showcase`   | Storybook on `@storybook/angular`. Private, shipped as a container image                                                |
 
-`@ferrlabs/ui-react` was removed once every product frontend had migrated to Angular — no repo imported it any more. Its history is in git; `@ferrlabs/ui-ng` is the component surface.
+`@ferrlabs/ui-react` is gone. Every product frontend is Angular now and nothing imported it, so
+it was removed rather than left as a second component surface inviting drift. The history is in
+git.
 
 ## Consumption
-
-Each product app adds the Angular and foundation packages to its `package.json`:
 
 ```json
 {
@@ -28,54 +38,69 @@ Each product app adds the Angular and foundation packages to its `package.json`:
 }
 ```
 
-Marketing sites built with Astro also add `@ferrlabs/ui-astro`.
-
-Published to GitHub Packages under the `@ferrlabs` scope.
-
-## Angular imports
+Marketing sites add `@ferrlabs/ui-astro`. Published to GitHub Packages under the `@ferrlabs`
+scope.
 
 ```ts
-import { FieldComponent, InputComponent, PaginationComponent } from '@ferrlabs/ui-ng';
-```
-
-The versioned-docs engine ships as a secondary entry point:
-
-```ts
+import { ButtonComponent, PaginationComponent, ShellComponent } from '@ferrlabs/ui-ng';
 import { DocsLayoutComponent } from '@ferrlabs/ui-ng/docs';
 ```
 
-## Design tokens
+## The rule
 
-Every FerrLabs site imports the foundation stylesheet, which loads Tailwind v4, the self-hosted fonts, and the design tokens in one go:
+If a product needs a Button, an Input, a Sidebar, a Modal or a Pagination, it imports it from
+here. If the component does not exist yet, it gets added here in its own PR and then consumed.
+Inlining a one-off copy in the app is not an option, including as a temporary measure.
+
+This is not hypothetical. Four apps carried a private copy of the same editorial chrome and the
+copies drifted apart. Code review rejects new local components that duplicate something upstream.
+
+Confirmations, validations and prompts always use the shared `Modal`. Never `window.alert`,
+`window.confirm` or `window.prompt`: the browser dialog is off-brand, not themeable, blocks the
+event loop, and cannot be driven in tests.
+
+## Design tokens
 
 ```css
 @import '@ferrlabs/ui-foundation/styles/global.css';
 ```
 
-Tokens only (when the app imports Tailwind itself):
+That pulls Tailwind v4, the fonts and the tokens in one go. Tokens alone, when the app imports
+Tailwind itself:
 
 ```css
 @import '@ferrlabs/ui-foundation/styles/tokens.css';
 ```
 
-Product accents, fixed — one product, one accent, never mixed:
+One product, one accent, never mixed:
 
-- **FerrLabs** (holding) — slate (`#1e293b`)
-- **FerrFlow** — orange (`#e8733a`)
-- **FerrVault** — emerald (`#10b981`)
-- **FerrTrack** — indigo (`#6366f1`)
-- **FerrGrowth** — violet (`#8b5cf6`)
-- **FerrFleet** — amber (`#f59e0b`)
-- **FerrLens** — teal (`#14b8a6`)
+| Product    | Accent            |
+| ---------- | ----------------- |
+| FerrLabs   | slate `#1e293b`   |
+| FerrFlow   | orange `#e8733a`  |
+| FerrVault  | emerald `#10b981` |
+| FerrTrack  | indigo `#6366f1`  |
+| FerrGrowth | violet `#7c3aed`  |
+| FerrFleet  | amber `#f59e0b`   |
+| FerrLens   | teal `#14b8a6`    |
+
+Components read `--color-accent`, so a product gets its hue by setting one token rather than by
+theming each component.
 
 ## Develop
 
 ```bash
 pnpm install
-pnpm typecheck    # all packages
-pnpm build        # all packages
+pnpm build        # topological, foundation before ui-ng
+pnpm typecheck
+```
+
+Storybook, which is also the fastest way to see a component you are changing:
+
+```bash
+pnpm --filter @ferrlabs/ui-showcase storybook
 ```
 
 ## License
 
-Proprietary.
+Proprietary, except `@ferrlabs/ui-foundation`, which declares MPL-2.0 in its `package.json`.
