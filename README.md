@@ -2,28 +2,27 @@
 
 Shared UI primitives for [FerrLabs](https://github.com/FerrLabs) products.
 
-pnpm workspace consolidated into a small set of published packages: React components, Astro components, the framework-agnostic design foundation (tokens, fonts, icons), and an Angular port. Consumed by every product frontend.
+pnpm workspace consolidated into a small set of published packages: Angular components, Astro components, and the framework-agnostic design foundation (tokens, fonts, icons). Consumed by every product frontend.
 
 ## Packages
 
 | Package                                      | Name                      | Role                                                                                      |
 | -------------------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------- |
-| [`packages/ui`](packages/ui)                 | `@ferrlabs/ui-react`      | React components — primitives (`/primitives`) and composed app chrome (`/react`)          |
+| [`packages/ui-ng`](packages/ui-ng)           | `@ferrlabs/ui-ng`         | Angular components — app chrome, form and surface primitives, plus a `docs` entry point   |
 | [`packages/astro`](packages/astro)           | `@ferrlabs/ui-astro`      | Astro components for marketing sites (Navbar, Footer, PreFooterCTA, Icon, LanguageSelect) |
 | [`packages/foundation`](packages/foundation) | `@ferrlabs/ui-foundation` | Framework-agnostic foundation — base CSS + self-hosted fonts, design tokens, SVG icons    |
-| [`packages/ui-ng`](packages/ui-ng)           | `@ferrlabs/ui-ng`         | Angular port (currently Button)                                                           |
-| [`packages/showcase`](packages/showcase)     | `@ferrlabs/ui-showcase`   | Storybook showcase (private, not published)                                               |
+| [`packages/showcase`](packages/showcase)     | `@ferrlabs/ui-showcase`   | Storybook showcase (private, awaiting an Angular rebuild)                                 |
 
-The earlier `@ferrlabs/ui-primitives`, `@ferrlabs/ui-react`, `@ferrlabs/ui-auth`, `@ferrlabs/ui-icons`, `@ferrlabs/styles`, and `@ferrlabs/ui-tailwind` packages have been consolidated into the three published packages above (UI#105). The React surface is reachable through `@ferrlabs/ui-react` subpaths; tokens, fonts, and icons live in `@ferrlabs/ui-foundation`.
+`@ferrlabs/ui-react` was removed once every product frontend had migrated to Angular — no repo imported it any more. Its history is in git; `@ferrlabs/ui-ng` is the component surface.
 
 ## Consumption
 
-Each product site / app adds the React and foundation packages to its `package.json`:
+Each product app adds the Angular and foundation packages to its `package.json`:
 
 ```json
 {
   "dependencies": {
-    "@ferrlabs/ui-react": "workspace:*",
+    "@ferrlabs/ui-ng": "workspace:*",
     "@ferrlabs/ui-foundation": "workspace:*"
   }
 }
@@ -33,14 +32,17 @@ Marketing sites built with Astro also add `@ferrlabs/ui-astro`.
 
 Published to GitHub Packages under the `@ferrlabs` scope.
 
-## React imports
+## Angular imports
 
-```tsx
-import { Field, Input } from '@ferrlabs/ui-react/primitives';
-import { Shell, type NavGroup } from '@ferrlabs/ui-react/react';
+```ts
+import { FieldComponent, InputComponent, PaginationComponent } from '@ferrlabs/ui-ng';
 ```
 
-`Spinner` and `Footer` exist in both `primitives` and `react` with different implementations, so the package keeps each layer addressable through a subpath rather than a single flat export.
+The versioned-docs engine ships as a secondary entry point:
+
+```ts
+import { DocsLayoutComponent } from '@ferrlabs/ui-ng/docs';
+```
 
 ## Design tokens
 
