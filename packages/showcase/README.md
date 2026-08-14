@@ -2,7 +2,7 @@
 
 Storybook for the FerrLabs design system, running on `@storybook/angular` against
 `@ferrlabs/ui-ng`. Private, not published to npm — it ships as a container image
-and is served on `storybook.ferrlabs.internal` (VPN-only).
+and is served on `storybook.ferrlabs` (VPN-only).
 
 ```bash
 pnpm --filter @ferrlabs/ui-showcase storybook   # dev server on :6006

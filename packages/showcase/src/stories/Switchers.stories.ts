@@ -1,4 +1,5 @@
 import {
+  brandApps,
   BrandDropdownComponent,
   ProjectSwitcherComponent,
   SiteSwitcherComponent,
@@ -65,6 +66,28 @@ export const BrandDropdownCollapsed: Story = {
     template: `
       <div style="padding:16px; background:var(--color-app-bg-2, var(--color-paper-2)); width:72px">
         <flr-brand-dropdown current="ferrvault" [collapsed]="true" />
+      </div>`,
+  }),
+};
+
+export const BrandDropdownInternal: Story = {
+  render: () => ({
+    props: {
+      apps: brandApps({
+        env: {
+          apps: {
+            ferrlabs: 'https://app.ferrlabs',
+            ferrvault: 'https://app.ferrvault.ferrlabs',
+            ferrtrack: 'https://app.ferrtrack.ferrlabs',
+            ferrfleet: 'https://app.ferrfleet.ferrlabs',
+            storybook: 'https://storybook.ferrlabs',
+          },
+        },
+      }),
+    },
+    template: `
+      <div style="padding:16px; background:var(--color-app-bg-2, var(--color-paper-2)); width:280px">
+        <flr-brand-dropdown current="ferrvault" [apps]="apps" />
       </div>`,
   }),
 };

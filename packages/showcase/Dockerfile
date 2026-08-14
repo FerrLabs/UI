@@ -1,5 +1,5 @@
 # Storybook statique du design-system FerrLabs (@ferrlabs/ui-showcase),
-# servi en interne sur storybook.ferrlabs.internal (VPN-only).
+# servi en interne sur storybook.ferrlabs (VPN-only).
 #
 # Build stage — monorepo pnpm. Le showcase consomme @ferrlabs/ui-ng et
 # @ferrlabs/ui-foundation depuis la source (workspace:*) ; aucun pull du

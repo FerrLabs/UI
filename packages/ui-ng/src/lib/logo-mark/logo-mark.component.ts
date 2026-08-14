@@ -196,6 +196,22 @@ export type ProductSlug =
             <circle cx="9" cy="9" r="2" [attr.fill]="accent()" opacity="0.7" />
           </g>
         }
+        @default {
+          <g>
+            <rect
+              x="6"
+              y="6"
+              width="20"
+              height="20"
+              rx="5"
+              [attr.stroke]="accent()"
+              stroke-width="1.6"
+              fill="none"
+              opacity="0.45"
+            />
+            <circle cx="16" cy="16" r="3.5" [attr.fill]="accent()" />
+          </g>
+        }
       }
     </svg>
   `,

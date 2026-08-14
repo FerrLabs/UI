@@ -16,7 +16,8 @@ export type BrandDropdownAppId =
   | 'ferrgrowth'
   | 'ferrfleet'
   | 'ferrlens'
-  | 'ferrlabs';
+  | 'ferrlabs'
+  | 'storybook';
 
 export interface BrandDropdownApp {
   readonly id: BrandDropdownAppId;

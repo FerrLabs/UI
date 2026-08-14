@@ -2,7 +2,7 @@ name: Storybook image
 
 # @ferrlabs/ui-showcase n'est pas publié sur npm (pas dans .ferrflow) : on
 # construit son image Storybook sur push main (ou manuellement) et on pousse
-# sur GHCR. Déployée en interne sur storybook.ferrlabs.internal (VPN-only).
+# sur GHCR. Déployée en interne sur storybook.ferrlabs (VPN-only).
 on:
   push:
     branches: [main]

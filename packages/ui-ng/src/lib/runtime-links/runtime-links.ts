@@ -12,7 +12,10 @@
 // broken link: the entry is dropped, so an instance only ever offers what it
 // can actually reach.
 
-import type { BrandDropdownApp, BrandDropdownAppId } from '../brand-dropdown/brand-dropdown.component';
+import type {
+  BrandDropdownApp,
+  BrandDropdownAppId,
+} from '../brand-dropdown/brand-dropdown.component';
 import type { UserMenuItem } from '../user-menu/user-menu.component';
 
 /** Shape written to `globalThis.__ENV` by the container entrypoint. */
@@ -23,18 +26,27 @@ export interface RuntimeEnv {
   readonly accountUrl?: string;
   /** Marketing site behind the shell's product name. */
   readonly marketingUrl?: string;
-  /** Sibling products, keyed by product id. Absent or empty means "not here". */
+  /** Sibling surfaces, keyed by app id. Absent or empty means "not here". */
   readonly apps?: Readonly<Partial<Record<BrandDropdownAppId, string>>>;
 }
 
 /** Brand identity, not deployment config — labels and accents stay in code. */
-const PRODUCTS: readonly (Omit<BrandDropdownApp, 'href'>)[] = [
+const PRODUCTS: readonly Omit<BrandDropdownApp, 'href'>[] = [
   { id: 'ferrlabs', label: 'FerrLabs', accent: '#1e293b' },
   { id: 'ferrgrowth', label: 'FerrGrowth', accent: '#7c3aed' },
   { id: 'ferrfleet', label: 'FerrFleet', accent: '#f59e0b' },
   { id: 'ferrtrack', label: 'FerrTrack', accent: '#6366f1' },
   { id: 'ferrvault', label: 'FerrVault', accent: '#10b981' },
   { id: 'ferrlens', label: 'FerrLens', accent: '#0ea5e9' },
+];
+
+// Surfaces that are not products: internal tooling, and anything else a
+// deployment wants to hang off the switcher. They render under their own
+// heading so nobody reads Storybook as something we sell, and they follow the
+// same rule as the products — undeclared means absent, so the public SaaS
+// never advertises a VPN-only host.
+const TOOLS: readonly Omit<BrandDropdownApp, 'href'>[] = [
+  { id: 'storybook', label: 'Storybook', accent: '#ff4785', section: 'Tools' },
 ];
 
 export function readRuntimeEnv(): RuntimeEnv {
@@ -62,9 +74,10 @@ export function orgCreateUrl(env: RuntimeEnv = readRuntimeEnv()): string | null 
 }
 
 /**
- * Sibling products for the brand dropdown, in the order declared above.
+ * Sibling surfaces for the brand dropdown — products first, then tools, in the
+ * order declared above.
  *
- * Only products with a configured URL are returned, so an instance shows the
+ * Only entries with a configured URL are returned, so an instance shows the
  * ones it actually has rather than linking out of its own world.
  */
 export function brandApps(
@@ -74,10 +87,10 @@ export function brandApps(
   const configured = env.apps ?? {};
   const apps: BrandDropdownApp[] = [];
 
-  for (const product of PRODUCTS) {
-    const href = runtimeUrl(configured[product.id]);
+  for (const entry of [...PRODUCTS, ...TOOLS]) {
+    const href = runtimeUrl(configured[entry.id]);
     if (href) {
-      apps.push({ ...product, href });
+      apps.push({ ...entry, href });
     }
   }
 
