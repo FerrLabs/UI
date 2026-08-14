@@ -128,6 +128,17 @@ export type { SiteSwitcherItem } from './lib/site-switcher/site-switcher.compone
 export { PageHeaderComponent } from './lib/page-header/page-header.component';
 export type { BreadcrumbCrumb } from './lib/page-header/page-header.component';
 
+export {
+  PaginationComponent,
+  DEFAULT_PAGINATION_LABELS,
+} from './lib/pagination/pagination.component';
+export type {
+  PaginationAlign,
+  PaginationLabels,
+  PaginationSize,
+  PaginationVariant,
+} from './lib/pagination/pagination.component';
+
 export { SiteNavbarComponent } from './lib/site-navbar/site-navbar.component';
 export { SiteFooterComponent } from './lib/site-footer/site-footer.component';
 export { SiteShellComponent } from './lib/site-shell/site-shell.component';
