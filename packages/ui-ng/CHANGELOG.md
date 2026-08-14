@@ -4,6 +4,17 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.18.0] - 2026-08-14
+
+### Features
+
+- feat(ui-ng): add a Pagination component (#365)
+- feat(showcase): rebuild the Storybook on @storybook/angular (#369)
+
+### Refactoring
+
+- refactor(ui): drop @ferrlabs/ui-react and the React showcase (#368)
+
 ## [1.17.0] - 2026-08-05
 
 ### Features
