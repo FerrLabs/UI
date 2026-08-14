@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.19.0] - 2026-08-14
+
+### Features
+
+- feat(ui-ng): let the brand switcher carry internal tools, starting with Storybook (#371)
+
 ## [1.18.0] - 2026-08-14
 
 ### Features

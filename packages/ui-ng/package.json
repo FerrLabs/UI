@@ -1,6 +1,6 @@
 {
   "name": "@ferrlabs/ui-ng",
-  "version": "1.18.0",
+  "version": "1.19.0",
   "description": "FerrLabs design system — Angular 22 components (standalone, signals, zoneless). Mirrors @ferrlabs/ui-react; consumes tokens from @ferrlabs/ui-foundation.",
   "license": "UNLICENSED",
   "private": false,
