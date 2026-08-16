@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.19.1] - 2026-08-16
+
+### Bug Fixes
+
+- fix(ui-ng): dismiss the app switch overlay on bfcache restore and lift it to the top layer (#382)
+
 ## [1.19.0] - 2026-08-14
 
 ### Features
