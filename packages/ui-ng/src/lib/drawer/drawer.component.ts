@@ -31,13 +31,14 @@ let drawerCounter = 0;
  * Edge drawer / side sheet — Angular 22 port of `@ferrlabs/ui-react`'s Drawer,
  * built on `@angular/cdk` Overlay. Slides in from `left` or `right`, traps
  * focus, blocks scroll, and emits `closed` on Escape or backdrop click. Body is
- * the default slot, footer the `[drawer-footer]` slot. Requires the host app to
- * import `@angular/cdk/overlay-prebuilt.css` once.
+ * the default slot, footer the `[drawer-footer]` slot. The overlay container
+ * styles ship with the component, so the host app has nothing to import.
  */
 @Component({
   selector: 'flr-drawer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  styleUrls: ['../overlay/cdk-overlay.css'],
   imports: [A11yModule],
   template: `
     <ng-template #panel>

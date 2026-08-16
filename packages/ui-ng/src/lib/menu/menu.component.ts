@@ -16,6 +16,7 @@ export type MenuAlign = 'start' | 'end';
   selector: 'flr-menu',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  styleUrls: ['../overlay/cdk-overlay.css'],
   imports: [OverlayModule],
   template: `
     <span
