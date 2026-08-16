@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   ElementRef,
   inject,
   input,
   signal,
+  viewChild,
 } from '@angular/core';
 import { LogoMarkComponent, type ProductSlug } from '../logo-mark/logo-mark.component';
 
@@ -51,6 +53,7 @@ interface BrandRow {
   host: {
     '(document:mousedown)': 'onDocumentDown($event)',
     '(document:keydown.escape)': 'open.set(false)',
+    '(window:pageshow)': 'switchVisible.set(null)',
   },
   template: `
     <button
@@ -108,6 +111,8 @@ interface BrandRow {
 
     @if (switchVisible(); as app) {
       <div
+        #switchOverlay
+        popover="manual"
         class="flr-bd__switch"
         aria-live="polite"
         [attr.aria-label]="'Switching to ' + app.label"
@@ -273,6 +278,15 @@ interface BrandRow {
     .flr-bd__switch {
       position: fixed;
       inset: 0;
+      width: auto;
+      height: auto;
+      max-width: none;
+      max-height: none;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      color: inherit;
       background: var(--color-paper, #faf8f4);
       backdrop-filter: blur(10px) saturate(140%);
       -webkit-backdrop-filter: blur(10px) saturate(140%);
@@ -333,6 +347,14 @@ export class BrandDropdownComponent {
   protected readonly open = signal(false);
   protected readonly switchVisible = signal<BrandDropdownApp | null>(null);
 
+  private readonly switchOverlay = viewChild<ElementRef<HTMLElement>>('switchOverlay');
+
+  constructor() {
+    effect(() => {
+      this.switchOverlay()?.nativeElement.togglePopover?.(true);
+    });
+  }
+
   protected readonly rows = computed<BrandRow[]>(() => {
     const apps = this.apps();
     const collapsed = this.collapsed();
@@ -348,7 +370,7 @@ export class BrandDropdownComponent {
 
   protected readonly triggerTitle = computed(() => {
     const cur = this.apps().find((a) => a.id === this.current());
-    return cur ? `${cur.label} · switch to another FerrLabs app` : 'Switch app';
+    return cur ? `${cur.label}, switch to another FerrLabs app` : 'Switch app';
   });
 
   protected onDocumentDown(event: MouseEvent): void {
