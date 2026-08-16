@@ -44,9 +44,11 @@ const PRODUCTS: readonly Omit<BrandDropdownApp, 'href'>[] = [
 // deployment wants to hang off the switcher. They render under their own
 // heading so nobody reads Storybook as something we sell, and they follow the
 // same rule as the products — undeclared means absent, so the public SaaS
-// never advertises a VPN-only host.
+// never advertises a VPN-only host. They open in a new tab: a tool carries no
+// switcher of its own, so replacing the current app with one would be a door
+// that only opens one way.
 const TOOLS: readonly Omit<BrandDropdownApp, 'href'>[] = [
-  { id: 'storybook', label: 'Storybook', accent: '#ff4785', section: 'Tools' },
+  { id: 'storybook', label: 'Storybook', accent: '#ff4785', section: 'Tools', newTab: true },
 ];
 
 export function readRuntimeEnv(): RuntimeEnv {

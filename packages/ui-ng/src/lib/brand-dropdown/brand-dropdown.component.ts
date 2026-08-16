@@ -28,6 +28,11 @@ export interface BrandDropdownApp {
   readonly accent: string;
   /** Visual grouping — a divider + uppercase header renders between groups. */
   readonly section?: string;
+  /**
+   * Open in a new tab and leave the current app where it is. For surfaces that
+   * carry no switcher of their own, so there is no way back from them.
+   */
+  readonly newTab?: boolean;
 }
 
 export const DEFAULT_APPS: readonly BrandDropdownApp[] = [
@@ -87,7 +92,10 @@ interface BrandRow {
             [class.flr-bd__app--collapsed]="collapsed()"
             [href]="row.app.href"
             role="menuitem"
+            [attr.target]="row.app.newTab ? '_blank' : null"
+            [attr.rel]="row.app.newTab ? 'noreferrer noopener' : null"
             [attr.aria-current]="row.app.id === current() ? 'page' : null"
+            [attr.aria-label]="row.app.newTab ? row.app.label + ', opens in a new tab' : null"
             [title]="collapsed() ? row.app.label : null"
             (click)="onSelect($event, row.app)"
           >
@@ -103,6 +111,9 @@ interface BrandRow {
             </span>
             @if (!collapsed()) {
               <span class="flr-bd__label">{{ row.app.label }}</span>
+              @if (row.app.newTab) {
+                <span class="flr-bd__ext" aria-hidden="true">↗</span>
+              }
             }
           </a>
         }
@@ -275,6 +286,13 @@ interface BrandRow {
       text-align: left;
       font-weight: 700;
     }
+    .flr-bd__ext {
+      flex-shrink: 0;
+      font-size: 11px;
+      line-height: 1;
+      color: var(--color-ink-3, #64748b);
+      opacity: 0.7;
+    }
     .flr-bd__switch {
       position: fixed;
       inset: 0;
@@ -379,8 +397,9 @@ export class BrandDropdownComponent {
   }
 
   protected onSelect(event: MouseEvent, app: BrandDropdownApp): void {
-    event.preventDefault();
     this.open.set(false);
+    if (app.newTab || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
     if (app.id === this.current()) return;
     if (typeof window === 'undefined') return;
     window.setTimeout(() => this.switchVisible.set(app), SWITCH_OVERLAY_DELAY_MS);
