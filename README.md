@@ -9,6 +9,8 @@ fonts and icons. One source for every product surface, so nothing gets rebuilt p
 
 [![CI](https://github.com/FerrLabs/UI/actions/workflows/ci.yml/badge.svg)](https://github.com/FerrLabs/UI/actions/workflows/ci.yml)
 [![Storybook](https://img.shields.io/badge/storybook-internal-ff4785)](https://storybook.ferrlabs)
+[![Quality Gate](https://sonar.ferrlabs.com/api/project_badges/measure?project=UI&metric=alert_status&token=sqb_7d6cc1066e2478f22cf47dc08aca4991295c4039)](https://sonar.ferrlabs.com/dashboard?id=UI)
+[![Maintainability](https://sonar.ferrlabs.com/api/project_badges/measure?project=UI&metric=sqale_rating&token=sqb_7d6cc1066e2478f22cf47dc08aca4991295c4039)](https://sonar.ferrlabs.com/dashboard?id=UI)
 
 [Storybook](https://storybook.ferrlabs) (VPN-only) | [Changelog](https://ferrlabs.com/changelog/) | [FerrLabs](https://github.com/FerrLabs)
 
