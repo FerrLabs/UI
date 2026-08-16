@@ -4,6 +4,17 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.20.0] - 2026-08-16
+
+### Features
+
+- feat(ci): ajoute l'analyse SonarQube (#362)
+
+### Bug Fixes
+
+- fix(ui-ng): ship the CDK overlay container styles with the components that need them (#385)
+- fix(ui-ng): open switcher tools in a new tab instead of replacing the current app (#384)
+
 ## [1.19.1] - 2026-08-16
 
 ### Bug Fixes
