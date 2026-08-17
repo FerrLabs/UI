@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.21.0] - 2026-08-17
+
+### Features
+
+- feat(ui-ng): give the bar chart a hover tooltip and a left scale (#391)
+
 ## [1.20.0] - 2026-08-16
 
 ### Features
