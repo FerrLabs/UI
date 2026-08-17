@@ -76,63 +76,70 @@ function niceCeil(raw: number): number {
             }
           </div>
 
-          <div class="flr-bc__plot" [style.height.px]="height()" (pointerleave)="hover.set(-1)">
-            @for (t of ticks(); track t.at) {
-              <span class="flr-bc__rule" [style.bottom.%]="t.at" aria-hidden="true"></span>
-            }
+          <!-- The plot and the axis share this column so they divide the same
+               width over the same number of slots. Left as siblings of the
+               gutter, the axis started at the figure's edge while the bars
+               started after the gutter, and every label drifted from its bar by
+               the gutter width. -->
+          <div class="flr-bc__col">
+            <div class="flr-bc__plot" [style.height.px]="height()" (pointerleave)="hover.set(-1)">
+              @for (t of ticks(); track t.at) {
+                <span class="flr-bc__rule" [style.bottom.%]="t.at" aria-hidden="true"></span>
+              }
 
-            @for (b of bars(); track b.key) {
-              <div
-                class="flr-bc__slot"
-                tabindex="0"
-                role="img"
-                [attr.aria-label]="b.aria"
-                [class.flr-bc__slot--on]="hover() === b.index"
-                (pointerenter)="hover.set(b.index)"
-                (focus)="hover.set(b.index)"
-                (blur)="hover.set(-1)"
-              >
-                <div class="flr-bc__stack">
-                  <div
-                    class="flr-bc__bar"
-                    [style.height.%]="b.pct"
-                    [style.background]="color()"
-                    [class.flr-bc__bar--zero]="b.zero"
-                  ></div>
-                  @if (b.dangerPct > 0) {
+              @for (b of bars(); track b.key) {
+                <div
+                  class="flr-bc__slot"
+                  tabindex="0"
+                  role="img"
+                  [attr.aria-label]="b.aria"
+                  [class.flr-bc__slot--on]="hover() === b.index"
+                  (pointerenter)="hover.set(b.index)"
+                  (focus)="hover.set(b.index)"
+                  (blur)="hover.set(-1)"
+                >
+                  <div class="flr-bc__stack">
                     <div
-                      class="flr-bc__bar flr-bc__bar--danger"
-                      [style.height.%]="b.dangerPct"
+                      class="flr-bc__bar"
+                      [style.height.%]="b.pct"
+                      [style.background]="color()"
+                      [class.flr-bc__bar--zero]="b.zero"
                     ></div>
+                    @if (b.dangerPct > 0) {
+                      <div
+                        class="flr-bc__bar flr-bc__bar--danger"
+                        [style.height.%]="b.dangerPct"
+                      ></div>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (tip(); as t) {
+                <div
+                  class="flr-bc__tip"
+                  [style.left.%]="t.at"
+                  [class.flr-bc__tip--start]="t.edge === 'start'"
+                  [class.flr-bc__tip--end]="t.edge === 'end'"
+                  role="status"
+                >
+                  <span class="flr-bc__tip-label">{{ t.label }}</span>
+                  @if (t.value) {
+                    <span class="flr-bc__tip-value">{{ t.value }}</span>
+                  }
+                  @if (t.danger) {
+                    <span class="flr-bc__tip-danger">{{ t.danger }}</span>
                   }
                 </div>
-              </div>
-            }
+              }
+            </div>
 
-            @if (tip(); as t) {
-              <div
-                class="flr-bc__tip"
-                [style.left.%]="t.at"
-                [class.flr-bc__tip--start]="t.edge === 'start'"
-                [class.flr-bc__tip--end]="t.edge === 'end'"
-                role="status"
-              >
-                <span class="flr-bc__tip-label">{{ t.label }}</span>
-                @if (t.value) {
-                  <span class="flr-bc__tip-value">{{ t.value }}</span>
-                }
-                @if (t.danger) {
-                  <span class="flr-bc__tip-danger">{{ t.danger }}</span>
-                }
-              </div>
-            }
+            <div class="flr-bc__axis">
+              @for (b of bars(); track b.key) {
+                <span class="flr-bc__tick">{{ b.tick }}</span>
+              }
+            </div>
           </div>
-        </div>
-
-        <div class="flr-bc__axis">
-          @for (b of bars(); track b.key) {
-            <span class="flr-bc__tick">{{ b.tick }}</span>
-          }
         </div>
       }
     </figure>
@@ -159,10 +166,17 @@ function niceCeil(raw: number): number {
       font: 400 11.5px/1.2 var(--flr-font-mono, ui-monospace, monospace);
       opacity: 0.55;
     }
+    /* Top-aligned, not bottom: the gutter carries the plot's height, so lining
+       their tops up puts the 0 tick on the baseline. Bottom-aligning would sit
+       the gutter against the axis labels instead. */
     .flr-bc__grid {
       display: flex;
-      align-items: flex-end;
+      align-items: flex-start;
       gap: 8px;
+    }
+    .flr-bc__col {
+      flex: 1;
+      min-width: 0;
     }
     /* Sized by its widest tick so the plot starts at a stable offset whatever
        the magnitude, instead of shifting when the data crosses a digit. */
@@ -185,8 +199,6 @@ function niceCeil(raw: number): number {
     }
     .flr-bc__plot {
       position: relative;
-      flex: 1;
-      min-width: 0;
       display: flex;
       align-items: flex-end;
       gap: 2px;
