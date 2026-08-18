@@ -11,6 +11,14 @@ const VARIANT_COLOR: Record<TagVariant, string> = {
   danger: 'var(--color-danger, #dc2626)',
 };
 
+const VARIANT_TEXT: Record<TagVariant, string> = {
+  neutral: VARIANT_COLOR.neutral,
+  accent: VARIANT_COLOR.accent,
+  success: 'var(--color-success-fg, #065f46)',
+  warning: 'var(--color-warning-fg, #78350f)',
+  danger: 'var(--color-danger-fg, #7f1d1d)',
+};
+
 const SIZE: Record<TagSize, { padding: string; fontSize: string; gap: string; dot: number }> = {
   sm: { padding: '2px 7px', fontSize: '9.5px', gap: '5px', dot: 4 },
   md: { padding: '3px 9px', fontSize: '10.5px', gap: '6px', dot: 5 },
@@ -101,7 +109,14 @@ export class TagComponent {
     const explicit = this.color();
     if (explicit) return explicit;
     const variant = this.variant();
-    return variant ? VARIANT_COLOR[variant] : 'var(--color-fg-2, var(--color-ink-2, #475569))';
+    return variant ? VARIANT_COLOR[variant] : VARIANT_COLOR.neutral;
+  });
+
+  protected readonly resolvedTextColor = computed(() => {
+    const explicit = this.color();
+    if (explicit) return explicit;
+    const variant = this.variant();
+    return variant ? VARIANT_TEXT[variant] : VARIANT_TEXT.neutral;
   });
 
   protected readonly styles = computed<Record<string, string>>(() => {
@@ -113,7 +128,7 @@ export class TagComponent {
       'font-size': dim.fontSize,
       background: this.soft() ? `color-mix(in oklab, ${c} 14%, transparent)` : 'transparent',
       border: this.soft() ? 'none' : '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
-      color: c,
+      color: this.resolvedTextColor(),
     };
   });
 
