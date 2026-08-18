@@ -62,6 +62,18 @@
   --color-app-rule-strong: rgba(30, 41, 59, 0.24);
   --color-app-nav-active: rgba(30, 41, 59, 0.06);
   --color-app-nav-hover: rgba(30, 41, 59, 0.03);
+
+  /* Status colours. `--color-<status>` is the solid fill (a banner bar, a
+   * toast background, a progress track) and keeps its value in both themes
+   * so white text on it holds its contrast. `--color-<status>-fg` is the text
+   * that sits on a surface tinted with that status, and flips with the theme.
+   */
+  --color-success: #10b981;
+  --color-success-fg: #065f46;
+  --color-warning: #f59e0b;
+  --color-warning-fg: #78350f;
+  --color-danger: #dc2626;
+  --color-danger-fg: #7f1d1d;
 }
 
 /* Dark mode tokens — opt-in via `<html data-theme="dark">`. The marketing
@@ -90,4 +102,8 @@ html[data-theme='dark'] {
   --color-app-rule-strong: rgba(241, 245, 249, 0.24);
   --color-app-nav-active: rgba(241, 245, 249, 0.08);
   --color-app-nav-hover: rgba(241, 245, 249, 0.04);
+
+  --color-success-fg: #6ee7b7;
+  --color-warning-fg: #fcd34d;
+  --color-danger-fg: #fca5a5;
 }

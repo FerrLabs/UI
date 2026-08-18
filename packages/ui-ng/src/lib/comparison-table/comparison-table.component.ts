@@ -238,7 +238,7 @@ interface RenderCell {
       line-height: 1;
     }
     .flr-cmp__mark--yes {
-      color: #10b981;
+      color: var(--color-success, #10b981);
     }
     .flr-cmp__mark--ours {
       color: var(--ours-accent, #10b981);
@@ -248,7 +248,7 @@ interface RenderCell {
       color: var(--color-ink-3, #94a3b8);
     }
     .flr-cmp__mark--partial {
-      color: #f59e0b;
+      color: var(--color-warning, #f59e0b);
     }
     .flr-cmp__mark--text {
       font-size: 13px;

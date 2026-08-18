@@ -72,7 +72,7 @@ export class StatComponent {
           'var(--color-accent, var(--accent, var(--color-ferrlabs-slate, #1e293b)))'
         );
       case 'down':
-        return '#ef4444';
+        return 'var(--color-danger, #dc2626)';
       default:
         return 'var(--color-fg-3, var(--color-ink-3, #64748b))';
     }

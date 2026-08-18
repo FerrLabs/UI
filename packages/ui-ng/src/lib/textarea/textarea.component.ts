@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-const ERROR = '#dc2626';
+const ERROR = 'var(--color-danger, #dc2626)';
 
 /**
  * Multi-line text input — Angular 22 port of `@ferrlabs/ui-react`'s Textarea.
@@ -89,7 +89,7 @@ export class TextareaComponent implements ControlValueAccessor {
         ? 'var(--color-accent, var(--color-ink, #1e293b))'
         : 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))';
     const ring = this.invalid()
-      ? 'color-mix(in oklab, #dc2626 25%, transparent)'
+      ? 'color-mix(in oklab, var(--color-danger, #dc2626) 25%, transparent)'
       : 'color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent)';
     return {
       background: this.disabled() ? 'var(--color-paper-2, #f3efe7)' : 'var(--color-card, #ffffff)',

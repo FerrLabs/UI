@@ -68,7 +68,7 @@ let fieldCounter = 0;
     }
     .flr-field__required {
       margin-left: 4px;
-      color: #dc2626;
+      color: var(--color-danger, #dc2626);
     }
     .flr-field__optional {
       margin-left: 6px;
@@ -81,7 +81,7 @@ let fieldCounter = 0;
     .flr-field__error {
       margin: 0;
       font-size: 12px;
-      color: #dc2626;
+      color: var(--color-danger, #dc2626);
     }
     .flr-field__hint {
       margin: 0;

@@ -16,7 +16,7 @@ const SIZE: Record<InputSize, { height: string; fontSize: string; padding: strin
   lg: { height: '48px', fontSize: '16px', padding: '0 14px' },
 };
 
-const ERROR = '#dc2626';
+const ERROR = 'var(--color-danger, #dc2626)';
 
 /**
  * Text input — Angular 22 port of `@ferrlabs/ui-react`'s Input. Implements
@@ -100,7 +100,7 @@ export class InputComponent implements ControlValueAccessor {
         ? 'var(--color-accent, var(--color-ink, #1e293b))'
         : 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))';
     const ring = this.invalid()
-      ? 'color-mix(in oklab, #dc2626 25%, transparent)'
+      ? 'color-mix(in oklab, var(--color-danger, #dc2626) 25%, transparent)'
       : 'color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent)';
     return {
       height: dim.height,

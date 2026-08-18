@@ -161,14 +161,14 @@ export class RadioGroupComponent implements ControlValueAccessor {
         box-shadow 140ms;
     }
     .flr-radio__box--invalid {
-      border-color: #dc2626;
+      border-color: var(--color-danger, #dc2626);
     }
     .flr-radio__box--focused {
       box-shadow: 0 0 0 3px
         color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent);
     }
     .flr-radio__box--invalid.flr-radio__box--focused {
-      box-shadow: 0 0 0 3px color-mix(in oklab, #dc2626 30%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-danger, #dc2626) 30%, transparent);
     }
     .flr-radio--disabled .flr-radio__box {
       background: var(--color-paper-2, #f3efe7);

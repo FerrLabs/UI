@@ -164,12 +164,12 @@ export class SearchFieldComponent implements ControlValueAccessor {
   protected readonly inputStyles = computed<Record<string, string>>(() => {
     const dim = this.dim();
     const border = this.invalid()
-      ? '#dc2626'
+      ? 'var(--color-danger, #dc2626)'
       : this.focused()
         ? 'var(--color-accent, var(--color-fg, #1e293b))'
         : 'var(--color-rule-strong, rgba(30, 41, 59, 0.24))';
     const ring = this.invalid()
-      ? '0 0 0 4px color-mix(in oklab, #dc2626 14%, transparent)'
+      ? '0 0 0 4px color-mix(in oklab, var(--color-danger, #dc2626) 14%, transparent)'
       : '0 0 0 4px color-mix(in oklab, var(--color-accent, var(--color-fg, #1e293b)) 14%, transparent)';
     return {
       height: `${dim.height}px`,

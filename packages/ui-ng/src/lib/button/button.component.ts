@@ -17,7 +17,7 @@ const SIZE: Record<ButtonSize, SizeDim> = {
   lg: { padding: '12px 20px', fontSize: '14px', gap: '10px', radius: '10px' },
 };
 
-const DANGER = '#dc2626';
+const DANGER = 'var(--color-danger, #dc2626)';
 
 /**
  * Editorial app button — Angular 22 port of `@ferrlabs/ui-react`'s Button.

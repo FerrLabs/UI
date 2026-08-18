@@ -72,13 +72,13 @@ const ICON: Record<ToastVariant, string> = {
       background: var(--color-ink, #1e293b);
     }
     .flr-toast--success {
-      background: #10b981;
+      background: var(--color-success, #10b981);
     }
     .flr-toast--warning {
-      background: #f59e0b;
+      background: var(--color-warning, #f59e0b);
     }
     .flr-toast--error {
-      background: #dc2626;
+      background: var(--color-danger, #dc2626);
     }
     @keyframes flr-toast-in {
       from {

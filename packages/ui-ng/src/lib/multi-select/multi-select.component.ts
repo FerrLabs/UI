@@ -102,7 +102,7 @@ export interface MultiSelectOption {
       background: var(--flr-bg, #fff);
     }
     .flr-ms--invalid {
-      border-color: #dc2626;
+      border-color: var(--color-danger, #dc2626);
     }
     .flr-ms__search {
       width: 100%;
