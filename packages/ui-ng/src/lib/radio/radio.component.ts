@@ -154,8 +154,8 @@ export class RadioGroupComponent implements ControlValueAccessor {
       height: 16px;
       flex-shrink: 0;
       border-radius: 999px;
-      background: var(--color-card);
-      border: 1px solid var(--color-rule-strong);
+      background: var(--color-card, #ffffff);
+      border: 1px solid var(--color-rule-strong, rgba(30, 41, 59, 0.28));
       transition:
         border-color 140ms,
         box-shadow 140ms;
@@ -165,13 +165,13 @@ export class RadioGroupComponent implements ControlValueAccessor {
     }
     .flr-radio__box--focused {
       box-shadow: 0 0 0 3px
-        color-mix(in oklab, var(--color-accent, var(--color-ink)) 30%, transparent);
+        color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent);
     }
     .flr-radio__box--invalid.flr-radio__box--focused {
       box-shadow: 0 0 0 3px color-mix(in oklab, #dc2626 30%, transparent);
     }
     .flr-radio--disabled .flr-radio__box {
-      background: var(--color-paper-2);
+      background: var(--color-paper-2, #f3efe7);
     }
     .flr-radio__input {
       position: absolute;
@@ -186,7 +186,7 @@ export class RadioGroupComponent implements ControlValueAccessor {
       width: 8px;
       height: 8px;
       border-radius: 999px;
-      background: var(--color-accent, var(--color-ink));
+      background: var(--color-accent, var(--color-ink, #1e293b));
       opacity: 0;
       transition: opacity 120ms;
       pointer-events: none;
@@ -201,12 +201,12 @@ export class RadioGroupComponent implements ControlValueAccessor {
     }
     .flr-radio__label {
       font-size: 14px;
-      color: var(--color-ink);
+      color: var(--color-ink, #1e293b);
       line-height: 1.25;
     }
     .flr-radio__hint {
       font-size: 12px;
-      color: var(--color-ink-3);
+      color: var(--color-ink-3, #64748b);
       line-height: 1.25;
     }
   `,

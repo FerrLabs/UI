@@ -82,29 +82,29 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       height: 16px;
       flex-shrink: 0;
       border-radius: 4px;
-      background: var(--color-card);
-      border: 1px solid var(--color-rule-strong);
+      background: var(--color-card, #ffffff);
+      border: 1px solid var(--color-rule-strong, rgba(30, 41, 59, 0.28));
       transition:
         background 140ms,
         border-color 140ms,
         box-shadow 140ms;
     }
     .flr-checkbox__box--on {
-      background: var(--color-accent, var(--color-ink));
-      border-color: var(--color-accent, var(--color-ink));
+      background: var(--color-accent, var(--color-ink, #1e293b));
+      border-color: var(--color-accent, var(--color-ink, #1e293b));
     }
     .flr-checkbox__box--invalid {
       border-color: #dc2626;
     }
     .flr-checkbox__box--focused {
       box-shadow: 0 0 0 3px
-        color-mix(in oklab, var(--color-accent, var(--color-ink)) 30%, transparent);
+        color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent);
     }
     .flr-checkbox__box--invalid.flr-checkbox__box--focused {
       box-shadow: 0 0 0 3px color-mix(in oklab, #dc2626 30%, transparent);
     }
     .flr-checkbox--disabled .flr-checkbox__box {
-      background: var(--color-paper-2);
+      background: var(--color-paper-2, #f3efe7);
     }
     .flr-checkbox__input {
       position: absolute;
@@ -139,12 +139,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
     .flr-checkbox__label {
       font-size: 14px;
-      color: var(--color-ink);
+      color: var(--color-ink, #1e293b);
       line-height: 1.25;
     }
     .flr-checkbox__hint {
       font-size: 12px;
-      color: var(--color-ink-3);
+      color: var(--color-ink-3, #64748b);
       line-height: 1.25;
     }
   `,

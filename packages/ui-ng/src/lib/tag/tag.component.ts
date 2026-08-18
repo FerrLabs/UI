@@ -4,8 +4,8 @@ export type TagVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'danger'
 export type TagSize = 'sm' | 'md';
 
 const VARIANT_COLOR: Record<TagVariant, string> = {
-  neutral: 'var(--color-fg-2)',
-  accent: 'var(--color-accent)',
+  neutral: 'var(--color-fg-2, var(--color-ink-2, #475569))',
+  accent: 'var(--color-accent, var(--accent, var(--color-ferrlabs-slate, #1e293b)))',
   success: '#10b981',
   warning: '#f59e0b',
   danger: '#dc2626',
@@ -101,7 +101,7 @@ export class TagComponent {
     const explicit = this.color();
     if (explicit) return explicit;
     const variant = this.variant();
-    return variant ? VARIANT_COLOR[variant] : 'var(--color-fg-2)';
+    return variant ? VARIANT_COLOR[variant] : 'var(--color-fg-2, var(--color-ink-2, #475569))';
   });
 
   protected readonly styles = computed<Record<string, string>>(() => {
@@ -112,7 +112,7 @@ export class TagComponent {
       padding: dim.padding,
       'font-size': dim.fontSize,
       background: this.soft() ? `color-mix(in oklab, ${c} 14%, transparent)` : 'transparent',
-      border: this.soft() ? 'none' : '1px solid var(--color-rule)',
+      border: this.soft() ? 'none' : '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
       color: c,
     };
   });

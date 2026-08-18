@@ -52,9 +52,9 @@ const ERROR = '#dc2626';
       min-height: 96px;
       padding: 10px 12px;
       font-size: 14px;
-      font-family: var(--font-sans);
+      font-family: var(--font-sans, 'Fraunces', Georgia, ui-serif, serif);
       line-height: 1.5;
-      color: var(--color-ink);
+      color: var(--color-ink, #1e293b);
       border-radius: 8px;
       outline: none;
       resize: vertical;
@@ -86,13 +86,13 @@ export class TextareaComponent implements ControlValueAccessor {
     const border = this.invalid()
       ? ERROR
       : this.focused()
-        ? 'var(--color-accent, var(--color-ink))'
-        : 'var(--color-rule-strong)';
+        ? 'var(--color-accent, var(--color-ink, #1e293b))'
+        : 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))';
     const ring = this.invalid()
       ? 'color-mix(in oklab, #dc2626 25%, transparent)'
-      : 'color-mix(in oklab, var(--color-accent, var(--color-ink)) 30%, transparent)';
+      : 'color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent)';
     return {
-      background: this.disabled() ? 'var(--color-paper-2)' : 'var(--color-card)',
+      background: this.disabled() ? 'var(--color-paper-2, #f3efe7)' : 'var(--color-card, #ffffff)',
       border: `1px solid ${border}`,
       'box-shadow': this.focused() ? `0 0 0 3px ${ring}` : null,
       cursor: this.disabled() ? 'not-allowed' : 'text',

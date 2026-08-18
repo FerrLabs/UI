@@ -64,7 +64,7 @@ let fieldCounter = 0;
       font-weight: 500;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--color-ink-3);
+      color: var(--color-ink-3, #64748b);
     }
     .flr-field__required {
       margin-left: 4px;
@@ -72,7 +72,7 @@ let fieldCounter = 0;
     }
     .flr-field__optional {
       margin-left: 6px;
-      color: var(--color-ink-3);
+      color: var(--color-ink-3, #64748b);
       font-weight: 400;
     }
     .flr-field__trailing {
@@ -86,7 +86,7 @@ let fieldCounter = 0;
     .flr-field__hint {
       margin: 0;
       font-size: 12px;
-      color: var(--color-ink-3);
+      color: var(--color-ink-3, #64748b);
     }
   `,
 })

@@ -93,12 +93,12 @@ const SIZE: Record<SwitchSize, { trackW: number; trackH: number; thumb: number; 
     }
     .flr-switch__label {
       font-size: 14px;
-      color: var(--color-ink);
+      color: var(--color-ink, #1e293b);
       line-height: 1.25;
     }
     .flr-switch__hint {
       font-size: 12px;
-      color: var(--color-ink-3);
+      color: var(--color-ink-3, #64748b);
       line-height: 1.25;
     }
   `,
@@ -122,10 +122,10 @@ export class SwitchComponent implements ControlValueAccessor {
       width: `${d.trackW}px`,
       height: `${d.trackH}px`,
       background: this.checked()
-        ? 'var(--color-accent, var(--color-ink))'
-        : 'var(--color-rule-strong)',
+        ? 'var(--color-accent, var(--color-ink, #1e293b))'
+        : 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))',
       'box-shadow': this.focused()
-        ? '0 0 0 3px color-mix(in oklab, var(--color-accent, var(--color-ink)) 30%, transparent)'
+        ? '0 0 0 3px color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent)'
         : null,
     };
   });

@@ -10,7 +10,7 @@ const HEIGHT: Record<ProgressBarSize, string> = {
 };
 
 const FILL: Record<ProgressBarVariant, string> = {
-  accent: 'var(--color-accent)',
+  accent: 'var(--color-accent, var(--accent, var(--color-ferrlabs-slate, #1e293b)))',
   success: '#10b981',
   warning: '#f59e0b',
   danger: '#dc2626',
@@ -66,15 +66,23 @@ const FILL: Record<ProgressBarVariant, string> = {
       align-items: center;
       justify-content: space-between;
       font-size: 12px;
-      color: var(--color-ink-2);
+      color: var(--color-ink-2, #475569);
     }
     .flr-progress__value {
-      font-family: var(--font-mono);
-      color: var(--color-ink-3);
+      font-family: var(
+        --font-mono,
+        'DM Mono',
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Consolas,
+        monospace
+      );
+      color: var(--color-ink-3, #64748b);
     }
     .flr-progress__track {
       width: 100%;
-      background: var(--color-rule);
+      background: var(--color-rule, rgba(30, 41, 59, 0.14));
       border-radius: 999px;
       overflow: hidden;
     }

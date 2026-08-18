@@ -55,9 +55,9 @@ import { SITE_CHROME, resolveLocale, withLocaleBase } from '../site-chrome/site-
   styles: `
     .footer {
       padding: 96px 0 48px;
-      border-top: 1px solid var(--paper-rule);
-      background: var(--paper);
-      color: var(--paper-ink);
+      border-top: 1px solid var(--paper-rule, var(--color-rule, rgba(30, 41, 59, 0.14)));
+      background: var(--paper, var(--color-paper, #faf8f4));
+      color: var(--paper-ink, var(--color-ink, #1e293b));
     }
     .footer__grid {
       display: grid;
@@ -68,7 +68,7 @@ import { SITE_CHROME, resolveLocale, withLocaleBase } from '../site-chrome/site-
       display: flex;
       align-items: center;
       gap: 14px;
-      color: var(--accent);
+      color: var(--accent, #1e293b);
     }
     .footer__logo ::ng-deep svg {
       display: block;
@@ -76,21 +76,21 @@ import { SITE_CHROME, resolveLocale, withLocaleBase } from '../site-chrome/site-
       height: 36px;
     }
     .footer__wordmark {
-      font-family: var(--font-display);
+      font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
       font-weight: 900;
       font-size: 36px;
       letter-spacing: -0.03em;
-      color: var(--paper-ink);
+      color: var(--paper-ink, var(--color-ink, #1e293b));
     }
     .footer__wordmark-accent {
-      color: var(--accent);
+      color: var(--accent, #1e293b);
     }
     .footer__colophon {
-      font-family: var(--font-display);
+      font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
       font-style: italic;
       font-size: 18px;
       line-height: 1.5;
-      color: var(--paper-ink-2);
+      color: var(--paper-ink-2, var(--color-ink-2, #475569));
       margin: 24px 0 0;
       max-width: 380px;
     }
@@ -99,12 +99,12 @@ import { SITE_CHROME, resolveLocale, withLocaleBase } from '../site-chrome/site-
       margin-top: 24px;
       font-size: 12px;
       letter-spacing: 0.06em;
-      color: var(--paper-ink-2);
+      color: var(--paper-ink-2, var(--color-ink-2, #475569));
       text-decoration: none;
       transition: color 160ms ease;
     }
     .footer__back:hover {
-      color: var(--accent);
+      color: var(--accent, #1e293b);
     }
     .footer__cols {
       display: grid;
@@ -115,7 +115,7 @@ import { SITE_CHROME, resolveLocale, withLocaleBase } from '../site-chrome/site-
       font-size: 11px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--paper-ink-3);
+      color: var(--paper-ink-3, var(--color-ink-3, #64748b));
       margin-bottom: 16px;
     }
     .footer__col-list {
@@ -128,17 +128,17 @@ import { SITE_CHROME, resolveLocale, withLocaleBase } from '../site-chrome/site-
     }
     .footer__link {
       font-size: 14px;
-      color: var(--paper-ink-2);
+      color: var(--paper-ink-2, var(--color-ink-2, #475569));
       text-decoration: none;
       transition: color 160ms ease;
     }
     .footer__link:hover {
-      color: var(--paper-ink);
+      color: var(--paper-ink, var(--color-ink, #1e293b));
     }
     .footer__bottom {
       margin-top: 80px;
       padding-top: 24px;
-      border-top: 1px solid var(--paper-rule);
+      border-top: 1px solid var(--paper-rule, var(--color-rule, rgba(30, 41, 59, 0.14)));
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -148,7 +148,7 @@ import { SITE_CHROME, resolveLocale, withLocaleBase } from '../site-chrome/site-
     .footer__bottom-text {
       font-size: 11px;
       letter-spacing: 0.06em;
-      color: var(--paper-ink-3);
+      color: var(--paper-ink-3, var(--color-ink-3, #64748b));
     }
     @media (max-width: 880px) {
       .footer__grid {

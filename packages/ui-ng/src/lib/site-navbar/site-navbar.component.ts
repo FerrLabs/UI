@@ -108,7 +108,7 @@ import {
     }
     .nav--scrolled {
       background: rgba(250, 248, 244, 0.85);
-      border-bottom-color: var(--color-rule);
+      border-bottom-color: var(--color-rule, rgba(30, 41, 59, 0.14));
     }
     .nav__container {
       max-width: 1440px;
@@ -128,7 +128,7 @@ import {
       display: flex;
       align-items: center;
       gap: 10px;
-      color: var(--accent);
+      color: var(--accent, #1e293b);
       letter-spacing: -0.01em;
       text-decoration: none;
     }
@@ -142,14 +142,14 @@ import {
       height: 28px;
     }
     .nav__wordmark {
-      font-family: var(--font-display);
+      font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
       font-weight: 900;
       font-size: 22px;
       letter-spacing: -0.02em;
-      color: var(--color-ink);
+      color: var(--color-ink, #1e293b);
     }
     .nav__wordmark-accent {
-      color: var(--accent);
+      color: var(--accent, #1e293b);
     }
     .nav__desktop {
       display: flex;
@@ -161,7 +161,7 @@ import {
       font-size: 12px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--color-ink-2);
+      color: var(--color-ink-2, #475569);
       position: relative;
       padding: 6px 0;
       text-decoration: none;
@@ -173,7 +173,7 @@ import {
       right: 0;
       bottom: -2px;
       height: 1px;
-      background: var(--accent);
+      background: var(--accent, #1e293b);
       transform: scaleX(0);
       transform-origin: left;
       transition: transform 220ms ease;
@@ -184,25 +184,33 @@ import {
     .nav__lang {
       display: flex;
       align-items: center;
-      border: 1px solid var(--color-rule);
+      border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
       border-radius: 999px;
       overflow: hidden;
     }
     .nav__lang-opt {
-      font-family: var(--font-mono);
+      font-family: var(
+        --font-mono,
+        'DM Mono',
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Consolas,
+        monospace
+      );
       font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       padding: 6px 12px;
-      color: var(--color-ink-2);
+      color: var(--color-ink-2, #475569);
       text-decoration: none;
       transition:
         background 180ms,
         color 180ms;
     }
     .nav__lang-opt.is-active {
-      background: var(--color-ink);
-      color: var(--color-paper);
+      background: var(--color-ink, #1e293b);
+      color: var(--color-paper, #faf8f4);
     }
     .nav__cta {
       display: inline-flex;
@@ -213,7 +221,7 @@ import {
       text-transform: uppercase;
       padding: 10px 16px;
       border-radius: 999px;
-      background: var(--accent);
+      background: var(--accent, #1e293b);
       color: #fff;
       text-decoration: none;
       transition:
@@ -227,10 +235,10 @@ import {
     .nav__toggle {
       display: none;
       margin-left: auto;
-      border: 1px solid var(--color-rule);
+      border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
       border-radius: 999px;
       background: transparent;
-      color: var(--color-ink);
+      color: var(--color-ink, #1e293b);
       padding: 8px 14px;
       font-size: 11px;
       letter-spacing: 0.08em;
@@ -249,7 +257,7 @@ import {
       position: fixed;
       inset: 0;
       z-index: 100;
-      background: var(--color-paper);
+      background: var(--color-paper, #faf8f4);
     }
     .nav__mobile-bar {
       justify-content: space-between;
@@ -263,14 +271,14 @@ import {
       gap: 0;
     }
     .nav__mobile-link {
-      font-family: var(--font-display);
+      font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
       font-weight: 700;
       font-size: clamp(40px, 9vw, 72px);
       letter-spacing: -0.03em;
       line-height: 1.04;
-      border-bottom: 1px solid var(--color-rule);
+      border-bottom: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
       padding: 20px 0;
-      color: var(--color-ink);
+      color: var(--color-ink, #1e293b);
       display: flex;
       align-items: baseline;
       gap: 16px;
@@ -278,7 +286,7 @@ import {
     }
     .nav__mobile-link .mono {
       font-size: 12px;
-      color: var(--color-ink-3);
+      color: var(--color-ink-3, #64748b);
       letter-spacing: 0.1em;
       font-weight: 400;
     }

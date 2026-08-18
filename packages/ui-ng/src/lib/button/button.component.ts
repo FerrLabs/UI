@@ -76,7 +76,15 @@ const DANGER = '#dc2626';
       display: contents;
     }
     .flr-btn {
-      font-family: var(--font-mono);
+      font-family: var(
+        --font-mono,
+        'DM Mono',
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Consolas,
+        monospace
+      );
       letter-spacing: 0.04em;
       align-items: center;
       justify-content: center;
@@ -148,11 +156,11 @@ export class ButtonComponent {
         break;
       case 'ghost':
         bg = 'transparent';
-        fg = accent ?? 'var(--color-fg)';
-        border = 'var(--color-rule-strong)';
+        fg = accent ?? 'var(--color-fg, var(--color-ink, #1e293b))';
+        border = 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))';
         break;
       default:
-        bg = accent ?? 'var(--color-accent, var(--color-fg))';
+        bg = accent ?? 'var(--color-accent, var(--color-fg, var(--color-ink, #1e293b)))';
         fg = '#fff';
         border = bg;
     }
