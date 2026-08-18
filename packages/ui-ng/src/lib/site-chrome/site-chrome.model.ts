@@ -49,6 +49,13 @@ export interface SiteChromeConfig {
   readonly logoSvg: string;
   readonly wordmark: string;
   readonly wordmarkAccent?: string;
+  /**
+   * The locales this site actually ships. Defaults to every locale the design
+   * system knows about, which is what every translated site wants. A site with
+   * one entry gets no language switcher and no `hreflang` alternates, because
+   * both would point at pages that were never built.
+   */
+  readonly locales?: readonly SiteLocale[];
   readonly navLinks: readonly SiteNavLink[];
   readonly cta?: SiteCta | null;
   readonly footer: SiteFooterConfig;
@@ -56,6 +63,12 @@ export interface SiteChromeConfig {
 }
 
 export const SITE_LOCALES: readonly SiteLocale[] = ['en', 'fr'];
+
+// What a given site ships, which is every known locale unless it says otherwise.
+export function siteLocales(config: SiteChromeConfig): readonly SiteLocale[] {
+  const locales = config.locales;
+  return locales && locales.length > 0 ? locales : SITE_LOCALES;
+}
 
 export const SITE_CHROME = new InjectionToken<SiteChromeConfig>('SITE_CHROME');
 

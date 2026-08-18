@@ -64,6 +64,15 @@ export const Navbar: Story = { render: () => ({ template: `<flr-site-navbar />` 
 
 export const Footer: Story = { render: () => ({ template: `<flr-site-footer />` }) };
 
+// A site that ships one language. The switcher is not rendered at all, because
+// the locale it would offer was never built and the link goes to a 404.
+export const NavbarSingleLocale: Story = {
+  decorators: [
+    applicationConfig({ providers: [provideSiteChrome({ ...CHROME, locales: ['en'] })] }),
+  ],
+  render: () => ({ template: `<flr-site-navbar />` }),
+};
+
 export const Shell: Story = {
   render: () => ({
     template: `

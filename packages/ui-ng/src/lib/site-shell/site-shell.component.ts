@@ -12,7 +12,7 @@ import { SiteNavbarComponent } from '../site-navbar/site-navbar.component';
 import { SiteFooterComponent } from '../site-footer/site-footer.component';
 import {
   SITE_CHROME,
-  SITE_LOCALES,
+  siteLocales,
   localeSwitchHref,
   resolveLocale,
 } from '../site-chrome/site-chrome.model';
@@ -73,8 +73,16 @@ export class SiteShellComponent {
     });
   }
 
+  // A site that ships one locale gets no alternates at all: `hreflang` pointing
+  // at a translation nobody built is a worse promise than the visible switcher,
+  // because a crawler follows it.
   private setAlternates(barePath: string): void {
-    for (const locale of SITE_LOCALES) {
+    const locales = siteLocales(this.chrome);
+    if (locales.length < 2) {
+      return;
+    }
+
+    for (const locale of locales) {
       const href = `${this.chrome.origin}${localeSwitchHref(locale, barePath)}`;
       this.setLink('alternate', href, locale);
     }
