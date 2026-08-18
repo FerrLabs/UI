@@ -11,9 +11,9 @@ const HEIGHT: Record<ProgressBarSize, string> = {
 
 const FILL: Record<ProgressBarVariant, string> = {
   accent: 'var(--color-accent, var(--accent, var(--color-ferrlabs-slate, #1e293b)))',
-  success: '#10b981',
-  warning: '#f59e0b',
-  danger: '#dc2626',
+  success: 'var(--color-success, #10b981)',
+  warning: 'var(--color-warning, #f59e0b)',
+  danger: 'var(--color-danger, #dc2626)',
 };
 
 /**

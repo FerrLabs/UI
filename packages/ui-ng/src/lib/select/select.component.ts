@@ -46,7 +46,7 @@ const SIZE: Record<SelectSize, SelectDim> = {
   },
 };
 
-const ERROR = '#dc2626';
+const ERROR = 'var(--color-danger, #dc2626)';
 
 /**
  * Native select with editorial chrome — Angular 22 port of
@@ -120,7 +120,7 @@ export class SelectComponent implements ControlValueAccessor {
         ? 'var(--color-accent, var(--color-ink, #1e293b))'
         : 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))';
     const ring = this.invalid()
-      ? 'color-mix(in oklab, #dc2626 25%, transparent)'
+      ? 'color-mix(in oklab, var(--color-danger, #dc2626) 25%, transparent)'
       : 'color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent)';
     return {
       height: `${dim.height}px`,

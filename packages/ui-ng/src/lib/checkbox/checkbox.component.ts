@@ -94,14 +94,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       border-color: var(--color-accent, var(--color-ink, #1e293b));
     }
     .flr-checkbox__box--invalid {
-      border-color: #dc2626;
+      border-color: var(--color-danger, #dc2626);
     }
     .flr-checkbox__box--focused {
       box-shadow: 0 0 0 3px
         color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent);
     }
     .flr-checkbox__box--invalid.flr-checkbox__box--focused {
-      box-shadow: 0 0 0 3px color-mix(in oklab, #dc2626 30%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-danger, #dc2626) 30%, transparent);
     }
     .flr-checkbox--disabled .flr-checkbox__box {
       background: var(--color-paper-2, #f3efe7);

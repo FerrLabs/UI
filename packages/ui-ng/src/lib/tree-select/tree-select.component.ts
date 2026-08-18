@@ -143,7 +143,7 @@ export interface TreeSelectGroup {
       background: var(--flr-bg, #fff);
     }
     .flr-ts--invalid {
-      border-color: #dc2626;
+      border-color: var(--color-danger, #dc2626);
     }
     .flr-ts__search {
       width: 100%;

@@ -252,7 +252,7 @@ function niceCeil(raw: number): number {
       min-height: 2px;
     }
     .flr-bc__bar--danger {
-      background: #ef4444;
+      background: var(--color-danger, #dc2626);
       border-radius: 0;
       order: -1;
     }
