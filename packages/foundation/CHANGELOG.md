@@ -4,6 +4,40 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.3.0] - 2026-08-18
+
+### Features
+
+- feat(ui-ng): absorb the editorial primitives the app forks duplicate (#405)
+- feat(ui): define semantic status tokens and fix status contrast in dark mode (#404)
+- feat(ui-ng): give every design token a fallback so components render without the stylesheet (#402)
+- feat(ui-ng): let a site declare the locales it actually ships (#401)
+- feat(ui-ng): give the bar chart a hover tooltip and a left scale (#391)
+- feat(ci): ajoute l'analyse SonarQube (#362)
+- feat(ui-ng): let the brand switcher carry internal tools, starting with Storybook (#371)
+- feat(ui-ng): add a Pagination component (#365)
+- feat(showcase): rebuild the Storybook on @storybook/angular (#369)
+- feat(ui-ng): add flr-status-bars for uptime timelines (#348)
+- feat(ui-ng): distinguish a loading multi-select from an empty one (#339)
+- feat(ui-ng): resolve cross-product links at runtime (#327)
+- feat(ui-ng): composant bar-chart sans dependance (#334)
+- feat(ui-ng): composant tree-select groupe et pliable (#332)
+- feat(ui-ng): composant multi-select filtrable (#330)
+
+### Bug Fixes
+
+- fix(ui-ng): ship the CDK overlay container styles with the components that need them (#385)
+- fix(ui-ng): open switcher tools in a new tab instead of replacing the current app (#384)
+- fix(ui-ng): dismiss the app switch overlay on bfcache restore and lift it to the top layer (#382)
+- fix(ui-ng): relaie l'attribut form du bouton et espace les actions de modale (#346)
+- fix(ui-ng): drop the active sidebar item's left bar (#328)
+- fix(ci): repair renovate-rebase.yml truncated by the pin sweep (#316)
+- fix(ci): install pnpm 11 in the showcase Dockerfile to satisfy engines.pnpm (#304)
+
+### Refactoring
+
+- refactor(ui): drop @ferrlabs/ui-react and the React showcase (#368)
+
 ## [5.2.0] - 2026-07-16
 
 ### Features
