@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.23.0] - 2026-08-18
+
+### Features
+
+- feat(ui-ng): give every design token a fallback so components render without the stylesheet (#402)
+
 ## [1.22.0] - 2026-08-18
 
 ### Features
