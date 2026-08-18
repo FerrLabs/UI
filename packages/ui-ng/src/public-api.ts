@@ -145,6 +145,7 @@ export { SiteShellComponent } from './lib/site-shell/site-shell.component';
 export {
   SITE_CHROME,
   SITE_LOCALES,
+  siteLocales,
   provideSiteChrome,
   localeBase,
   withLocaleBase,

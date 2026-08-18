@@ -5,6 +5,7 @@ import {
   SITE_CHROME,
   type SiteLocale,
   localeSwitchHref,
+  siteLocales,
   resolveLocale,
   withLocaleBase,
 } from '../site-chrome/site-chrome.model';
@@ -35,14 +36,18 @@ import {
             }
           }
 
-          <div class="nav__lang mono" translate="no">
-            <a [href]="langHref('en')" class="nav__lang-opt" [class.is-active]="locale === 'en'"
-              >EN</a
-            >
-            <a [href]="langHref('fr')" class="nav__lang-opt" [class.is-active]="locale === 'fr'"
-              >FR</a
-            >
-          </div>
+          @if (locales.length > 1) {
+            <div class="nav__lang mono" translate="no">
+              @for (option of locales; track option) {
+                <a
+                  [href]="langHref(option)"
+                  class="nav__lang-opt"
+                  [class.is-active]="locale === option"
+                  >{{ option.toUpperCase() }}</a
+                >
+              }
+            </div>
+          }
 
           @if (cta) {
             <a [href]="cta.href" class="nav__cta mono"
@@ -302,6 +307,10 @@ export class SiteNavbarComponent {
 
   protected readonly scrolled = signal(false);
   protected readonly mobileOpen = signal(false);
+
+  // Only what this site ships. A switcher offering a locale that was never
+  // built is a link to a 404 sitting in the header of every page.
+  protected readonly locales = siteLocales(this.chrome);
 
   protected langHref(target: SiteLocale): string {
     return localeSwitchHref(target, this.location.path() || '/');
