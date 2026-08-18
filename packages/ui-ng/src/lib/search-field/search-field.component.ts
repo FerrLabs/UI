@@ -112,14 +112,14 @@ const SIZE: Record<SearchFieldSize, SearchDim> = {
     .flr-search__icon {
       position: absolute;
       pointer-events: none;
-      color: var(--color-ink-3);
+      color: var(--color-ink-3, #64748b);
       display: inline-flex;
     }
     .flr-search__input {
       width: 100%;
       box-sizing: border-box;
       border-radius: 8px;
-      font-family: var(--font-sans);
+      font-family: var(--font-sans, 'Fraunces', Georgia, ui-serif, serif);
       font-weight: 400;
       line-height: 1.4;
       outline: none;
@@ -136,11 +136,11 @@ const SIZE: Record<SearchFieldSize, SearchDim> = {
       border: none;
       padding: 0;
       cursor: pointer;
-      color: var(--color-ink-3);
+      color: var(--color-ink-3, #64748b);
       transition: color 140ms;
     }
     .flr-search__clear:hover {
-      color: var(--color-ink);
+      color: var(--color-ink, #1e293b);
     }
   `,
 })

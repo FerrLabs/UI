@@ -33,7 +33,15 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
       gap: 8px;
       height: 40px;
       padding: 0 16px;
-      font-family: var(--font-mono);
+      font-family: var(
+        --font-mono,
+        'DM Mono',
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Consolas,
+        monospace
+      );
       font-size: 12px;
       font-weight: 500;
       letter-spacing: 0.08em;
@@ -42,8 +50,8 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
       white-space: nowrap;
       user-select: none;
       color: #fff;
-      background: var(--color-accent, var(--color-ink));
-      border: 1px solid var(--color-accent, var(--color-ink));
+      background: var(--color-accent, var(--color-ink, #1e293b));
+      border: 1px solid var(--color-accent, var(--color-ink, #1e293b));
       border-radius: 8px;
       cursor: pointer;
       transition:

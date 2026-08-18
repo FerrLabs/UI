@@ -275,7 +275,7 @@ export class SidebarSectionComponent {
       display: block;
     }
     .flr-sb-item--active .flr-sb-item__icon {
-      color: var(--flr-sb-accent, var(--color-accent, var(--color-ink)));
+      color: var(--flr-sb-accent, var(--color-accent, var(--color-ink, #1e293b)));
     }
     .flr-sb-item--collapsed .flr-sb-item__icon {
       transform: translateX(4px);
@@ -303,7 +303,7 @@ export class SidebarSectionComponent {
       white-space: nowrap;
     }
     .flr-sb-item--active .flr-sb-item__badge {
-      background: var(--flr-sb-accent, var(--color-accent, var(--color-ink)));
+      background: var(--flr-sb-accent, var(--color-accent, var(--color-ink, #1e293b)));
       color: #fff;
     }
     .flr-sb-item--collapsed .flr-sb-item__badge {
@@ -327,7 +327,7 @@ export class SidebarItemComponent {
   readonly selected = output<void>();
 
   protected readonly accentColor = computed(
-    () => this.accent() ?? 'var(--color-accent, var(--color-ink))',
+    () => this.accent() ?? 'var(--color-accent, var(--color-ink, #1e293b))',
   );
 
   protected handleClick(event: MouseEvent): void {

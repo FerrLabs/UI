@@ -83,9 +83,9 @@ const ERROR = '#dc2626';
     .flr-select {
       width: 100%;
       box-sizing: border-box;
-      font-family: var(--font-sans);
+      font-family: var(--font-sans, 'Fraunces', Georgia, ui-serif, serif);
       line-height: 1.4;
-      color: var(--color-ink);
+      color: var(--color-ink, #1e293b);
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
@@ -117,17 +117,19 @@ export class SelectComponent implements ControlValueAccessor {
     const border = this.invalid()
       ? ERROR
       : this.focused()
-        ? 'var(--color-accent, var(--color-ink))'
-        : 'var(--color-rule-strong)';
+        ? 'var(--color-accent, var(--color-ink, #1e293b))'
+        : 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))';
     const ring = this.invalid()
       ? 'color-mix(in oklab, #dc2626 25%, transparent)'
-      : 'color-mix(in oklab, var(--color-accent, var(--color-ink)) 30%, transparent)';
+      : 'color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent)';
     return {
       height: `${dim.height}px`,
       'padding-left': `${dim.paddingLeft}px`,
       'padding-right': `${dim.paddingRight}px`,
       'font-size': `${dim.fontSize}px`,
-      'background-color': this.disabled() ? 'var(--color-paper-2)' : 'var(--color-card)',
+      'background-color': this.disabled()
+        ? 'var(--color-paper-2, #f3efe7)'
+        : 'var(--color-card, #ffffff)',
       'background-position': `right ${dim.chevronOffset}px center`,
       'background-size': `${dim.chevronSize}px ${dim.chevronSize}px`,
       border: `1px solid ${border}`,

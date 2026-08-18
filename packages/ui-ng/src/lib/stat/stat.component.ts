@@ -28,8 +28,8 @@ export type StatDelta = 'up' | 'down' | 'flat';
       display: contents;
     }
     .flr-stat {
-      background: var(--color-card);
-      border: 1px solid var(--color-rule);
+      background: var(--color-card, #ffffff);
+      border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
       border-radius: 14px;
       padding: 20px;
     }
@@ -37,7 +37,7 @@ export type StatDelta = 'up' | 'down' | 'flat';
       font-size: 10.5px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--color-fg-3);
+      color: var(--color-fg-3, var(--color-ink-3, #64748b));
       margin-bottom: 12px;
     }
     .flr-stat__row {
@@ -46,7 +46,7 @@ export type StatDelta = 'up' | 'down' | 'flat';
       gap: 10px;
     }
     .flr-stat__value {
-      font-family: var(--font-sans);
+      font-family: var(--font-sans, 'Fraunces', Georgia, ui-serif, serif);
       font-weight: 700;
       font-size: 32px;
       letter-spacing: -0.025em;
@@ -67,11 +67,14 @@ export class StatComponent {
   protected readonly deltaColor = computed(() => {
     switch (this.deltaType()) {
       case 'up':
-        return this.accent() ?? 'var(--color-accent)';
+        return (
+          this.accent() ??
+          'var(--color-accent, var(--accent, var(--color-ferrlabs-slate, #1e293b)))'
+        );
       case 'down':
         return '#ef4444';
       default:
-        return 'var(--color-fg-3)';
+        return 'var(--color-fg-3, var(--color-ink-3, #64748b))';
     }
   });
 
