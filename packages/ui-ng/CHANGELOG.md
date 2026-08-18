@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.22.0] - 2026-08-18
+
+### Features
+
+- feat(ui-ng): let a site declare the locales it actually ships (#401)
+
 ## [1.21.0] - 2026-08-17
 
 ### Features
