@@ -19,7 +19,13 @@ const meta: Meta<PageHeaderComponent> = {
   render: (args) => ({
     props: args,
     template: `
-      <flr-page-header [title]="title" [eyebrow]="eyebrow" [sub]="sub" [breadcrumbs]="breadcrumbs">
+      <flr-page-header
+        [title]="title"
+        [eyebrow]="eyebrow"
+        [count]="count"
+        [sub]="sub"
+        [breadcrumbs]="breadcrumbs"
+      >
         <flr-tag page-header-badge variant="success" [soft]="true">Active</flr-tag>
         <div page-header-actions style="display:flex; gap:8px">
           <flr-button variant="ghost" size="sm">Edit</flr-button>
@@ -35,9 +41,17 @@ type Story = StoryObj<PageHeaderComponent>;
 export const Full: Story = {};
 
 export const TitleOnly: Story = {
-  args: { eyebrow: null, sub: null, breadcrumbs: [] },
+  args: { eyebrow: null, sub: null, count: null, breadcrumbs: [] },
   render: (args) => ({
     props: args,
     template: `<flr-page-header [title]="title" [breadcrumbs]="breadcrumbs" />`,
+  }),
+};
+
+export const WithCount: Story = {
+  args: { eyebrow: null, sub: null, breadcrumbs: [], title: 'Secrets', count: 128 },
+  render: (args) => ({
+    props: args,
+    template: `<flr-page-header [title]="title" [count]="count" [breadcrumbs]="breadcrumbs" />`,
   }),
 };

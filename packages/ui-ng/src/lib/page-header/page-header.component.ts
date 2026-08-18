@@ -33,7 +33,12 @@ export interface BreadcrumbCrumb {
           <div class="mono flr-ph__eyebrow">{{ eyebrow() }}</div>
         }
         <div class="flr-ph__title-row">
-          <h1 class="flr-ph__title">{{ title() }}</h1>
+          <h1 class="flr-ph__title">
+            <span>{{ title() }}</span>
+            @if (count() != null) {
+              <span class="mono flr-ph__count">{{ count() }}</span>
+            }
+          </h1>
           <ng-content select="[page-header-badge]" />
         </div>
         @if (sub()) {
@@ -107,6 +112,17 @@ export interface BreadcrumbCrumb {
       line-height: 1.05;
       letter-spacing: -0.025em;
       margin: 0;
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .flr-ph__count {
+      font-family: var(--font-mono, 'DM Mono', ui-monospace, monospace);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--color-ink-3, #64748b);
     }
     .flr-ph__sub {
       font-size: 15px;
@@ -128,6 +144,7 @@ export interface BreadcrumbCrumb {
 export class PageHeaderComponent {
   readonly title = input.required<string>();
   readonly eyebrow = input<string | null>(null);
+  readonly count = input<string | number | null>(null);
   readonly sub = input<string | null>(null);
   readonly breadcrumbs = input<readonly BreadcrumbCrumb[]>([]);
 }
