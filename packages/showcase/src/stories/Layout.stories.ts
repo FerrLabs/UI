@@ -1,10 +1,12 @@
-import { ContainerComponent, DividerComponent } from '@ferrlabs/ui-ng';
+import { ContainerComponent, DividerComponent, SectionComponent } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
 const meta: Meta = {
   title: 'Primitives/Layout',
-  decorators: [moduleMetadata({ imports: [ContainerComponent, DividerComponent] })],
+  decorators: [
+    moduleMetadata({ imports: [ContainerComponent, DividerComponent, SectionComponent] }),
+  ],
 };
 
 export default meta;
@@ -36,6 +38,24 @@ export const Divider: Story = {
           <flr-divider orientation="vertical" />
           <span>Right</span>
         </div>
+      </div>`,
+  }),
+};
+
+export const Section: Story = {
+  render: () => ({
+    template: `
+      <div style="display:grid; gap:28px; max-width:520px">
+        <flr-section title="Deploy keys">
+          <p style="margin:0; font-size:14px; color:var(--color-fg-2)">
+            Read-only keys scoped to a single repository.
+          </p>
+        </flr-section>
+        <flr-section title="Rotation" hint="every 90 days">
+          <p style="margin:0; font-size:14px; color:var(--color-fg-2)">
+            The hint sits on the title baseline and carries the mono face.
+          </p>
+        </flr-section>
       </div>`,
   }),
 };
