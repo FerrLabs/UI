@@ -27,6 +27,9 @@ const SIZE: Record<SwitchSize, { trackW: number; trackH: number; thumb: number; 
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SwitchComponent), multi: true },
   ],
   template: `
+    <!-- TODO(#122): a label cannot be associated with a button, so this wraps rather than
+         labels. The switch needs aria-labelledby against the projected text instead. -->
+    <!-- eslint-disable-next-line @angular-eslint/template/label-has-associated-control -->
     <label class="flr-switch" [class.flr-switch--disabled]="disabled()">
       <button
         type="button"

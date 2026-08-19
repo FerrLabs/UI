@@ -9,7 +9,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { LogoMarkComponent, type ProductSlug } from '../logo-mark/logo-mark.component';
+import { LogoMarkComponent } from '../logo-mark/logo-mark.component';
 
 export type BrandDropdownAppId =
   | 'ferrflow'

@@ -4,5 +4,7 @@ build
 .astro
 .vite
 pnpm-lock.yaml
+.angular
+packages/showcase/.storybook/preview.css
 *.tsbuildinfo
 CHANGELOG.md

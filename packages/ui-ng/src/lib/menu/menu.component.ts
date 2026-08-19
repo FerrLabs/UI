@@ -19,6 +19,10 @@ export type MenuAlign = 'start' | 'end';
   styleUrls: ['../overlay/cdk-overlay.css'],
   imports: [OverlayModule],
   template: `
+    <!-- TODO(#122): the click handler and the aria state sit on this wrapper rather than on
+         the projected trigger, so the element that carries them is not focusable. Both belong
+         on the trigger button, which changes the component contract. -->
+    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
     <span
       class="flr-menu"
       cdkOverlayOrigin
@@ -40,6 +44,7 @@ export type MenuAlign = 'start' | 'end';
       (backdropClick)="open.set(false)"
       (detach)="open.set(false)"
     >
+      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
       <div
         class="flr-menu__panel"
         role="menu"
