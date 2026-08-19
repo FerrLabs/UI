@@ -30,7 +30,7 @@ jobs:
             echo "packages=[\"$INPUT\"]" >> "$GITHUB_OUTPUT"
             echo "Manual dispatch â†’ publish $INPUT"
           else
-            echo 'packages=["foundation","astro","ui"]' >> "$GITHUB_OUTPUT"
+            echo 'packages=["foundation","ui-ng"]' >> "$GITHUB_OUTPUT"
             echo "Manual dispatch (no input) â†’ publish all"
           fi
 

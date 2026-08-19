@@ -21,13 +21,14 @@ fonts and icons. One source for every product surface, so nothing gets rebuilt p
 | Package                                      | Name                      | Role                                                                                                                    |
 | -------------------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | [`packages/ui-ng`](packages/ui-ng)           | `@ferrlabs/ui-ng`         | Angular components: app chrome, forms, surfaces, overlays, plus a `docs` entry point carrying the versioned-docs engine |
-| [`packages/astro`](packages/astro)           | `@ferrlabs/ui-astro`      | Marketing-site chrome: Navbar, Footer, PreFooterCTA, Icon, LanguageSelect                                               |
 | [`packages/foundation`](packages/foundation) | `@ferrlabs/ui-foundation` | Design tokens, self-hosted Fraunces and DM Mono, SVG icons. Framework-agnostic                                          |
 | [`packages/showcase`](packages/showcase)     | `@ferrlabs/ui-showcase`   | Storybook on `@storybook/angular`. Private, shipped as a container image                                                |
 
-`@ferrlabs/ui-react` is gone. Every product frontend is Angular now and nothing imported it, so
-it was removed rather than left as a second component surface inviting drift. The history is in
-git.
+`@ferrlabs/ui-react` and `@ferrlabs/ui-astro` are both gone. Every product frontend and every
+marketing site is Angular now, and neither package had a consumer left, so they were removed
+rather than kept as second and third component surfaces inviting drift. Site chrome lives in
+`@ferrlabs/ui-ng` as `SiteNavbar`, `SiteFooter` and `SiteShell`, wired through
+`provideSiteChrome`. The history is in git, and the published versions stay installable.
 
 ## Consumption
 
@@ -40,8 +41,7 @@ git.
 }
 ```
 
-Marketing sites add `@ferrlabs/ui-astro`. Published to GitHub Packages under the `@ferrlabs`
-scope.
+Published to GitHub Packages under the `@ferrlabs` scope.
 
 ```ts
 import { ButtonComponent, PaginationComponent, ShellComponent } from '@ferrlabs/ui-ng';
