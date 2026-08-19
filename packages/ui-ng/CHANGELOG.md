@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.24.1] - 2026-08-19
+
+### Refactoring
+
+- refactor(ui): drop @ferrlabs/ui-astro now that every site is Angular (#407)
+
 ## [1.24.0] - 2026-08-18
 
 ### Features
