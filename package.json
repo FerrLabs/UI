@@ -10,20 +10,30 @@
   "scripts": {
     "build": "pnpm -r --workspace-concurrency=1 build",
     "typecheck": "pnpm -r typecheck",
-    "lint": "pnpm -r lint",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "pnpm -r test",
-    "ci:local": "pnpm build && pnpm typecheck",
+    "ci:local": "pnpm build && pnpm typecheck && pnpm lint && pnpm format:check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "angular-eslint": "^22.1.0",
+    "eslint": "^10.8.1",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.11.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.0",
     "prettier": "^3.4.2",
-    "typescript": "^6.0.0"
+    "typescript": "^6.0.0",
+    "typescript-eslint": "^8.67.0"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx,mjs,cjs,json,md,css}": "prettier --write"
+    "*.{ts,tsx,js,jsx,mjs,cjs,json,md,css}": [
+      "prettier --write",
+      "eslint --fix --no-warn-ignored"
+    ]
   }
 }

@@ -43,6 +43,10 @@ jobs:
             echo "filter=" >> "$GITHUB_OUTPUT"
             echo "manual dispatch — full workspace"
           fi
+      - name: Format check
+        run: pnpm format:check
+      - name: Lint
+        run: pnpm lint
       - name: Build library packages
         # ui-ng resolves @ferrlabs/ui-foundation through its dist/ exports, so
         # the topological order matters. Use

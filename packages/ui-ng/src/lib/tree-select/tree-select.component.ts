@@ -65,7 +65,7 @@ export interface TreeSelectGroup {
 
       <div class="flr-ts__tree" role="tree" [attr.aria-label]="label()">
         @for (g of visible(); track g.id) {
-          <div class="flr-ts__group" role="treeitem">
+          <div class="flr-ts__group" role="treeitem" [attr.aria-selected]="groupState(g) === 'all'">
             <div class="flr-ts__grouprow">
               <input
                 type="checkbox"
