@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.24.2] - 2026-08-21
+
+### Bug Fixes
+
+- fix(docs): keep the current path on On this page anchors (#417)
+
 ## [1.24.1] - 2026-08-19
 
 ### Refactoring
