@@ -106,7 +106,7 @@ interface SiblingLink {
           <ul class="docs__toc-list">
             @for (entry of toc(); track entry.id) {
               <li [class.docs__toc-item--sub]="entry.level === 3">
-                <a [href]="'#' + entry.id" class="docs__toc-link">{{ entry.text }}</a>
+                <a [href]="pagePath() + '#' + entry.id" class="docs__toc-link">{{ entry.text }}</a>
               </li>
             }
           </ul>
@@ -361,6 +361,7 @@ export class DocsLayoutComponent {
 
   protected readonly sidebarOpen = signal(false);
   protected readonly toc = signal<readonly TocEntry[]>([]);
+  protected readonly pagePath = signal('');
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly contentHost = viewChild<ElementRef<HTMLElement>>('content');
@@ -374,6 +375,7 @@ export class DocsLayoutComponent {
       if (!host) {
         return;
       }
+      this.pagePath.set(window.location.pathname);
       const headings = Array.from(host.querySelectorAll<HTMLElement>('h2, h3'));
       this.toc.set(
         headings
