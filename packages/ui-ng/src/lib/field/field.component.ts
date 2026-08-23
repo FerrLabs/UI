@@ -1,20 +1,32 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  afterRenderEffect,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  input,
+} from '@angular/core';
 
 let fieldCounter = 0;
 
 /**
  * Form-field wrapper — Angular 22 port of `@ferrlabs/ui-react`'s Field.
- * Renders the mono label, optional hint, and error message, and exposes the
- * wiring ids the control needs. Project the control as default content and
- * read the ids via the `flrField` template reference:
+ * Renders the mono label, optional hint, and error message, and links them to
+ * the projected control itself, so the common case needs no wiring:
+ *
+ * ```html
+ * <flr-field label="Email" [error]="err">
+ *   <flr-input />
+ * </flr-field>
+ * ```
+ *
+ * An `id` or `aria-describedby` set by the caller always wins. `invalid` stays
+ * the caller's to pass, since it drives styling rather than semantics:
  *
  * ```html
  * <flr-field label="Email" [error]="err" #f="flrField">
- *   <flr-input
- *     [id]="f.fieldId"
- *     [aria-describedby]="f.describedBy()"
- *     [invalid]="f.invalid()"
- *   />
+ *   <flr-input [invalid]="f.invalid()" />
  * </flr-field>
  * ```
  */
@@ -97,6 +109,8 @@ export class FieldComponent {
   readonly required = input(false);
   readonly optional = input(false);
 
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
   readonly fieldId = `flr-field-${++fieldCounter}`;
   readonly hintId = `${this.fieldId}-hint`;
   readonly errorId = `${this.fieldId}-error`;
@@ -111,4 +125,20 @@ export class FieldComponent {
     const error = this.error();
     return error != null && error !== '';
   });
+
+  constructor() {
+    afterRenderEffect(() => {
+      const describedBy = this.describedBy();
+      const control = this.host.nativeElement.querySelector<HTMLElement>('input, textarea, select');
+      if (!control) {
+        return;
+      }
+      if (!control.id) {
+        control.id = this.fieldId;
+      }
+      if (describedBy && !control.hasAttribute('aria-describedby')) {
+        control.setAttribute('aria-describedby', describedBy);
+      }
+    });
+  }
 }
