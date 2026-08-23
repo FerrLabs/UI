@@ -8,7 +8,9 @@
     "styles": "node scripts/fonts.mjs && tailwindcss -i .storybook/preview.src.css -o .storybook/preview.css",
     "storybook": "pnpm styles && ng run showcase:storybook",
     "build": "pnpm styles && ng run showcase:build-storybook",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "test-storybook",
+    "test:ci": "test-storybook --maxWorkers=2"
   },
   "dependencies": {
     "@angular/common": "^22.0.0",
@@ -26,15 +28,21 @@
     "@angular/cli": "^22.0.0",
     "@angular/compiler": "^22.0.0",
     "@angular/compiler-cli": "^22.0.0",
+    "@fontsource/dm-mono": "^5.3.0",
+    "@fontsource/fraunces": "^5.3.0",
     "@storybook/addon-a11y": "^10.0.0",
     "@storybook/addon-docs": "^10.0.0",
     "@storybook/addon-themes": "^10.0.0",
-    "@fontsource/dm-mono": "^5.3.0",
-    "@fontsource/fraunces": "^5.3.0",
     "@storybook/angular": "^10.0.0",
+    "@storybook/test-runner": "^0.24.4",
     "@tailwindcss/cli": "^4.1.13",
+    "axe-playwright": "^2.2.2",
+    "concurrently": "^10.0.5",
+    "http-server": "^14.1.1",
+    "playwright": "^1.62.1",
     "storybook": "^10.0.0",
     "tailwindcss": "^4.1.13",
-    "typescript": "^6.0.0"
+    "typescript": "^6.0.0",
+    "wait-on": "^9.1.0"
   }
 }
