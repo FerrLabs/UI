@@ -70,7 +70,7 @@ export class MenuComponent {
   readonly minWidth = input(220);
   readonly open = model(false);
 
-  private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   constructor() {
     afterRenderEffect(() => {
