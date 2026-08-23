@@ -8,3 +8,6 @@ build/
 .env
 .env.local
 *.tsbuildinfo
+
+.claude/*
+!.claude/launch.json
