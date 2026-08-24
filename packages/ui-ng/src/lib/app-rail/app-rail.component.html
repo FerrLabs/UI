@@ -1,0 +1,32 @@
+<nav class="flr-rail" [attr.aria-label]="ariaLabel()">
+  <div class="flr-rail__top"><ng-content select="[rail-top]" /></div>
+
+  <ul class="flr-rail__list">
+    @for (item of items(); track item.id) {
+      <li class="flr-rail__row">
+        <a
+          class="flr-rail__tile"
+          [class.flr-rail__tile--current]="item.id === current()"
+          [class.flr-rail__tile--locked]="item.locked ?? false"
+          [href]="item.href"
+          [style.--flr-rail-accent]="item.accent"
+          [attr.aria-current]="item.id === current() ? 'page' : null"
+          [attr.aria-label]="itemLabel(item)"
+          [attr.target]="item.newTab ? '_blank' : null"
+          [attr.rel]="item.newTab ? 'noreferrer noopener' : null"
+          (click)="onSelect(item)"
+        >
+          <flr-logo-mark [product]="glyph(item)" accent="#ffffff" [size]="24" />
+        </a>
+        <span class="flr-rail__tip" aria-hidden="true">{{ item.label }}</span>
+      </li>
+    }
+  </ul>
+
+  <div class="flr-rail__spacer"></div>
+
+  <div class="flr-rail__utility">
+    <div class="flr-rail__divider" aria-hidden="true"></div>
+    <div class="flr-rail__actions"><ng-content select="[rail-utility]" /></div>
+  </div>
+</nav>
