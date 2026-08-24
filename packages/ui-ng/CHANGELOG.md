@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.25.0] - 2026-08-24
+
+### Features
+
+- feat(ui-ng): add flr-app-rail and a shell rail slot (#437)
+
 ## [1.24.2] - 2026-08-21
 
 ### Bug Fixes
