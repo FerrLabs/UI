@@ -27,7 +27,7 @@ export interface ShellNavGroup {
  * Composes `<flr-sidebar>` (data-driven nav from `sections`) + a sticky topbar
  * (breadcrumb, ⌘K search, action/user slots) + a scrollable main outlet.
  * Brand, topbar actions, and the user menu are projection slots
- * (`[shell-brand]`, `[shell-breadcrumb-lead]`, `[shell-breadcrumb-actions]`,
+ * (`[shell-rail]`, `[shell-brand]`, `[shell-breadcrumb-lead]`, `[shell-breadcrumb-actions]`,
  * `[shell-actions]`, `[shell-topbar-right]`, `[shell-user]`) so the consumer
  * drops in `LogoMark` / a site switcher leading or trailing the breadcrumb /
  * dropdowns. `[shell-breadcrumb-lead]` renders before the crumb trail (a `/`
@@ -43,6 +43,7 @@ export interface ShellNavGroup {
   },
   template: `
     <div class="flr-shell">
+      <div class="flr-shell__rail"><ng-content select="[shell-rail]" /></div>
       <flr-sidebar [(collapsed)]="collapsed">
         <div sidebar-brand class="flr-shell__brand"><ng-content select="[shell-brand]" /></div>
         <div sidebar-project><ng-content select="[shell-project]" /></div>
@@ -117,6 +118,13 @@ export interface ShellNavGroup {
       display: flex;
       min-height: 100vh;
       background: var(--color-app-bg, #fafaf9);
+    }
+    .flr-shell__rail {
+      display: flex;
+      align-self: stretch;
+    }
+    .flr-shell__rail:empty {
+      display: none;
     }
     .flr-shell__brand {
       display: flex;
