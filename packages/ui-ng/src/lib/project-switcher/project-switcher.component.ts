@@ -36,23 +36,45 @@ export interface ProjectSwitcherPlaceholder {
   host: {
     '(document:mousedown)': 'onDocumentDown($event)',
     '(document:keydown.escape)': 'close()',
+    '[class.flr-ps--brand]': "variant() === 'brand'",
   },
   template: `
-    <flr-site-card [label]="displayedLabel()" (select)="toggle()">
-      @if (displayedIcon()) {
-        <span
-          site-card-icon
-          class="flr-ps__trigger-icon"
-          [innerHTML]="iconHtml(displayedIcon())"
-        ></span>
-      }
-      @if (triggerEyebrow()) {
-        <span site-card-eyebrow>{{ triggerEyebrow() }}</span>
-      }
-      @if (displayedMeta()) {
-        <span site-card-meta>{{ displayedMeta() }}</span>
-      }
-    </flr-site-card>
+    @if (variant() === 'brand') {
+      <button
+        type="button"
+        class="flr-ps__brand"
+        [attr.aria-haspopup]="'menu'"
+        [attr.aria-expanded]="open()"
+        (click)="toggle()"
+      >
+        @if (displayedIcon()) {
+          <span class="flr-ps__trigger-icon" [innerHTML]="iconHtml(displayedIcon())"></span>
+        }
+        <span class="flr-ps__brand-text">
+          <span class="flr-ps__brand-label">{{ displayedLabel() }}</span>
+          @if (displayedMeta()) {
+            <span class="flr-ps__brand-meta">{{ displayedMeta() }}</span>
+          }
+        </span>
+        <span class="flr-ps__brand-chev" aria-hidden="true">▾</span>
+      </button>
+    } @else {
+      <flr-site-card [label]="displayedLabel()" (select)="toggle()">
+        @if (displayedIcon()) {
+          <span
+            site-card-icon
+            class="flr-ps__trigger-icon"
+            [innerHTML]="iconHtml(displayedIcon())"
+          ></span>
+        }
+        @if (triggerEyebrow()) {
+          <span site-card-eyebrow>{{ triggerEyebrow() }}</span>
+        }
+        @if (displayedMeta()) {
+          <span site-card-meta>{{ displayedMeta() }}</span>
+        }
+      </flr-site-card>
+    }
 
     @if (open()) {
       <div class="flr-ps__panel" role="menu">
@@ -122,6 +144,72 @@ export interface ProjectSwitcherPlaceholder {
     :host {
       display: block;
       position: relative;
+    }
+    :host(.flr-ps--brand) {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      align-self: stretch;
+      height: 100%;
+    }
+    .flr-ps__brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 0 18px;
+      margin: 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      overflow: hidden;
+      transition: background 140ms ease;
+    }
+    .flr-ps__brand:hover {
+      background: var(--color-app-nav-hover, rgba(30, 41, 59, 0.03));
+    }
+    .flr-ps__brand-text {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .flr-ps__brand-label {
+      font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 1.1;
+      color: var(--color-ink, #1e293b);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .flr-ps__brand-meta {
+      font-size: 11px;
+      line-height: 1.1;
+      color: var(--color-ink-3, #64748b);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .flr-ps__brand-chev {
+      flex-shrink: 0;
+      font-size: 12px;
+      opacity: 0.7;
+      color: var(--color-ink-3, #64748b);
+    }
+    :host(.flr-ps--brand) .flr-ps__panel {
+      left: 0;
+      right: 0;
+      top: 100%;
+      border-radius: 0 0 10px 10px;
     }
     .flr-ps__trigger-icon,
     .flr-ps__item-icon {
@@ -282,6 +370,7 @@ export class ProjectSwitcherComponent {
   readonly createLabel = input<string | null>(null);
   readonly viewAllLabel = input<string | null>(null);
   readonly placeholder = input<ProjectSwitcherPlaceholder | null>(null);
+  readonly variant = input<'card' | 'brand'>('card');
   readonly triggerEyebrow = input<string | null>(null);
   readonly emptyState = input('No results');
 
