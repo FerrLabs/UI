@@ -16,7 +16,7 @@
           [attr.rel]="item.newTab ? 'noreferrer noopener' : null"
           (click)="onSelect(item)"
         >
-          <flr-logo-mark [product]="glyph(item)" accent="#ffffff" [size]="24" />
+          <flr-logo-mark [product]="glyph(item)" [accent]="item.accent" [size]="26" />
         </a>
         <span class="flr-rail__tip" aria-hidden="true">{{ item.label }}</span>
       </li>
