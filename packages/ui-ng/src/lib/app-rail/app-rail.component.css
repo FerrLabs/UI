@@ -49,12 +49,13 @@
   width: 44px;
   height: 44px;
   border-radius: 13px;
-  background: linear-gradient(
-    155deg,
-    color-mix(in srgb, var(--flr-rail-accent, #64748b) 46%, #ffffff),
-    var(--flr-rail-accent, #64748b) 62%,
-    color-mix(in srgb, var(--flr-rail-accent, #64748b) 82%, #000000)
+  background: var(
+    --color-app-rail-tile,
+    color-mix(in srgb, var(--color-app-rail, #101012) 86%, #ffffff)
   );
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.34),
+    0 0 0 1px color-mix(in srgb, var(--color-app-rail, #101012) 60%, #ffffff);
   transition:
     opacity 130ms ease,
     filter 130ms ease,
@@ -65,7 +66,9 @@
 .flr-rail__tile:hover,
 .flr-rail__tile:focus-visible {
   transform: translateY(-1px);
-  box-shadow: 0 0 14px -3px color-mix(in srgb, var(--flr-rail-accent, #64748b) 70%, transparent);
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.4),
+    0 0 0 1px color-mix(in srgb, var(--flr-rail-accent, #64748b) 55%, transparent);
 }
 
 .flr-rail__tile:focus-visible {
@@ -75,9 +78,8 @@
 
 .flr-rail__tile--current {
   box-shadow:
-    0 0 0 2px color-mix(in srgb, var(--flr-rail-accent, #64748b) 30%, #ffffff),
-    0 0 0 5px color-mix(in srgb, var(--flr-rail-accent, #64748b) 28%, transparent),
-    0 0 30px 6px color-mix(in srgb, var(--flr-rail-accent, #64748b) 85%, transparent);
+    0 1px 3px rgba(0, 0, 0, 0.34),
+    0 0 0 2px var(--flr-rail-accent, #64748b);
 }
 
 .flr-rail__tile--locked {
