@@ -6,6 +6,14 @@
   "private": false,
   "sideEffects": false,
   "exports": {
+    ".": {
+      "types": "./dist/types/ferrlabs-ui-ng.d.ts",
+      "default": "./dist/fesm2022/ferrlabs-ui-ng.mjs"
+    },
+    "./docs": {
+      "types": "./dist/types/ferrlabs-ui-ng-docs.d.ts",
+      "default": "./dist/fesm2022/ferrlabs-ui-ng-docs.mjs"
+    },
     "./docs/styles.css": {
       "default": "./docs/styles.css"
     }
