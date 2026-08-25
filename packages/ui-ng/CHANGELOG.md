@@ -4,6 +4,13 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.25.1] - 2026-08-25
+
+### Bug Fixes
+
+- fix(ui-ng): let the project switcher fill the sidebar brand row (#442)
+- fix(ui-ng): give the app rail solid tiles and accent logos (#444)
+
 ## [1.25.0] - 2026-08-24
 
 ### Features
