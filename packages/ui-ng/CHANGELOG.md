@@ -4,6 +4,13 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.25.2] - 2026-08-25
+
+### Bug Fixes
+
+- fix(ui-ng): keep dark product marks visible on the app rail (#449)
+- fix(ui-ng): expose the package root in the source exports map (#447)
+
 ## [1.25.1] - 2026-08-25
 
 ### Bug Fixes
