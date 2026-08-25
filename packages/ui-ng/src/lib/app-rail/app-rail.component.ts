@@ -55,6 +55,24 @@ export class AppRailComponent {
     return PRODUCT_SLUGS.has(item.id) ? (item.id as ProductSlug) : 'ferrlabs';
   }
 
+  protected markColor(item: AppRailItem): string {
+    return this.readsOnRail(item.accent) ? item.accent : '#ffffff';
+  }
+
+  private readsOnRail(accent: string): boolean {
+    const hex = accent.trim().replace('#', '');
+    if (hex.length !== 3 && hex.length !== 6) return true;
+    const full =
+      hex.length === 3
+        ? hex
+            .split('')
+            .map((c) => c + c)
+            .join('')
+        : hex;
+    const [r, g, b] = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b > 70;
+  }
+
   protected itemLabel(item: AppRailItem): string {
     const parts = [item.label];
     if (item.locked) parts.push('no active subscription');
