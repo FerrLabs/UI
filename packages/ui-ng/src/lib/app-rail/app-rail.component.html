@@ -3,7 +3,7 @@
 
   <ul class="flr-rail__list">
     @for (item of items(); track item.id) {
-      <li class="flr-rail__row">
+      <li class="flr-rail__row" [style.--flr-rail-accent]="item.accent">
         <a
           class="flr-rail__tile"
           [class.flr-rail__tile--current]="item.id === current()"
@@ -28,5 +28,6 @@
   <div class="flr-rail__utility">
     <div class="flr-rail__divider" aria-hidden="true"></div>
     <div class="flr-rail__actions"><ng-content select="[rail-utility]" /></div>
+    <div class="flr-rail__user"><ng-content select="[rail-user]" /></div>
   </div>
 </nav>

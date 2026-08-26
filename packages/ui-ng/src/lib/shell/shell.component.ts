@@ -44,69 +44,71 @@ export interface ShellNavGroup {
   template: `
     <div class="flr-shell">
       <div class="flr-shell__rail"><ng-content select="[shell-rail]" /></div>
-      <flr-sidebar [(collapsed)]="collapsed">
-        <div sidebar-brand class="flr-shell__brand"><ng-content select="[shell-brand]" /></div>
-        <div sidebar-project><ng-content select="[shell-project]" /></div>
-        @for (group of sections(); track group.title ?? $index) {
-          <flr-sidebar-section [title]="group.title ?? null" [collapsed]="collapsed()">
-            @for (item of group.items; track item.id) {
-              <flr-sidebar-item
-                [label]="item.label"
-                [href]="item.href ?? null"
-                [active]="isActive(item)"
-                [collapsed]="collapsed()"
-                [accent]="accent()"
-                [badge]="item.badge ?? null"
-                [danger]="item.danger ?? false"
-                [disabled]="item.disabled ?? false"
-                (selected)="onSelect(item)"
-              >
-                @if (item.icon) {
-                  <span item-icon [innerHTML]="iconHtml(item.icon)"></span>
-                }
-              </flr-sidebar-item>
-            }
-          </flr-sidebar-section>
-        }
-      </flr-sidebar>
-
-      <div class="flr-shell__body">
-        <header class="flr-shell__topbar">
-          <div class="flr-shell__slot flr-shell__slot--crumb-lead">
-            <ng-content select="[shell-breadcrumb-lead]" />
-          </div>
-          @if (breadcrumb().length) {
-            <div class="mono flr-shell__crumbs">
-              @for (crumb of breadcrumb(); track $index; let last = $last) {
-                <span class="flr-shell__crumb" [class.flr-shell__crumb--last]="last">{{
-                  crumb
-                }}</span>
-                @if (!last) {
-                  <span class="flr-shell__crumb-sep">/</span>
-                }
+      <div class="flr-shell__surface">
+        <flr-sidebar [(collapsed)]="collapsed">
+          <div sidebar-brand class="flr-shell__brand"><ng-content select="[shell-brand]" /></div>
+          <div sidebar-project><ng-content select="[shell-project]" /></div>
+          @for (group of sections(); track group.title ?? $index) {
+            <flr-sidebar-section [title]="group.title ?? null" [collapsed]="collapsed()">
+              @for (item of group.items; track item.id) {
+                <flr-sidebar-item
+                  [label]="item.label"
+                  [href]="item.href ?? null"
+                  [active]="isActive(item)"
+                  [collapsed]="collapsed()"
+                  [accent]="accent()"
+                  [badge]="item.badge ?? null"
+                  [danger]="item.danger ?? false"
+                  [disabled]="item.disabled ?? false"
+                  (selected)="onSelect(item)"
+                >
+                  @if (item.icon) {
+                    <span item-icon [innerHTML]="iconHtml(item.icon)"></span>
+                  }
+                </flr-sidebar-item>
               }
+            </flr-sidebar-section>
+          }
+        </flr-sidebar>
+
+        <div class="flr-shell__body">
+          <header class="flr-shell__topbar">
+            <div class="flr-shell__slot flr-shell__slot--crumb-lead">
+              <ng-content select="[shell-breadcrumb-lead]" />
             </div>
-          }
-          <div class="flr-shell__slot flr-shell__slot--crumb">
-            <ng-content select="[shell-breadcrumb-actions]" />
-          </div>
-          <div class="flr-shell__spacer"></div>
-          @if (searchEnabled()) {
-            <button
-              type="button"
-              class="flr-shell__search mono"
-              aria-label="Open search (Cmd+K)"
-              (click)="search.emit()"
-            >
-              <span>Search</span>
-              <kbd class="flr-shell__kbd">⌘K</kbd>
-            </button>
-          }
-          <div class="flr-shell__slot"><ng-content select="[shell-actions]" /></div>
-          <div class="flr-shell__slot"><ng-content select="[shell-topbar-right]" /></div>
-          <div class="flr-shell__slot"><ng-content select="[shell-user]" /></div>
-        </header>
-        <main class="flr-shell__main"><ng-content /></main>
+            @if (breadcrumb().length) {
+              <div class="mono flr-shell__crumbs">
+                @for (crumb of breadcrumb(); track $index; let last = $last) {
+                  <span class="flr-shell__crumb" [class.flr-shell__crumb--last]="last">{{
+                    crumb
+                  }}</span>
+                  @if (!last) {
+                    <span class="flr-shell__crumb-sep">/</span>
+                  }
+                }
+              </div>
+            }
+            <div class="flr-shell__slot flr-shell__slot--crumb">
+              <ng-content select="[shell-breadcrumb-actions]" />
+            </div>
+            <div class="flr-shell__spacer"></div>
+            @if (searchEnabled()) {
+              <button
+                type="button"
+                class="flr-shell__search mono"
+                aria-label="Open search (Cmd+K)"
+                (click)="search.emit()"
+              >
+                <span>Search</span>
+                <kbd class="flr-shell__kbd">⌘K</kbd>
+              </button>
+            }
+            <div class="flr-shell__slot"><ng-content select="[shell-actions]" /></div>
+            <div class="flr-shell__slot"><ng-content select="[shell-topbar-right]" /></div>
+            <div class="flr-shell__slot"><ng-content select="[shell-user]" /></div>
+          </header>
+          <main class="flr-shell__main"><ng-content /></main>
+        </div>
       </div>
     </div>
   `,
@@ -117,6 +119,20 @@ export interface ShellNavGroup {
     .flr-shell {
       display: flex;
       min-height: 100vh;
+      background: var(--color-app-rail, #101012);
+    }
+    .flr-shell__surface {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      background: var(--color-app-bg, #fafaf9);
+    }
+    .flr-shell:has(.flr-shell__rail:not(:empty)) .flr-shell__surface {
+      margin-top: var(--flr-shell-inset, 10px);
+      border-top-left-radius: var(--flr-shell-radius, 14px);
+      overflow: clip;
+    }
+    .flr-shell:not(:has(.flr-shell__rail:not(:empty))) {
       background: var(--color-app-bg, #fafaf9);
     }
     .flr-shell__rail {
