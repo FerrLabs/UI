@@ -1,5 +1,6 @@
 import {
   AppRailComponent,
+  AvatarComponent,
   LogoMarkComponent,
   ShellComponent,
   type AppRailItem,
@@ -30,7 +31,11 @@ const SECTIONS = [
 const meta: Meta<AppRailComponent> = {
   title: 'App chrome/AppRail',
   component: AppRailComponent,
-  decorators: [moduleMetadata({ imports: [AppRailComponent, ShellComponent, LogoMarkComponent] })],
+  decorators: [
+    moduleMetadata({
+      imports: [AppRailComponent, ShellComponent, LogoMarkComponent, AvatarComponent],
+    }),
+  ],
   args: { items: ITEMS, current: 'ferrtrack' },
   parameters: { layout: 'fullscreen' },
 };
@@ -59,6 +64,15 @@ export const InShell: Story = {
         <flr-shell [sections]="sections" [currentPath]="currentPath" [breadcrumb]="['Issues']">
           <flr-app-rail shell-rail [items]="items" [current]="current">
             <flr-logo-mark rail-top product="ferrlabs" accent="#ffffff" [size]="26" />
+            <button
+              rail-utility
+              type="button"
+              aria-label="Settings"
+              style="width:32px;height:32px;border:none;border-radius:9px;background:transparent;color:rgba(255,255,255,.62);cursor:pointer"
+            >
+              &#9881;
+            </button>
+            <flr-avatar rail-user name="Ada Doe" [size]="32" />
           </flr-app-rail>
           <div shell-brand style="display:flex;align-items:center;gap:10px;padding:0 4px">
             <flr-logo-mark product="ferrtrack" accent="#6366f1" [size]="26" />
