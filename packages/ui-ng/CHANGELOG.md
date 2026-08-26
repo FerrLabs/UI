@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.26.0] - 2026-08-26
+
+### Features
+
+- feat(ui-ng): add the account slot, inset the surface and mark the current app (#453)
+
 ## [1.25.2] - 2026-08-25
 
 ### Bug Fixes
