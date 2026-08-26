@@ -34,7 +34,8 @@ const PRODUCT_SLUGS: ReadonlySet<string> = new Set<ProductSlug>([
  * per-product nav.
  *
  * `[rail-top]` takes the suite monogram, `[rail-utility]` the bottom actions
- * (add product, settings). Reads `--color-app-rail*` tokens.
+ * (add product, settings) and `[rail-user]` the account avatar, pinned last.
+ * Reads `--color-app-rail*` tokens.
  */
 @Component({
   selector: 'flr-app-rail',
