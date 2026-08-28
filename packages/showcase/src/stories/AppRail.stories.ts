@@ -2,8 +2,10 @@ import {
   AppRailComponent,
   AvatarComponent,
   LogoMarkComponent,
+  ProjectSwitcherComponent,
   ShellComponent,
   type AppRailItem,
+  type ProjectSwitcherItem,
 } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
@@ -15,6 +17,11 @@ const ITEMS: readonly AppRailItem[] = [
   { id: 'ferrgrowth', label: 'FerrGrowth', href: '/growth', accent: '#7c3aed' },
   { id: 'ferrfleet', label: 'FerrFleet', href: '/fleet', accent: '#f59e0b' },
   { id: 'ferrlens', label: 'FerrLens', href: '/lens', accent: '#14b8a6', locked: true },
+];
+
+const ORGS: readonly ProjectSwitcherItem[] = [
+  { id: 'ferrlabs', label: 'FerrLabs', meta: 'ferrlabs' },
+  { id: 'ace-studio', label: 'Ace Studio', meta: 'ace-studio' },
 ];
 
 const SECTIONS = [
@@ -33,7 +40,13 @@ const meta: Meta<AppRailComponent> = {
   component: AppRailComponent,
   decorators: [
     moduleMetadata({
-      imports: [AppRailComponent, ShellComponent, LogoMarkComponent, AvatarComponent],
+      imports: [
+        AppRailComponent,
+        ShellComponent,
+        LogoMarkComponent,
+        AvatarComponent,
+        ProjectSwitcherComponent,
+      ],
     }),
   ],
   args: { items: ITEMS, current: 'ferrtrack' },
@@ -42,6 +55,34 @@ const meta: Meta<AppRailComponent> = {
 
 export default meta;
 type Story = StoryObj<AppRailComponent>;
+
+const shell = (variant: string) => `
+      <div style="height:640px">
+        <flr-shell [sections]="sections" [currentPath]="currentPath" [breadcrumb]="['Issues']">
+          <flr-app-rail shell-rail [items]="items" [current]="current">
+            <flr-logo-mark rail-top product="ferrlabs" accent="#ffffff" [size]="26" />
+            <button
+              rail-utility
+              type="button"
+              aria-label="Settings"
+              style="width:32px;height:32px;border:none;border-radius:9px;background:transparent;color:rgba(255,255,255,.62);cursor:pointer"
+            >
+              &#9881;
+            </button>
+            <flr-avatar rail-user name="Ada Doe" [size]="32" />
+          </flr-app-rail>
+          <flr-project-switcher
+            shell-brand
+            ${variant}
+            title="Switch org"
+            searchPlaceholder="Search orgs…"
+            [current]="currentOrg"
+            [items]="orgs"
+          />
+          <div style="padding:32px">Page content</div>
+        </flr-shell>
+      </div>
+    `;
 
 export const Default: Story = {
   render: (args) => ({
@@ -58,29 +99,14 @@ export const Default: Story = {
 
 export const InShell: Story = {
   render: (args) => ({
-    props: { ...args, sections: SECTIONS, currentPath: '/issues' },
-    template: `
-      <div style="height:640px">
-        <flr-shell [sections]="sections" [currentPath]="currentPath" [breadcrumb]="['Issues']">
-          <flr-app-rail shell-rail [items]="items" [current]="current">
-            <flr-logo-mark rail-top product="ferrlabs" accent="#ffffff" [size]="26" />
-            <button
-              rail-utility
-              type="button"
-              aria-label="Settings"
-              style="width:32px;height:32px;border:none;border-radius:9px;background:transparent;color:rgba(255,255,255,.62);cursor:pointer"
-            >
-              &#9881;
-            </button>
-            <flr-avatar rail-user name="Ada Doe" [size]="32" />
-          </flr-app-rail>
-          <div shell-brand style="display:flex;align-items:center;gap:10px;padding:0 4px">
-            <flr-logo-mark product="ferrtrack" accent="#6366f1" [size]="26" />
-            <span style="font-weight:600">Ace Studio</span>
-          </div>
-          <div style="padding:32px">Page content</div>
-        </flr-shell>
-      </div>
-    `,
+    props: { ...args, sections: SECTIONS, currentPath: '/issues', orgs: ORGS, currentOrg: ORGS[0] },
+    template: shell('variant="brand"'),
+  }),
+};
+
+export const BrandRowWithoutVariant: Story = {
+  render: (args) => ({
+    props: { ...args, sections: SECTIONS, currentPath: '/issues', orgs: ORGS, currentOrg: ORGS[0] },
+    template: shell(''),
   }),
 };
