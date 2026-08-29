@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.27.0] - 2026-08-29
+
+### Features
+
+- feat(docs): collapse the docs sidebar sections (#465)
+
 ## [1.26.0] - 2026-08-26
 
 ### Features
