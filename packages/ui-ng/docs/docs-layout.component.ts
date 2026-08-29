@@ -57,8 +57,8 @@ interface SiblingLink {
 
         <nav class="docs__nav" [attr.aria-label]="navLabel">
           @for (section of nav(); track section.label) {
-            <div class="docs__section">
-              <div class="mono docs__section-label">{{ section.label }}</div>
+            <details class="docs__section" [open]="sectionIsOpen(section)">
+              <summary class="mono docs__section-label">{{ section.label }}</summary>
               <ul class="docs__section-list">
                 @for (item of section.items; track item.slug) {
                   <li>
@@ -72,7 +72,7 @@ interface SiblingLink {
                   </li>
                 }
               </ul>
-            </div>
+            </details>
           }
         </nav>
       </aside>
@@ -188,14 +188,57 @@ interface SiblingLink {
       outline: none;
     }
     .docs__section {
-      margin-bottom: 28px;
+      margin-bottom: 4px;
+    }
+    .docs__section[open] {
+      margin-bottom: 20px;
     }
     .docs__section-label {
       font-size: 11px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--paper-ink-3);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 4px 0;
+      user-select: none;
+    }
+    .docs__section[open] > .docs__section-label {
       margin-bottom: 12px;
+    }
+    .docs__section-label::-webkit-details-marker {
+      display: none;
+    }
+    .docs__section-label::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg) translate(-2px, -2px);
+      transition: transform 120ms ease;
+      flex: none;
+      opacity: 0.7;
+    }
+    .docs__section[open] > .docs__section-label::after {
+      transform: rotate(-135deg) translate(-2px, -2px);
+    }
+    .docs__section-label:hover {
+      color: var(--paper-ink-2);
+    }
+    .docs__section-label:focus-visible {
+      outline: 2px solid var(--paper-accent, currentColor);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .docs__section-label::after {
+        transition: none;
+      }
     }
     .docs__section-list {
       list-style: none;
@@ -442,6 +485,10 @@ export class DocsLayoutComponent {
     if (target.value) {
       window.location.assign(target.value);
     }
+  }
+
+  protected sectionIsOpen(section: DocSection): boolean {
+    return section.items.some((item) => item.slug === this.slug());
   }
 
   protected docHref(slug: string): string {
