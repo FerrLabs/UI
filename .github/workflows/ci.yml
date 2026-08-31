@@ -89,7 +89,7 @@ jobs:
         run: pnpm --filter "@ferrlabs/ui-showcase..." build
       - name: Run accessibility tests
         run: |
-          pnpm --filter @ferrlabs/ui-showcase exec concurrently -k -s first -n sb,test             "npx http-server packages/showcase/dist -p 6006 --silent"             "npx wait-on tcp:127.0.0.1:6006 && pnpm --filter @ferrlabs/ui-showcase test:ci"
+          pnpm --filter @ferrlabs/ui-showcase exec concurrently -k -s first -n sb,test             "npx http-server dist -p 6006"             "npx wait-on http-get://127.0.0.1:6006/index.json && pnpm --filter @ferrlabs/ui-showcase test:ci"
 
   release:
     name: Release with FerrFlow
