@@ -116,7 +116,7 @@ export const Widths: Story = {
     template: `
       <div style="display:grid; gap:10px">
         @for (p of pages; track p) {
-          <flr-pagination [page]="p" [totalPages]="20" align="start" />
+          <flr-pagination [page]="p" [totalPages]="20" align="start" [aria-label]="'Pagination, width sample ' + p" />
         }
       </div>`,
   }),

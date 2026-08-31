@@ -79,7 +79,7 @@ interface RenderCell {
         }
         <thead>
           <tr>
-            <th class="flr-cmp__corner" scope="col"></th>
+            <td class="flr-cmp__corner"></td>
             @for (col of columns(); track col.name) {
               <th
                 class="flr-cmp__head"
@@ -155,7 +155,7 @@ interface RenderCell {
     .flr-cmp__heading em {
       font-style: italic;
       font-weight: 600;
-      color: var(--ours-accent, var(--color-ink, #1e293b));
+      color: var(--color-ink, #1e293b);
     }
     .flr-cmp__lead {
       margin: 0;

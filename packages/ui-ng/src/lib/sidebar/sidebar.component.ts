@@ -300,7 +300,7 @@ export class SidebarSectionComponent {
       padding: 1px 7px;
       border-radius: 999px;
       background: var(--color-rule, rgba(30, 41, 59, 0.14));
-      color: var(--color-ink-3, #64748b);
+      color: var(--color-ink-2, #475569);
       white-space: nowrap;
     }
     .flr-sb-item--active .flr-sb-item__badge {

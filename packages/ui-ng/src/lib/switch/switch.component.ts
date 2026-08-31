@@ -69,7 +69,7 @@ const SIZE: Record<SwitchSize, { trackW: number; trackH: number; thumb: number; 
     }
     .flr-switch--disabled {
       cursor: not-allowed;
-      opacity: 0.6;
+      color: var(--color-ink-3, #5d6b80);
     }
     .flr-switch__track {
       position: relative;
