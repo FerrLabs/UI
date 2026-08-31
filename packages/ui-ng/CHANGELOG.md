@@ -4,6 +4,14 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.27.2] - 2026-08-31
+
+### Bug Fixes
+
+- fix(ui-ng): name the sidebar nav, colour empty states and drop accent-as-text (#480)
+- fix(a11y): link flr-field label and messages to the projected control (#432)
+- fix(a11y): put menu ARIA on the trigger and link field labels to their controls (#430)
+
 ## [1.27.1] - 2026-08-31
 
 ### Bug Fixes
