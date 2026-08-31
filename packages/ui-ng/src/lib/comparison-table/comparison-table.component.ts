@@ -198,7 +198,7 @@ interface RenderCell {
       border-bottom: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
     }
     .flr-cmp__head--ours {
-      color: var(--ours-accent, var(--color-ink, #1e293b));
+      color: var(--color-ink, #1e293b);
       background: color-mix(in oklab, var(--ours-accent, #1e293b) 10%, transparent);
       border-top-left-radius: 8px;
       border-top-right-radius: 8px;

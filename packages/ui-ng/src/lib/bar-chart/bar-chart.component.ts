@@ -310,7 +310,7 @@ function niceCeil(raw: number): number {
       margin: 0;
       padding: 18px 0;
       font: 400 12px/1.4 var(--flr-font-sans, system-ui);
-      opacity: 0.55;
+      color: var(--color-ink-3, #5d6b80);
     }
     @media (prefers-reduced-motion: no-preference) {
       .flr-bc__stack {
