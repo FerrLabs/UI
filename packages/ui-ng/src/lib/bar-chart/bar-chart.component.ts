@@ -164,7 +164,7 @@ function niceCeil(raw: number): number {
     }
     .flr-bc__summary {
       font: 400 11.5px/1.2 var(--flr-font-mono, ui-monospace, monospace);
-      opacity: 0.55;
+      color: var(--color-ink-3, #5d6b80);
     }
     /* Top-aligned, not bottom: the gutter carries the plot's height, so lining
        their tops up puts the 0 tick on the baseline. Bottom-aligning would sit
@@ -195,7 +195,7 @@ function niceCeil(raw: number): number {
       transform: translateY(50%);
       white-space: nowrap;
       font: 400 10px/1 var(--flr-font-mono, ui-monospace, monospace);
-      opacity: 0.45;
+      color: var(--color-ink-3, #5d6b80);
     }
     .flr-bc__plot {
       position: relative;
@@ -302,7 +302,7 @@ function niceCeil(raw: number): number {
       min-width: 0;
       text-align: center;
       font: 400 10px/1 var(--flr-font-mono, ui-monospace, monospace);
-      opacity: 0.45;
+      color: var(--color-ink-3, #5d6b80);
       white-space: nowrap;
       overflow: hidden;
     }
