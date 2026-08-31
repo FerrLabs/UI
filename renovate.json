@@ -1,4 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>FerrLabs/.github"]
+  "extends": ["github>FerrLabs/.github"],
+  "packageRules": [
+    {
+      "description": "@storybook/test-runner 0.24.4 breaks on Jest 30.5: module.register() is not supported in Jest. Hold the Jest family at 30.4 until the test runner adapts. See #475.",
+      "matchPackageNames": ["jest", "/^@jest//", "/^jest-/"],
+      "allowedVersions": "<30.5.0"
+    }
+  ]
 }
