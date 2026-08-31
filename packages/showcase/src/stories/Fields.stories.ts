@@ -40,7 +40,7 @@ export const Input: Story = {
         <flr-input size="md" placeholder="Medium" [formControl]="value" />
         <flr-input size="lg" placeholder="Large" [formControl]="value" />
         <flr-input [invalid]="true" placeholder="Invalid" [formControl]="value" />
-        <flr-input [formControl]="locked" />
+        <flr-input aria-label="Locked" [formControl]="locked" />
       </div>`,
   }),
 };
@@ -91,14 +91,29 @@ export const WithFieldWrapper: Story = {
     },
     template: `
       <div style="display:grid; gap:20px; max-width:380px">
-        <flr-field label="Project name" hint="Lowercase, no spaces." [required]="true">
-          <flr-input placeholder="ferrflow-cloud" [formControl]="name" />
+        <flr-field label="Project name" hint="Lowercase, no spaces." [required]="true" #name0="flrField">
+          <flr-input
+            placeholder="ferrflow-cloud"
+            [id]="name0.fieldId"
+            [aria-describedby]="name0.describedBy()"
+            [formControl]="name"
+          />
         </flr-field>
-        <flr-field label="Webhook URL" error="Must be an https:// URL.">
-          <flr-input [invalid]="true" [formControl]="webhook" />
+        <flr-field label="Webhook URL" error="Must be an https:// URL." #hook0="flrField">
+          <flr-input
+            [id]="hook0.fieldId"
+            [aria-describedby]="hook0.describedBy()"
+            [invalid]="hook0.invalid()"
+            [formControl]="webhook"
+          />
         </flr-field>
-        <flr-field label="Notes" [optional]="true">
-          <flr-textarea [rows]="3" [formControl]="notes" />
+        <flr-field label="Notes" [optional]="true" #notes0="flrField">
+          <flr-textarea
+            [rows]="3"
+            [id]="notes0.fieldId"
+            [aria-describedby]="notes0.describedBy()"
+            [formControl]="notes"
+          />
         </flr-field>
       </div>`,
   }),

@@ -1,8 +1,11 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
+  inject,
   input,
   model,
   output,
@@ -19,18 +22,11 @@ export type MenuAlign = 'start' | 'end';
   styleUrls: ['../overlay/cdk-overlay.css'],
   imports: [OverlayModule],
   template: `
-    <!-- TODO(#122): the click handler and the aria state sit on this wrapper rather than on
-         the projected trigger, so the element that carries them is not focusable. Both belong
-         on the trigger button, which changes the component contract. -->
+    <!-- TODO(#122): the click handler sits on this wrapper rather than on the projected
+         trigger. Clicks and Enter/Space bubble up from the projected button so the menu is
+         operable, but moving the handler onto the trigger would change the component contract. -->
     <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
-    <span
-      class="flr-menu"
-      cdkOverlayOrigin
-      #origin="cdkOverlayOrigin"
-      [attr.aria-haspopup]="'menu'"
-      [attr.aria-expanded]="open()"
-      (click)="toggle()"
-    >
+    <span class="flr-menu" cdkOverlayOrigin #origin="cdkOverlayOrigin" (click)="toggle()">
       <ng-content select="[flr-menu-trigger]" />
     </span>
 
@@ -73,6 +69,20 @@ export class MenuComponent {
   readonly align = input<MenuAlign>('start');
   readonly minWidth = input(220);
   readonly open = model(false);
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  constructor() {
+    afterRenderEffect(() => {
+      const expanded = this.open();
+      const trigger = this.host.nativeElement.querySelector('[flr-menu-trigger]');
+      if (!trigger) {
+        return;
+      }
+      trigger.setAttribute('aria-haspopup', 'menu');
+      trigger.setAttribute('aria-expanded', String(expanded));
+    });
+  }
 
   protected readonly positions = computed<ConnectedPosition[]>(() => {
     const x = this.align() === 'end' ? 'end' : 'start';
