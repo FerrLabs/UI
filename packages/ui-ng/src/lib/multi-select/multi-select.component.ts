@@ -161,7 +161,7 @@ export interface MultiSelectOption {
       margin: 0;
       padding: 14px 12px;
       font: 400 12.5px/1.4 var(--flr-font-sans, system-ui);
-      opacity: 0.6;
+      color: var(--color-ink-3, #5d6b80);
     }
     .flr-ms__foot {
       display: flex;

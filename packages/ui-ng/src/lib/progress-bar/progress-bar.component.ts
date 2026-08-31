@@ -36,11 +36,12 @@ const FILL: Record<ProgressBarVariant, string> = {
       }
       <div
         class="flr-progress__track"
-        role="progressbar"
-        [attr.aria-valuenow]="indeterminate() ? null : value()"
-        [attr.aria-valuemin]="0"
-        [attr.aria-valuemax]="max()"
-        [attr.aria-label]="label()"
+        [attr.role]="label() ? 'progressbar' : null"
+        [attr.aria-hidden]="label() ? null : 'true'"
+        [attr.aria-valuenow]="!label() || indeterminate() ? null : value()"
+        [attr.aria-valuemin]="label() ? 0 : null"
+        [attr.aria-valuemax]="label() ? max() : null"
+        [attr.aria-label]="label() || null"
         [style.height]="height()"
       >
         <div

@@ -33,8 +33,7 @@ const SIZE_MAP: Record<Exclude<AvatarSize, number>, number> = {
         [style.width.px]="px()"
         [style.height.px]="px()"
         [style.border-radius.px]="radius()"
-        [style.background]="accent() ?? 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))'"
-        [style.color]="accent() ? '#fff' : 'var(--color-ink, #1e293b)'"
+        [style.background]="accent() ?? 'var(--color-ink-2, #475569)'"
         [style.font-size.px]="px() * 0.4"
       >
         {{ initials() }}
@@ -55,6 +54,7 @@ const SIZE_MAP: Record<Exclude<AvatarSize, number>, number> = {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      color: #fff;
       font-family: var(--font-mono, 'DM Mono', ui-monospace, monospace);
       font-weight: 500;
       user-select: none;

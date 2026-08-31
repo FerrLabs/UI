@@ -14,7 +14,7 @@ import { NgTemplateOutlet } from '@angular/common';
     <aside class="flr-sb" [class.flr-sb--collapsed]="collapsed()" [style.width]="widthPx()">
       <div class="flr-sb__brand"><ng-content select="[sidebar-brand]" /></div>
       <div class="flr-sb__project"><ng-content select="[sidebar-project]" /></div>
-      <nav class="flr-sb__nav"><ng-content /></nav>
+      <nav class="flr-sb__nav" [attr.aria-label]="navLabel()"><ng-content /></nav>
       <div class="flr-sb__footer">
         <button type="button" class="flr-sb__toggle mono" (click)="toggle()">
           <span aria-hidden="true">{{ collapsed() ? '→' : '←' }}</span>
@@ -99,6 +99,7 @@ import { NgTemplateOutlet } from '@angular/common';
 })
 export class SidebarComponent {
   readonly collapsed = model(false);
+  readonly navLabel = input('Sections');
   readonly width = input(256);
   readonly collapsedWidth = input(64);
 
