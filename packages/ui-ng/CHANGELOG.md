@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.27.3] - 2026-08-31
+
+### Bug Fixes
+
+- fix(ui-ng): clear the last contrast, landmark and empty-header failures (#482)
+
 ## [1.27.2] - 2026-08-31
 
 ### Bug Fixes
