@@ -4,6 +4,15 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.27.1] - 2026-08-31
+
+### Bug Fixes
+
+- fix(ui-ng): colour chart labels and avatar initials instead of dimming them (#478)
+- fix(foundation): darken ink-3 so captions clear AA on app surfaces (#474)
+- fix(deps): hold the Jest family at 30.4 so the Storybook runner works (#476)
+- fix(ci): build ui-ng before the showcase in the accessibility job (#467)
+
 ## [1.27.0] - 2026-08-29
 
 ### Features

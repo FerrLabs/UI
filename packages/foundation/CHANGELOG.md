@@ -4,6 +4,26 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.4.0] - 2026-08-31
+
+### Features
+
+- feat(docs): collapse the docs sidebar sections (#465)
+- feat(ui-ng): add the account slot, inset the surface and mark the current app (#453)
+- feat(ui-ng): add flr-app-rail and a shell rail slot (#437)
+
+### Bug Fixes
+
+- fix(ui-ng): colour chart labels and avatar initials instead of dimming them (#478)
+- fix(foundation): darken ink-3 so captions clear AA on app surfaces (#474)
+- fix(deps): hold the Jest family at 30.4 so the Storybook runner works (#476)
+- fix(ci): build ui-ng before the showcase in the accessibility job (#467)
+- fix(ui-ng): keep dark product marks visible on the app rail (#449)
+- fix(ui-ng): expose the package root in the source exports map (#447)
+- fix(ui-ng): let the project switcher fill the sidebar brand row (#442)
+- fix(ui-ng): give the app rail solid tiles and accent logos (#444)
+- fix(docs): keep the current path on On this page anchors (#417)
+
 ## [5.3.1] - 2026-08-19
 
 ### Refactoring
