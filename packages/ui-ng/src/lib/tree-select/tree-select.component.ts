@@ -201,7 +201,7 @@ export interface TreeSelectGroup {
     }
     .flr-ts__groupmeta {
       font-size: 11.5px;
-      opacity: 0.6;
+      color: var(--color-ink-3, #5d6b80);
       white-space: nowrap;
     }
     .flr-ts__leaves {
