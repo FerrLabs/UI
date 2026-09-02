@@ -57,7 +57,7 @@ interface SiblingLink {
 
         <nav class="docs__nav" [attr.aria-label]="navLabel">
           @for (section of nav(); track section.label) {
-            <details class="docs__section" [open]="sectionIsOpen(section)">
+            <details class="docs__section" open>
               <summary class="mono docs__section-label">{{ section.label }}</summary>
               <ul class="docs__section-list">
                 @for (item of section.items; track item.slug) {
@@ -485,10 +485,6 @@ export class DocsLayoutComponent {
     if (target.value) {
       window.location.assign(target.value);
     }
-  }
-
-  protected sectionIsOpen(section: DocSection): boolean {
-    return section.items.some((item) => item.slug === this.slug());
   }
 
   protected docHref(slug: string): string {
