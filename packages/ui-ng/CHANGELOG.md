@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.28.0] - 2026-09-02
+
+### Features
+
+- feat(docs): expand every sidebar section by default (#487)
+
 ## [1.27.3] - 2026-08-31
 
 ### Bug Fixes
