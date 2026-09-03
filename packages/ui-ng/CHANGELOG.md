@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.29.2] - 2026-09-03
+
+### Bug Fixes
+
+- fix(ui-ng): render icon markup only from an allowlist, never raw (#500)
+
 ## [1.29.1] - 2026-09-03
 
 ### Bug Fixes
