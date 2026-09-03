@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.29.0] - 2026-09-03
+
+### Features
+
+- feat(ui-ng): add a paged() helper for client-side paging (#494)
+
 ## [1.28.0] - 2026-09-02
 
 ### Features
