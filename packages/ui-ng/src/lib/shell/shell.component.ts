@@ -5,11 +5,16 @@ import {
   SidebarItemComponent,
   SidebarSectionComponent,
 } from '../sidebar/sidebar.component';
+import { isTrustedIconMarkup } from '../icon/icon-markup';
 
 export interface ShellNavItem {
   readonly id: string;
   readonly label: string;
-  /** Text/emoji glyph or trusted inline SVG markup. */
+  /**
+   * Text/emoji glyph, or SVG markup restricted to the elements and attributes
+   * `isTrustedIconMarkup` allows. Anything else renders as text, so a value
+   * that reaches this field from user input cannot inject markup.
+   */
   readonly icon?: string;
   readonly href?: string;
   readonly badge?: string | number | null;
@@ -63,7 +68,14 @@ export interface ShellNavGroup {
                   (selected)="onSelect(item)"
                 >
                   @if (item.icon) {
-                    <span item-icon [innerHTML]="iconHtml(item.icon)"></span>
+                    <span item-icon>
+                      @let icon = trustedIcon(item.icon);
+                      @if (icon) {
+                        <span [innerHTML]="icon"></span>
+                      } @else {
+                        {{ item.icon }}
+                      }
+                    </span>
                   }
                 </flr-sidebar-item>
               }
@@ -265,8 +277,8 @@ export class ShellComponent {
     if (item.href) this.navigate.emit(item.href);
   }
 
-  protected iconHtml(markup: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(markup);
+  protected trustedIcon(markup: string): SafeHtml | null {
+    return isTrustedIconMarkup(markup) ? this.sanitizer.bypassSecurityTrustHtml(markup) : null;
   }
 
   protected onKeydown(event: KeyboardEvent): void {
