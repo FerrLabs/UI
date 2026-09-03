@@ -128,6 +128,7 @@ export interface ShellNavGroup {
       background: var(--color-app-bg, #fafaf9);
     }
     .flr-shell:has(.flr-shell__rail:not(:empty)) .flr-shell__surface {
+      --flr-sidebar-height: calc(100vh - var(--flr-shell-inset, 10px));
       margin-top: var(--flr-shell-inset, 10px);
       border-top-left-radius: var(--flr-shell-radius, 14px);
       overflow: clip;

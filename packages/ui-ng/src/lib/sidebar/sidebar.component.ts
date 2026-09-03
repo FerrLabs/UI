@@ -29,7 +29,7 @@ import { NgTemplateOutlet } from '@angular/common';
     }
     .flr-sb {
       flex-shrink: 0;
-      height: 100vh;
+      height: var(--flr-sidebar-height, 100vh);
       position: sticky;
       top: 0;
       display: flex;
