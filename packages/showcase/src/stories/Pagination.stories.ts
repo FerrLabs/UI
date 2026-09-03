@@ -1,6 +1,12 @@
-import { PaginationComponent } from '@ferrlabs/ui-ng';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { PaginationComponent, paged } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
+
+const SECRETS = Array.from({ length: 23 }, (_, i) => ({
+  name: `DATABASE_URL_${i + 1}`,
+  env: i % 3 === 0 ? 'production' : 'staging',
+}));
 
 const meta: Meta<PaginationComponent> = {
   title: 'Primitives/Pagination',
@@ -120,4 +126,57 @@ export const Widths: Story = {
         }
       </div>`,
   }),
+};
+
+@Component({
+  selector: 'flr-paged-demo',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [PaginationComponent],
+  template: `
+    <div style="display:grid; gap:12px; max-width:520px">
+      <label style="display:flex; gap:8px; align-items:center; font-size:13px">
+        <input type="checkbox" [checked]="onlyProduction()" (change)="toggle()" />
+        Production only
+      </label>
+
+      <ul style="margin:0; padding:0; list-style:none; display:grid; gap:4px; min-height:150px">
+        @for (row of rows.items(); track row.name) {
+          <li style="font-size:13px; font-family:var(--font-mono)">
+            {{ row.name }}
+            <span style="color:var(--color-fg-3)">{{ row.env }}</span>
+          </li>
+        }
+      </ul>
+
+      <flr-pagination
+        [page]="rows.page()"
+        [totalItems]="rows.total()"
+        [pageSize]="rows.pageSize"
+        [showSummary]="true"
+        size="sm"
+        align="between"
+        (pageChange)="rows.setPage($event)"
+      />
+    </div>
+  `,
+})
+class PagedDemoComponent {
+  private readonly all = SECRETS;
+  protected readonly onlyProduction = signal(false);
+
+  private readonly filtered = computed(() =>
+    this.onlyProduction() ? this.all.filter((row) => row.env === 'production') : this.all,
+  );
+
+  protected readonly rows = paged(this.filtered, 5);
+
+  protected toggle(): void {
+    this.onlyProduction.update((on) => !on);
+  }
+}
+
+export const WithPagedHelper: Story = {
+  render: () => ({ template: `<flr-paged-demo />` }),
+  decorators: [moduleMetadata({ imports: [PagedDemoComponent] })],
 };
