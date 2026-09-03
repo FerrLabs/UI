@@ -149,6 +149,9 @@ export type {
   PaginationVariant,
 } from './lib/pagination/pagination.component';
 
+export { paged, DEFAULT_PAGE_SIZE } from './lib/pagination/paged';
+export type { Paged } from './lib/pagination/paged';
+
 export { SiteNavbarComponent } from './lib/site-navbar/site-navbar.component';
 export { SiteFooterComponent } from './lib/site-footer/site-footer.component';
 export { SiteShellComponent } from './lib/site-shell/site-shell.component';
