@@ -97,5 +97,5 @@ jobs:
     permissions:
       contents: write
       id-token: write
-    uses: FerrLabs/.github/.github/workflows/reusable-ferrflow-release.yml@71acd9ae328af791b3a65ea09ab233b1945636d4 # main
+    uses: FerrLabs/.github/.github/workflows/reusable-ferrflow-release.yml@3df97ce594e954bfed6db38189bcad25452ad034 # main
     secrets: inherit
