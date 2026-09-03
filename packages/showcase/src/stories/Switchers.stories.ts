@@ -4,6 +4,7 @@ import {
   ProjectSwitcherComponent,
   SiteSwitcherComponent,
 } from '@ferrlabs/ui-ng';
+import { icons } from '@ferrlabs/ui-foundation/icons';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
@@ -88,6 +89,28 @@ export const BrandDropdownInternal: Story = {
     template: `
       <div style="padding:16px; background:var(--color-app-bg-2, var(--color-paper-2)); width:280px">
         <flr-brand-dropdown current="ferrvault" [apps]="apps" />
+      </div>`,
+  }),
+};
+
+const ICON_PROJECTS = [
+  { id: 'svg', label: 'Allowed SVG', meta: 'library icon', icon: icons.overview },
+  { id: 'emoji', label: 'Emoji glyph', meta: 'plain text', icon: '⌨' },
+  {
+    id: 'injection',
+    label: 'Injection attempt',
+    meta: 'rendered as text',
+    icon: '<img src=x onerror="window.__iconXss = true">',
+  },
+];
+
+export const ProjectSwitcherIconMarkup: Story = {
+  render: () => ({
+    props: { items: ICON_PROJECTS, current: ICON_PROJECTS[0] },
+    template: `
+      <div style="padding:16px">
+        <flr-project-switcher [items]="items" [current]="current" title="Switch project"
+                              triggerEyebrow="Project" />
       </div>`,
   }),
 };

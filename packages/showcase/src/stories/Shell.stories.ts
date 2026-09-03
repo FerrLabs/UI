@@ -1,4 +1,5 @@
 import { ButtonComponent, ShellComponent, UserMenuComponent } from '@ferrlabs/ui-ng';
+import { icons } from '@ferrlabs/ui-foundation/icons';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
@@ -59,3 +60,25 @@ type Story = StoryObj<ShellComponent>;
 export const Default: Story = {};
 
 export const NoSearch: Story = { args: { searchEnabled: false, breadcrumb: [] } };
+
+export const UntrustedIconMarkup: Story = {
+  args: {
+    sections: [
+      {
+        title: 'Icons',
+        items: [
+          { id: 'svg', label: 'Allowed SVG', icon: icons.overview, href: '/svg' },
+          { id: 'emoji', label: 'Emoji glyph', icon: '⌨', href: '/emoji' },
+          {
+            id: 'injection',
+            label: 'Injection attempt',
+            icon: '<img src=x onerror="window.__iconXss = true">',
+            href: '/injection',
+          },
+        ],
+      },
+    ],
+    currentPath: '/svg',
+    breadcrumb: ['Icons'],
+  },
+};
