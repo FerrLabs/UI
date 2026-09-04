@@ -4,6 +4,13 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.29.3] - 2026-09-04
+
+### Bug Fixes
+
+- fix(ui-ng): name the docs sidebar and toc landmarks (#506)
+- fix(ui-ng): scroll the page area, not the document (#504)
+
 ## [1.29.2] - 2026-09-03
 
 ### Bug Fixes
