@@ -1,0 +1,36 @@
+@if (asLink()) {
+  <a
+    #control
+    class="flr-tab"
+    [class.flr-tab--active]="active()"
+    [href]="href()"
+    [attr.aria-current]="active() ? 'page' : null"
+    (click)="onClick($event)"
+  >
+    <ng-container [ngTemplateOutlet]="body" />
+  </a>
+} @else {
+  <button
+    #control
+    type="button"
+    class="flr-tab"
+    [class.flr-tab--active]="active()"
+    [disabled]="disabled()"
+    [attr.role]="isPanel() ? 'tab' : null"
+    [attr.aria-selected]="isPanel() ? active() : null"
+    [attr.aria-controls]="isPanel() ? panelId() : null"
+    [attr.aria-current]="!isPanel() && active() ? 'page' : null"
+    [attr.tabindex]="tabIndex()"
+    (click)="onClick($event)"
+    (keydown)="onKeydown($event)"
+  >
+    <ng-container [ngTemplateOutlet]="body" />
+  </button>
+}
+
+<ng-template #body>
+  <span class="flr-tab__label">{{ label() }}</span>
+  @if (count() !== null) {
+    <span class="mono flr-tab__count">{{ count() }}</span>
+  }
+</ng-template>
