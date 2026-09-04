@@ -193,3 +193,7 @@ export type { RuntimeEnv } from './lib/runtime-links/runtime-links';
 
 export { StatusBarsComponent } from './lib/status-bars/status-bars.component';
 export type { StatusLevel, StatusBucket } from './lib/status-bars/status-bars.component';
+
+export { TabsComponent } from './lib/tabs/tabs.component';
+export { TabComponent } from './lib/tabs/tab.component';
+export type { TabsMode } from './lib/tabs/tabs.model';

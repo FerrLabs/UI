@@ -1,0 +1,61 @@
+:host {
+  display: contents;
+}
+
+.flr-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--color-fg-2, #475569);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    border-color 120ms ease;
+}
+
+.flr-tab:hover:not(:disabled) {
+  color: var(--color-fg, #1e293b);
+  border-bottom-color: var(--color-rule-strong, rgba(30, 41, 59, 0.28));
+}
+
+.flr-tab:focus-visible {
+  outline: 2px solid var(--color-accent, var(--color-fg, #1e293b));
+  outline-offset: -2px;
+  border-radius: 4px 4px 0 0;
+}
+
+.flr-tab--active,
+.flr-tab--active:hover {
+  color: var(--color-fg, #1e293b);
+  border-bottom-color: var(--color-accent, var(--color-fg, #1e293b));
+}
+
+.flr-tab:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.flr-tab__count {
+  font-size: 11px;
+  color: var(--color-fg-3, #5d6b80);
+}
+
+.flr-tab--active .flr-tab__count {
+  color: var(--color-fg-2, #475569);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flr-tab {
+    transition: none;
+  }
+}
