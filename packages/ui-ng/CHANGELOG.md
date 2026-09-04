@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.30.0] - 2026-09-04
+
+### Features
+
+- feat(ui-ng): add a shared Tabs primitive (#508)
+
 ## [1.29.3] - 2026-09-04
 
 ### Bug Fixes
