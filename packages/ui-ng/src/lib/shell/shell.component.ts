@@ -119,7 +119,7 @@ export interface ShellNavGroup {
             <div class="flr-shell__slot"><ng-content select="[shell-topbar-right]" /></div>
             <div class="flr-shell__slot"><ng-content select="[shell-user]" /></div>
           </header>
-          <main class="flr-shell__main"><ng-content /></main>
+          <main class="flr-shell__main" tabindex="0"><ng-content /></main>
         </div>
       </div>
     </div>
@@ -130,7 +130,7 @@ export interface ShellNavGroup {
     }
     .flr-shell {
       display: flex;
-      min-height: 100vh;
+      height: 100dvh;
       background: var(--color-app-rail, #101012);
     }
     .flr-shell__surface {
@@ -140,7 +140,7 @@ export interface ShellNavGroup {
       background: var(--color-app-bg, #fafaf9);
     }
     .flr-shell:has(.flr-shell__rail:not(:empty)) .flr-shell__surface {
-      --flr-sidebar-height: calc(100vh - var(--flr-shell-inset, 10px));
+      --flr-sidebar-height: calc(100dvh - var(--flr-shell-inset, 10px));
       margin-top: var(--flr-shell-inset, 10px);
       border-top-left-radius: var(--flr-shell-radius, 14px);
       overflow: clip;
@@ -165,6 +165,7 @@ export interface ShellNavGroup {
       flex-direction: column;
       flex: 1;
       min-width: 0;
+      min-height: 0;
     }
     .flr-shell__topbar {
       height: 64px;
@@ -244,6 +245,7 @@ export interface ShellNavGroup {
     }
     .flr-shell__main {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
       background: var(--color-app-bg, #fafaf9);
     }
