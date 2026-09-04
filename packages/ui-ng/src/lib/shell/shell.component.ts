@@ -119,7 +119,7 @@ export interface ShellNavGroup {
             <div class="flr-shell__slot"><ng-content select="[shell-topbar-right]" /></div>
             <div class="flr-shell__slot"><ng-content select="[shell-user]" /></div>
           </header>
-          <main class="flr-shell__main"><ng-content /></main>
+          <main class="flr-shell__main" tabindex="0"><ng-content /></main>
         </div>
       </div>
     </div>
