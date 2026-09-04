@@ -37,7 +37,11 @@ interface SiblingLink {
         {{ sidebarLabel() }}
       </button>
 
-      <aside class="docs__sidebar" [class.is-open]="sidebarOpen()">
+      <aside
+        class="docs__sidebar"
+        [class.is-open]="sidebarOpen()"
+        [attr.aria-label]="sidebarLandmarkLabel()"
+      >
         @if (versions().length) {
           <div class="docs__versions mono" translate="no">
             <label class="docs__versions-label" for="flr-docs-version">{{ versionLabel() }}</label>
@@ -100,7 +104,7 @@ interface SiblingLink {
         </nav>
       </main>
 
-      <aside class="docs__toc">
+      <aside class="docs__toc" [attr.aria-label]="tocLabel()">
         @if (toc().length) {
           <div class="mono docs__toc-label">{{ tocLabel() }}</div>
           <ul class="docs__toc-list">
@@ -471,6 +475,9 @@ export class DocsLayoutComponent {
     this.sidebarOpen() ? (this.isFr() ? 'Fermer' : 'Close') : this.isFr() ? 'Sommaire' : 'Menu',
   );
   protected readonly navLabel = 'Documentation';
+  protected readonly sidebarLandmarkLabel = computed(() =>
+    this.isFr() ? 'Sommaire de la documentation' : 'Documentation menu',
+  );
   protected readonly tocLabel = computed(() => (this.isFr() ? 'Sur cette page' : 'On this page'));
   protected readonly pagerLabel = 'Pagination';
   protected readonly prevLabel = computed(() => (this.isFr() ? 'Précédent' : 'Previous'));
