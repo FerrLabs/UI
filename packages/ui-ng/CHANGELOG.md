@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.31.0] - 2026-09-05
+
+### Features
+
+- feat(ui-ng): annotated textarea that draws diagnostics under the text (#511)
+
 ## [1.30.0] - 2026-09-04
 
 ### Features
