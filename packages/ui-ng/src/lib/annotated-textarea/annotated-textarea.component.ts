@@ -172,6 +172,7 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
       white-space: pre-wrap;
       overflow-wrap: break-word;
       word-break: normal;
+      scrollbar-gutter: stable;
     }
     .flr-at__mirror {
       position: absolute;
