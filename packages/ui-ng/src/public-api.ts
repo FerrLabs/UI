@@ -44,6 +44,9 @@ export type { InputSize } from './lib/input/input.component';
 
 export { TextareaComponent } from './lib/textarea/textarea.component';
 
+export { AnnotatedTextareaComponent } from './lib/annotated-textarea/annotated-textarea.component';
+export type { TextareaDiagnostic } from './lib/annotated-textarea/annotated-textarea.component';
+
 export { FieldComponent } from './lib/field/field.component';
 
 export { CheckboxComponent } from './lib/checkbox/checkbox.component';
