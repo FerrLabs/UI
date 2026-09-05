@@ -28,7 +28,22 @@ interface Bubble {
   readonly severity: 'error' | 'warning';
   readonly left: number;
   readonly top: number;
+  readonly below: boolean;
 }
+
+/**
+ * Room the bubble needs above a mark before it is worth placing there. Below
+ * this it renders off the top of the viewport, which is what happens to a
+ * first-line diagnostic in a field near the top of the page.
+ *
+ * Sized for a three-line bubble rather than the one-line case: the bubble is
+ * `12 + N * 16.8` tall and sits at `rect.top - 6 - height`, so two lines
+ * already need 51.6 and three need 68.4. Measuring the rendered bubble would
+ * be exact but wants a second pass after render, which is more machinery than
+ * a hover tooltip earns. The cost of the larger constant is that short
+ * messages near the top flip below a little sooner than they must.
+ */
+const BUBBLE_CLEARANCE = 72;
 
 function lineOffsets(value: string): number[] {
   const offsets = [0];
@@ -137,6 +152,7 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
         <div
           class="flr-at__bubble"
           [class.flr-at__bubble--warning]="b.severity === 'warning'"
+          [class.flr-at__bubble--below]="b.below"
           [style.left.px]="b.left"
           [style.top.px]="b.top"
           aria-hidden="true"
@@ -217,6 +233,9 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
       line-height: 1.4;
       pointer-events: none;
       box-shadow: 0 6px 18px rgba(15, 23, 42, 0.22);
+    }
+    .flr-at__bubble--below {
+      transform: none;
     }
     .flr-at__bubble--warning {
       background: var(--color-warning, #d97706);
@@ -353,11 +372,13 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
 
       const hit = this.markAt(i);
       if (!hit) return;
+      const below = rect.top < BUBBLE_CLEARANCE;
       const next: Bubble = {
         message: hit.message,
         severity: hit.severity ?? 'error',
         left: rect.left - frameRect.left,
-        top: rect.top - frameRect.top - 6,
+        top: below ? rect.bottom - frameRect.top + 6 : rect.top - frameRect.top - 6,
+        below,
       };
       const current = this.bubble();
       if (
