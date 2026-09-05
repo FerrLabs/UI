@@ -33,10 +33,17 @@ interface Bubble {
 
 /**
  * Room the bubble needs above a mark before it is worth placing there. Below
- * this it would render off the top of the viewport, which is what happens to a
+ * this it renders off the top of the viewport, which is what happens to a
  * first-line diagnostic in a field near the top of the page.
+ *
+ * Sized for a three-line bubble rather than the one-line case: the bubble is
+ * `12 + N * 16.8` tall and sits at `rect.top - 6 - height`, so two lines
+ * already need 51.6 and three need 68.4. Measuring the rendered bubble would
+ * be exact but wants a second pass after render, which is more machinery than
+ * a hover tooltip earns. The cost of the larger constant is that short
+ * messages near the top flip below a little sooner than they must.
  */
-const BUBBLE_CLEARANCE = 48;
+const BUBBLE_CLEARANCE = 72;
 
 function lineOffsets(value: string): number[] {
   const offsets = [0];
