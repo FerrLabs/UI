@@ -139,7 +139,7 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
           [class.flr-at__bubble--warning]="b.severity === 'warning'"
           [style.left.px]="b.left"
           [style.top.px]="b.top"
-          role="status"
+          aria-hidden="true"
         >
           {{ b.message }}
         </div>
@@ -154,7 +154,7 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
     .flr-at {
       position: relative;
       border-radius: 8px;
-      overflow: hidden;
+      overflow: visible;
       transition:
         border-color 140ms,
         box-shadow 140ms;
@@ -255,12 +255,18 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
 
   protected readonly segments = computed(() => segmentsFor(this.value(), this.diagnostics()));
 
-  protected readonly hasErrors = computed(() =>
-    this.diagnostics().some((d) => d.severity !== 'warning'),
-  );
+  private readonly shown = computed(() => {
+    const seen = new Set<TextareaDiagnostic>();
+    for (const seg of this.segments()) {
+      if (seg.diagnostic) seen.add(seg.diagnostic);
+    }
+    return [...seen];
+  });
+
+  protected readonly hasErrors = computed(() => this.shown().some((d) => d.severity !== 'warning'));
 
   protected readonly srSummary = computed(() => {
-    const count = this.diagnostics().length;
+    const count = this.shown().length;
     if (count === 0) return '';
     return count === 1 ? '1 problem found' : `${count} problems found`;
   });
@@ -336,13 +342,14 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
 
     for (let i = 0; i < marks.length; i++) {
       const mark = marks[i];
-      const rect = mark.getBoundingClientRect();
-      const inside =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom;
-      if (!inside) continue;
+      const rect = Array.from(mark.getClientRects()).find(
+        (r) =>
+          event.clientX >= r.left &&
+          event.clientX <= r.right &&
+          event.clientY >= r.top &&
+          event.clientY <= r.bottom,
+      );
+      if (!rect) continue;
 
       const hit = this.markAt(i);
       if (!hit) return;
@@ -353,7 +360,12 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
         top: rect.top - frameRect.top - 6,
       };
       const current = this.bubble();
-      if (!current || current.message !== next.message || current.top !== next.top) {
+      if (
+        !current ||
+        current.message !== next.message ||
+        current.top !== next.top ||
+        current.left !== next.left
+      ) {
         this.bubble.set(next);
       }
       return;
