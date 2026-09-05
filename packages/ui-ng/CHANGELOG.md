@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.31.1] - 2026-09-05
+
+### Bug Fixes
+
+- fix(ui-ng): flip the diagnostic bubble below a mark with no room above it (#517)
+
 ## [1.31.0] - 2026-09-05
 
 ### Features
