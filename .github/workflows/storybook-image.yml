@@ -1,8 +1,5 @@
 name: Storybook image
 
-# @ferrlabs/ui-showcase n'est pas publié sur npm (pas dans .ferrflow) : on
-# construit son image Storybook sur push main (ou manuellement) et on pousse
-# sur GHCR. Déployée en interne sur storybook.ferrlabs (VPN-only).
 on:
   push:
     branches: [main]
@@ -29,8 +26,6 @@ jobs:
       - name: Build and push
         run: |
           SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-          # build-<run_number> : tag monotone trié numériquement par la Flux
-          # ImagePolicy (auto-update). main-<sha> + latest : référence humaine.
           BUILD="${{ github.run_number }}"
           IMAGE=ghcr.io/ferrlabs/ui/showcase
           buildah login -u ${{ github.actor }} -p ${GITHUB_TOKEN} ghcr.io
