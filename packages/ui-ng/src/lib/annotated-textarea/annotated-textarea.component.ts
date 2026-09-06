@@ -33,27 +33,8 @@ interface Bubble {
   readonly below: boolean;
 }
 
-/**
- * Room the bubble needs above a mark before it is worth placing there. Below
- * this it renders off the top of the viewport, which is what happens to a
- * first-line diagnostic in a field near the top of the page.
- *
- * Sized for a three-line bubble rather than the one-line case: the bubble is
- * `12 + N * 16.8` tall and sits at `rect.top - 6 - height`, so two lines
- * already need 51.6 and three need 68.4. Measuring the rendered bubble would
- * be exact but wants a second pass after render, which is more machinery than
- * a hover tooltip earns. The cost of the larger constant is that short
- * messages near the top flip below a little sooner than they must.
- */
 const BUBBLE_CLEARANCE = 72;
 
-/**
- * Rectangle of one position inside a mark, rather than the mark's own first
- * rectangle. A mark that soft-wraps has one rectangle per visual line, so the
- * first one points at the wrong line whenever the caret sits on a later one.
- * A collapsed range has no width, which `placeBubble` does not use, and the
- * line box it reports is the one wanted.
- */
 function caretRect(mark: HTMLElement, offset: number): DOMRect | undefined {
   const node = mark.firstChild;
   if (!node || node.nodeType !== Node.TEXT_NODE) return mark.getClientRects()[0];
@@ -76,15 +57,6 @@ function lineOffsets(value: string): number[] {
   return offsets;
 }
 
-/**
- * Flatten the diagnostics into one ordered list of runs over the whole value,
- * newlines included in the plain runs.
- *
- * Deliberately flat rather than grouped per line: the newlines then travel
- * inside interpolated values, which Angular does not touch, instead of as
- * template whitespace, which it collapses by default. Grouping per line is the
- * version that renders correctly in a unit test and misaligns in the browser.
- */
 function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]): Segment[] {
   const offsets = lineOffsets(value);
 
@@ -114,21 +86,6 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
   return segments;
 }
 
-/**
- * Textarea that draws diagnostics under the text it is describing, rather than
- * listing them somewhere else on the page.
- *
- * A textarea cannot decorate its own content, so this renders a mirror layer
- * behind a transparent-background textarea: same box, same typography, the
- * mirror's glyphs invisible and only its underlines showing. Both layers are
- * declared here on purpose. An overlay built on top of a textarea from outside
- * has to guess that typography and silently misaligns when it changes; owning
- * both sides is what makes the alignment hold.
- *
- * Hover is hit-tested against the rendered underline rectangles instead of
- * relying on pointer events, because the textarea sits on top and takes them
- * all. Reading the real layout also means no font-metric arithmetic.
- */
 @Component({
   selector: 'flr-annotated-textarea',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -316,19 +273,6 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
 
   protected readonly hasErrors = computed(() => this.shown().some((d) => d.severity !== 'warning'));
 
-  /**
-   * The list id is emitted whether or not there are diagnostics, and the list
-   * always renders, so having diagnostics never changes the attribute.
-   * `flr-field` appends its own error id to whatever the control carries; a
-   * value that flipped between `null` and the id would be rewritten by change
-   * detection and drop that token, with no signal change to make the field's
-   * effect put it back.
-   *
-   * A consumer that passes a changing `aria-describedby` still walks into that,
-   * since the binding rewrites the attribute and the field's effect does not
-   * re-run. No caller does, and covering it would mean watching the attribute
-   * from the field.
-   */
   protected readonly describedByAttr = computed(() => {
     const outer = this.describedBy();
     return outer ? `${outer} ${this.listId}` : this.listId;
@@ -450,13 +394,6 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
     this.showCaretBubble();
   }
 
-  /**
-   * Diagnostic under the caret, so the message is reachable by keyboard. The
-   * measurement is deferred a frame by `trackCaret` because a keystroke changes
-   * the value, and the marks it moves are only in the DOM after the next
-   * render. Hovering a mark takes precedence while it lasts, and releasing the
-   * hover falls back here rather than clearing.
-   */
   private showCaretBubble(): void {
     if (!this.focused()) {
       if (this.bubble()) this.bubble.set(null);

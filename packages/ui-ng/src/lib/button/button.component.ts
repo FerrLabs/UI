@@ -19,13 +19,6 @@ const SIZE: Record<ButtonSize, SizeDim> = {
 
 const DANGER = 'var(--color-danger, #dc2626)';
 
-/**
- * Editorial app button — Angular 22 port of `@ferrlabs/ui-react`'s Button.
- * Mono label, accent-filled (primary), ghost-bordered, or danger. Renders an
- * `<a>` when `href` is set, otherwise a `<button>`. Styling reads the shared
- * tokens from `@ferrlabs/ui-foundation` (`--color-accent`, `--color-fg`,
- * `--color-rule-strong`, `--font-mono`).
- */
 @Component({
   selector: 'flr-button',
   imports: [NgTemplateOutlet],
@@ -117,21 +110,11 @@ const DANGER = 'var(--color-danger, #dc2626)';
 export class ButtonComponent {
   readonly variant = input<ButtonVariant>('primary');
   readonly size = input<ButtonSize>('md');
-  /** Hex accent override. Bg on `primary`/`danger`, text on `ghost`. */
   readonly accent = input<string | null>(null);
   readonly loading = input(false);
   readonly fullWidth = input(false);
   readonly disabled = input(false);
   readonly type = input<'button' | 'submit' | 'reset'>('button');
-  /**
-   * `id` of the form this button submits, for a submit button rendered outside
-   * its `<form>` — a modal footer being the usual case.
-   *
-   * Needed as a real input: written as a bare attribute it stays on the
-   * `<flr-button>` host and never reaches the `<button>` below, so the click
-   * silently does nothing. That is not a styling detail — it is the difference
-   * between a Save button that saves and one that looks identical and doesn't.
-   */
   readonly form = input<string | null>(null);
   readonly href = input<string | null>(null);
   readonly target = input<string | null>(null);

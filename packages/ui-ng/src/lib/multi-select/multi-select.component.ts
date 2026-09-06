@@ -8,28 +8,12 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-/** One selectable row. `id` is what the form value carries. */
 export interface MultiSelectOption {
   readonly id: string;
   readonly label: string;
-  /** Secondary line — an author, a branch, a timestamp. Also searched. */
   readonly hint?: string;
 }
 
-/**
- * Filterable multi-select list.
- *
- * Exists because picking N items out of a long, remote list — repositories,
- * open pull requests — is a shape a native `<select multiple>` handles badly:
- * no filtering, ctrl-click to deselect, and a scroll box that hides how many
- * are chosen. Consumers were about to grow their own; this is the shared one.
- *
- * Deliberately dumb about *where* the options come from. The consumer loads
- * them (often asynchronously) and passes them in, so this component never
- * knows about HTTP, debouncing or pagination — and stays testable.
- *
- * Implements `ControlValueAccessor`, so the value is a `string[]` of ids.
- */
 @Component({
   selector: 'flr-multi-select',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -190,15 +174,8 @@ export class MultiSelectComponent implements ControlValueAccessor {
   readonly searchable = input<boolean>(true);
   readonly searchPlaceholder = input<string>('Filter…');
   readonly searchLabel = input<string>('Filter options');
-  /**
-   * True while the consumer is still fetching `options`. Without this an async
-   * list spends its whole load claiming "Nothing to choose from." — an empty
-   * list and an unfinished one look identical, and only one of them is a
-   * reason to give up waiting.
-   */
   readonly loading = input<boolean>(false);
   readonly loadingText = input<string>('Loading…');
-  /** Shown when the list itself is empty — distinct from "no match". */
   readonly emptyText = input<string>('Nothing to choose from.');
   readonly noMatchText = input<string>('No match.');
   readonly invalid = input<boolean>(false);
@@ -207,11 +184,6 @@ export class MultiSelectComponent implements ControlValueAccessor {
   protected readonly disabled = signal(false);
   private readonly selected = signal<ReadonlySet<string>>(new Set());
 
-  /**
-   * Matches the label and the hint: a pull request is recognised by its title
-   * as often as by its number or author, and filtering on the label alone
-   * would make the hint decorative.
-   */
   protected readonly visible = computed<readonly MultiSelectOption[]>(() => {
     const q = this.query().trim().toLowerCase();
     if (!q) return this.options();
@@ -243,10 +215,6 @@ export class MultiSelectComponent implements ControlValueAccessor {
     this.emit();
   }
 
-  /**
-   * Clears the selection, not the filter. Clearing both would hide which rows
-   * were just deselected, and the filter is the user's place in the list.
-   */
   protected clear(): void {
     if (this.disabled()) return;
     this.selected.set(new Set());

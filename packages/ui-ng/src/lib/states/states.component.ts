@@ -1,10 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-/**
- * Page-level "nothing here" block. The description is projected content, so
- * the consumer keeps its own translation pipeline; `title` and the
- * `[empty-icon]` / `[empty-action]` slots are optional.
- */
 @Component({
   selector: 'flr-empty-state',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,10 +48,6 @@ export class EmptyStateComponent {
   readonly title = input<string | null>(null);
 }
 
-/**
- * Page-level pending block. `label` defaults to English; pass the localised
- * string the way `flr-pagination` takes its labels.
- */
 @Component({
   selector: 'flr-loading-state',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,11 +68,6 @@ export class LoadingStateComponent {
   readonly label = input('Loading…');
 }
 
-/**
- * Page-level failure block with an optional retry. Reads the shared status
- * tokens, so it follows the theme instead of the `--color-rose-*` names the
- * app-local copies invented and never defined.
- */
 @Component({
   selector: 'flr-error-state',
   changeDetection: ChangeDetectionStrategy.OnPush,

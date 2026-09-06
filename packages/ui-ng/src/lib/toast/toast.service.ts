@@ -16,13 +16,6 @@ export interface ToastItem extends ToastInput {
   readonly duration: number;
 }
 
-/**
- * Toast queue — Angular 22 port of `@ferrlabs/ui-react`'s ToastProvider, as an
- * injectable service. `show()` enqueues a toast (auto-dismissed after
- * `duration` ms unless `0`) and announces it via the CDK `LiveAnnouncer`
- * (assertive for `error`, polite otherwise). Render the queue once with
- * `<flr-toast-container>`.
- */
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   private readonly liveAnnouncer = inject(LiveAnnouncer);

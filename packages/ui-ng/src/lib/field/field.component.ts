@@ -10,28 +10,6 @@ import {
 
 let fieldCounter = 0;
 
-/**
- * Form-field wrapper — Angular 22 port of `@ferrlabs/ui-react`'s Field.
- * Renders the mono label, optional hint, and error message, and links them to
- * the projected control itself, so the common case needs no wiring:
- *
- * ```html
- * <flr-field label="Email" [error]="err">
- *   <flr-input />
- * </flr-field>
- * ```
- *
- * An `id` set by the caller always wins, and the field's description id is merged
- * into any `aria-describedby` the control already carries rather than replacing
- * it, so a control that describes itself keeps both. `invalid` stays
- * the caller's to pass, since it drives styling rather than semantics:
- *
- * ```html
- * <flr-field label="Email" [error]="err" #f="flrField">
- *   <flr-input [invalid]="f.invalid()" />
- * </flr-field>
- * ```
- */
 @Component({
   selector: 'flr-field',
   exportAs: 'flrField',

@@ -6,7 +6,6 @@ export interface UserMenuItem {
   readonly id?: string;
   readonly label: string;
   readonly href?: string;
-  /** Text/emoji glyph rendered before the label. */
   readonly icon?: string;
   readonly danger?: boolean;
   readonly separatorAbove?: boolean;

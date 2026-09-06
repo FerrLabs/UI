@@ -24,12 +24,6 @@ const SIZE: Record<TagSize, { padding: string; fontSize: string; gap: string; do
   md: { padding: '3px 9px', fontSize: '10.5px', gap: '6px', dot: 5 },
 };
 
-/**
- * Editorial pill — Angular 22 port of `@ferrlabs/ui-react`'s Tag. Mono
- * uppercase label with a leading dot. Pick a semantic `variant` or pass an
- * explicit `color`. `removable` shows a × button and emits `removed`. Project
- * a leading icon via the `[tag-icon]` slot.
- */
 @Component({
   selector: 'flr-tag',
   changeDetection: ChangeDetectionStrategy.OnPush,

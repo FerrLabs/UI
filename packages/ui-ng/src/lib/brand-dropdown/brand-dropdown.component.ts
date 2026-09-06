@@ -26,12 +26,7 @@ export interface BrandDropdownApp {
   readonly label: string;
   readonly href: string;
   readonly accent: string;
-  /** Visual grouping — a divider + uppercase header renders between groups. */
   readonly section?: string;
-  /**
-   * Open in a new tab and leave the current app where it is. For surfaces that
-   * carry no switcher of their own, so there is no way back from them.
-   */
   readonly newTab?: boolean;
 }
 

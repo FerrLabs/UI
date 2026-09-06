@@ -2,11 +2,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 export type DividerOrientation = 'horizontal' | 'vertical';
 
-/**
- * Hairline separator — Angular 22 port of `@ferrlabs/ui-react`'s Divider.
- * Horizontal `<hr>`, a vertical rule, or a centred mono `label` between two
- * lines. Reads `--color-rule` / `--color-ink-3` / `--font-mono`.
- */
 @Component({
   selector: 'flr-divider',
   changeDetection: ChangeDetectionStrategy.OnPush,

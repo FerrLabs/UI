@@ -48,12 +48,6 @@ const SIZE: Record<SelectSize, SelectDim> = {
 
 const ERROR = 'var(--color-danger, #dc2626)';
 
-/**
- * Native select with editorial chrome — Angular 22 port of
- * `@ferrlabs/ui-react`'s Select. Implements `ControlValueAccessor`; project
- * the `<option>`s as content. (Fixes the React original's missing
- * `--font-serif`, using the real `--font-sans` token.)
- */
 @Component({
   selector: 'flr-select',
   changeDetection: ChangeDetectionStrategy.OnPush,

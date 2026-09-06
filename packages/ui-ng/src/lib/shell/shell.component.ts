@@ -10,11 +10,6 @@ import { isTrustedIconMarkup } from '../icon/icon-markup';
 export interface ShellNavItem {
   readonly id: string;
   readonly label: string;
-  /**
-   * Text/emoji glyph, or SVG markup restricted to the elements and attributes
-   * `isTrustedIconMarkup` allows. Anything else renders as text, so a value
-   * that reaches this field from user input cannot inject markup.
-   */
   readonly icon?: string;
   readonly href?: string;
   readonly badge?: string | number | null;
@@ -27,18 +22,6 @@ export interface ShellNavGroup {
   readonly items: readonly ShellNavItem[];
 }
 
-/**
- * Authenticated app chrome — Angular 22 port of `@ferrlabs/ui-react`'s Shell.
- * Composes `<flr-sidebar>` (data-driven nav from `sections`) + a sticky topbar
- * (breadcrumb, ⌘K search, action/user slots) + a scrollable main outlet.
- * Brand, topbar actions, and the user menu are projection slots
- * (`[shell-rail]`, `[shell-brand]`, `[shell-breadcrumb-lead]`, `[shell-breadcrumb-actions]`,
- * `[shell-actions]`, `[shell-topbar-right]`, `[shell-user]`) so the consumer
- * drops in `LogoMark` / a site switcher leading or trailing the breadcrumb /
- * dropdowns. `[shell-breadcrumb-lead]` renders before the crumb trail (a `/`
- * separates it from the first crumb). Page content is the
- * default slot. Reads `--color-app-*` / `--color-rule` / `--font-mono` tokens.
- */
 @Component({
   selector: 'flr-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,

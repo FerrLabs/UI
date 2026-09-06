@@ -16,11 +16,6 @@ const FILL: Record<ProgressBarVariant, string> = {
   danger: 'var(--color-danger, #dc2626)',
 };
 
-/**
- * Determinate / indeterminate progress bar — Angular 22 port of
- * `@ferrlabs/ui-react`'s ProgressBar. Set `indeterminate` for an animated
- * sweep; otherwise `value`/`max` drive the fill width.
- */
 @Component({
   selector: 'flr-progress-bar',
   changeDetection: ChangeDetectionStrategy.OnPush,

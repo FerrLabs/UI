@@ -8,11 +8,6 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-/**
- * Checkbox — Angular 22 port of `@ferrlabs/ui-react`'s Checkbox. Implements
- * `ControlValueAccessor` (boolean value) for reactive forms / `ngModel`.
- * Optional `label`/`hint`, `invalid` state, and `indeterminate` visual.
- */
 @Component({
   selector: 'flr-checkbox',
   changeDetection: ChangeDetectionStrategy.OnPush,

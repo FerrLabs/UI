@@ -18,13 +18,6 @@ const SIZE: Record<InputSize, { height: string; fontSize: string; padding: strin
 
 const ERROR = 'var(--color-danger, #dc2626)';
 
-/**
- * Text input — Angular 22 port of `@ferrlabs/ui-react`'s Input. Implements
- * `ControlValueAccessor`, so it drops into reactive forms and `ngModel`
- * directly (`<flr-input formControlName="email" />`). Shows a focus ring and
- * an `invalid` error state. (Fixes the React original's missing
- * `--font-serif`, using the real `--font-sans` token.)
- */
 @Component({
   selector: 'flr-input',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,11 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 
 export type StatDelta = 'up' | 'down' | 'flat';
 
-/**
- * Bordered KPI card — Angular 22 port of `@ferrlabs/ui-react`'s Stat. Mono
- * label, Fraunces 700 number, accent delta. (The React original references a
- * non-existent `--font-serif`; this port uses the real `--font-sans` token.)
- */
 @Component({
   selector: 'flr-stat',
   changeDetection: ChangeDetectionStrategy.OnPush,

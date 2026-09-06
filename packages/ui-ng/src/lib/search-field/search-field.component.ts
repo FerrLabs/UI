@@ -25,12 +25,6 @@ const SIZE: Record<SearchFieldSize, SearchDim> = {
   lg: { height: 48, padX: 44, fontSize: 16, iconSize: 20, iconInset: 14 },
 };
 
-/**
- * Search input with leading icon and clear button — Angular 22 port of
- * `@ferrlabs/ui-react`'s SearchField. Implements `ControlValueAccessor`; the
- * clear button empties the value and emits `cleared`. (Fixes the React
- * original's missing `--font-serif`, using the real `--font-sans` token.)
- */
 @Component({
   selector: 'flr-search-field',
   changeDetection: ChangeDetectionStrategy.OnPush,

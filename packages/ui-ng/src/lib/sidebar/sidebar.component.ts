@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, model, output } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
-/**
- * App sidebar shell — Angular 22 port of `@ferrlabs/ui-react`'s Sidebar.
- * Paper-app palette, collapsible (256px ↔ 64px). Project the brand into the
- * `[sidebar-brand]` slot and nav rows (`<flr-sidebar-section>` /
- * `<flr-sidebar-item>`) as default content. `collapsed` is two-way bindable.
- */
 @Component({
   selector: 'flr-sidebar',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -112,10 +106,6 @@ export class SidebarComponent {
   }
 }
 
-/**
- * Section group inside `<flr-sidebar>` — optional mono uppercase title above a
- * cluster of `<flr-sidebar-item>`s.
- */
 @Component({
   selector: 'flr-sidebar-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -168,10 +158,6 @@ export class SidebarSectionComponent {
   readonly collapsed = input(false);
 }
 
-/**
- * Nav row inside a `<flr-sidebar-section>`. Renders an `<a>` when `href` is set,
- * otherwise a `<button>`. Active rows get a left accent bar; `danger` rows go red.
- */
 @Component({
   selector: 'flr-sidebar-item',
   changeDetection: ChangeDetectionStrategy.OnPush,

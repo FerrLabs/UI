@@ -62,16 +62,6 @@ function attributesAreSafe(raw: string): boolean {
   return rest.replace(/\//g, ' ').trim() === '';
 }
 
-/**
- * True when `markup` is an SVG icon built only from the elements and
- * attributes this library renders itself.
- *
- * Fail-closed: anything it cannot account for, an unknown element, an unquoted
- * or unknown attribute (`onerror`, `href`, `style`), a comment, stray text
- * between tags, makes the whole string untrusted. Callers render an untrusted
- * value as text instead of markup, so a rejected string is visible rather than
- * parsed.
- */
 export function isTrustedIconMarkup(markup: string): boolean {
   const value = markup.trim();
   if (!value.startsWith('<svg') || !value.endsWith('</svg>')) return false;
