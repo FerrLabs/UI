@@ -5,11 +5,8 @@ export interface AppRailItem {
   readonly id: string;
   readonly label: string;
   readonly href: string;
-  /** Product accent, per the one-product-one-accent rule. Drives the tile gradient and the active glow. */
   readonly accent: string;
-  /** Glyph to render. Falls back to `id` when it is already a product slug. */
   readonly product?: ProductSlug;
-  /** No active subscription on this org: rendered dimmed, still navigable so it can carry the upsell. */
   readonly locked?: boolean;
   readonly newTab?: boolean;
 }
@@ -25,18 +22,6 @@ const PRODUCT_SLUGS: ReadonlySet<string> = new Set<ProductSlug>([
   'ferrlabs',
 ]);
 
-/**
- * Persistent product rail for the authenticated app chrome.
- *
- * Replaces the `flr-brand-dropdown` trigger at the top of the sidebar: every
- * product the org can reach is visible at once instead of hidden behind a
- * menu. Sits left of `flr-sidebar`, which keeps the org switcher and the
- * per-product nav.
- *
- * `[rail-top]` takes the suite monogram, `[rail-utility]` the bottom actions
- * (add product, settings) and `[rail-user]` the account avatar, pinned last.
- * Reads `--color-app-rail*` tokens.
- */
 @Component({
   selector: 'flr-app-rail',
   changeDetection: ChangeDetectionStrategy.OnPush,

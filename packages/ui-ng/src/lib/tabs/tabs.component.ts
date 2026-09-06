@@ -9,14 +9,6 @@ import {
 import { TABS_STRIP, type TabsMode, type TabsStrip, type TabsStripItem } from './tabs.model';
 import { TabComponent } from './tab.component';
 
-/**
- * Underline tab strip. Wraps `flr-tab` children and gives them their ARIA
- * shape: a navigation landmark for tabs that are links, a `tablist` with
- * arrow-key navigation for tabs that swap a region of the same page.
- *
- * The landmark is only emitted when `ariaLabel` is set, because an unnamed
- * navigation landmark collides with every other unnamed one on the page.
- */
 @Component({
   selector: 'flr-tabs',
   changeDetection: ChangeDetectionStrategy.OnPush,
