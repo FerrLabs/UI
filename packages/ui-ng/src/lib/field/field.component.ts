@@ -21,7 +21,9 @@ let fieldCounter = 0;
  * </flr-field>
  * ```
  *
- * An `id` or `aria-describedby` set by the caller always wins. `invalid` stays
+ * An `id` set by the caller always wins, and the field's description id is merged
+ * into any `aria-describedby` the control already carries rather than replacing
+ * it, so a control that describes itself keeps both. `invalid` stays
  * the caller's to pass, since it drives styling rather than semantics:
  *
  * ```html
@@ -136,8 +138,16 @@ export class FieldComponent {
       if (!control.id) {
         control.id = this.fieldId;
       }
-      if (describedBy && !control.hasAttribute('aria-describedby')) {
-        control.setAttribute('aria-describedby', describedBy);
+      const tokens = (control.getAttribute('aria-describedby') ?? '')
+        .split(/\s+/)
+        .filter((token) => token !== '' && token !== this.hintId && token !== this.errorId);
+      if (describedBy) {
+        tokens.push(describedBy);
+      }
+      if (tokens.length > 0) {
+        control.setAttribute('aria-describedby', tokens.join(' '));
+      } else {
+        control.removeAttribute('aria-describedby');
       }
     });
   }

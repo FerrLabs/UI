@@ -1,5 +1,5 @@
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { AnnotatedTextareaComponent } from '@ferrlabs/ui-ng';
+import { AnnotatedTextareaComponent, FieldComponent } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
@@ -15,7 +15,11 @@ STRIPE_API_KEY=sk_live_x`;
 const meta: Meta<AnnotatedTextareaComponent> = {
   title: 'Primitives/AnnotatedTextarea',
   component: AnnotatedTextareaComponent,
-  decorators: [moduleMetadata({ imports: [AnnotatedTextareaComponent, ReactiveFormsModule] })],
+  decorators: [
+    moduleMetadata({
+      imports: [AnnotatedTextareaComponent, FieldComponent, ReactiveFormsModule],
+    }),
+  ],
 };
 
 export default meta;
@@ -75,6 +79,34 @@ export const Diagnostics: Story = {
         [formControl]="control"
         aria-label="Paste .env content"
       />`,
+  }),
+};
+
+/**
+ * Wrapped in a `flr-field` carrying its own error, which is how a form uses it.
+ * Both descriptions have to reach the textarea: the field's error text and the
+ * component's own list of diagnostics. The field merges its id into whatever
+ * the control already carries rather than replacing it, so `aria-describedby`
+ * ends up holding two ids.
+ */
+export const InField: Story = {
+  render: () => ({
+    props: {
+      control: new FormControl(ENV),
+      diagnostics: [
+        {
+          line: 0,
+          from: 0,
+          to: 20,
+          message: 'invalid name: `,` is not allowed',
+          severity: 'error',
+        },
+      ],
+    },
+    template: `
+      <flr-field label="Paste .env content" error="Fix the highlighted entries before importing.">
+        <flr-annotated-textarea [rows]="8" [diagnostics]="diagnostics" [formControl]="control" />
+      </flr-field>`,
   }),
 };
 

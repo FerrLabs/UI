@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   computed,
   forwardRef,
+  inject,
   input,
   signal,
   viewChild,
@@ -44,6 +46,27 @@ interface Bubble {
  * messages near the top flip below a little sooner than they must.
  */
 const BUBBLE_CLEARANCE = 72;
+
+/**
+ * Rectangle of one position inside a mark, rather than the mark's own first
+ * rectangle. A mark that soft-wraps has one rectangle per visual line, so the
+ * first one points at the wrong line whenever the caret sits on a later one.
+ * A collapsed range has no width, which `placeBubble` does not use, and the
+ * line box it reports is the one wanted.
+ */
+function caretRect(mark: HTMLElement, offset: number): DOMRect | undefined {
+  const node = mark.firstChild;
+  if (!node || node.nodeType !== Node.TEXT_NODE) return mark.getClientRects()[0];
+
+  const range = document.createRange();
+  const at = Math.min(Math.max(offset, 0), node.textContent?.length ?? 0);
+  range.setStart(node, at);
+  range.setEnd(node, at);
+  const rect = range.getBoundingClientRect();
+  return rect.height > 0 ? rect : mark.getClientRects()[0];
+}
+
+let sequence = 0;
 
 function lineOffsets(value: string): number[] {
   const offsets = [0];
@@ -136,7 +159,7 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
         [attr.name]="name()"
         [attr.id]="textareaId()"
         [attr.aria-label]="ariaLabel()"
-        [attr.aria-describedby]="describedBy()"
+        [attr.aria-describedby]="describedByAttr()"
         [attr.aria-invalid]="hasErrors() || null"
         [readOnly]="readonly()"
         [required]="required()"
@@ -144,8 +167,10 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
         (input)="handleInput($event)"
         (scroll)="syncScroll()"
         (mousemove)="probe($event)"
-        (mouseleave)="bubble.set(null)"
-        (focus)="focused.set(true)"
+        (mouseleave)="handleMouseLeave()"
+        (keyup)="trackCaret()"
+        (click)="trackCaret()"
+        (focus)="handleFocus()"
         (blur)="handleBlur()"
       ></textarea>
       @if (bubble(); as b) {
@@ -162,6 +187,11 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
       }
     </div>
     <p class="flr-at__sr" role="status">{{ srSummary() }}</p>
+    <ul class="flr-at__sr" [id]="listId">
+      @for (d of shown(); track $index) {
+        <li>Line {{ d.line + 1 }}: {{ d.message }}</li>
+      }
+    </ul>
   `,
   styles: `
     :host {
@@ -274,7 +304,9 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
 
   protected readonly segments = computed(() => segmentsFor(this.value(), this.diagnostics()));
 
-  private readonly shown = computed(() => {
+  protected readonly listId = `flr-at-diagnostics-${++sequence}`;
+
+  protected readonly shown = computed(() => {
     const seen = new Set<TextareaDiagnostic>();
     for (const seg of this.segments()) {
       if (seg.diagnostic) seen.add(seg.diagnostic);
@@ -283,6 +315,19 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
   });
 
   protected readonly hasErrors = computed(() => this.shown().some((d) => d.severity !== 'warning'));
+
+  /**
+   * The list id is emitted whether or not there are diagnostics, and the list
+   * always renders, so the attribute keeps one value for the life of the
+   * component. `flr-field` appends its own error id to whatever the control
+   * carries; a value that flipped between `null` and the id would be rewritten
+   * by change detection and drop that token, with no signal change to make the
+   * field's effect put it back.
+   */
+  protected readonly describedByAttr = computed(() => {
+    const outer = this.describedBy();
+    return outer ? `${outer} ${this.listId}` : this.listId;
+  });
 
   protected readonly srSummary = computed(() => {
     const count = this.shown().length;
@@ -306,6 +351,12 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
       opacity: this.disabled() ? '0.65' : '1',
     };
   });
+
+  private frame = 0;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => cancelAnimationFrame(this.frame));
+  }
 
   private onChange: (value: string) => void = () => {};
   protected onTouched: () => void = () => {};
@@ -333,6 +384,21 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
     this.onChange(next);
     this.bubble.set(null);
     this.syncScroll();
+    this.trackCaret();
+  }
+
+  protected handleFocus(): void {
+    this.focused.set(true);
+    this.trackCaret();
+  }
+
+  protected handleMouseLeave(): void {
+    this.showCaretBubble();
+  }
+
+  protected trackCaret(): void {
+    cancelAnimationFrame(this.frame);
+    this.frame = requestAnimationFrame(() => this.showCaretBubble());
   }
 
   protected handleBlur(): void {
@@ -372,27 +438,78 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
 
       const hit = this.markAt(i);
       if (!hit) return;
-      const below = rect.top < BUBBLE_CLEARANCE;
-      const next: Bubble = {
-        message: hit.message,
-        severity: hit.severity ?? 'error',
-        left: rect.left - frameRect.left,
-        top: below ? rect.bottom - frameRect.top + 6 : rect.top - frameRect.top - 6,
-        below,
-      };
-      const current = this.bubble();
-      if (
-        !current ||
-        current.message !== next.message ||
-        current.top !== next.top ||
-        current.left !== next.left
-      ) {
-        this.bubble.set(next);
-      }
+      this.placeBubble(hit, rect, frameRect);
       return;
     }
 
-    if (this.bubble()) this.bubble.set(null);
+    this.showCaretBubble();
+  }
+
+  /**
+   * Diagnostic under the caret, so the message is reachable by keyboard. The
+   * measurement is deferred a frame by `trackCaret` because a keystroke changes
+   * the value, and the marks it moves are only in the DOM after the next
+   * render. Hovering a mark takes precedence while it lasts, and releasing the
+   * hover falls back here rather than clearing.
+   */
+  private showCaretBubble(): void {
+    if (!this.focused()) {
+      if (this.bubble()) this.bubble.set(null);
+      return;
+    }
+
+    const caret = this.editor().nativeElement.selectionStart ?? 0;
+    const at = this.markIndexAt(caret);
+    const frame = this.mirror().nativeElement.parentElement;
+    const hit = at ? this.markAt(at.index) : undefined;
+    if (!at || !hit || !frame) {
+      if (this.bubble()) this.bubble.set(null);
+      return;
+    }
+
+    const marks = this.mirror().nativeElement.querySelectorAll<HTMLElement>('.flr-at__mark');
+    const mark = marks[at.index];
+    const rect = mark ? caretRect(mark, caret - at.start) : undefined;
+    if (!rect) {
+      if (this.bubble()) this.bubble.set(null);
+      return;
+    }
+
+    this.placeBubble(hit, rect, frame.getBoundingClientRect());
+  }
+
+  private placeBubble(hit: TextareaDiagnostic, rect: DOMRect, frameRect: DOMRect): void {
+    const below = rect.top < BUBBLE_CLEARANCE;
+    const next: Bubble = {
+      message: hit.message,
+      severity: hit.severity ?? 'error',
+      left: rect.left - frameRect.left,
+      top: below ? rect.bottom - frameRect.top + 6 : rect.top - frameRect.top - 6,
+      below,
+    };
+    const current = this.bubble();
+    if (
+      !current ||
+      current.message !== next.message ||
+      current.top !== next.top ||
+      current.left !== next.left
+    ) {
+      this.bubble.set(next);
+    }
+  }
+
+  private markIndexAt(caret: number): { index: number; start: number } | null {
+    let offset = 0;
+    let index = 0;
+    for (const seg of this.segments()) {
+      const end = offset + seg.text.length;
+      if (seg.diagnostic) {
+        if (caret >= offset && caret <= end) return { index, start: offset };
+        index++;
+      }
+      offset = end;
+    }
+    return null;
   }
 
   private markAt(index: number): TextareaDiagnostic | undefined {
