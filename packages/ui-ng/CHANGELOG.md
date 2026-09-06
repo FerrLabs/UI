@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.31.2] - 2026-09-06
+
+### Bug Fixes
+
+- fix(ui-ng): make annotated-textarea diagnostics reachable without a pointer (#525)
+
 ## [1.31.1] - 2026-09-05
 
 ### Bug Fixes
