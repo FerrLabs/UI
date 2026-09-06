@@ -17,11 +17,6 @@ import { isTrustedIconMarkup } from '../icon/icon-markup';
 export interface ProjectSwitcherItem {
   readonly id: string;
   readonly label: string;
-  /**
-   * Text/emoji glyph, or SVG markup restricted to the elements and attributes
-   * `isTrustedIconMarkup` allows. Anything else renders as text, so a value
-   * that reaches this field from user input cannot inject markup.
-   */
   readonly icon?: string;
   readonly meta?: string;
   readonly href?: string;
@@ -30,11 +25,6 @@ export interface ProjectSwitcherItem {
 
 export interface ProjectSwitcherPlaceholder {
   readonly label: string;
-  /**
-   * Text/emoji glyph, or SVG markup restricted to the elements and attributes
-   * `isTrustedIconMarkup` allows. Anything else renders as text, so a value
-   * that reaches this field from user input cannot inject markup.
-   */
   readonly icon?: string;
   readonly meta?: string;
 }

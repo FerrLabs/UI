@@ -10,12 +10,6 @@ const PADDING: Record<CardPadding, string> = {
   lg: '32px',
 };
 
-/**
- * Editorial surface card — Angular 22 port of `@ferrlabs/ui-react`'s Card.
- * `outlined` (hairline rule), `raised` (soft shadow), or `flat`. Set
- * `interactive` for a hover lift on clickable cards. Reads `--color-card`,
- * `--color-ink`, `--color-card-rule` from `@ferrlabs/ui-foundation`.
- */
 @Component({
   selector: 'flr-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,10 +56,6 @@ export class CardComponent {
   });
 }
 
-/**
- * Card heading row — title + optional description on the left, projected
- * trailing content (slot `[card-trailing]`) on the right.
- */
 @Component({
   selector: 'flr-card-header',
   changeDetection: ChangeDetectionStrategy.OnPush,

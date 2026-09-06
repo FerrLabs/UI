@@ -1,10 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-/**
- * Titled block inside a page body. A heading, an optional mono hint on the
- * same baseline, then the projected content. Absorbed from the private
- * `shared/editorial.ts` that FerrVault and FerrGrowth each carried.
- */
 @Component({
   selector: 'flr-section',
   changeDetection: ChangeDetectionStrategy.OnPush,

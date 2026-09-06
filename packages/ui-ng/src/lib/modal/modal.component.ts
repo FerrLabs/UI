@@ -27,14 +27,6 @@ const MAX_WIDTH: Record<ModalSize, number> = {
 
 let modalCounter = 0;
 
-/**
- * Centred modal dialog — Angular 22 port of `@ferrlabs/ui-react`'s Modal,
- * built on `@angular/cdk` Overlay. Declarative `[open]` / `(closed)`; the body
- * is the default slot, the footer the `[modal-footer]` slot. Focus is trapped
- * (`cdkTrapFocus`), Escape and backdrop click emit `closed`, and page scroll is
- * blocked while open. The overlay container styles ship with the component, so
- * the host app has nothing to import.
- */
 @Component({
   selector: 'flr-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -128,13 +120,6 @@ let modalCounter = 0;
       justify-content: flex-end;
       gap: 8px;
     }
-    /* Consumers project their actions inside a div carrying the modal-footer
-       attribute. Without this rule the footer's flex layout applies to that
-       single wrapper, so the gap above governs nothing and the buttons sit
-       flush against each other. display:contents promotes the wrapper's
-       children to be the footer's own flex items, which is what the rules
-       above already assume. Scoped to the slot attribute so a footer that
-       projects buttons directly is unaffected. */
     .flr-modal__footer > [modal-footer] {
       display: contents;
     }

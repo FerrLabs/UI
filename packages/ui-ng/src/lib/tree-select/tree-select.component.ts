@@ -10,36 +10,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import type { MultiSelectOption } from '../multi-select/multi-select.component';
 
-/**
- * A branch of the tree — an organisation, a team, a namespace.
- *
- * `id` only has to be unique among groups; it is never part of the form value,
- * which carries leaf ids alone. A group is a way to reach its leaves, not
- * something the consumer can select on its own.
- */
 export interface TreeSelectGroup {
   readonly id: string;
   readonly label: string;
-  /** Secondary line on the group row — a count, a plan, an account type. */
   readonly hint?: string;
   readonly options: readonly MultiSelectOption[];
 }
 
-/**
- * Two-level filterable multi-select with a checkbox per row.
- *
- * Exists because {@link MultiSelectComponent} flattens: with several GitHub
- * organisations and a few dozen repositories each, a flat list gives no way to
- * take "everything in this org" and no way to fold away the orgs you are not
- * working in. Here each group carries its own checkbox — checked, unchecked,
- * or indeterminate — and collapses independently.
- *
- * Like the flat one it is deliberately dumb about *where* groups come from:
- * the consumer loads them and passes them in, so this component never knows
- * about HTTP or pagination.
- *
- * Implements `ControlValueAccessor`; the value is a `string[]` of **leaf** ids.
- */
 @Component({
   selector: 'flr-tree-select',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -275,12 +252,7 @@ export class TreeSelectComponent implements ControlValueAccessor {
   readonly searchable = input<boolean>(true);
   readonly searchPlaceholder = input<string>('Filter…');
   readonly searchLabel = input<string>('Filter options');
-  /**
-   * Whether groups start open. Off is the better default past a handful of
-   * groups: the point of the tree is to see the orgs before the repositories.
-   */
   readonly startExpanded = input<boolean>(false);
-  /** Shown when there is nothing at all — distinct from "no match". */
   readonly emptyText = input<string>('Nothing to choose from.');
   readonly noMatchText = input<string>('No match.');
   readonly invalid = input<boolean>(false);
@@ -288,15 +260,8 @@ export class TreeSelectComponent implements ControlValueAccessor {
   protected readonly query = signal('');
   protected readonly disabled = signal(false);
   private readonly selected = signal<ReadonlySet<string>>(new Set());
-  /** Groups the user has explicitly toggled, against the `startExpanded` default. */
   private readonly flipped = signal<ReadonlySet<string>>(new Set());
 
-  /**
-   * Groups reduced to the leaves matching the filter, with empty groups
-   * dropped. A group whose own label matches keeps all of its leaves — typing
-   * an org name is how you ask for that whole org, and hiding its
-   * repositories because they don't repeat the org name would be baffling.
-   */
   protected readonly visible = computed<readonly TreeSelectGroup[]>(() => {
     const q = this.query().trim().toLowerCase();
     if (!q) return this.groups();
@@ -318,10 +283,6 @@ export class TreeSelectComponent implements ControlValueAccessor {
     return this.selected().has(id);
   }
 
-  /**
-   * Open while filtering regardless of the fold state: a filter that matched
-   * something inside a collapsed group would otherwise look like no match.
-   */
   protected isOpen(groupId: string): boolean {
     if (this.query().trim()) return true;
     return this.flipped().has(groupId) !== this.startExpanded();
@@ -359,11 +320,6 @@ export class TreeSelectComponent implements ControlValueAccessor {
     this.emit();
   }
 
-  /**
-   * Selects or clears the leaves **currently shown** for this group, not every
-   * leaf it holds. Under an active filter the checkbox has to mean what the
-   * user can see, or "select all" would quietly pull in rows they filtered out.
-   */
   protected toggleGroup(group: TreeSelectGroup): void {
     if (this.disabled()) return;
     const turningOn = this.groupState(group) !== 'all';
@@ -378,10 +334,6 @@ export class TreeSelectComponent implements ControlValueAccessor {
     this.emit();
   }
 
-  /**
-   * Clears the selection, not the filter. Clearing both would hide which rows
-   * were just deselected, and the filter is the user's place in the tree.
-   */
   protected clear(): void {
     if (this.disabled()) return;
     this.selected.set(new Set());

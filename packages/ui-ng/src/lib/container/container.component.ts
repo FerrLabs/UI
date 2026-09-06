@@ -19,10 +19,6 @@ const PADDING: Record<ContainerPadding, string> = {
   lg: '0 40px',
 };
 
-/**
- * Centred max-width layout wrapper — Angular 22 port of
- * `@ferrlabs/ui-react`'s Container.
- */
 @Component({
   selector: 'flr-container',
   changeDetection: ChangeDetectionStrategy.OnPush,

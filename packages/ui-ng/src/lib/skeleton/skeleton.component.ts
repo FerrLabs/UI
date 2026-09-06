@@ -12,11 +12,6 @@ function toLength(value: string | number): string {
   return typeof value === 'number' ? `${value}px` : value;
 }
 
-/**
- * Shimmering placeholder block — Angular 22 port of `@ferrlabs/ui-react`'s
- * Skeleton. `rect`, `text`, or `circle`. `width`/`height` accept a number
- * (px) or any CSS length.
- */
 @Component({
   selector: 'flr-skeleton',
   changeDetection: ChangeDetectionStrategy.OnPush,

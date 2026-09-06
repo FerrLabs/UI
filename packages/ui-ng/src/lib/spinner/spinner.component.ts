@@ -10,10 +10,6 @@ const SIZE: Record<SpinnerSize, { box: string; border: string }> = {
   lg: { box: '28px', border: '3px' },
 };
 
-/**
- * Indeterminate loading ring — Angular 22 port of `@ferrlabs/ui-react`'s
- * Spinner. `accent` reads `--color-accent`; `current` inherits text colour.
- */
 @Component({
   selector: 'flr-spinner',
   changeDetection: ChangeDetectionStrategy.OnPush,

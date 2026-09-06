@@ -1,10 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-/**
- * Form submit button — Angular 22 port of `@ferrlabs/ui-react`'s Submit. Mono
- * uppercase, accent-filled, `type="submit"`. `loading` shows a spinner and
- * disables the button; project the label as content.
- */
 @Component({
   selector: 'flr-submit',
   changeDetection: ChangeDetectionStrategy.OnPush,

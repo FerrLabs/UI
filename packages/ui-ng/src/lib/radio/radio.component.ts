@@ -13,11 +13,6 @@ export type RadioGroupOrientation = 'vertical' | 'horizontal';
 
 let radioGroupCounter = 0;
 
-/**
- * Radio group — Angular 22 port of `@ferrlabs/ui-react`'s RadioGroup.
- * Implements `ControlValueAccessor`; child `<flr-radio>`s resolve it through
- * DI and report their selection back. Use `<flr-radio-group formControlName>`.
- */
 @Component({
   selector: 'flr-radio-group',
   exportAs: 'flrRadioGroup',
@@ -84,11 +79,6 @@ export class RadioGroupComponent implements ControlValueAccessor {
   }
 }
 
-/**
- * Radio option — Angular 22 port of `@ferrlabs/ui-react`'s Radio. Must be
- * nested inside a `<flr-radio-group>`; checked state and the shared `name`
- * come from the enclosing group.
- */
 @Component({
   selector: 'flr-radio',
   changeDetection: ChangeDetectionStrategy.OnPush,

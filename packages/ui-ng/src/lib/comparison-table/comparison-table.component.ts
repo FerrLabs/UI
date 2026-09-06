@@ -1,29 +1,20 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-/** A single cell: `true` = has it, `false` = doesn't, `'partial'` = limited,
- * or a free string (e.g. `'Free'`, `'$$$'`, `'Add-on'`). */
 export type ComparisonCell = boolean | 'partial' | string;
 
 export interface ComparisonColumn {
-  /** Product name shown in the header. */
   name: string;
-  /** Marks the FerrLabs product column — highlighted with `accent`. */
   ours?: boolean;
-  /** Accent color for the `ours` column (the product hue). */
   accent?: string;
 }
 
 export interface ComparisonRow {
-  /** Feature name (row header). */
   feature: string;
-  /** Optional one-line clarification under the feature name. */
   hint?: string;
-  /** One cell per column, in the same order as `columns`. */
   cells: ComparisonCell[];
 }
 
 export interface ComparisonGroup {
-  /** Optional section title; omit for an ungrouped block. */
   title?: string;
   rows: ComparisonRow[];
 }
@@ -34,15 +25,6 @@ interface RenderCell {
   label: string;
 }
 
-/**
- * Feature-comparison section for "Why <product>" pages: an optional header
- * (eyebrow / heading / lead) above a table with features down the side, the
- * FerrLabs product plus competitors across the top, and a check / dash /
- * partial / text mark per cell. The `ours` column is highlighted with the
- * product accent. Owning the header here keeps the type scale identical across
- * every product site — pass content, not styles. Theme-aware, horizontally
- * scrollable on narrow viewports.
- */
 @Component({
   selector: 'flr-comparison-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -263,13 +245,9 @@ export class ComparisonTableComponent {
   readonly yesLabel = input('Yes');
   readonly noLabel = input('No');
   readonly partialLabel = input('Partial');
-  /** Small uppercase marker above the heading. Omit to hide the header block. */
   readonly eyebrow = input('');
-  /** Page heading, e.g. `Why FerrFlow?`. */
   readonly heading = input('');
-  /** Substring of `heading` to render in the product accent, e.g. `FerrFlow`. */
   readonly headingAccent = input('');
-  /** Intro paragraph under the heading. */
   readonly lead = input('');
 
   protected readonly hasHeader = computed(

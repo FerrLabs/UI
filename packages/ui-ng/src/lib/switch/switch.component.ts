@@ -16,10 +16,6 @@ const SIZE: Record<SwitchSize, { trackW: number; trackH: number; thumb: number; 
     md: { trackW: 36, trackH: 20, thumb: 16, offset: 2 },
   };
 
-/**
- * Toggle switch — Angular 22 port of `@ferrlabs/ui-react`'s Switch. Implements
- * `ControlValueAccessor` (boolean value). Optional `label`/`hint`, `sm`/`md`.
- */
 @Component({
   selector: 'flr-switch',
   changeDetection: ChangeDetectionStrategy.OnPush,

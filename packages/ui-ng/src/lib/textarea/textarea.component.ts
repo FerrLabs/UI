@@ -10,12 +10,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 const ERROR = 'var(--color-danger, #dc2626)';
 
-/**
- * Multi-line text input — Angular 22 port of `@ferrlabs/ui-react`'s Textarea.
- * Implements `ControlValueAccessor` for reactive forms / `ngModel`. Shows a
- * focus ring and an `invalid` error state. (Fixes the React original's
- * missing `--font-serif`, using the real `--font-sans` token.)
- */
 @Component({
   selector: 'flr-textarea',
   changeDetection: ChangeDetectionStrategy.OnPush,

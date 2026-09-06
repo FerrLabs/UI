@@ -73,9 +73,6 @@ export class SiteShellComponent {
     });
   }
 
-  // A site that ships one locale gets no alternates at all: `hreflang` pointing
-  // at a translation nobody built is a worse promise than the visible switcher,
-  // because a crawler follows it.
   private setAlternates(barePath: string): void {
     const locales = siteLocales(this.chrome);
     if (locales.length < 2) {

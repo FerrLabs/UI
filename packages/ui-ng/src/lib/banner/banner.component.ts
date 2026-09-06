@@ -36,12 +36,6 @@ const TOKENS: Record<BannerVariant, BannerTokens> = {
   },
 };
 
-/**
- * Inline message banner — Angular 22 port of `@ferrlabs/ui-react`'s Banner.
- * Project the body as default content and an optional action via the
- * `[banner-action]` slot. `dismissible` shows a close button and emits
- * `dismissed`.
- */
 @Component({
   selector: 'flr-banner',
   changeDetection: ChangeDetectionStrategy.OnPush,

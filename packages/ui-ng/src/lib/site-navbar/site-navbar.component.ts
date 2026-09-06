@@ -316,8 +316,6 @@ export class SiteNavbarComponent {
   protected readonly scrolled = signal(false);
   protected readonly mobileOpen = signal(false);
 
-  // Only what this site ships. A switcher offering a locale that was never
-  // built is a link to a 404 sitting in the header of every page.
   protected readonly locales = siteLocales(this.chrome);
 
   protected langHref(target: SiteLocale): string {

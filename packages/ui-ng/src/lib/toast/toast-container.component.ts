@@ -8,11 +8,6 @@ const ICON: Record<ToastVariant, string> = {
   error: '×',
 };
 
-/**
- * Toast viewport — Angular 22 port of `@ferrlabs/ui-react`'s toast region.
- * Mount once near the app root; it renders the queue held by `ToastService`
- * (screen-reader announcements are handled by the service via `LiveAnnouncer`).
- */
 @Component({
   selector: 'flr-toast-container',
   changeDetection: ChangeDetectionStrategy.OnPush,
