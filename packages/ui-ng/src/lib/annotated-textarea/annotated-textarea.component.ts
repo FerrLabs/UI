@@ -318,11 +318,16 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
 
   /**
    * The list id is emitted whether or not there are diagnostics, and the list
-   * always renders, so the attribute keeps one value for the life of the
-   * component. `flr-field` appends its own error id to whatever the control
-   * carries; a value that flipped between `null` and the id would be rewritten
-   * by change detection and drop that token, with no signal change to make the
-   * field's effect put it back.
+   * always renders, so having diagnostics never changes the attribute.
+   * `flr-field` appends its own error id to whatever the control carries; a
+   * value that flipped between `null` and the id would be rewritten by change
+   * detection and drop that token, with no signal change to make the field's
+   * effect put it back.
+   *
+   * A consumer that passes a changing `aria-describedby` still walks into that,
+   * since the binding rewrites the attribute and the field's effect does not
+   * re-run. No caller does, and covering it would mean watching the attribute
+   * from the field.
    */
   protected readonly describedByAttr = computed(() => {
     const outer = this.describedBy();
