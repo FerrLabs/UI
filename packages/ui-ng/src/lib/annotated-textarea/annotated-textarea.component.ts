@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   computed,
   forwardRef,
+  inject,
   input,
   signal,
   viewChild,
@@ -44,6 +46,25 @@ interface Bubble {
  * messages near the top flip below a little sooner than they must.
  */
 const BUBBLE_CLEARANCE = 72;
+
+/**
+ * Rectangle of one position inside a mark, rather than the mark's own first
+ * rectangle. A mark that soft-wraps has one rectangle per visual line, so the
+ * first one points at the wrong line whenever the caret sits on a later one.
+ * A collapsed range has no width, which `placeBubble` does not use, and the
+ * line box it reports is the one wanted.
+ */
+function caretRect(mark: HTMLElement, offset: number): DOMRect | undefined {
+  const node = mark.firstChild;
+  if (!node || node.nodeType !== Node.TEXT_NODE) return mark.getClientRects()[0];
+
+  const range = document.createRange();
+  const at = Math.min(Math.max(offset, 0), node.textContent?.length ?? 0);
+  range.setStart(node, at);
+  range.setEnd(node, at);
+  const rect = range.getBoundingClientRect();
+  return rect.height > 0 ? rect : mark.getClientRects()[0];
+}
 
 let sequence = 0;
 
@@ -166,13 +187,11 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
       }
     </div>
     <p class="flr-at__sr" role="status">{{ srSummary() }}</p>
-    @if (shown().length > 0) {
-      <ul class="flr-at__sr" [id]="listId">
-        @for (d of shown(); track $index) {
-          <li>Line {{ d.line + 1 }}: {{ d.message }}</li>
-        }
-      </ul>
-    }
+    <ul class="flr-at__sr" [id]="listId">
+      @for (d of shown(); track $index) {
+        <li>Line {{ d.line + 1 }}: {{ d.message }}</li>
+      }
+    </ul>
   `,
   styles: `
     :host {
@@ -297,9 +316,17 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
 
   protected readonly hasErrors = computed(() => this.shown().some((d) => d.severity !== 'warning'));
 
+  /**
+   * The list id is emitted whether or not there are diagnostics, and the list
+   * always renders, so the attribute keeps one value for the life of the
+   * component. `flr-field` appends its own error id to whatever the control
+   * carries; a value that flipped between `null` and the id would be rewritten
+   * by change detection and drop that token, with no signal change to make the
+   * field's effect put it back.
+   */
   protected readonly describedByAttr = computed(() => {
-    const ids = [this.describedBy(), this.shown().length > 0 ? this.listId : null].filter(Boolean);
-    return ids.length > 0 ? ids.join(' ') : null;
+    const outer = this.describedBy();
+    return outer ? `${outer} ${this.listId}` : this.listId;
   });
 
   protected readonly srSummary = computed(() => {
@@ -324,6 +351,12 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
       opacity: this.disabled() ? '0.65' : '1',
     };
   });
+
+  private frame = 0;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => cancelAnimationFrame(this.frame));
+  }
 
   private onChange: (value: string) => void = () => {};
   protected onTouched: () => void = () => {};
@@ -351,6 +384,7 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
     this.onChange(next);
     this.bubble.set(null);
     this.syncScroll();
+    this.trackCaret();
   }
 
   protected handleFocus(): void {
@@ -363,7 +397,8 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
   }
 
   protected trackCaret(): void {
-    requestAnimationFrame(() => this.showCaretBubble());
+    cancelAnimationFrame(this.frame);
+    this.frame = requestAnimationFrame(() => this.showCaretBubble());
   }
 
   protected handleBlur(): void {
@@ -423,17 +458,18 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
       return;
     }
 
-    const editor = this.editor().nativeElement;
-    const index = this.markIndexAt(editor.selectionStart ?? 0);
+    const caret = this.editor().nativeElement.selectionStart ?? 0;
+    const at = this.markIndexAt(caret);
     const frame = this.mirror().nativeElement.parentElement;
-    const hit = index < 0 ? undefined : this.markAt(index);
-    if (!hit || !frame) {
+    const hit = at ? this.markAt(at.index) : undefined;
+    if (!at || !hit || !frame) {
       if (this.bubble()) this.bubble.set(null);
       return;
     }
 
     const marks = this.mirror().nativeElement.querySelectorAll<HTMLElement>('.flr-at__mark');
-    const rect = marks[index]?.getClientRects()[0];
+    const mark = marks[at.index];
+    const rect = mark ? caretRect(mark, caret - at.start) : undefined;
     if (!rect) {
       if (this.bubble()) this.bubble.set(null);
       return;
@@ -462,18 +498,18 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
     }
   }
 
-  private markIndexAt(caret: number): number {
+  private markIndexAt(caret: number): { index: number; start: number } | null {
     let offset = 0;
     let index = 0;
     for (const seg of this.segments()) {
       const end = offset + seg.text.length;
       if (seg.diagnostic) {
-        if (caret >= offset && caret <= end) return index;
+        if (caret >= offset && caret <= end) return { index, start: offset };
         index++;
       }
       offset = end;
     }
-    return -1;
+    return null;
   }
 
   private markAt(index: number): TextareaDiagnostic | undefined {
