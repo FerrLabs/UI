@@ -310,12 +310,14 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
   constructor() {
     inject(DestroyRef).onDestroy(() => cancelAnimationFrame(this.frame));
 
-    afterRenderEffect(() => {
-      const current = this.bubble();
-      const el = this.bubbleEl()?.nativeElement;
-      if (!current || current.below || !el) return;
-      if (el.getBoundingClientRect().top >= 0) return;
-      this.bubble.set({ ...current, below: true });
+    afterRenderEffect({
+      read: () => {
+        const current = this.bubble();
+        const el = this.bubbleEl()?.nativeElement;
+        if (!current || current.below || !el) return;
+        if (el.getBoundingClientRect().top >= 0) return;
+        this.bubble.set({ ...current, below: true });
+      },
     });
   }
 
