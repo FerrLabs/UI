@@ -8,3 +8,10 @@ allowBuilds:
   msgpackr-extract: false
   sharp: true
   unrs-resolver: true
+
+# Angular resolves zone.js as an optional peer. Without a single version here,
+# `ui-ng` and `showcase` each get their own `@angular/core` instance, and
+# `@storybook/angular`'s `InputSignal` unwrapping stops matching the one the
+# stories are typed against: every story's args then fail to typecheck.
+overrides:
+  zone.js: 0.16.3
