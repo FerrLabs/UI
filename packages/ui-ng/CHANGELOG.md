@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.31.3] - 2026-09-07
+
+### Bug Fixes
+
+- fix(ui-ng): flip the annotated-textarea bubble by measuring it instead of guessing its height (#534)
+
 ## [1.31.2] - 2026-09-06
 
 ### Bug Fixes
