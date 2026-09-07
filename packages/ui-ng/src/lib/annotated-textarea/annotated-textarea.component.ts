@@ -3,6 +3,7 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  afterRenderEffect,
   computed,
   forwardRef,
   inject,
@@ -29,11 +30,12 @@ interface Bubble {
   readonly message: string;
   readonly severity: 'error' | 'warning';
   readonly left: number;
-  readonly top: number;
+  readonly anchorTop: number;
+  readonly anchorBottom: number;
   readonly below: boolean;
 }
 
-const BUBBLE_CLEARANCE = 72;
+const BUBBLE_GAP = 6;
 
 function caretRect(mark: HTMLElement, offset: number): DOMRect | undefined {
   const node = mark.firstChild;
@@ -132,11 +134,12 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
       ></textarea>
       @if (bubble(); as b) {
         <div
+          #bubbleEl
           class="flr-at__bubble"
           [class.flr-at__bubble--warning]="b.severity === 'warning'"
           [class.flr-at__bubble--below]="b.below"
           [style.left.px]="b.left"
-          [style.top.px]="b.top"
+          [style.top.px]="bubbleTop(b)"
           aria-hidden="true"
         >
           {{ b.message }}
@@ -251,6 +254,7 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
   readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
   readonly describedBy = input<string | null>(null, { alias: 'aria-describedby' });
 
+  private readonly bubbleEl = viewChild<ElementRef<HTMLElement>>('bubbleEl');
   private readonly mirror = viewChild.required<ElementRef<HTMLPreElement>>('mirror');
   private readonly editor = viewChild.required<ElementRef<HTMLTextAreaElement>>('editor');
 
@@ -305,6 +309,18 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
 
   constructor() {
     inject(DestroyRef).onDestroy(() => cancelAnimationFrame(this.frame));
+
+    afterRenderEffect(() => {
+      const current = this.bubble();
+      const el = this.bubbleEl()?.nativeElement;
+      if (!current || current.below || !el) return;
+      if (el.getBoundingClientRect().top >= 0) return;
+      this.bubble.set({ ...current, below: true });
+    });
+  }
+
+  protected bubbleTop(bubble: Bubble): number {
+    return bubble.below ? bubble.anchorBottom + BUBBLE_GAP : bubble.anchorTop - BUBBLE_GAP;
   }
 
   private onChange: (value: string) => void = () => {};
@@ -421,20 +437,21 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
   }
 
   private placeBubble(hit: TextareaDiagnostic, rect: DOMRect, frameRect: DOMRect): void {
-    const below = rect.top < BUBBLE_CLEARANCE;
     const next: Bubble = {
       message: hit.message,
       severity: hit.severity ?? 'error',
       left: rect.left - frameRect.left,
-      top: below ? rect.bottom - frameRect.top + 6 : rect.top - frameRect.top - 6,
-      below,
+      anchorTop: rect.top - frameRect.top,
+      anchorBottom: rect.bottom - frameRect.top,
+      below: false,
     };
     const current = this.bubble();
     if (
       !current ||
       current.message !== next.message ||
-      current.top !== next.top ||
-      current.left !== next.left
+      current.left !== next.left ||
+      current.anchorTop !== next.anchorTop ||
+      current.anchorBottom !== next.anchorBottom
     ) {
       this.bubble.set(next);
     }
