@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.32.0] - 2026-09-17
+
+### Features
+
+- feat(ui-ng): merge the product rail into the nav column (#549)
+
 ## [1.31.4] - 2026-09-07
 
 ### Bug Fixes
