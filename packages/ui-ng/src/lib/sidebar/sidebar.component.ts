@@ -6,10 +6,12 @@ import { NgTemplateOutlet } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <aside class="flr-sb" [class.flr-sb--collapsed]="collapsed()" [style.width]="widthPx()">
+      <div class="flr-sb__switcher"><ng-content select="[sidebar-switcher]" /></div>
       <div class="flr-sb__brand"><ng-content select="[sidebar-brand]" /></div>
       <div class="flr-sb__project"><ng-content select="[sidebar-project]" /></div>
       <nav class="flr-sb__nav" [attr.aria-label]="navLabel()"><ng-content /></nav>
       <div class="flr-sb__footer">
+        <div class="flr-sb__extra"><ng-content select="[sidebar-footer]" /></div>
         <button type="button" class="flr-sb__toggle mono" (click)="toggle()">
           <span aria-hidden="true">{{ collapsed() ? '→' : '←' }}</span>
           <span class="flr-sb__toggle-label">Collapse</span>
@@ -44,8 +46,23 @@ import { NgTemplateOutlet } from '@angular/common';
       justify-content: center;
     }
     .flr-sb__brand:empty,
-    .flr-sb__project:empty {
+    .flr-sb__project:empty,
+    .flr-sb__switcher:empty,
+    .flr-sb__extra:empty,
+    .flr-sb__brand:has(> div:only-child:empty),
+    .flr-sb__project:has(> div:only-child:empty),
+    .flr-sb__switcher:has(> div:only-child:empty),
+    .flr-sb__extra:has(> div:only-child:empty) {
       display: none;
+    }
+    .flr-sb__switcher {
+      padding: 12px 12px 4px;
+    }
+    .flr-sb--collapsed .flr-sb__switcher {
+      padding: 12px 8px 4px;
+    }
+    .flr-sb__extra {
+      padding: 4px 4px 8px;
     }
     .flr-sb__nav {
       flex: 1;

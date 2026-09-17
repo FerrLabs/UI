@@ -1,0 +1,69 @@
+<div class="flr-as" [class.flr-as--collapsed]="collapsed()">
+  <button
+    type="button"
+    class="flr-as__trigger"
+    [attr.aria-label]="triggerLabel()"
+    [attr.aria-expanded]="open()"
+    aria-controls="flr-as-list"
+    [style.--flr-as-accent]="currentItem()?.accent ?? null"
+    (click)="toggle()"
+  >
+    @if (currentItem(); as item) {
+      <span class="flr-as__mark" aria-hidden="true">
+        <flr-logo-mark [product]="glyph(item)" [accent]="markColor(item)" [size]="21" />
+      </span>
+      @if (!collapsed()) {
+        <span class="flr-as__text">
+          <span class="flr-as__name">{{ item.label }}</span>
+          <span class="mono flr-as__caption">{{ caption() }}</span>
+        </span>
+      }
+    }
+    @if (!collapsed()) {
+      <span class="flr-as__chevron" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <polyline points="4.5 6.5 8 3 11.5 6.5" />
+          <polyline points="4.5 9.5 8 13 11.5 9.5" />
+        </svg>
+      </span>
+    }
+  </button>
+
+  @if (open()) {
+    <div class="flr-as__panel" id="flr-as-list">
+      <p class="mono flr-as__panel-title">{{ listLabel() }}</p>
+
+      @for (item of items(); track item.id) {
+        <a
+          class="flr-as__item"
+          [class.flr-as__item--current]="item.id === current()"
+          [href]="item.href"
+          [style.--flr-as-accent]="item.accent"
+          [attr.aria-current]="item.id === current() ? 'page' : null"
+          [attr.target]="item.newTab ? '_blank' : null"
+          [attr.rel]="item.newTab ? 'noreferrer noopener' : null"
+          (click)="onSelect(item)"
+        >
+          <span class="flr-as__mark" aria-hidden="true">
+            <flr-logo-mark [product]="glyph(item)" [accent]="markColor(item)" [size]="19" />
+          </span>
+          <span class="flr-as__text">
+            <span class="flr-as__name">{{ item.label }}</span>
+            @if (item.meta) {
+              <span class="mono flr-as__meta">{{ item.meta }}</span>
+            }
+          </span>
+          @if (item.id === current()) {
+            <span class="flr-as__check" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 8.5 6.5 12 13 4" />
+              </svg>
+            </span>
+          }
+        </a>
+      }
+
+      <div class="flr-as__footer"><ng-content select="[switcher-footer]" /></div>
+    </div>
+  }
+</div>

@@ -1,5 +1,6 @@
 import {
   AppRailComponent,
+  AppSwitcherComponent,
   AvatarComponent,
   ButtonComponent,
   LogoMarkComponent,
@@ -39,6 +40,7 @@ const meta: Meta<ShellComponent> = {
         ButtonComponent,
         UserMenuComponent,
         AppRailComponent,
+        AppSwitcherComponent,
         LogoMarkComponent,
         AvatarComponent,
       ],
@@ -124,6 +126,37 @@ export const LongContent: Story = {
           @for (row of rows; track row) {
             <p style="margin:0 0 12px">Run #{{ row }} — rotated 4 secrets, 1.2s</p>
           }
+        </div>
+      </flr-shell>`,
+  }),
+};
+
+export const Merged: Story = {
+  render: (args) => ({
+    props: {
+      ...args,
+      apps: [
+        { id: 'ferrflow', label: 'FerrFlow', href: '/flow', accent: '#e8733a', meta: 'Included' },
+        { id: 'ferrgrowth', label: 'FerrGrowth', href: '/growth', accent: '#7c3aed', meta: 'Team' },
+        { id: 'ferrfleet', label: 'FerrFleet', href: '/fleet', accent: '#f59e0b', meta: 'Pro' },
+      ],
+    },
+    template: `
+      <flr-shell
+        [productName]="productName" [marketingHref]="marketingHref" [sections]="sections"
+        [currentPath]="currentPath" [breadcrumb]="breadcrumb" [searchEnabled]="searchEnabled"
+      >
+        <flr-app-switcher shell-switcher [items]="apps" current="ferrfleet">
+          <a switcher-footer href="/billing"
+             style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:10px; color:rgba(255,255,255,0.52); font-size:12.5px; text-decoration:none">
+            Manage subscriptions
+          </a>
+        </flr-app-switcher>
+        <flr-avatar shell-nav-footer name="Ada Doe" [size]="30" />
+        <flr-button shell-actions size="sm">Run now</flr-button>
+        <div style="padding:24px">
+          <h2 style="margin:0 0 8px">vault-rotator</h2>
+          <p style="margin:0; color:var(--color-fg-2)">Rotates FerrVault secrets nightly.</p>
         </div>
       </flr-shell>`,
   }),

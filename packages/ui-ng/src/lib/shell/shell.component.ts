@@ -34,6 +34,9 @@ export interface ShellNavGroup {
       <div class="flr-shell__rail"><ng-content select="[shell-rail]" /></div>
       <div class="flr-shell__surface">
         <flr-sidebar [(collapsed)]="collapsed">
+          <div sidebar-switcher class="flr-shell__switcher">
+            <ng-content select="[shell-switcher]" />
+          </div>
           <div sidebar-brand class="flr-shell__brand"><ng-content select="[shell-brand]" /></div>
           <div sidebar-project><ng-content select="[shell-project]" /></div>
           @for (group of sections(); track group.title ?? $index) {
@@ -64,6 +67,9 @@ export interface ShellNavGroup {
               }
             </flr-sidebar-section>
           }
+          <div sidebar-footer class="flr-shell__nav-footer">
+            <ng-content select="[shell-nav-footer]" />
+          </div>
         </flr-sidebar>
 
         <div class="flr-shell__body">
@@ -128,7 +134,24 @@ export interface ShellNavGroup {
       border-top-left-radius: var(--flr-shell-radius, 14px);
       overflow: clip;
     }
-    .flr-shell:not(:has(.flr-shell__rail:not(:empty))) {
+    .flr-shell:not(:has(.flr-shell__rail:not(:empty))):not(:has(.flr-shell__switcher:not(:empty))) {
+      background: var(--color-app-bg, #fafaf9);
+    }
+    .flr-shell:has(.flr-shell__switcher:not(:empty)) flr-sidebar {
+      --color-app-sidebar: var(--color-app-rail, #101012);
+      --color-ink: #ffffff;
+      --color-ink-2: rgba(255, 255, 255, 0.62);
+      --color-ink-3: rgba(255, 255, 255, 0.45);
+      --color-rule: rgba(255, 255, 255, 0.1);
+      --color-app-nav-hover: rgba(255, 255, 255, 0.06);
+      --color-app-nav-active: rgba(255, 255, 255, 0.1);
+      --color-danger: #f87171;
+      --color-avatar-bg: rgba(255, 255, 255, 0.16);
+    }
+    .flr-shell:has(.flr-shell__switcher:not(:empty)) .flr-shell__body {
+      margin-top: var(--flr-shell-inset, 10px);
+      border-top-left-radius: var(--flr-shell-radius, 14px);
+      overflow: clip;
       background: var(--color-app-bg, #fafaf9);
     }
     .flr-shell__rail {
