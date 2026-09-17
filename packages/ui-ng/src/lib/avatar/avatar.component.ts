@@ -33,7 +33,7 @@ const SIZE_MAP: Record<Exclude<AvatarSize, number>, number> = {
         [style.width.px]="px()"
         [style.height.px]="px()"
         [style.border-radius.px]="radius()"
-        [style.background]="accent() ?? 'var(--color-ink-2, #475569)'"
+        [style.background]="accent() ?? 'var(--color-avatar-bg, var(--color-ink-2, #475569))'"
         [style.font-size.px]="px() * 0.4"
       >
         {{ initials() }}

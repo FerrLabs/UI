@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { LogoMarkComponent, type ProductSlug } from '../logo-mark/logo-mark.component';
+import { markColorOnDark } from './mark-color';
 
 export interface AppRailItem {
   readonly id: string;
@@ -7,6 +8,7 @@ export interface AppRailItem {
   readonly href: string;
   readonly accent: string;
   readonly product?: ProductSlug;
+  readonly meta?: string;
   readonly locked?: boolean;
   readonly newTab?: boolean;
 }
@@ -42,21 +44,7 @@ export class AppRailComponent {
   }
 
   protected markColor(item: AppRailItem): string {
-    return this.readsOnRail(item.accent) ? item.accent : '#ffffff';
-  }
-
-  private readsOnRail(accent: string): boolean {
-    const hex = accent.trim().replace('#', '');
-    if (hex.length !== 3 && hex.length !== 6) return true;
-    const full =
-      hex.length === 3
-        ? hex
-            .split('')
-            .map((c) => c + c)
-            .join('')
-        : hex;
-    const [r, g, b] = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16));
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b > 70;
+    return markColorOnDark(item.accent);
   }
 
   protected itemLabel(item: AppRailItem): string {
