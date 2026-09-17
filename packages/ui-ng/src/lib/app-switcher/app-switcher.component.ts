@@ -7,10 +7,13 @@ import {
   input,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { LogoMarkComponent, type ProductSlug } from '../logo-mark/logo-mark.component';
 import type { AppRailItem } from '../app-rail/app-rail.component';
 import { markColorOnDark } from '../app-rail/mark-color';
+
+let panelCount = 0;
 
 const PRODUCT_SLUGS: ReadonlySet<string> = new Set<ProductSlug>([
   'ferrflow',
@@ -45,7 +48,9 @@ export class AppSwitcherComponent {
   readonly selected = output<AppRailItem>();
 
   private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
 
+  protected readonly panelId = `flr-as-list-${(panelCount += 1)}`;
   protected readonly open = signal(false);
 
   protected readonly currentItem = computed<AppRailItem | null>(() => {
@@ -65,7 +70,12 @@ export class AppSwitcherComponent {
   }
 
   protected close(): void {
+    if (!this.open()) return;
+    const doc = this.host.nativeElement.ownerDocument;
+    const active = doc.activeElement;
+    const heldFocus = active instanceof Node && this.host.nativeElement.contains(active);
     this.open.set(false);
+    if (heldFocus) this.trigger().nativeElement.focus();
   }
 
   protected onSelect(item: AppRailItem): void {

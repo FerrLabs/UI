@@ -148,6 +148,9 @@ export interface ShellNavGroup {
       --color-danger: #f87171;
       --color-avatar-bg: rgba(255, 255, 255, 0.16);
     }
+    .flr-shell:has(.flr-shell__switcher:not(:empty)) .flr-shell__surface {
+      background: var(--color-app-rail, #101012);
+    }
     .flr-shell:has(.flr-shell__switcher:not(:empty)) .flr-shell__body {
       margin-top: var(--flr-shell-inset, 10px);
       border-top-left-radius: var(--flr-shell-radius, 14px);
