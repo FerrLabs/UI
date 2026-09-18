@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.33.0] - 2026-09-18
+
+### Features
+
+- feat(ui-ng): derive the app switcher list from the org's subscriptions (#550)
+
 ## [1.32.0] - 2026-09-17
 
 ### Features
