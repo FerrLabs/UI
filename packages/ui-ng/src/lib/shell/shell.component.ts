@@ -259,7 +259,7 @@ export interface ShellNavGroup {
       flex: 1;
       min-height: 0;
       overflow-y: auto;
-      padding-bottom: 40px;
+      padding-bottom: var(--flr-shell-main-pad-bottom, 40px);
       background: var(--color-app-bg, #fafaf9);
     }
   `,
