@@ -3,13 +3,22 @@ import {
   AppSwitcherComponent,
   AvatarComponent,
   ButtonComponent,
+  DEFAULT_APPS,
   LogoMarkComponent,
+  ProjectSwitcherComponent,
   ShellComponent,
   UserMenuComponent,
+  entitledApps,
+  type ProjectSwitcherItem,
 } from '@ferrlabs/ui-ng';
 import { icons } from '@ferrlabs/ui-foundation/icons';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
+
+const ORGS: readonly ProjectSwitcherItem[] = [
+  { id: 'ferrlabs', label: 'FerrLabs', meta: 'ferrlabs' },
+  { id: 'ace-studio', label: 'Ace Studio', meta: 'ace-studio' },
+];
 
 const SECTIONS = [
   {
@@ -43,6 +52,7 @@ const meta: Meta<ShellComponent> = {
         AppSwitcherComponent,
         LogoMarkComponent,
         AvatarComponent,
+        ProjectSwitcherComponent,
       ],
     }),
   ],
@@ -135,11 +145,16 @@ export const Merged: Story = {
   render: (args) => ({
     props: {
       ...args,
-      apps: [
-        { id: 'ferrflow', label: 'FerrFlow', href: '/flow', accent: '#e8733a', meta: 'Included' },
-        { id: 'ferrgrowth', label: 'FerrGrowth', href: '/growth', accent: '#7c3aed', meta: 'Team' },
-        { id: 'ferrfleet', label: 'FerrFleet', href: '/fleet', accent: '#f59e0b', meta: 'Pro' },
-      ],
+      apps: entitledApps(
+        DEFAULT_APPS,
+        [
+          { product: 'ferrgrowth', tier: 'team', status: 'active' },
+          { product: 'ferrfleet', tier: 'pro', status: 'active' },
+        ],
+        'ferrfleet',
+      ),
+      orgs: ORGS,
+      currentOrg: ORGS[0],
     },
     template: `
       <flr-shell
@@ -152,6 +167,14 @@ export const Merged: Story = {
             Manage subscriptions
           </a>
         </flr-app-switcher>
+        <flr-project-switcher
+          shell-brand
+          variant="brand"
+          title="Switch org"
+          searchPlaceholder="Search orgs…"
+          [current]="currentOrg"
+          [items]="orgs"
+        />
         <flr-avatar shell-nav-footer name="Ada Doe" [size]="30" />
         <flr-button shell-actions size="sm">Run now</flr-button>
         <div style="padding:24px">
@@ -160,4 +183,11 @@ export const Merged: Story = {
         </div>
       </flr-shell>`,
   }),
+};
+
+export const MergedOrgSwitcherOpen: Story = {
+  ...Merged,
+  play: async ({ canvasElement }) => {
+    canvasElement.querySelector<HTMLButtonElement>('flr-project-switcher button')?.click();
+  },
 };

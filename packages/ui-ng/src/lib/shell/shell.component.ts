@@ -141,12 +141,14 @@ export interface ShellNavGroup {
       --color-app-sidebar: var(--color-app-rail, #101012);
       --color-ink: #ffffff;
       --color-ink-2: rgba(255, 255, 255, 0.62);
-      --color-ink-3: rgba(255, 255, 255, 0.45);
+      --color-ink-3: rgba(255, 255, 255, 0.56);
       --color-rule: rgba(255, 255, 255, 0.1);
       --color-app-nav-hover: rgba(255, 255, 255, 0.06);
       --color-app-nav-active: rgba(255, 255, 255, 0.1);
       --color-danger: #f87171;
       --color-avatar-bg: rgba(255, 255, 255, 0.16);
+      --color-card: var(--color-app-rail-tip, #1a1b20);
+      --color-app-bg-2: rgba(255, 255, 255, 0.06);
     }
     .flr-shell:has(.flr-shell__switcher:not(:empty)) .flr-shell__surface {
       background: var(--color-app-rail, #101012);
