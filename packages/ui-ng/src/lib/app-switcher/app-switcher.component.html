@@ -32,9 +32,31 @@
 
   @if (open()) {
     <div class="flr-as__panel" [id]="panelId">
-      <p class="mono flr-as__panel-title">{{ listLabel() }}</p>
+      <div class="flr-as__panel-head">
+        <p class="mono flr-as__panel-title">{{ listLabel() }}</p>
+        <button
+          type="button"
+          class="flr-as__customize"
+          [attr.aria-label]="customizeLabel()"
+          [title]="customizeLabel()"
+          (click)="openCustomize()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            aria-hidden="true"
+          >
+            <path
+              d="M10.3 3.6a1 1 0 0 1 1-.8h1.4a1 1 0 0 1 1 .8l.3 1.7a7 7 0 0 1 1.6.9l1.6-.6a1 1 0 0 1 1.2.4l.7 1.2a1 1 0 0 1-.2 1.3l-1.3 1.1a7 7 0 0 1 0 1.8l1.3 1.1a1 1 0 0 1 .2 1.3l-.7 1.2a1 1 0 0 1-1.2.4l-1.6-.6a7 7 0 0 1-1.6.9l-.3 1.7a1 1 0 0 1-1 .8h-1.4a1 1 0 0 1-1-.8l-.3-1.7a7 7 0 0 1-1.6-.9l-1.6.6a1 1 0 0 1-1.2-.4l-.7-1.2a1 1 0 0 1 .2-1.3l1.3-1.1a7 7 0 0 1 0-1.8L4.9 9.1a1 1 0 0 1-.2-1.3l.7-1.2a1 1 0 0 1 1.2-.4l1.6.6a7 7 0 0 1 1.6-.9z"
+            />
+            <circle cx="12" cy="12" r="2.6" />
+          </svg>
+        </button>
+      </div>
 
-      @for (item of items(); track item.id) {
+      @for (item of visibleItems(); track item.id) {
         <a
           class="flr-as__item"
           [class.flr-as__item--current]="item.id === current()"
@@ -68,3 +90,28 @@
     </div>
   }
 </div>
+
+<flr-modal
+  [open]="customizing()"
+  [title]="customizeLabel()"
+  [description]="customizeHint()"
+  size="sm"
+  (closed)="customizing.set(false)"
+>
+  <ul class="flr-as__toggles">
+    @for (item of items(); track item.id) {
+      <li>
+        <flr-switch
+          [label]="item.label"
+          [hint]="item.meta ?? null"
+          [ngModel]="isShown(item)"
+          [disabled]="isLocked(item)"
+          (ngModelChange)="setShown(item, $event)"
+        />
+      </li>
+    }
+  </ul>
+  <div modal-footer>
+    <flr-button (pressed)="customizing.set(false)">{{ doneLabel() }}</flr-button>
+  </div>
+</flr-modal>
