@@ -186,9 +186,32 @@
   border-top: 1px solid var(--color-app-rail-rule, rgba(255, 255, 255, 0.1));
 }
 
+.flr-as__footer ::ng-deep a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12.5px;
+  text-decoration: none;
+  transition: background 130ms ease;
+}
+
+.flr-as__footer ::ng-deep a:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+.flr-as__footer ::ng-deep a:focus-visible {
+  outline: 2px solid var(--color-app-rail-focus, #ffffff);
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .flr-as__trigger,
-  .flr-as__item {
+  .flr-as__item,
+  .flr-as__footer ::ng-deep a {
     transition: none;
   }
 }

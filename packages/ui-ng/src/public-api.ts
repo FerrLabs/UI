@@ -97,6 +97,8 @@ export type { AvatarSize, AvatarShape } from './lib/avatar/avatar.component';
 export { AppRailComponent } from './lib/app-rail/app-rail.component';
 export type { AppRailItem } from './lib/app-rail/app-rail.component';
 export { AppSwitcherComponent } from './lib/app-switcher/app-switcher.component';
+export { entitledApps } from './lib/app-switcher/entitled-apps';
+export type { ProductSubscription } from './lib/app-switcher/entitled-apps';
 export { LogoMarkComponent } from './lib/logo-mark/logo-mark.component';
 export type { ProductSlug } from './lib/logo-mark/logo-mark.component';
 

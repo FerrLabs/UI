@@ -40,13 +40,7 @@ export interface ProjectSwitcherPlaceholder {
   },
   template: `
     @if (variant() === 'brand') {
-      <button
-        type="button"
-        class="flr-ps__brand"
-        [attr.aria-haspopup]="'menu'"
-        [attr.aria-expanded]="open()"
-        (click)="toggle()"
-      >
+      <button type="button" class="flr-ps__brand" [attr.aria-expanded]="open()" (click)="toggle()">
         @if (displayedIcon()) {
           @let icon = trustedIcon(displayedIcon());
           <span class="flr-ps__trigger-icon">
@@ -87,7 +81,7 @@ export interface ProjectSwitcherPlaceholder {
     }
 
     @if (open()) {
-      <div class="flr-ps__panel" role="menu">
+      <div class="flr-ps__panel">
         <div class="mono flr-ps__title">{{ title() }}</div>
         <div class="flr-ps__search-wrap">
           <input
@@ -107,7 +101,6 @@ export interface ProjectSwitcherPlaceholder {
             @for (item of filtered(); track item.id; let idx = $index) {
               <button
                 type="button"
-                role="menuitem"
                 class="flr-ps__item"
                 [class.flr-ps__item--hl]="idx === highlight()"
                 [attr.aria-current]="item.id === current()?.id ? 'true' : null"

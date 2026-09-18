@@ -86,8 +86,9 @@ export class AppSwitcherComponent {
   protected onDocumentClick(event: MouseEvent): void {
     if (!this.open()) return;
     const target = event.target;
-    if (target instanceof Node && this.host.nativeElement.contains(target)) return;
-    this.close();
+    const inside = target instanceof Node && this.host.nativeElement.contains(target);
+    const followedFooterLink = target instanceof Element && !!target.closest('.flr-as__footer a');
+    if (!inside || followedFooterLink) this.close();
   }
 
   protected markColor(item: AppRailItem): string {

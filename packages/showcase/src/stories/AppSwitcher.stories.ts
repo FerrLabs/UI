@@ -1,12 +1,21 @@
-import { AppSwitcherComponent, type AppRailItem } from '@ferrlabs/ui-ng';
+import {
+  AppSwitcherComponent,
+  DEFAULT_APPS,
+  entitledApps,
+  type ProductSubscription,
+} from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
+import { expect, waitFor } from 'storybook/test';
 
-const ENTITLED: readonly AppRailItem[] = [
-  { id: 'ferrflow', label: 'FerrFlow', href: '/flow', accent: '#e8733a', meta: 'Included' },
-  { id: 'ferrgrowth', label: 'FerrGrowth', href: '/growth', accent: '#7c3aed', meta: 'Team' },
-  { id: 'ferrvault', label: 'FerrVault', href: '/vault', accent: '#10b981', meta: 'Pro' },
+const SUBSCRIPTIONS: readonly ProductSubscription[] = [
+  { product: 'ferrflow', tier: 'free', status: 'active' },
+  { product: 'ferrgrowth', tier: 'team', status: 'trialing' },
+  { product: 'ferrtrack', tier: 'pro', status: 'canceled' },
+  { product: 'ferrvault', tier: 'pro', status: 'active' },
 ];
+
+const ENTITLED = entitledApps(DEFAULT_APPS, SUBSCRIPTIONS, 'ferrvault');
 
 const meta: Meta<AppSwitcherComponent> = {
   title: 'App chrome/AppSwitcher',
@@ -18,10 +27,7 @@ const meta: Meta<AppSwitcherComponent> = {
     template: `
       <div style="width:248px; padding:14px 12px; min-height:360px; background:var(--color-app-rail, #101012)">
         <flr-app-switcher [items]="items" [current]="current">
-          <a switcher-footer href="/billing"
-             style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:10px; color:rgba(255,255,255,0.52); font-size:12.5px; text-decoration:none">
-            Manage subscriptions
-          </a>
+          <a switcher-footer href="/products">Manage subscriptions</a>
         </flr-app-switcher>
       </div>`,
   }),
@@ -35,6 +41,18 @@ export const Default: Story = {};
 export const Open: Story = {
   play: async ({ canvasElement }) => {
     canvasElement.querySelector<HTMLButtonElement>('.flr-as__trigger')?.click();
+    await waitFor(() => {
+      const rows = [...canvasElement.querySelectorAll('.flr-as__item')].map((row) =>
+        [row.querySelector('.flr-as__name'), row.querySelector('.flr-as__meta')].map(
+          (el) => el?.textContent?.trim() ?? null,
+        ),
+      );
+      expect(rows).toEqual([
+        ['FerrLabs', null],
+        ['FerrGrowth', 'Team'],
+        ['FerrVault', 'Pro'],
+      ]);
+    });
   },
 };
 
