@@ -5,13 +5,19 @@ import {
   computed,
   inject,
   input,
+  model,
   output,
   signal,
   viewChild,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ButtonComponent } from '../button/button.component';
+import { ModalComponent } from '../modal/modal.component';
+import { SwitchComponent } from '../switch/switch.component';
 import { LogoMarkComponent, type ProductSlug } from '../logo-mark/logo-mark.component';
 import type { AppRailItem } from '../app-rail/app-rail.component';
 import { markColorOnDark } from '../app-rail/mark-color';
+import { ORG_HUB } from './entitled-apps';
 
 let panelCount = 0;
 
@@ -29,7 +35,7 @@ const PRODUCT_SLUGS: ReadonlySet<string> = new Set<ProductSlug>([
 @Component({
   selector: 'flr-app-switcher',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LogoMarkComponent],
+  imports: [LogoMarkComponent, ModalComponent, SwitchComponent, ButtonComponent, FormsModule],
   templateUrl: './app-switcher.component.html',
   styleUrl: './app-switcher.component.css',
   host: {
@@ -44,6 +50,12 @@ export class AppSwitcherComponent {
   readonly listLabel = input('Your apps');
   readonly collapsed = input(false);
   readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+  readonly customizeLabel = input('Customize apps');
+  readonly customizeHint = input(
+    'Pick the apps this menu shows. FerrLabs always stays, it holds your account.',
+  );
+  readonly doneLabel = input('Done');
+  readonly hidden = model<readonly string[]>([]);
 
   readonly selected = output<AppRailItem>();
 
@@ -52,6 +64,15 @@ export class AppSwitcherComponent {
 
   protected readonly panelId = `flr-as-list-${(panelCount += 1)}`;
   protected readonly open = signal(false);
+  protected readonly customizing = signal(false);
+
+  protected readonly visibleItems = computed(() => {
+    const hidden = new Set(this.hidden());
+    const current = this.current();
+    return this.items().filter(
+      (item) => item.id === ORG_HUB || item.id === current || !hidden.has(item.id),
+    );
+  });
 
   protected readonly currentItem = computed<AppRailItem | null>(() => {
     const id = this.current();
@@ -81,6 +102,24 @@ export class AppSwitcherComponent {
   protected onSelect(item: AppRailItem): void {
     this.close();
     this.selected.emit(item);
+  }
+
+  protected openCustomize(): void {
+    this.close();
+    this.customizing.set(true);
+  }
+
+  protected isLocked(item: AppRailItem): boolean {
+    return item.id === ORG_HUB;
+  }
+
+  protected isShown(item: AppRailItem): boolean {
+    return this.isLocked(item) || !this.hidden().includes(item.id);
+  }
+
+  protected setShown(item: AppRailItem, shown: boolean): void {
+    const next = this.hidden().filter((id) => id !== item.id);
+    this.hidden.set(shown ? next : [...next, item.id]);
   }
 
   protected onDocumentClick(event: MouseEvent): void {

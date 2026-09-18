@@ -7,7 +7,7 @@ export interface ProductSubscription {
 }
 
 const ENTITLED_STATUSES: ReadonlySet<string> = new Set(['trialing', 'active', 'past_due']);
-const ORG_HUB = 'ferrlabs';
+export const ORG_HUB = 'ferrlabs';
 
 export function entitledApps(
   apps: readonly AppRailItem[],
