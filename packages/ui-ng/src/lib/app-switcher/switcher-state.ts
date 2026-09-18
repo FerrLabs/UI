@@ -21,7 +21,7 @@ export function switcherState(apps: readonly SwitcherApp[]): SwitcherState {
     items: apps.map(({ id, label, href, accent, tier }) =>
       tier ? { id, label, href, accent, meta: tierLabel(tier) } : { id, label, href, accent },
     ),
-    hidden: apps.filter((app) => app.hidden).map((app) => app.id),
+    hidden: apps.filter((app) => app.hidden && app.id !== ORG_HUB).map((app) => app.id),
     hubHref: apps.find((app) => app.id === ORG_HUB)?.href ?? null,
   };
 }

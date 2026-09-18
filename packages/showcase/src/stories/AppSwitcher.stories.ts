@@ -113,7 +113,7 @@ const FROM_API: readonly SwitcherApp[] = [
     href: 'https://app.ferrlabs.com',
     accent: '#1e293b',
     tier: null,
-    hidden: false,
+    hidden: true,
   },
   {
     id: 'ferrtrack',
@@ -133,12 +133,13 @@ const FROM_API: readonly SwitcherApp[] = [
   },
 ];
 
+const FROM_API_STATE = switcherState(FROM_API);
+
 export const FromApi: Story = {
-  args: { items: switcherState(FROM_API).items, hidden: switcherState(FROM_API).hidden },
+  args: { items: FROM_API_STATE.items, hidden: FROM_API_STATE.hidden },
   play: async ({ canvasElement }) => {
-    const state = switcherState(FROM_API);
-    expect(state.hidden).toEqual(['ferrtrack']);
-    expect(state.hubHref).toBe('https://app.ferrlabs.com');
+    expect(FROM_API_STATE.hidden).toEqual(['ferrtrack']);
+    expect(FROM_API_STATE.hubHref).toBe('https://app.ferrlabs.com');
     await openPanel(canvasElement);
     const rows = [...canvasElement.querySelectorAll('.flr-as__item')].map((row) =>
       [row.querySelector('.flr-as__name'), row.querySelector('.flr-as__meta')].map(
