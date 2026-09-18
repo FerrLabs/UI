@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.33.1] - 2026-09-18
+
+### Bug Fixes
+
+- fix(ui-ng): drop the sidebar edge behind the merged nav's rounded corner (#555)
+
 ## [1.33.0] - 2026-09-18
 
 ### Features
