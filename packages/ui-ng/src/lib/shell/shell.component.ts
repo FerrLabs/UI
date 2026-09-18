@@ -149,6 +149,7 @@ export interface ShellNavGroup {
       --color-avatar-bg: rgba(255, 255, 255, 0.16);
       --color-card: var(--color-app-rail-tip, #1a1b20);
       --color-app-bg-2: rgba(255, 255, 255, 0.06);
+      --flr-sidebar-border: transparent;
     }
     .flr-shell:has(.flr-shell__switcher:not(:empty)) .flr-shell__surface {
       background: var(--color-app-rail, #101012);

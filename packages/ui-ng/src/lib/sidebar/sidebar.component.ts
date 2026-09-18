@@ -31,7 +31,7 @@ import { NgTemplateOutlet } from '@angular/common';
       display: flex;
       flex-direction: column;
       background: var(--color-app-sidebar, #f7f7f5);
-      border-right: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
+      border-right: 1px solid var(--flr-sidebar-border, var(--color-rule, rgba(30, 41, 59, 0.14)));
       transition: width 220ms ease;
     }
     .flr-sb__brand {
