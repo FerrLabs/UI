@@ -26,6 +26,6 @@ export function entitledApps(
   });
 }
 
-function tierLabel(tier: string): string {
+export function tierLabel(tier: string): string {
   return tier.charAt(0).toUpperCase() + tier.slice(1);
 }
