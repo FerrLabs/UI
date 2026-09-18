@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.35.1] - 2026-09-18
+
+### Bug Fixes
+
+- fix(ui-ng): take the review nits on the shell padding and switcherState (#562)
+
 ## [1.35.0] - 2026-09-18
 
 ### Features
