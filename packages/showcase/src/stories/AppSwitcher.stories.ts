@@ -27,10 +27,7 @@ const meta: Meta<AppSwitcherComponent> = {
     template: `
       <div style="width:248px; padding:14px 12px; min-height:360px; background:var(--color-app-rail, #101012)">
         <flr-app-switcher [items]="items" [current]="current">
-          <a switcher-footer href="/billing"
-             style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:10px; color:rgba(255,255,255,0.52); font-size:12.5px; text-decoration:none">
-            Manage subscriptions
-          </a>
+          <a switcher-footer href="/products">Manage subscriptions</a>
         </flr-app-switcher>
       </div>`,
   }),

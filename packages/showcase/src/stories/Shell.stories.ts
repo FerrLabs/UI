@@ -162,10 +162,7 @@ export const Merged: Story = {
         [currentPath]="currentPath" [breadcrumb]="breadcrumb" [searchEnabled]="searchEnabled"
       >
         <flr-app-switcher shell-switcher [items]="apps" current="ferrfleet">
-          <a switcher-footer href="/billing"
-             style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:10px; color:rgba(255,255,255,0.52); font-size:12.5px; text-decoration:none">
-            Manage subscriptions
-          </a>
+          <a switcher-footer href="/products">Manage subscriptions</a>
         </flr-app-switcher>
         <flr-project-switcher
           shell-brand
