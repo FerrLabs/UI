@@ -14,6 +14,7 @@ import {
 import { icons } from '@ferrlabs/ui-foundation/icons';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
+import { expect, waitFor } from 'storybook/test';
 
 const ORGS: readonly ProjectSwitcherItem[] = [
   { id: 'ferrlabs', label: 'FerrLabs', meta: 'ferrlabs' },
@@ -139,6 +140,37 @@ export const LongContent: Story = {
         </div>
       </flr-shell>`,
   }),
+};
+
+export const FullBleedTable: Story = {
+  render: (args) => ({
+    props: { ...args, rows: Array.from({ length: 60 }, (_, i) => i + 1) },
+    template: `
+      <flr-shell
+        [productName]="productName" [marketingHref]="marketingHref" [sections]="sections"
+        [currentPath]="currentPath" [breadcrumb]="breadcrumb" [searchEnabled]="searchEnabled"
+      >
+        <table class="full-bleed" style="width:100%; border-collapse:collapse">
+          <tbody>
+            @for (row of rows; track row) {
+              <tr style="border-bottom:1px solid var(--color-rule)">
+                <td style="padding:14px 28px">Run #{{ row }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </flr-shell>`,
+  }),
+  play: async ({ canvasElement }) => {
+    const main = canvasElement.querySelector<HTMLElement>('.flr-shell__main');
+    const table = canvasElement.querySelector<HTMLElement>('.full-bleed');
+    if (!main || !table) throw new Error('shell main or table not found');
+    main.scrollTop = main.scrollHeight;
+    await waitFor(() => {
+      const gap = main.getBoundingClientRect().bottom - table.getBoundingClientRect().bottom;
+      expect(gap).toBeGreaterThanOrEqual(32);
+    });
+  },
 };
 
 export const Merged: Story = {
