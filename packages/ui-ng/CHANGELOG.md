@@ -4,6 +4,16 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.34.0] - 2026-09-18
+
+### Features
+
+- feat(ui-ng): let each user choose which apps the switcher shows (#557)
+
+### Bug Fixes
+
+- fix(ui-ng): leave room under the last row of a full-bleed page (#559)
+
 ## [1.33.1] - 2026-09-18
 
 ### Bug Fixes
