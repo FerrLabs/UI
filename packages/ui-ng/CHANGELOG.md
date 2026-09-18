@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.35.0] - 2026-09-18
+
+### Features
+
+- feat(ui-ng): map the FerrLabs apps endpoint onto the app switcher (#561)
+
 ## [1.34.0] - 2026-09-18
 
 ### Features
