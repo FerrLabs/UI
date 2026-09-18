@@ -185,6 +185,8 @@ export const Merged: Story = {
 export const MergedOrgSwitcherOpen: Story = {
   ...Merged,
   play: async ({ canvasElement }) => {
-    canvasElement.querySelector<HTMLButtonElement>('flr-project-switcher button')?.click();
+    const trigger = canvasElement.querySelector<HTMLButtonElement>('flr-project-switcher button');
+    if (!trigger) throw new Error('org switcher trigger not found');
+    trigger.click();
   },
 };
