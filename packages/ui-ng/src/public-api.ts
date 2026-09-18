@@ -100,6 +100,8 @@ export { AppSwitcherComponent } from './lib/app-switcher/app-switcher.component'
 export { entitledApps } from './lib/app-switcher/entitled-apps';
 export type { ProductSubscription } from './lib/app-switcher/entitled-apps';
 export { hiddenAppsFromPreferences, withHiddenApps } from './lib/app-switcher/switcher-preferences';
+export { switcherState } from './lib/app-switcher/switcher-state';
+export type { SwitcherApp, SwitcherState } from './lib/app-switcher/switcher-state';
 export { LogoMarkComponent } from './lib/logo-mark/logo-mark.component';
 export type { ProductSlug } from './lib/logo-mark/logo-mark.component';
 

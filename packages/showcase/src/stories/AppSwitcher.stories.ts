@@ -2,7 +2,9 @@ import {
   AppSwitcherComponent,
   DEFAULT_APPS,
   entitledApps,
+  switcherState,
   type ProductSubscription,
+  type SwitcherApp,
 } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
@@ -101,5 +103,51 @@ export const Customize: Story = {
     const locked = document.querySelector<HTMLButtonElement>('.flr-as__toggles [role="switch"]');
     expect(locked?.disabled).toBe(true);
     expect(locked?.getAttribute('aria-checked')).toBe('true');
+  },
+};
+
+const FROM_API: readonly SwitcherApp[] = [
+  {
+    id: 'ferrlabs',
+    label: 'FerrLabs',
+    href: 'https://app.ferrlabs.com',
+    accent: '#1e293b',
+    tier: null,
+    hidden: false,
+  },
+  {
+    id: 'ferrtrack',
+    label: 'FerrTrack',
+    href: 'https://app.ferrtrack.com',
+    accent: '#6366f1',
+    tier: 'team',
+    hidden: true,
+  },
+  {
+    id: 'ferrvault',
+    label: 'FerrVault',
+    href: 'https://app.ferrvault.com',
+    accent: '#10b981',
+    tier: 'enterprise',
+    hidden: false,
+  },
+];
+
+export const FromApi: Story = {
+  args: { items: switcherState(FROM_API).items, hidden: switcherState(FROM_API).hidden },
+  play: async ({ canvasElement }) => {
+    const state = switcherState(FROM_API);
+    expect(state.hidden).toEqual(['ferrtrack']);
+    expect(state.hubHref).toBe('https://app.ferrlabs.com');
+    await openPanel(canvasElement);
+    const rows = [...canvasElement.querySelectorAll('.flr-as__item')].map((row) =>
+      [row.querySelector('.flr-as__name'), row.querySelector('.flr-as__meta')].map(
+        (el) => el?.textContent?.trim() ?? null,
+      ),
+    );
+    expect(rows).toEqual([
+      ['FerrLabs', null],
+      ['FerrVault', 'Enterprise'],
+    ]);
   },
 };
