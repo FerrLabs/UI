@@ -15,3 +15,8 @@ allowBuilds:
 # stories are typed against: every story's args then fail to typecheck.
 overrides:
   zone.js: 0.16.3
+  # jest 30.5 rejects `module.register()` outright, and storybook's `importModule`
+  # registers its TypeScript loader that way before reading any config, so
+  # `test-storybook` cannot load `.storybook/test-runner.ts` at all. Nothing in
+  # @storybook/test-runner 0.24.5 (latest) avoids the call. See #569.
+  jest-runtime: 30.4.2
