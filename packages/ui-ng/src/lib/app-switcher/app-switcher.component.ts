@@ -18,6 +18,7 @@ import { LogoMarkComponent, type ProductSlug } from '../logo-mark/logo-mark.comp
 import type { AppRailItem } from '../app-rail/app-rail.component';
 import { markColorOnDark } from '../app-rail/mark-color';
 import { ORG_HUB } from './entitled-apps';
+import { SHELL_CONTEXT } from '../shell/shell-context';
 
 let panelCount = 0;
 
@@ -61,6 +62,11 @@ export class AppSwitcherComponent {
 
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
+  private readonly shell = inject(SHELL_CONTEXT, { optional: true });
+
+  protected readonly compact = computed(
+    () => this.collapsed() || (this.shell?.collapsed() ?? false),
+  );
 
   protected readonly panelId = `flr-as-list-${(panelCount += 1)}`;
   protected readonly open = signal(false);

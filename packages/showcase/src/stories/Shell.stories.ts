@@ -269,3 +269,33 @@ export const CollapsedRailShowsOnlyTheAvatar: Story = {
     await expect(trigger.textContent).not.toContain('ada@ferrlabs.com');
   },
 };
+
+export const CollapsedRailKeepsTheOrgReadable: Story = {
+  ...Merged,
+  args: { collapsed: true },
+  play: async ({ canvasElement }) => {
+    const org = canvasElement.querySelector<HTMLButtonElement>('flr-project-switcher button');
+    const app = canvasElement.querySelector<HTMLButtonElement>('flr-app-switcher button');
+    if (!org || !app) throw new Error('rail switchers not found');
+    await expect(org.getAttribute('aria-label')).toBe('FerrLabs');
+    await expect(org.textContent?.trim()).toBe('F');
+    await expect(app.textContent).not.toContain('Switch app');
+  },
+};
+
+export const CollapsedRailOrgSwitcherOpensBesideTheRail: Story = {
+  ...CollapsedRailKeepsTheOrgReadable,
+  play: async ({ canvasElement }) => {
+    const org = canvasElement.querySelector<HTMLButtonElement>('flr-project-switcher button');
+    const rail = canvasElement.querySelector<HTMLElement>('flr-sidebar aside');
+    if (!org || !rail) throw new Error('org switcher or rail not found');
+    org.click();
+    await waitFor(() => {
+      const panel = canvasElement.querySelector<HTMLElement>('.flr-ps__panel');
+      if (!panel) throw new Error('org panel not open');
+      const box = panel.getBoundingClientRect();
+      expect(box.left).toBeGreaterThanOrEqual(rail.getBoundingClientRect().right);
+      expect(box.width).toBeGreaterThanOrEqual(240);
+    });
+  },
+};

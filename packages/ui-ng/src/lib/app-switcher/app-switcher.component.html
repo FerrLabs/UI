@@ -1,4 +1,4 @@
-<div class="flr-as" [class.flr-as--collapsed]="collapsed()">
+<div class="flr-as" [class.flr-as--collapsed]="compact()">
   <button
     type="button"
     #trigger
@@ -13,14 +13,14 @@
       <span class="flr-as__mark" aria-hidden="true">
         <flr-logo-mark [product]="glyph(item)" [accent]="markColor(item)" [size]="21" />
       </span>
-      @if (!collapsed()) {
+      @if (!compact()) {
         <span class="flr-as__text">
           <span class="flr-as__name">{{ item.label }}</span>
           <span class="mono flr-as__caption">{{ caption() }}</span>
         </span>
       }
     }
-    @if (!collapsed()) {
+    @if (!compact()) {
       <span class="flr-as__chevron" aria-hidden="true">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
           <polyline points="4.5 6.5 8 3 11.5 6.5" />

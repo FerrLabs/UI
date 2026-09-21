@@ -13,6 +13,7 @@ import {
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { SiteCardComponent } from '../site-card/site-card.component';
 import { isTrustedIconMarkup } from '../icon/icon-markup';
+import { SHELL_CONTEXT } from '../shell/shell-context';
 
 export interface ProjectSwitcherItem {
   readonly id: string;
@@ -37,10 +38,17 @@ export interface ProjectSwitcherPlaceholder {
     '(document:mousedown)': 'onDocumentDown($event)',
     '(document:keydown.escape)': 'close()',
     '[class.flr-ps--brand]': "variant() === 'brand'",
+    '[class.flr-ps--compact]': 'compact()',
   },
   template: `
     @if (variant() === 'brand') {
-      <button type="button" class="flr-ps__brand" [attr.aria-expanded]="open()" (click)="toggle()">
+      <button
+        type="button"
+        class="flr-ps__brand"
+        [attr.aria-expanded]="open()"
+        [attr.aria-label]="compact() ? displayedLabel() : null"
+        (click)="toggle()"
+      >
         @if (displayedIcon()) {
           @let icon = trustedIcon(displayedIcon());
           <span class="flr-ps__trigger-icon">
@@ -50,14 +58,18 @@ export interface ProjectSwitcherPlaceholder {
               {{ displayedIcon() }}
             }
           </span>
+        } @else if (compact()) {
+          <span class="flr-ps__monogram" aria-hidden="true">{{ monogram() }}</span>
         }
-        <span class="flr-ps__brand-text">
-          <span class="flr-ps__brand-label">{{ displayedLabel() }}</span>
-          @if (displayedMeta()) {
-            <span class="flr-ps__brand-meta">{{ displayedMeta() }}</span>
-          }
-        </span>
-        <span class="flr-ps__brand-chev" aria-hidden="true">▾</span>
+        @if (!compact()) {
+          <span class="flr-ps__brand-text">
+            <span class="flr-ps__brand-label">{{ displayedLabel() }}</span>
+            @if (displayedMeta()) {
+              <span class="flr-ps__brand-meta">{{ displayedMeta() }}</span>
+            }
+          </span>
+          <span class="flr-ps__brand-chev" aria-hidden="true">▾</span>
+        }
       </button>
     } @else {
       <flr-site-card [label]="displayedLabel()" (select)="toggle()">
@@ -221,6 +233,31 @@ export interface ProjectSwitcherPlaceholder {
       top: 100%;
       border-radius: 0 0 10px 10px;
     }
+    :host(.flr-ps--compact) .flr-ps__brand {
+      justify-content: center;
+      padding: 0;
+    }
+    :host(.flr-ps--compact) .flr-ps__panel {
+      left: calc(100% + 10px);
+      right: auto;
+      top: 8px;
+      width: 280px;
+      border-radius: 10px;
+    }
+    .flr-ps__monogram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      flex: none;
+      border-radius: 10px;
+      background: var(--color-app-bg-2, #f4f4f2);
+      color: var(--color-ink, #1e293b);
+      font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
+      font-weight: 700;
+      font-size: 15px;
+    }
     .flr-ps__trigger-icon,
     .flr-ps__item-icon {
       display: inline-flex;
@@ -371,6 +408,7 @@ export interface ProjectSwitcherPlaceholder {
 export class ProjectSwitcherComponent {
   private readonly hostEl = inject(ElementRef<HTMLElement>);
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly shell = inject(SHELL_CONTEXT, { optional: true });
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
   readonly current = input<ProjectSwitcherItem | null>(null);
@@ -408,6 +446,14 @@ export class ProjectSwitcherComponent {
   protected readonly displayedLabel = computed(
     () => this.current()?.label ?? this.placeholder()?.label ?? 'All items',
   );
+  protected readonly compact = computed(
+    () => this.variant() === 'brand' && (this.shell?.collapsed() ?? false),
+  );
+
+  protected readonly monogram = computed(
+    () => Array.from(this.displayedLabel().trim())[0]?.toLocaleUpperCase() ?? '',
+  );
+
   protected readonly displayedMeta = computed(
     () => this.current()?.meta ?? this.placeholder()?.meta ?? '',
   );
