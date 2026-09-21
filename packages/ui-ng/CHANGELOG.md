@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.36.1] - 2026-09-21
+
+### Bug Fixes
+
+- fix(ui-ng): collapse the rail switchers with the shell (#579)
+
 ## [1.36.0] - 2026-09-21
 
 ### Features
