@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { MenuComponent, MenuItemComponent, MenuSeparatorComponent } from '../menu/menu.component';
+import { SHELL_CONTEXT } from '../shell/shell-context';
 
 export interface UserMenuItem {
   readonly id?: string;
@@ -15,14 +16,47 @@ export interface UserMenuItem {
   selector: 'flr-user-menu',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MenuComponent, MenuItemComponent, MenuSeparatorComponent, AvatarComponent],
+  host: {
+    '[class.flr-um--rail]': 'inRail',
+  },
   template: `
-    <flr-menu align="end" [minWidth]="220">
-      <button flr-menu-trigger type="button" class="flr-um__trigger" [title]="name()">
-        <flr-avatar [name]="name()" [src]="avatarSrc()" [accent]="accent()" [size]="28" />
-        @if (showName()) {
-          <span class="flr-um__name">{{ name() }}</span>
+    <flr-menu
+      [align]="inRail ? 'start' : 'end'"
+      [direction]="inRail ? 'up' : 'down'"
+      [block]="inRail"
+      [minWidth]="220"
+    >
+      <button
+        flr-menu-trigger
+        type="button"
+        class="flr-um__trigger"
+        [class.flr-um__trigger--rail]="inRail"
+        [class.flr-um__trigger--compact]="compact()"
+        [title]="name()"
+        [attr.aria-label]="compact() ? name() : null"
+      >
+        <flr-avatar
+          [name]="name()"
+          [src]="avatarSrc()"
+          [accent]="accent()"
+          [size]="inRail ? 30 : 28"
+        />
+        @if (inRail) {
+          @if (!compact()) {
+            <span class="flr-um__identity">
+              <span class="flr-um__name">{{ name() }}</span>
+              @if (email()) {
+                <span class="mono flr-um__email">{{ email() }}</span>
+              }
+            </span>
+            <span class="flr-um__chev flr-um__chev--up" aria-hidden="true">▾</span>
+          }
+        } @else {
+          @if (showName()) {
+            <span class="flr-um__name">{{ name() }}</span>
+          }
+          <span class="flr-um__chev" aria-hidden="true">▾</span>
         }
-        <span class="flr-um__chev" aria-hidden="true">▾</span>
       </button>
 
       <div flr-menu-content>
@@ -53,6 +87,10 @@ export interface UserMenuItem {
   styles: `
     :host {
       display: inline-flex;
+    }
+    :host(.flr-um--rail) {
+      display: flex;
+      width: 100%;
     }
     .flr-um__trigger {
       display: inline-flex;
@@ -85,6 +123,37 @@ export interface UserMenuItem {
       font-size: 10px;
       opacity: 0.7;
       margin-left: 2px;
+    }
+    .flr-um__trigger--rail {
+      width: 100%;
+      gap: 10px;
+      padding: 8px;
+      text-align: left;
+    }
+    .flr-um__trigger--compact {
+      justify-content: center;
+      padding: 6px 0;
+    }
+    .flr-um__identity {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+      gap: 2px;
+    }
+    .flr-um__trigger--rail .flr-um__name {
+      max-width: none;
+      color: var(--color-ink, #1e293b);
+    }
+    .flr-um__email {
+      font-size: 11px;
+      color: var(--color-ink-3, #64748b);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .flr-um__chev--up {
+      transform: rotate(180deg);
     }
     .flr-um__header {
       padding: 8px 12px 10px;
@@ -119,4 +188,8 @@ export class UserMenuComponent {
   readonly showName = input(true);
 
   readonly select = output<UserMenuItem>();
+
+  private readonly shell = inject(SHELL_CONTEXT, { optional: true });
+  protected readonly inRail = this.shell !== null;
+  protected readonly compact = computed(() => this.shell?.collapsed() ?? false);
 }

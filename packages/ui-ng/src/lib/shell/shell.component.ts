@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, input, model, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  forwardRef,
+  inject,
+  input,
+  model,
+  output,
+} from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {
   SidebarComponent,
@@ -6,6 +14,7 @@ import {
   SidebarSectionComponent,
 } from '../sidebar/sidebar.component';
 import { isTrustedIconMarkup } from '../icon/icon-markup';
+import { SHELL_CONTEXT, type ShellContext } from './shell-context';
 
 export interface ShellNavItem {
   readonly id: string;
@@ -26,6 +35,7 @@ export interface ShellNavGroup {
   selector: 'flr-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SidebarComponent, SidebarSectionComponent, SidebarItemComponent],
+  providers: [{ provide: SHELL_CONTEXT, useExisting: forwardRef(() => ShellComponent) }],
   host: {
     '(window:keydown)': 'onKeydown($event)',
   },
@@ -70,6 +80,7 @@ export interface ShellNavGroup {
           <div sidebar-footer class="flr-shell__nav-footer">
             <ng-content select="[shell-nav-footer]" />
           </div>
+          <div sidebar-footer class="flr-shell__user"><ng-content select="[shell-user]" /></div>
         </flr-sidebar>
 
         <div class="flr-shell__body">
@@ -106,7 +117,6 @@ export interface ShellNavGroup {
             }
             <div class="flr-shell__slot"><ng-content select="[shell-actions]" /></div>
             <div class="flr-shell__slot"><ng-content select="[shell-topbar-right]" /></div>
-            <div class="flr-shell__slot"><ng-content select="[shell-user]" /></div>
           </header>
           <main class="flr-shell__main" tabindex="0"><ng-content /></main>
         </div>
@@ -264,7 +274,7 @@ export interface ShellNavGroup {
     }
   `,
 })
-export class ShellComponent {
+export class ShellComponent implements ShellContext {
   readonly productName = input('');
   readonly marketingHref = input<string | null>(null);
   readonly accent = input<string | null>(null);

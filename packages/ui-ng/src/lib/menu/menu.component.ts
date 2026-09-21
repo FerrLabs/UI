@@ -14,6 +14,7 @@ import {
 import { type ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
 
 export type MenuAlign = 'start' | 'end';
+export type MenuDirection = 'down' | 'up';
 
 @Component({
   selector: 'flr-menu',
@@ -21,6 +22,9 @@ export type MenuAlign = 'start' | 'end';
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['../overlay/cdk-overlay.css'],
   imports: [OverlayModule],
+  host: {
+    '[class.flr-menu--block]': 'block()',
+  },
   template: `
     <!-- TODO(#122): the click handler sits on this wrapper rather than on the projected
          trigger. Clicks and Enter/Space bubble up from the projected button so the menu is
@@ -56,6 +60,11 @@ export type MenuAlign = 'start' | 'end';
       display: inline-flex;
       position: relative;
     }
+    flr-menu.flr-menu--block,
+    flr-menu.flr-menu--block > .flr-menu {
+      display: flex;
+      width: 100%;
+    }
     .flr-menu__panel {
       background: var(--color-card, #ffffff);
       border: 1px solid var(--color-card-rule, rgba(30, 41, 59, 0.1));
@@ -67,6 +76,8 @@ export type MenuAlign = 'start' | 'end';
 })
 export class MenuComponent {
   readonly align = input<MenuAlign>('start');
+  readonly direction = input<MenuDirection>('down');
+  readonly block = input(false);
   readonly minWidth = input(220);
   readonly open = model(false);
 
@@ -86,10 +97,21 @@ export class MenuComponent {
 
   protected readonly positions = computed<ConnectedPosition[]>(() => {
     const x = this.align() === 'end' ? 'end' : 'start';
-    return [
-      { originX: x, originY: 'bottom', overlayX: x, overlayY: 'top', offsetY: 6 },
-      { originX: x, originY: 'top', overlayX: x, overlayY: 'bottom', offsetY: -6 },
-    ];
+    const below: ConnectedPosition = {
+      originX: x,
+      originY: 'bottom',
+      overlayX: x,
+      overlayY: 'top',
+      offsetY: 6,
+    };
+    const above: ConnectedPosition = {
+      originX: x,
+      originY: 'top',
+      overlayX: x,
+      overlayY: 'bottom',
+      offsetY: -6,
+    };
+    return this.direction() === 'up' ? [above, below] : [below, above];
   });
 
   protected toggle(): void {
