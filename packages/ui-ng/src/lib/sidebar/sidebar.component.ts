@@ -52,7 +52,7 @@ import { NgTemplateOutlet } from '@angular/common';
     .flr-sb__brand:has(> div:only-child:empty),
     .flr-sb__project:has(> div:only-child:empty),
     .flr-sb__switcher:has(> div:only-child:empty),
-    .flr-sb__extra:has(> div:only-child:empty) {
+    .flr-sb__extra:not(:has(> :not(:empty))) {
       display: none;
     }
     .flr-sb__switcher {
