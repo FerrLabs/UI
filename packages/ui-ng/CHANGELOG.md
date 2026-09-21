@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.36.0] - 2026-09-21
+
+### Features
+
+- feat(ui-ng): render the user menu at the bottom of the rail (#577)
+
 ## [1.35.1] - 2026-09-18
 
 ### Bug Fixes
