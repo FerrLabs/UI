@@ -124,7 +124,7 @@ interface RenderCell {
       font-size: 11px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--color-ink-3, #64748b);
+      color: var(--color-ink-3, #5d6b80);
     }
     .flr-cmp__heading {
       margin: 0 0 20px;
@@ -170,7 +170,7 @@ interface RenderCell {
       text-align: left;
       padding: 0 0 12px;
       font-size: 13px;
-      color: var(--color-ink-3, #64748b);
+      color: var(--color-ink-3, #5d6b80);
     }
     .flr-cmp__head {
       padding: 12px 16px;
@@ -191,7 +191,7 @@ interface RenderCell {
       font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--color-ink-3, #64748b);
+      color: var(--color-ink-3, #5d6b80);
     }
     .flr-cmp__row {
       border-bottom: 1px solid var(--color-rule, rgba(30, 41, 59, 0.1));
@@ -206,7 +206,7 @@ interface RenderCell {
       margin-top: 2px;
       font-size: 12px;
       font-weight: 400;
-      color: var(--color-ink-3, #64748b);
+      color: var(--color-ink-3, #5d6b80);
     }
     .flr-cmp__cell {
       padding: 12px 16px;
@@ -220,17 +220,17 @@ interface RenderCell {
       line-height: 1;
     }
     .flr-cmp__mark--yes {
-      color: var(--color-success, #10b981);
+      color: var(--color-success-fg, #065f46);
     }
     .flr-cmp__mark--ours {
-      color: var(--ours-accent, #10b981);
+      color: color-mix(in oklab, var(--ours-accent, #10b981) 50%, var(--color-ink, #1e293b));
       font-weight: 700;
     }
     .flr-cmp__mark--no {
-      color: var(--color-ink-3, #94a3b8);
+      color: var(--color-ink-3, #5d6b80);
     }
     .flr-cmp__mark--partial {
-      color: var(--color-warning, #f59e0b);
+      color: var(--color-warning-fg, #78350f);
     }
     .flr-cmp__mark--text {
       font-size: 13px;
