@@ -1,0 +1,64 @@
+:host {
+  display: block;
+}
+
+.flr-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.flr-contact__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.flr-contact__trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.flr-contact__error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--color-danger, #b91c1c);
+  background: color-mix(in srgb, var(--color-danger, #b91c1c) 8%, transparent);
+}
+
+.flr-contact__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.flr-contact__sent {
+  padding: 24px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--color-accent, #1e293b) 7%, transparent);
+}
+
+.flr-contact__sent-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.flr-contact__sent p {
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+
+.flr-contact__reference {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+@media (max-width: 640px) {
+  .flr-contact__row {
+    grid-template-columns: 1fr;
+  }
+}
