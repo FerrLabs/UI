@@ -109,13 +109,18 @@ export class ContactFormComponent {
   protected async submit(event: Event): Promise<void> {
     event.preventDefault();
     if (this.sending()) return;
+    const payload = this.payload();
+    if (!payload.email || !payload.subject || !payload.message) {
+      this.outcome.set({ state: 'error', message: this.labels().incomplete });
+      return;
+    }
     this.sending.set(true);
     this.outcome.set(null);
     try {
       const response = await fetch(this.endpoint(), {
         method: 'POST',
         headers: { 'content-type': 'application/json', accept: 'application/json' },
-        body: JSON.stringify(this.payload()),
+        body: JSON.stringify(payload),
       });
       const outcome = await readContactResponse(response, this.labels());
       this.outcome.set(outcome);

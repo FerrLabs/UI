@@ -47,6 +47,8 @@ export interface ContactFormLabels {
   readonly sentTitle: string;
   readonly sentBody: string;
   readonly reference: string;
+  readonly incomplete: string;
+  readonly invalid: string;
   readonly tooMany: string;
   readonly failed: string;
 }
@@ -72,6 +74,8 @@ export const CONTACT_FORM_LABELS_EN: ContactFormLabels = {
   sentBody:
     'A person on the team will answer at the address you gave. A copy is on its way to your inbox.',
   reference: 'Reference',
+  incomplete: 'Fill in your email, a subject and a message.',
+  invalid: 'Check your email address, and that the subject and message are not too long.',
   tooMany: 'Too many messages from here in a short time. Please try again in a few minutes.',
   failed: 'The message could not be sent. Please try again, or write to contact@ferrlabs.com.',
 };
@@ -97,6 +101,8 @@ export const CONTACT_FORM_LABELS_FR: ContactFormLabels = {
   sentBody:
     'Une personne de l’équipe vous répondra à l’adresse indiquée. Une copie arrive dans votre boîte de réception.',
   reference: 'Référence',
+  incomplete: 'Indiquez votre e-mail, un sujet et un message.',
+  invalid: 'Vérifiez votre adresse e-mail, et que le sujet et le message ne sont pas trop longs.',
   tooMany: 'Trop de messages envoyés d’ici en peu de temps. Réessayez dans quelques minutes.',
   failed: 'Le message n’a pas pu être envoyé. Réessayez, ou écrivez à contact@ferrlabs.com.',
 };
@@ -166,14 +172,11 @@ export async function readContactResponse(
 ): Promise<ContactOutcome> {
   const body = (await response.json().catch(() => null)) as {
     reference?: unknown;
-    error?: unknown;
   } | null;
   if (response.ok) {
     return { state: 'sent', reference: typeof body?.reference === 'string' ? body.reference : '' };
   }
   if (response.status === 429) return { state: 'error', message: labels.tooMany };
-  if (response.status === 422 && typeof body?.error === 'string') {
-    return { state: 'error', message: body.error };
-  }
+  if (response.status === 422) return { state: 'error', message: labels.invalid };
   return { state: 'error', message: labels.failed };
 }
