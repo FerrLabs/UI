@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.37.1] - 2026-09-26
+
+### Bug Fixes
+
+- fix(ui-ng): a late session prefill no longer overwrites what the user typed (#592)
+
 ## [1.37.0] - 2026-09-26
 
 ### Features
