@@ -6,6 +6,7 @@ import {
   input,
   output,
   signal,
+  untracked,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FieldComponent } from '../field/field.component';
@@ -80,11 +81,11 @@ export class ContactFormComponent {
     effect(() => this.selectedKind.set(this.kind()));
     effect(() => {
       const email = this.email();
-      if (email) this.emailValue.set(email);
+      if (email && !untracked(this.emailValue)) this.emailValue.set(email);
     });
     effect(() => {
       const name = this.name();
-      if (name) this.nameValue.set(name);
+      if (name && !untracked(this.nameValue)) this.nameValue.set(name);
     });
   }
 
