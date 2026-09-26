@@ -1,0 +1,98 @@
+@if (reference() !== null) {
+  <div class="flr-contact__sent" role="status">
+    <h2 class="flr-contact__sent-title">{{ labels().sentTitle }}</h2>
+    <p>{{ labels().sentBody }}</p>
+    @if (reference()) {
+      <p class="flr-contact__reference mono">{{ labels().reference }}: {{ reference() }}</p>
+    }
+  </div>
+} @else {
+  <form class="flr-contact" (submit)="submit($event)">
+    <div class="flr-contact__row">
+      <flr-field [label]="labels().product" [required]="true">
+        <flr-select
+          name="product"
+          [ngModel]="selectedProduct()"
+          (ngModelChange)="selectedProduct.set($event)"
+        >
+          @for (p of products; track p.value) {
+            <option [value]="p.value">{{ p.label }}</option>
+          }
+        </flr-select>
+      </flr-field>
+      <flr-field [label]="labels().kind" [required]="true">
+        <flr-select
+          name="kind"
+          [ngModel]="selectedKind()"
+          (ngModelChange)="selectedKind.set($event)"
+        >
+          @for (k of kinds; track k) {
+            <option [value]="k">{{ labels().kinds[k] }}</option>
+          }
+        </flr-select>
+      </flr-field>
+    </div>
+
+    <div class="flr-contact__row">
+      <flr-field [label]="labels().email" [required]="true">
+        <flr-input
+          name="email"
+          type="email"
+          autocomplete="email"
+          [required]="true"
+          [ngModel]="emailValue()"
+          (ngModelChange)="emailValue.set($event)"
+        />
+      </flr-field>
+      <flr-field [label]="labels().name" [optional]="true" [optionalLabel]="labels().optional">
+        <flr-input
+          name="name"
+          autocomplete="name"
+          [ngModel]="nameValue()"
+          (ngModelChange)="nameValue.set($event)"
+        />
+      </flr-field>
+    </div>
+
+    <flr-field [label]="labels().subject" [required]="true">
+      <flr-input
+        name="subject"
+        [required]="true"
+        [ngModel]="subject()"
+        (ngModelChange)="subject.set($event)"
+      />
+    </flr-field>
+
+    <flr-field [label]="labels().message" [required]="true">
+      <flr-textarea
+        name="message"
+        [rows]="7"
+        [required]="true"
+        [ngModel]="message()"
+        (ngModelChange)="message.set($event)"
+      />
+    </flr-field>
+
+    <div class="flr-contact__trap" aria-hidden="true">
+      <label>
+        Website
+        <input
+          name="website"
+          type="text"
+          tabindex="-1"
+          autocomplete="off"
+          [ngModel]="website()"
+          (ngModelChange)="website.set($event)"
+        />
+      </label>
+    </div>
+
+    @if (error()) {
+      <p class="flr-contact__error" role="alert">{{ error() }}</p>
+    }
+
+    <div class="flr-contact__actions">
+      <flr-submit [loading]="sending()">{{ labels().submit }}</flr-submit>
+    </div>
+  </form>
+}

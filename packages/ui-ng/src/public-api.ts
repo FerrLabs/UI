@@ -205,3 +205,19 @@ export type { StatusLevel, StatusBucket } from './lib/status-bars/status-bars.co
 export { TabsComponent } from './lib/tabs/tabs.component';
 export { TabComponent } from './lib/tabs/tab.component';
 export type { TabsMode } from './lib/tabs/tabs.model';
+
+export { ContactFormComponent } from './lib/contact-form/contact-form.component';
+export {
+  CONTACT_FORM_LABELS_EN,
+  CONTACT_FORM_LABELS_FR,
+  CONTACT_KINDS,
+  CONTACT_PRODUCTS,
+  readContactPrefill,
+} from './lib/contact-form/contact-form.model';
+export type {
+  ContactFormLabels,
+  ContactKind,
+  ContactLocale,
+  ContactPrefill,
+  ContactProduct,
+} from './lib/contact-form/contact-form.model';

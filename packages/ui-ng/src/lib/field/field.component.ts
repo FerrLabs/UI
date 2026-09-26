@@ -23,7 +23,7 @@ let fieldCounter = 0;
             <span class="flr-field__required" aria-hidden="true">*</span>
           }
           @if (optional() && !required()) {
-            <span class="flr-field__optional">(optional)</span>
+            <span class="flr-field__optional">({{ optionalLabel() }})</span>
           }
         </label>
         <div class="flr-field__trailing"><ng-content select="[field-trailing]" /></div>
@@ -88,6 +88,7 @@ export class FieldComponent {
   readonly error = input<string | null>(null);
   readonly required = input(false);
   readonly optional = input(false);
+  readonly optionalLabel = input('optional');
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
