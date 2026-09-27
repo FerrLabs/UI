@@ -10,7 +10,7 @@ WORKDIR /app
 
 RUN npm install -g pnpm@11
 
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc tsconfig.base.json ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
 COPY packages ./packages
 
 # Install complet du workspace : le build Storybook importe des deps non

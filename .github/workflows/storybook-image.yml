@@ -17,7 +17,7 @@ env:
 jobs:
   build:
     name: Build & Push Storybook
-    runs-on: ferrlabs-k8s-large
+    runs-on: ${{ github.event.repository.private && 'ferrlabs-k8s-large' || 'ubuntu-latest' }}
     permissions:
       contents: read
       packages: write

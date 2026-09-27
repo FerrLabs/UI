@@ -1,8 +1,14 @@
 {
   "name": "@ferrlabs/ui-ng",
   "version": "1.37.1",
-  "description": "FerrLabs design system — Angular 22 components (standalone, signals, zoneless). Mirrors @ferrlabs/ui-react; consumes tokens from @ferrlabs/ui-foundation.",
-  "license": "UNLICENSED",
+  "description": "FerrLabs design system: Angular 22 components (standalone, signals, zoneless), themed by the tokens of @ferrlabs/ui-foundation.",
+  "license": "MPL-2.0",
+  "homepage": "https://github.com/FerrLabs/UI#readme",
+  "repository": {
+    "directory": "packages/ui-ng",
+    "type": "git",
+    "url": "git+https://github.com/FerrLabs/UI.git"
+  },
   "private": false,
   "sideEffects": false,
   "exports": {
@@ -28,7 +34,8 @@
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
-    "@angular/platform-browser": "^22.0.0"
+    "@angular/platform-browser": "^22.0.0",
+    "@ferrlabs/ui-foundation": "^5.0.0"
   },
   "peerDependenciesMeta": {
     "@ferrlabs/ui-foundation": {
@@ -39,6 +46,7 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
+    "@ferrlabs/ui-foundation": "workspace:^",
     "@angular/cdk": "^22.0.0",
     "@angular/common": "^22.0.0",
     "@angular/compiler": "^22.0.0",
@@ -50,6 +58,7 @@
     "typescript": "~6.0.0"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   }
 }
