@@ -105,4 +105,4 @@ pnpm --filter @ferrlabs/ui-showcase storybook
 
 ## License
 
-Proprietary, except `@ferrlabs/ui-foundation`, which declares MPL-2.0 in its `package.json`.
+[MPL-2.0](LICENSE). Both `@ferrlabs/ui-ng` and `@ferrlabs/ui-foundation` are published on npmjs.com and install without a token.

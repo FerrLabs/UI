@@ -13,7 +13,7 @@ on:
 jobs:
   resolve:
     name: Resolve packages
-    runs-on: ferrlabs-k8s
+    runs-on: ${{ github.event.repository.private && 'ferrlabs-k8s' || 'ubuntu-latest' }}
     outputs:
       packages: ${{ steps.pick.outputs.packages }}
     steps:
@@ -37,10 +37,9 @@ jobs:
   publish:
     name: Publish ${{ matrix.package }}
     needs: resolve
-    runs-on: ferrlabs-k8s
+    runs-on: ${{ github.event.repository.private && 'ferrlabs-k8s' || 'ubuntu-latest' }}
     permissions:
       contents: read
-      packages: write
     strategy:
       fail-fast: false
       matrix:
@@ -53,12 +52,10 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: '24'
-          registry-url: https://npm.pkg.github.com
+          registry-url: https://registry.npmjs.org
           scope: '@ferrlabs'
           cache: pnpm
       - name: Install dependencies
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm install --frozen-lockfile
       - name: Build package (with workspace deps)
         # Use --filter '...^@ferrlabs/ui-foo' to build the package AND its
@@ -71,7 +68,7 @@ jobs:
       - name: Publish
         working-directory: packages/${{ matrix.package }}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           pubdir="."
           if [ -f ng-package.json ] && [ -f dist/package.json ]; then
@@ -79,8 +76,8 @@ jobs:
           fi
           current=$(node -p "require('./${pubdir}/package.json').version")
           name=$(node -p "require('./${pubdir}/package.json').name")
-          if npm view "$name@$current" version --registry https://npm.pkg.github.com >/dev/null 2>&1; then
+          if npm view "$name@$current" version --registry https://registry.npmjs.org >/dev/null 2>&1; then
             echo "Already published: $name@$current â€” skipping"
             exit 0
           fi
-          cd "$pubdir" && pnpm publish --no-git-checks --access restricted
+          cd "$pubdir" && pnpm publish --no-git-checks --access public
