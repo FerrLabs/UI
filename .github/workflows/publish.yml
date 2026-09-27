@@ -40,6 +40,7 @@ jobs:
     runs-on: ${{ github.event.repository.private && 'ferrlabs-k8s' || 'ubuntu-latest' }}
     permissions:
       contents: read
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -52,8 +53,6 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: '24'
-          registry-url: https://registry.npmjs.org
-          scope: '@ferrlabs'
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -67,8 +66,6 @@ jobs:
           pnpm --filter "$pkg_name..." run --if-present build
       - name: Publish
         working-directory: packages/${{ matrix.package }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           pubdir="."
           if [ -f ng-package.json ] && [ -f dist/package.json ]; then
