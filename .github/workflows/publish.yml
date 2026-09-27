@@ -64,7 +64,7 @@ jobs:
         # â€” building the shell alone fails without the upstream's dist.
         run: |
           pkg_name=$(node -p "require('./packages/${{ matrix.package }}/package.json').name")
-          pnpm --filter "...$pkg_name" build || echo "no build step"
+          pnpm --filter "$pkg_name..." run --if-present build
       - name: Publish
         working-directory: packages/${{ matrix.package }}
         env:
