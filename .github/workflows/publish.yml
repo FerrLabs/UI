@@ -77,4 +77,8 @@ jobs:
             echo "Already published: $name@$current â€” skipping"
             exit 0
           fi
-          cd "$pubdir" && pnpm publish --no-git-checks --access public
+          cd "$pubdir"
+          packdir="$RUNNER_TEMP/pack"
+          mkdir -p "$packdir"
+          pnpm pack --pack-destination "$packdir"
+          npx --yes npm@11 publish "$packdir"/*.tgz --access public
