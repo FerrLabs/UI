@@ -45,7 +45,33 @@ export interface BreadcrumbCrumb {
           <p class="flr-ph__sub">{{ sub() }}</p>
         }
       </div>
-      <div class="flr-ph__actions"><ng-content select="[page-header-actions]" /></div>
+      <div class="flr-ph__actions">
+        <ng-content select="[page-header-actions]" />
+        @if (helpHref(); as href) {
+          <a
+            class="flr-ph__help"
+            [href]="href"
+            target="_blank"
+            rel="noopener"
+            aria-label="Open the documentation"
+            title="Documentation"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </a>
+        }
+      </div>
     </div>
   `,
   styles: `
@@ -133,8 +159,33 @@ export interface BreadcrumbCrumb {
     }
     .flr-ph__actions {
       display: flex;
+      align-items: center;
       gap: 10px;
       flex-wrap: wrap;
+    }
+    .flr-ph__help {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      color: var(--color-ink-3, #64748b);
+      transition:
+        color 120ms ease,
+        background-color 120ms ease;
+    }
+    .flr-ph__help:hover {
+      color: var(--color-ink, #1e293b);
+      background: var(--color-app-nav-active, rgba(30, 41, 59, 0.06));
+    }
+    .flr-ph__help:focus-visible {
+      outline: 2px solid var(--color-accent, currentColor);
+      outline-offset: 2px;
+    }
+    .flr-ph__help svg {
+      width: 18px;
+      height: 18px;
     }
     .flr-ph__actions:empty {
       display: none;
@@ -147,4 +198,5 @@ export class PageHeaderComponent {
   readonly count = input<string | number | null>(null);
   readonly sub = input<string | null>(null);
   readonly breadcrumbs = input<readonly BreadcrumbCrumb[]>([]);
+  readonly helpHref = input<string | null>(null);
 }
