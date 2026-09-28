@@ -15,6 +15,7 @@ const meta: Meta<PageHeaderComponent> = {
       { label: 'First-party', href: '/agents/first-party' },
       { label: 'vault-rotator' },
     ],
+    helpHref: 'https://ferrfleet.com/docs/',
   },
   render: (args) => ({
     props: args,
@@ -25,6 +26,7 @@ const meta: Meta<PageHeaderComponent> = {
         [count]="count"
         [sub]="sub"
         [breadcrumbs]="breadcrumbs"
+        [helpHref]="helpHref"
       >
         <flr-tag page-header-badge variant="success" [soft]="true">Active</flr-tag>
         <div page-header-actions style="display:flex; gap:8px">
