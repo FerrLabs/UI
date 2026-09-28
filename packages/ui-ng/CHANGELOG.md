@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.38.0] - 2026-09-28
+
+### Features
+
+- feat(ui-ng): add a docs help link to PageHeader (#604)
+
 ## [1.37.1] - 2026-09-26
 
 ### Bug Fixes
