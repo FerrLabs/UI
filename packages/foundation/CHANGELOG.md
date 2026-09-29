@@ -4,6 +4,12 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.5.0] - 2026-09-29
+
+### Features
+
+- feat(foundation): add a list icon (#611)
+
 ## [5.4.0] - 2026-08-31
 
 ### Features
