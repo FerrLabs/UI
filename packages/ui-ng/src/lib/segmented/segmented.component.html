@@ -1,7 +1,9 @@
 <div #group class="flr-seg" role="radiogroup" [attr.aria-label]="ariaLabel()">
+  <span #thumb class="flr-seg__thumb" aria-hidden="true" hidden></span>
   @for (option of options(); track option.value; let i = $index) {
     @let selected = option.value === value();
     <button
+      #optionButton
       type="button"
       role="radio"
       class="flr-seg__option"
@@ -12,7 +14,7 @@
       [attr.title]="iconOnly() && option.icon ? option.label : null"
       [tabindex]="selected ? 0 : -1"
       (click)="select(option)"
-      (keydown)="handleKeydown($event, i, group)"
+      (keydown)="handleKeydown($event, i)"
     >
       @let icon = trustedIcon(option.icon);
       @if (icon) {
