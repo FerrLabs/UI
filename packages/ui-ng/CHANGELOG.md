@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.39.0] - 2026-09-29
+
+### Features
+
+- feat(ui-ng): add a segmented control (#609)
+
 ## [1.38.0] - 2026-09-28
 
 ### Features
