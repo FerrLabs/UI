@@ -1,6 +1,6 @@
 {
   "name": "@ferrlabs/ui-ng",
-  "version": "1.39.0",
+  "version": "1.40.0",
   "description": "FerrLabs design system: Angular 22 components (standalone, signals, zoneless), themed by the tokens of @ferrlabs/ui-foundation.",
   "license": "MPL-2.0",
   "homepage": "https://github.com/FerrLabs/UI#readme",
