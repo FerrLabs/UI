@@ -23,6 +23,9 @@ export const icons = {
   products: stroke(
     `<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>`,
   ),
+  list: stroke(
+    `<line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>`,
+  ),
   usage: stroke(`<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>`),
   home: stroke(`<path d="M3 9 12 2l9 7v11a2 2 0 0 1-2 2h-4v-7H10v7H6a2 2 0 0 1-2-2z"/>`),
 
