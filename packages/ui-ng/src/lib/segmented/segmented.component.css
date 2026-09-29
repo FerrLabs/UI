@@ -1,0 +1,60 @@
+:host {
+  display: inline-block;
+}
+
+.flr-seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
+  border-radius: 10px;
+  background: var(--color-app-bg-2, #f4f4f2);
+}
+
+.flr-seg__option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--color-ink-3, #64748b);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    background-color 120ms ease;
+}
+
+.flr-seg__option:hover {
+  color: var(--color-ink, #1e293b);
+}
+
+.flr-seg__option:focus-visible {
+  outline: 2px solid var(--color-accent, currentColor);
+  outline-offset: 1px;
+}
+
+.flr-seg__option--selected {
+  background: var(--color-card, #ffffff);
+  color: var(--color-ink, #1e293b);
+  box-shadow: 0 1px 2px rgba(30, 41, 59, 0.12);
+}
+
+.flr-seg__option--icon-only {
+  width: 30px;
+  padding: 0;
+  justify-content: center;
+}
+
+.flr-seg__icon {
+  display: inline-flex;
+}
+
+.flr-seg__icon ::ng-deep svg {
+  width: 16px;
+  height: 16px;
+}
