@@ -92,6 +92,7 @@ export { ShellComponent } from './lib/shell/shell.component';
 export type { ShellNavItem, ShellNavGroup } from './lib/shell/shell.component';
 export { SHELL_CONTEXT } from './lib/shell/shell-context';
 export type { ShellContext } from './lib/shell/shell-context';
+export { RailToggleComponent } from './lib/rail-toggle/rail-toggle.component';
 
 export { AvatarComponent } from './lib/avatar/avatar.component';
 export type { AvatarSize, AvatarShape } from './lib/avatar/avatar.component';
