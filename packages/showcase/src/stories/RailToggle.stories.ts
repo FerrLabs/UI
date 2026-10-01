@@ -2,16 +2,22 @@ import { RailToggleComponent } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-const meta: Meta<RailToggleComponent> = {
+const meta: Meta = {
   title: 'App chrome/RailToggle',
-  component: RailToggleComponent,
   decorators: [moduleMetadata({ imports: [RailToggleComponent] })],
-  args: { collapsed: false },
 };
 
 export default meta;
-type Story = StoryObj<RailToggleComponent>;
+type Story = StoryObj;
 
-export const Expanded: Story = {};
+export const Expanded: Story = {
+  render: () => ({
+    template: `<flr-rail-toggle [collapsed]="false" />`,
+  }),
+};
 
-export const Collapsed: Story = { args: { collapsed: true } };
+export const Collapsed: Story = {
+  render: () => ({
+    template: `<flr-rail-toggle [collapsed]="true" />`,
+  }),
+};
