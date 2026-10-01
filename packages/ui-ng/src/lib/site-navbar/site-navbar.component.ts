@@ -8,6 +8,7 @@ import {
   siteLocales,
   resolveLocale,
   withLocaleBase,
+  withTrailingSlash,
 } from '../site-chrome/site-chrome.model';
 
 @Component({
@@ -306,11 +307,14 @@ export class SiteNavbarComponent {
   protected readonly homeHref = withLocaleBase(this.locale, '/');
   protected readonly links = this.chrome.navLinks.map((link) => ({
     label: link.label,
-    href: withLocaleBase(this.locale, link.href),
+    href: withTrailingSlash(withLocaleBase(this.locale, link.href)),
     external: link.external ?? false,
   }));
   protected readonly cta = this.chrome.cta
-    ? { label: this.chrome.cta.label, href: withLocaleBase(this.locale, this.chrome.cta.href) }
+    ? {
+        label: this.chrome.cta.label,
+        href: withTrailingSlash(withLocaleBase(this.locale, this.chrome.cta.href)),
+      }
     : null;
 
   protected readonly scrolled = signal(false);
