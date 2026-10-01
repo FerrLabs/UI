@@ -80,11 +80,20 @@ function isAbsolute(href: string): boolean {
   return /^[a-z]+:/i.test(href) || href.startsWith('//') || href.startsWith('#');
 }
 
+export function withTrailingSlash(href: string): string {
+  const cut = href.search(/[?#]/);
+  const path = cut === -1 ? href : href.slice(0, cut);
+  const suffix = cut === -1 ? '' : href.slice(cut);
+  const lastSegment = path.slice(path.lastIndexOf('/') + 1);
+  if (path === '' || path.endsWith('/') || lastSegment.includes('.')) return href;
+  return `${path}/${suffix}`;
+}
+
 export function withLocaleBase(locale: SiteLocale, href: string): string {
   if (isAbsolute(href)) return href;
   const base = localeBase(locale);
   if (href === '/') return base ? `${base}/` : '/';
-  return `${base}${href}`;
+  return withTrailingSlash(`${base}${href}`);
 }
 
 export function stripLocalePrefix(path: string): string {
@@ -97,7 +106,7 @@ export function localeSwitchHref(target: SiteLocale, path: string): string {
   const bare = stripLocalePrefix(path);
   const base = localeBase(target);
   if (bare === '/' || bare === '') return base ? `${base}/` : '/';
-  return `${base}${bare}`;
+  return withTrailingSlash(`${base}${bare}`);
 }
 
 export function resolveLocale(localeId: string | null | undefined): SiteLocale {

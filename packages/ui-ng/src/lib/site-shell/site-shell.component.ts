@@ -53,7 +53,7 @@ export class SiteShellComponent {
     effect(() => {
       const title = this.title();
       const description = this.description();
-      const path = this.location.path() || '/';
+      const path = this.location.path().split(/[?#]/)[0] || '/';
       const canonical =
         this.canonical() ?? `${this.chrome.origin}${localeSwitchHref(this.locale, path)}`;
 
