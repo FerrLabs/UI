@@ -1,6 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, LOCALE_ID } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
-import { SITE_CHROME, resolveLocale, withLocaleBase } from '../site-chrome/site-chrome.model';
+import {
+  SITE_CHROME,
+  resolveLocale,
+  withLocaleBase,
+  withTrailingSlash,
+} from '../site-chrome/site-chrome.model';
 
 @Component({
   selector: 'flr-site-footer',
@@ -176,7 +181,7 @@ export class SiteFooterComponent {
     title: col.title,
     links: col.links.map((link) => ({
       label: link.label,
-      href: link.external ? link.href : withLocaleBase(this.locale, link.href),
+      href: link.external ? link.href : withTrailingSlash(withLocaleBase(this.locale, link.href)),
       external: link.external ?? false,
     })),
   }));

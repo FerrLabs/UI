@@ -495,12 +495,12 @@ export class DocsLayoutComponent {
   }
 
   protected docHref(slug: string): string {
-    return `${this.base()}/${slug}`;
+    return `${this.base()}/${slug}/`;
   }
 
   protected versionHref(version: string): string {
     const prefix = this.isFr() ? '/fr' : '';
     const versionPath = version === 'current' ? '' : `/${version}`;
-    return `${prefix}${versionPath}/${this.docsSegment()}/${this.slug()}`;
+    return `${prefix}${versionPath}/${this.docsSegment()}/${this.slug()}/`;
   }
 }
