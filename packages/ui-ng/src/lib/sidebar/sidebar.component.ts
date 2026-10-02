@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, model, output } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { markColorOnDark } from '../app-rail/mark-color';
 
 @Component({
   selector: 'flr-sidebar',
@@ -186,6 +187,9 @@ export class SidebarSectionComponent {
     </ng-template>
   `,
   imports: [NgTemplateOutlet],
+  host: {
+    '[style.--flr-sb-accent-on-dark]': 'accentOnDark()',
+  },
   styles: `
     :host {
       display: block;
@@ -246,7 +250,10 @@ export class SidebarSectionComponent {
       display: block;
     }
     .flr-sb-item--active .flr-sb-item__icon {
-      color: var(--flr-sb-accent, var(--color-accent, var(--color-ink, #1e293b)));
+      color: var(
+        --flr-sb-active-icon,
+        var(--flr-sb-accent, var(--color-accent, var(--color-ink, #1e293b)))
+      );
     }
     .flr-sb-item--collapsed .flr-sb-item__icon {
       transform: translateX(4px);
@@ -300,6 +307,11 @@ export class SidebarItemComponent {
   protected readonly accentColor = computed(
     () => this.accent() ?? 'var(--color-accent, var(--color-ink, #1e293b))',
   );
+
+  protected readonly accentOnDark = computed(() => {
+    const accent = this.accent();
+    return accent ? markColorOnDark(accent) : null;
+  });
 
   protected handleClick(event: MouseEvent): void {
     if (this.disabled()) {
