@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.42.0] - 2026-10-02
+
+### Features
+
+- feat(ui-ng): list every product in the app switcher, tier shown when held (#623)
+
 ## [1.41.0] - 2026-10-02
 
 ### Features
