@@ -52,6 +52,8 @@ export const Open: Story = {
       expect(rows).toEqual([
         ['FerrLabs', null],
         ['FerrGrowth', 'Team'],
+        ['FerrFleet', null],
+        ['FerrTrack', null],
         ['FerrVault', 'Pro'],
       ]);
     });
@@ -70,7 +72,7 @@ export const Collapsed: Story = {
 };
 
 export const OneApp: Story = {
-  args: { items: [ENTITLED[2]], current: 'ferrvault' },
+  args: { items: ENTITLED.filter((app) => app.id === 'ferrvault'), current: 'ferrvault' },
 };
 
 async function openPanel(canvasElement: HTMLElement): Promise<void> {
@@ -87,7 +89,7 @@ export const HiddenApp: Story = {
     const names = [...canvasElement.querySelectorAll('.flr-as__item .flr-as__name')].map((el) =>
       el.textContent?.trim(),
     );
-    expect(names).toEqual(['FerrLabs', 'FerrVault']);
+    expect(names).toEqual(['FerrLabs', 'FerrFleet', 'FerrTrack', 'FerrVault']);
   },
 };
 
@@ -98,7 +100,7 @@ export const Customize: Story = {
     if (!gear) throw new Error('customize button not found');
     gear.click();
     await waitFor(() =>
-      expect(document.querySelectorAll('.flr-as__toggles [role="switch"]').length).toBe(3),
+      expect(document.querySelectorAll('.flr-as__toggles [role="switch"]').length).toBe(5),
     );
     const locked = document.querySelector<HTMLButtonElement>('.flr-as__toggles [role="switch"]');
     expect(locked?.disabled).toBe(true);
