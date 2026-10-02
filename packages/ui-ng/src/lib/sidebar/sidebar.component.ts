@@ -12,10 +12,6 @@ import { NgTemplateOutlet } from '@angular/common';
       <nav class="flr-sb__nav" [attr.aria-label]="navLabel()"><ng-content /></nav>
       <div class="flr-sb__footer">
         <div class="flr-sb__extra"><ng-content select="[sidebar-footer]" /></div>
-        <button type="button" class="flr-sb__toggle mono" (click)="toggle()">
-          <span aria-hidden="true">{{ collapsed() ? '→' : '←' }}</span>
-          <span class="flr-sb__toggle-label">Collapse</span>
-        </button>
       </div>
     </aside>
   `,
@@ -73,33 +69,8 @@ import { NgTemplateOutlet } from '@angular/common';
       border-top: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
       padding: 8px;
     }
-    .flr-sb__toggle {
-      width: 100%;
-      padding: 8px 12px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      color: var(--color-ink-3, #64748b);
-      font-family: var(--font-mono, 'DM Mono', ui-monospace, monospace);
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .flr-sb--collapsed .flr-sb__toggle {
-      justify-content: center;
-    }
-    .flr-sb__toggle-label {
-      overflow: hidden;
-      white-space: nowrap;
-      transition:
-        opacity 160ms ease,
-        max-width 220ms ease;
-    }
-    .flr-sb--collapsed .flr-sb__toggle-label {
-      opacity: 0;
-      max-width: 0;
+    .flr-sb__footer:not(:has(.flr-sb__extra > :not(:empty))) {
+      display: none;
     }
     @media (max-width: 880px) {
       .flr-sb {
@@ -117,10 +88,6 @@ export class SidebarComponent {
   protected readonly widthPx = computed(() =>
     this.collapsed() ? `${this.collapsedWidth()}px` : `${this.width()}px`,
   );
-
-  protected toggle(): void {
-    this.collapsed.set(!this.collapsed());
-  }
 }
 
 @Component({

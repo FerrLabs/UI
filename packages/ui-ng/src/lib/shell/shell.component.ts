@@ -14,6 +14,7 @@ import {
   SidebarSectionComponent,
 } from '../sidebar/sidebar.component';
 import { isTrustedIconMarkup } from '../icon/icon-markup';
+import { RailToggleComponent } from '../rail-toggle/rail-toggle.component';
 import { SHELL_CONTEXT, type ShellContext } from './shell-context';
 
 export interface ShellNavItem {
@@ -34,7 +35,7 @@ export interface ShellNavGroup {
 @Component({
   selector: 'flr-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SidebarComponent, SidebarSectionComponent, SidebarItemComponent],
+  imports: [SidebarComponent, SidebarSectionComponent, SidebarItemComponent, RailToggleComponent],
   providers: [{ provide: SHELL_CONTEXT, useExisting: forwardRef(() => ShellComponent) }],
   host: {
     '(window:keydown)': 'onKeydown($event)',
@@ -85,6 +86,7 @@ export interface ShellNavGroup {
 
         <div class="flr-shell__body">
           <header class="flr-shell__topbar">
+            <flr-rail-toggle class="flr-shell__rail-toggle" [(collapsed)]="collapsed" />
             <div class="flr-shell__slot flr-shell__slot--crumb-lead">
               <ng-content select="[shell-breadcrumb-lead]" />
             </div>
@@ -200,6 +202,14 @@ export interface ShellNavGroup {
       position: sticky;
       top: 0;
       z-index: 5;
+    }
+    .flr-shell__rail-toggle {
+      margin-left: -8px;
+    }
+    @media (max-width: 880px) {
+      .flr-shell__rail-toggle {
+        display: none;
+      }
     }
     .flr-shell__crumbs {
       font-size: 12px;

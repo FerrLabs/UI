@@ -44,7 +44,7 @@ export const Collapsed: Story = {
     props: args,
     template: `
       <div style="height:520px; display:flex; background:var(--color-paper)">
-        <flr-sidebar [width]="width" [collapsedWidth]="collapsedWidth">
+        <flr-sidebar [width]="width" [collapsedWidth]="collapsedWidth" [collapsed]="true">
           <flr-sidebar-section [collapsed]="true">
             <flr-sidebar-item label="Overview" [active]="true" [collapsed]="true" />
             <flr-sidebar-item label="Agents" badge="12" [collapsed]="true" />

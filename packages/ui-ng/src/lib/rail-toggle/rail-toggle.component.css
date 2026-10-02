@@ -1,0 +1,51 @@
+:host {
+  display: inline-flex;
+}
+.flr-rail-toggle {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-ink-2, #475569);
+  cursor: pointer;
+  transition:
+    background 120ms,
+    color 120ms;
+}
+.flr-rail-toggle:hover {
+  background: var(--color-app-nav-hover, rgba(30, 41, 59, 0.06));
+  color: var(--color-ink, #1e293b);
+}
+.flr-rail-toggle:focus-visible {
+  outline: 2px solid var(--color-accent, var(--color-ink, #1e293b));
+  outline-offset: 2px;
+}
+.flr-rail-toggle svg {
+  width: 20px;
+  height: 20px;
+  overflow: visible;
+}
+.flr-rail-toggle__panel {
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.flr-rail-toggle:hover .flr-rail-toggle__panel {
+  transform: scaleX(0.8);
+}
+.flr-rail-toggle--collapsed .flr-rail-toggle__panel {
+  transform: scaleX(0.35);
+}
+.flr-rail-toggle--collapsed:hover .flr-rail-toggle__panel {
+  transform: scaleX(0.6);
+}
+@media (prefers-reduced-motion: reduce) {
+  .flr-rail-toggle__panel {
+    transition: none;
+  }
+}
