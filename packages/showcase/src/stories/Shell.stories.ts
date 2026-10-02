@@ -222,6 +222,36 @@ export const Merged: Story = {
   }),
 };
 
+export const DarkAccentStaysVisible: Story = {
+  render: (args) => ({
+    props: {
+      ...args,
+      sections: [
+        {
+          title: 'Organization',
+          items: [
+            { id: 'sso', label: 'SSO / SAML', href: '/sso', icon: icons.sso },
+            { id: 'domains', label: 'Domains', href: '/domains', icon: icons.domains },
+          ],
+        },
+      ],
+      apps: entitledApps(DEFAULT_APPS, [], 'ferrlabs'),
+    },
+    template: `
+      <flr-shell [sections]="sections" currentPath="/sso" accent="#1e293b">
+        <flr-app-switcher shell-switcher [items]="apps" current="ferrlabs" />
+        <div style="padding:24px">SSO</div>
+      </flr-shell>`,
+  }),
+  play: async ({ canvasElement }) => {
+    const icon = canvasElement.querySelector<HTMLElement>(
+      '.flr-sb-item--active .flr-sb-item__icon',
+    );
+    if (!icon) throw new Error('active nav icon not found');
+    await expect(getComputedStyle(icon).color).toBe('rgb(255, 255, 255)');
+  },
+};
+
 export const MergedOrgSwitcherOpen: Story = {
   ...Merged,
   play: async ({ canvasElement }) => {
