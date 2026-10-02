@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.40.1] - 2026-10-02
+
+### Bug Fixes
+
+- fix(ui-ng): point canonical, hreflang and site links at the trailing-slash URLs (#619)
+
 ## [1.40.0] - 2026-09-29
 
 ### Features
