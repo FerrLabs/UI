@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.41.0] - 2026-10-02
+
+### Features
+
+- feat(ui-ng): collapse the sidebar from a panel icon in the shell topbar (#617)
+
 ## [1.40.1] - 2026-10-02
 
 ### Bug Fixes
