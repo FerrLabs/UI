@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.42.1] - 2026-10-02
+
+### Bug Fixes
+
+- fix(ui-ng): keep the active nav icon readable on the dark shell (#625)
+
 ## [1.42.0] - 2026-10-02
 
 ### Features
