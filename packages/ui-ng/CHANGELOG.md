@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.43.0] - 2026-10-03
+
+### Features
+
+- feat(ui-ng): add a waitlist form component (#633)
+
 ## [1.42.1] - 2026-10-02
 
 ### Bug Fixes
