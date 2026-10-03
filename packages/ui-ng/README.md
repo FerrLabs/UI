@@ -86,3 +86,7 @@ Import the markdown-content stylesheet once (it styles `.ferr-prose`,
 - `ChangeDetectionStrategy.OnPush` everywhere (the app runs **zoneless**).
 - Selectors are prefixed `flr-`.
 - Build: `pnpm --filter @ferrlabs/ui-ng build` (ng-packagr → Angular Package Format).
+
+## License
+
+Licensed under either of [Apache-2.0](LICENSE-APACHE) or [MIT](LICENSE-MIT), at your option.

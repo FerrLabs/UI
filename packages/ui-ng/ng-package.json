@@ -6,6 +6,11 @@
       "input": "docs",
       "glob": "styles.css",
       "output": "docs"
+    },
+    {
+      "input": ".",
+      "glob": "LICENSE-*",
+      "output": "."
     }
   ],
   "lib": {

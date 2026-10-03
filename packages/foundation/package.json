@@ -27,10 +27,12 @@
   "files": [
     "src",
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE-MIT",
+    "LICENSE-APACHE"
   ],
   "homepage": "https://github.com/FerrLabs/UI#readme",
-  "license": "MPL-2.0",
+  "license": "MIT OR Apache-2.0",
   "main": "./dist/index.js",
   "name": "@ferrlabs/ui-foundation",
   "peerDependencies": {

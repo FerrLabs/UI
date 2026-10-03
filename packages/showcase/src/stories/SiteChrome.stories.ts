@@ -41,7 +41,7 @@ const CHROME: SiteChromeConfig = {
       },
     ],
     bottomLeft: '© 2026 FerrLabs',
-    bottomRight: 'MPL-2.0',
+    bottomRight: 'MIT OR Apache-2.0',
   },
   labels: { menu: 'Menu', close: 'Close', openMenu: 'Open menu' },
 };
