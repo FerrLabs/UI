@@ -1,0 +1,60 @@
+:host {
+  display: block;
+}
+
+.flr-waitlist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.flr-waitlist__row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.flr-waitlist__email {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.flr-waitlist__trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.flr-waitlist__error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--color-danger, #b91c1c);
+  background: color-mix(in srgb, var(--color-danger, #b91c1c) 8%, transparent);
+}
+
+.flr-waitlist__joined {
+  padding: 20px 24px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--color-accent, #1e293b) 7%, transparent);
+}
+
+.flr-waitlist__joined p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.flr-waitlist__joined-title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+@media (max-width: 520px) {
+  .flr-waitlist__row {
+    flex-direction: column;
+  }
+}

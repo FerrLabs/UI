@@ -225,3 +225,10 @@ export type {
   ContactPrefill,
   ContactProduct,
 } from './lib/contact-form/contact-form.model';
+
+export { WaitlistFormComponent } from './lib/waitlist-form/waitlist-form.component';
+export {
+  WAITLIST_FORM_LABELS_EN,
+  WAITLIST_FORM_LABELS_FR,
+} from './lib/waitlist-form/waitlist-form.model';
+export type { WaitlistFormLabels } from './lib/waitlist-form/waitlist-form.model';

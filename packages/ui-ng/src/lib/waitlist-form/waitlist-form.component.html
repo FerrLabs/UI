@@ -1,0 +1,41 @@
+@if (isJoined()) {
+  <div class="flr-waitlist__joined" role="status">
+    <p class="flr-waitlist__joined-title">{{ labels().joinedTitle }}</p>
+    <p>{{ labels().joinedBody }}</p>
+  </div>
+} @else {
+  <form class="flr-waitlist" (submit)="submit($event)">
+    <div class="flr-waitlist__row">
+      <flr-input
+        class="flr-waitlist__email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        [required]="true"
+        [aria-label]="labels().email"
+        [placeholder]="labels().email"
+        [ngModel]="email()"
+        (ngModelChange)="email.set($event)"
+      />
+      <flr-submit [loading]="sending()">{{ labels().submit }}</flr-submit>
+    </div>
+
+    <div class="flr-waitlist__trap" aria-hidden="true">
+      <label>
+        Website
+        <input
+          name="website"
+          type="text"
+          tabindex="-1"
+          autocomplete="off"
+          [ngModel]="website()"
+          (ngModelChange)="website.set($event)"
+        />
+      </label>
+    </div>
+
+    @if (error()) {
+      <p class="flr-waitlist__error" role="alert">{{ error() }}</p>
+    }
+  </form>
+}
