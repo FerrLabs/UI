@@ -105,4 +105,15 @@ pnpm --filter @ferrlabs/ui-showcase storybook
 
 ## License
 
-[MPL-2.0](LICENSE). Both `@ferrlabs/ui-ng` and `@ferrlabs/ui-foundation` are published on npmjs.com and install without a token.
+Licensed under either of
+
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or https://www.apache.org/licenses/LICENSE-2.0)
+- MIT license ([LICENSE-MIT](LICENSE-MIT) or https://opensource.org/licenses/MIT)
+
+at your option. Both `@ferrlabs/ui-ng` and `@ferrlabs/ui-foundation` are published on npmjs.com and install without a token.
+
+The Fraunces and DM Mono fonts that `@ferrlabs/ui-foundation` loads come from the `@fontsource/fraunces` and `@fontsource/dm-mono` packages. They are licensed separately under the SIL Open Font License 1.1, which ships inside those packages, and are not covered by the license above.
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.

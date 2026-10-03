@@ -46,3 +46,9 @@ The old packages (`@ferrlabs/ui-icons`, `@ferrlabs/styles`,
 `@ferrlabs/ui-tailwind`) keep working as re-export shells during the
 transition window — change imports at your own pace. New consumers
 should target `@ferrlabs/ui-foundation` directly.
+
+## License
+
+Licensed under either of [Apache-2.0](LICENSE-APACHE) or [MIT](LICENSE-MIT), at your option.
+
+The Fraunces and DM Mono fonts are not covered by this license. They are pulled in through the `@fontsource/fraunces` and `@fontsource/dm-mono` dependencies and stay under the SIL Open Font License 1.1, whose text ships in each of those packages.

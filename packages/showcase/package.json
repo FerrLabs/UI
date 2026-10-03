@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Storybook showcase for @ferrlabs/ui-ng. Brand selector across FerrLabs / FerrFlow / FerrVault / FerrTrack / FerrGrowth / FerrFleet / FerrLens, with a light/dark toggle.",
+  "license": "MIT OR Apache-2.0",
   "type": "module",
   "scripts": {
     "styles": "node scripts/fonts.mjs && tailwindcss -i .storybook/preview.src.css -o .storybook/preview.css",
