@@ -91,7 +91,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^22.0.0
-        version: 22.2.1(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(@angular/compiler@22.2.1)(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@swc/core@1.16.2)(@types/node@26.6.1)(chokidar@5.0.0)(clean-css@5.3.3)(html-minifier-terser@6.1.0)(html-webpack-plugin@5.6.8(webpack@5.111.1(@swc/core@1.16.2)(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@6.1.0)(lightningcss@1.33.0)(postcss@8.5.28)))(jiti@2.7.0)(lightningcss@1.33.0)(ng-packagr@22.2.3(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3))(rollup@4.63.3)(sass-embedded@1.104.1)(sass@1.104.1)(supports-color@10.2.2)(tailwindcss@4.3.3)(typescript@6.0.3)(yaml@2.9.1)
+        version: 22.2.1(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(@angular/compiler@22.2.1)(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@swc/core@1.16.2)(@types/node@26.6.1)(chokidar@5.0.0)(clean-css@5.3.3)(html-minifier-terser@6.1.0)(html-webpack-plugin@5.6.8(webpack@5.111.1(@swc/core@1.16.2)(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@6.1.0)(lightningcss@1.33.0)(postcss@8.5.28)))(jiti@2.7.0)(lightningcss@1.33.0)(ng-packagr@22.2.4(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3))(rollup@4.63.3)(sass-embedded@1.104.1)(sass@1.104.1)(supports-color@10.2.2)(tailwindcss@4.3.3)(typescript@6.0.3)(yaml@2.9.1)
       '@angular/cli':
         specifier: ^22.0.0
         version: 22.2.1(@types/node@26.6.1)(chokidar@5.0.0)
@@ -118,7 +118,7 @@ importers:
         version: 10.6.1(storybook@10.6.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))
       '@storybook/angular':
         specifier: ^10.0.0
-        version: 10.6.1(4baa6d05fdd05799e4eb497fd9b61d39)
+        version: 10.6.1(b56089a99d90076c3d331d9e791b6db7)
       '@storybook/test-runner':
         specifier: ^0.26.0
         version: 0.26.0(@types/node@26.6.1)(debug@4.4.3(supports-color@10.2.2))(storybook@10.6.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0))(supports-color@10.2.2)
@@ -182,7 +182,7 @@ importers:
         version: link:../foundation
       ng-packagr:
         specifier: ^22.0.0
-        version: 22.2.3(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3)
+        version: 22.2.4(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3)
       typescript:
         specifier: ~6.0.0
         version: 6.0.3
@@ -6074,8 +6074,8 @@ packages:
     resolution: {integrity: sha512-NMPBRMJgiQHjbd8phG3Vebdx4kZ1H121rbl5IkMqeOsahptB9BKo/d7oJ3zTXqTgagn2bWlNSXkh0QUGM31RYg==}
     engines: {node: '>=18'}
 
-  ng-packagr@22.2.3:
-    resolution: {integrity: sha512-beDEoCQTYkwzvA7OcBTw3zfDUNiVddynjvIOb76ImuTcFB83pvHqCdtAXa8aRl0rxyKbNcE7gY2DyGr/OsDUdA==}
+  ng-packagr@22.2.4:
+    resolution: {integrity: sha512-P7nklZYs3BHG0QtDkhE7tYYPBRkWQhEf+aK5/zz9Rfc7mc2MHfIcN8ZtEHzMIEaKbgoQgUjnGZPRoCr5isB7ig==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0}
     hasBin: true
     peerDependencies:
@@ -7677,13 +7677,13 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  ? '@angular-devkit/build-angular@22.2.1(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(@angular/compiler@22.2.1)(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@swc/core@1.16.2)(@types/node@26.6.1)(chokidar@5.0.0)(clean-css@5.3.3)(html-minifier-terser@6.1.0)(html-webpack-plugin@5.6.8(webpack@5.111.1(@swc/core@1.16.2)(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@6.1.0)(lightningcss@1.33.0)(postcss@8.5.28)))(jiti@2.7.0)(lightningcss@1.33.0)(ng-packagr@22.2.3(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3))(rollup@4.63.3)(sass-embedded@1.104.1)(sass@1.104.1)(supports-color@10.2.2)(tailwindcss@4.3.3)(typescript@6.0.3)(yaml@2.9.1)'
+  ? '@angular-devkit/build-angular@22.2.1(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(@angular/compiler@22.2.1)(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@swc/core@1.16.2)(@types/node@26.6.1)(chokidar@5.0.0)(clean-css@5.3.3)(html-minifier-terser@6.1.0)(html-webpack-plugin@5.6.8(webpack@5.111.1(@swc/core@1.16.2)(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@6.1.0)(lightningcss@1.33.0)(postcss@8.5.28)))(jiti@2.7.0)(lightningcss@1.33.0)(ng-packagr@22.2.4(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3))(rollup@4.63.3)(sass-embedded@1.104.1)(sass@1.104.1)(supports-color@10.2.2)(tailwindcss@4.3.3)(typescript@6.0.3)(yaml@2.9.1)'
   : dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2202.1(chokidar@5.0.0)
       '@angular-devkit/build-webpack': 0.2202.1(chokidar@5.0.0)(webpack-dev-server@6.0.0(supports-color@10.2.2)(webpack@5.111.0(@swc/core@1.16.2)(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@6.1.0)(lightningcss@1.33.0)(postcss@8.5.28)))(webpack@5.111.0(@swc/core@1.16.2)(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@6.1.0)(lightningcss@1.33.0)(postcss@8.5.28))
       '@angular-devkit/core': 22.2.1(chokidar@5.0.0)
-      '@angular/build': 22.2.1(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(@angular/compiler@22.2.1)(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@types/node@26.6.1)(istanbul-lib-instrument@6.0.3(supports-color@10.2.2))(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(ng-packagr@22.2.3(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3))(postcss@8.5.28)(rollup@4.63.3)(supports-color@10.2.2)(tailwindcss@4.3.3)(terser@5.51.2)(tslib@2.8.1)(typescript@6.0.3)(yaml@2.9.1)
+      '@angular/build': 22.2.1(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(@angular/compiler@22.2.1)(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@types/node@26.6.1)(istanbul-lib-instrument@6.0.3(supports-color@10.2.2))(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(ng-packagr@22.2.4(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3))(postcss@8.5.28)(rollup@4.63.3)(supports-color@10.2.2)(tailwindcss@4.3.3)(terser@5.51.2)(tslib@2.8.1)(typescript@6.0.3)(yaml@2.9.1)
       '@angular/compiler-cli': 22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3)
       '@babel/core': 8.0.5
       '@babel/generator': 8.0.5
@@ -7738,7 +7738,7 @@ snapshots:
       '@angular/core': 22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)
       '@angular/platform-browser': 22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))
       esbuild: 0.28.2
-      ng-packagr: 22.2.3(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3)
+      ng-packagr: 22.2.4(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3)
       tailwindcss: 4.3.3
     transitivePeerDependencies:
       - '@angular/compiler'
@@ -7890,7 +7890,7 @@ snapshots:
       eslint: 10.11.0(jiti@2.7.0)(supports-color@10.2.2)
       typescript: 6.0.3
 
-  '@angular/build@22.2.1(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(@angular/compiler@22.2.1)(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@types/node@26.6.1)(istanbul-lib-instrument@6.0.3(supports-color@10.2.2))(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(ng-packagr@22.2.3(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3))(postcss@8.5.28)(rollup@4.63.3)(supports-color@10.2.2)(tailwindcss@4.3.3)(terser@5.51.2)(tslib@2.8.1)(typescript@6.0.3)(yaml@2.9.1)':
+  '@angular/build@22.2.1(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(@angular/compiler@22.2.1)(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@types/node@26.6.1)(istanbul-lib-instrument@6.0.3(supports-color@10.2.2))(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(ng-packagr@22.2.4(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3))(postcss@8.5.28)(rollup@4.63.3)(supports-color@10.2.2)(tailwindcss@4.3.3)(terser@5.51.2)(tslib@2.8.1)(typescript@6.0.3)(yaml@2.9.1)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2202.1(chokidar@5.0.0)
@@ -7929,7 +7929,7 @@ snapshots:
       istanbul-lib-instrument: 6.0.3(supports-color@10.2.2)
       less: 4.9.1(supports-color@10.2.2)
       lmdb: 3.5.6
-      ng-packagr: 22.2.3(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3)
+      ng-packagr: 22.2.4(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3)
       postcss: 8.5.28
       rollup: 4.63.3
       tailwindcss: 4.3.3
@@ -10372,10 +10372,10 @@ snapshots:
       storybook: 10.6.1(@types/react@19.3.0)(prettier@3.9.9)(react@19.3.0)
       ts-dedent: 2.3.0
 
-  '@storybook/angular@10.6.1(4baa6d05fdd05799e4eb497fd9b61d39)':
+  '@storybook/angular@10.6.1(b56089a99d90076c3d331d9e791b6db7)':
     dependencies:
       '@angular-devkit/architect': 0.2202.1(chokidar@5.0.0)
-      '@angular-devkit/build-angular': 22.2.1(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(@angular/compiler@22.2.1)(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@swc/core@1.16.2)(@types/node@26.6.1)(chokidar@5.0.0)(clean-css@5.3.3)(html-minifier-terser@6.1.0)(html-webpack-plugin@5.6.8(webpack@5.111.1(@swc/core@1.16.2)(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@6.1.0)(lightningcss@1.33.0)(postcss@8.5.28)))(jiti@2.7.0)(lightningcss@1.33.0)(ng-packagr@22.2.3(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3))(rollup@4.63.3)(sass-embedded@1.104.1)(sass@1.104.1)(supports-color@10.2.2)(tailwindcss@4.3.3)(typescript@6.0.3)(yaml@2.9.1)
+      '@angular-devkit/build-angular': 22.2.1(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(@angular/compiler@22.2.1)(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@swc/core@1.16.2)(@types/node@26.6.1)(chokidar@5.0.0)(clean-css@5.3.3)(html-minifier-terser@6.1.0)(html-webpack-plugin@5.6.8(webpack@5.111.1(@swc/core@1.16.2)(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@6.1.0)(lightningcss@1.33.0)(postcss@8.5.28)))(jiti@2.7.0)(lightningcss@1.33.0)(ng-packagr@22.2.4(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3))(rollup@4.63.3)(sass-embedded@1.104.1)(sass@1.104.1)(supports-color@10.2.2)(tailwindcss@4.3.3)(typescript@6.0.3)(yaml@2.9.1)
       '@angular-devkit/core': 22.2.1(chokidar@5.0.0)
       '@angular/common': 22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
       '@angular/compiler': 22.2.1
@@ -13813,7 +13813,7 @@ snapshots:
     dependencies:
       content-type: 2.1.0
 
-  ng-packagr@22.2.3(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3):
+  ng-packagr@22.2.4(@angular/compiler-cli@22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.3)(tslib@2.8.1)(typescript@6.0.3):
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular/compiler-cli': 22.2.1(@angular/compiler@22.2.1)(typescript@6.0.3)
