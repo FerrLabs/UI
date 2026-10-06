@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.44.0] - 2026-10-06
+
+### Features
+
+- feat(ui-ng): add a dropdown mode and localisable strings to flr-multi-select (#643)
+
 ## [1.43.0] - 2026-10-03
 
 ### Features
