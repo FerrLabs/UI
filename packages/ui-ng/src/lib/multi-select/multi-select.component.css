@@ -1,12 +1,12 @@
-:host {
+flr-multi-select,
+.flr-ms__panel {
   --flr-ms-accent: var(--flr-accent, var(--color-accent, #f59e0b));
   --flr-ms-accent-ink: var(--flr-accent-ink, var(--color-on-accent, #ffffff));
   --flr-ms-rule: var(--flr-rule, #e2e8f0);
-  display: block;
 }
 
-:host(.flr-ms-host--dropdown) {
-  position: relative;
+flr-multi-select {
+  display: block;
 }
 
 .flr-ms {
@@ -75,10 +75,6 @@
 }
 
 .flr-ms__panel {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  z-index: 30;
   width: max-content;
   min-width: 100%;
   max-width: min(360px, calc(100vw - 32px));

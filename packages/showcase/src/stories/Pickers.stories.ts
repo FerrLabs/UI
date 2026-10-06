@@ -65,13 +65,14 @@ export const MultiSelectDropdown: Story = {
   }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const overlay = within(canvasElement.ownerDocument.body);
     const trigger = canvas.getByRole('button', { name: /^Regions:/ });
     const value = canvas.getByTestId('value');
     await expect(trigger).toHaveTextContent('eu-west-1');
     await expect(trigger).toHaveAttribute('aria-haspopup', 'listbox');
 
     await userEvent.click(trigger);
-    const listbox = await canvas.findByRole('listbox');
+    const listbox = await overlay.findByRole('listbox');
     await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     await expect(listbox).toHaveAttribute('aria-multiselectable', 'true');
     await userEvent.click(within(listbox).getByRole('option', { name: /us-east-1/ }));
@@ -79,25 +80,25 @@ export const MultiSelectDropdown: Story = {
     await expect(trigger).toHaveTextContent('2 selected');
 
     await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(canvas.queryByRole('listbox')).toBeNull());
+    await waitFor(() => expect(overlay.queryByRole('listbox')).toBeNull());
     await expect(trigger).toHaveFocus();
 
     await userEvent.click(trigger);
-    await canvas.findByRole('listbox');
+    await overlay.findByRole('listbox');
     await userEvent.click(canvas.getByTestId('outside'));
-    await waitFor(() => expect(canvas.queryByRole('listbox')).toBeNull());
+    await waitFor(() => expect(overlay.queryByRole('listbox')).toBeNull());
 
     trigger.focus();
     await userEvent.keyboard('{ArrowDown}');
-    await canvas.findByRole('listbox');
-    await waitFor(() => expect(canvas.getByRole('searchbox')).toHaveFocus());
+    await overlay.findByRole('listbox');
+    await waitFor(() => expect(overlay.getByRole('searchbox')).toHaveFocus());
     await userEvent.keyboard('{ArrowDown}{ArrowDown} ');
     await waitFor(() => expect(value).toHaveTextContent('eu-west-1,us-east-1,eu-central-1'));
     await expect(
-      within(canvas.getByRole('listbox')).getByRole('option', { name: /eu-central-1/ }),
+      within(overlay.getByRole('listbox')).getByRole('option', { name: /eu-central-1/ }),
     ).toHaveAttribute('aria-selected', 'true');
 
-    await userEvent.click(canvas.getByRole('button', { name: 'Clear' }));
+    await userEvent.click(overlay.getByRole('button', { name: 'Clear' }));
     await waitFor(() => expect(trigger).toHaveTextContent('Any region'));
     await expect(value.textContent?.trim()).toBe('');
   },

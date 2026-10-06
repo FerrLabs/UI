@@ -1,6 +1,8 @@
 @if (mode() === 'dropdown') {
   <button
     #trigger
+    cdkOverlayOrigin
+    #origin="cdkOverlayOrigin"
     type="button"
     class="flr-ms__trigger"
     [class.flr-ms__trigger--invalid]="invalid()"
@@ -18,8 +20,23 @@
     <span class="flr-ms__summary">{{ summary() }}</span>
   </button>
 
-  @if (open()) {
-    <div class="flr-ms flr-ms__panel" role="presentation" (keydown)="onPanelKeydown($event)">
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="open()"
+    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayMinWidth]="panelMinWidth()"
+    (overlayOutsideClick)="onOutsideClick($event)"
+    (detach)="close(false)"
+  >
+    <div
+      #panel
+      class="flr-ms flr-ms__panel"
+      role="presentation"
+      [style]="panelTokens()"
+      (keydown)="onPanelKeydown($event)"
+      (focusout)="onFocusOut($event)"
+    >
       @if (searchable()) {
         <input
           #search
@@ -84,7 +101,7 @@
         }
       </div>
     </div>
-  }
+  </ng-template>
 } @else {
   <div class="flr-ms" [class.flr-ms--invalid]="invalid()">
     @if (searchable()) {

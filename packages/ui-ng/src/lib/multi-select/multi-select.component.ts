@@ -10,8 +10,12 @@ import {
   input,
   signal,
   viewChild,
+  ViewEncapsulation,
 } from '@angular/core';
+import { type ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import { inheritedTokens } from './panel-tokens';
 
 export interface MultiSelectOption {
   readonly id: string;
@@ -23,6 +27,13 @@ export type MultiSelectMode = 'list' | 'dropdown';
 
 let nextId = 0;
 
+const PANEL_POSITIONS: ConnectedPosition[] = [
+  { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6 },
+  { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -6 },
+  { originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 6 },
+  { originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6 },
+];
+
 @Component({
   selector: 'flr-multi-select',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,13 +44,13 @@ let nextId = 0;
       multi: true,
     },
   ],
+  encapsulation: ViewEncapsulation.None,
+  imports: [OverlayModule],
   host: {
-    '[class.flr-ms-host--dropdown]': "mode() === 'dropdown'",
-    '(document:pointerdown)': 'onDocumentPointerDown($event)',
     '(focusout)': 'onFocusOut($event)',
   },
   templateUrl: './multi-select.component.html',
-  styleUrl: './multi-select.component.css',
+  styleUrls: ['./multi-select.component.css', '../overlay/cdk-overlay.css'],
 })
 export class MultiSelectComponent implements ControlValueAccessor {
   readonly options = input.required<readonly MultiSelectOption[]>();
@@ -63,6 +74,9 @@ export class MultiSelectComponent implements ControlValueAccessor {
   protected readonly disabled = signal(false);
   protected readonly open = signal(false);
   protected readonly active = signal(0);
+  protected readonly panelTokens = signal<Record<string, string>>({});
+  protected readonly panelMinWidth = signal(0);
+  protected readonly positions = PANEL_POSITIONS;
   private readonly selected = signal<ReadonlySet<string>>(new Set());
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -70,6 +84,7 @@ export class MultiSelectComponent implements ControlValueAccessor {
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   private readonly search = viewChild<ElementRef<HTMLInputElement>>('search');
   private readonly listbox = viewChild<ElementRef<HTMLElement>>('listbox');
+  private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
 
   protected readonly visible = computed<readonly MultiSelectOption[]>(() => {
     const q = this.query().trim().toLowerCase();
@@ -197,27 +212,33 @@ export class MultiSelectComponent implements ControlValueAccessor {
     this.toggle(option.id);
   }
 
-  protected onDocumentPointerDown(event: PointerEvent): void {
-    if (!this.open()) return;
-    if (!this.host.nativeElement.contains(event.target as Node)) this.close(false);
+  protected onOutsideClick(event: MouseEvent): void {
+    if (this.trigger()?.nativeElement.contains(event.target as Node)) return;
+    this.close(false);
   }
 
   protected onFocusOut(event: FocusEvent): void {
     const next = event.relatedTarget as Node | null;
-    if (this.open() && next && !this.host.nativeElement.contains(next)) this.close(false);
+    if (!this.open() || !next) return;
+    if (this.host.nativeElement.contains(next)) return;
+    if (this.panel()?.nativeElement.contains(next)) return;
+    this.close(false);
   }
 
   private openPanel(): void {
     if (this.disabled() || this.open()) return;
     const firstSelected = this.visible().findIndex((o) => this.isSelected(o.id));
     this.active.set(Math.max(firstSelected, 0));
+    this.panelTokens.set(inheritedTokens(this.host.nativeElement));
+    this.panelMinWidth.set(this.trigger()?.nativeElement.offsetWidth ?? 0);
     this.open.set(true);
     afterNextRender(() => (this.search() ?? this.listbox())?.nativeElement.focus(), {
       injector: this.injector,
     });
   }
 
-  private close(restoreFocus: boolean): void {
+  protected close(restoreFocus: boolean): void {
+    if (!this.open()) return;
     this.open.set(false);
     this.query.set('');
     this.onTouched();
@@ -226,8 +247,8 @@ export class MultiSelectComponent implements ControlValueAccessor {
 
   private moveActive(index: number): void {
     this.active.set(index);
-    this.host.nativeElement
-      .querySelector(`#${this.optionId(index)}`)
+    this.listbox()
+      ?.nativeElement.querySelector(`#${this.optionId(index)}`)
       ?.scrollIntoView({ block: 'nearest' });
   }
 
