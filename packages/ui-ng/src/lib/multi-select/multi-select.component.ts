@@ -1,10 +1,15 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   forwardRef,
+  inject,
+  Injector,
   input,
   signal,
+  viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -13,6 +18,10 @@ export interface MultiSelectOption {
   readonly label: string;
   readonly hint?: string;
 }
+
+export type MultiSelectMode = 'list' | 'dropdown';
+
+let nextId = 0;
 
 @Component({
   selector: 'flr-multi-select',
@@ -24,153 +33,22 @@ export interface MultiSelectOption {
       multi: true,
     },
   ],
-  template: `
-    <div class="flr-ms" [class.flr-ms--invalid]="invalid()">
-      @if (searchable()) {
-        <input
-          class="flr-ms__search"
-          type="search"
-          [attr.aria-label]="searchLabel()"
-          [placeholder]="searchPlaceholder()"
-          [value]="query()"
-          (input)="onQuery($event)"
-        />
-      }
-
-      <div class="flr-ms__list" role="group" [attr.aria-label]="label()">
-        @for (o of visible(); track o.id) {
-          <label class="flr-ms__row" [class.flr-ms__row--on]="isSelected(o.id)">
-            <input
-              type="checkbox"
-              class="flr-ms__box"
-              [checked]="isSelected(o.id)"
-              [disabled]="disabled()"
-              (change)="toggle(o.id)"
-            />
-            <span class="flr-ms__text">
-              <span class="flr-ms__label">{{ o.label }}</span>
-              @if (o.hint) {
-                <span class="flr-ms__hint">{{ o.hint }}</span>
-              }
-            </span>
-          </label>
-        }
-
-        @if (visible().length === 0) {
-          <p class="flr-ms__empty">
-            @if (loading()) {
-              {{ loadingText() }}
-            } @else {
-              {{ options().length === 0 ? emptyText() : noMatchText() }}
-            }
-          </p>
-        }
-      </div>
-
-      <div class="flr-ms__foot">
-        <span class="flr-ms__count">{{ selectedCount() }} selected</span>
-        @if (selectedCount() > 0 && !disabled()) {
-          <button type="button" class="flr-ms__clear" (click)="clear()">Clear</button>
-        }
-      </div>
-    </div>
-  `,
-  styles: `
-    :host {
-      display: block;
-    }
-    .flr-ms {
-      border: 1px solid var(--flr-rule, #e2e8f0);
-      border-radius: 8px;
-      overflow: hidden;
-      background: var(--flr-bg, #fff);
-    }
-    .flr-ms--invalid {
-      border-color: var(--color-danger, #dc2626);
-    }
-    .flr-ms__search {
-      width: 100%;
-      box-sizing: border-box;
-      border: 0;
-      border-bottom: 1px solid var(--flr-rule, #e2e8f0);
-      padding: 9px 12px;
-      font: 400 13px/1.4 var(--flr-font-sans, system-ui);
-      color: inherit;
-      background: transparent;
-    }
-    .flr-ms__search:focus {
-      outline: none;
-      border-bottom-color: var(--flr-accent, #f59e0b);
-    }
-    .flr-ms__list {
-      max-height: 260px;
-      overflow-y: auto;
-    }
-    .flr-ms__row {
-      display: flex;
-      align-items: flex-start;
-      gap: 9px;
-      padding: 8px 12px;
-      cursor: pointer;
-      font: 400 13px/1.4 var(--flr-font-sans, system-ui);
-    }
-    .flr-ms__row:hover {
-      background: color-mix(in oklab, currentColor 5%, transparent);
-    }
-    .flr-ms__row--on {
-      background: color-mix(in oklab, var(--flr-accent, #f59e0b) 8%, transparent);
-    }
-    .flr-ms__box {
-      margin-top: 2px;
-      flex-shrink: 0;
-    }
-    .flr-ms__text {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-    .flr-ms__label {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .flr-ms__hint {
-      font-size: 11.5px;
-      opacity: 0.65;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .flr-ms__empty {
-      margin: 0;
-      padding: 14px 12px;
-      font: 400 12.5px/1.4 var(--flr-font-sans, system-ui);
-      color: var(--color-ink-3, #5d6b80);
-    }
-    .flr-ms__foot {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 7px 12px;
-      border-top: 1px solid var(--flr-rule, #e2e8f0);
-      font: 400 11.5px/1 var(--flr-font-sans, system-ui);
-      opacity: 0.75;
-    }
-    .flr-ms__clear {
-      border: 0;
-      background: transparent;
-      color: inherit;
-      cursor: pointer;
-      font: inherit;
-      text-decoration: underline;
-      padding: 0;
-    }
-  `,
+  host: {
+    '[class.flr-ms-host--dropdown]': "mode() === 'dropdown'",
+    '(document:pointerdown)': 'onDocumentPointerDown($event)',
+    '(focusout)': 'onFocusOut($event)',
+  },
+  templateUrl: './multi-select.component.html',
+  styleUrl: './multi-select.component.css',
 })
 export class MultiSelectComponent implements ControlValueAccessor {
   readonly options = input.required<readonly MultiSelectOption[]>();
+  readonly mode = input<MultiSelectMode>('list');
   readonly label = input<string>('Options');
+  readonly triggerId = input<string | null>(null, { alias: 'id' });
+  readonly placeholder = input<string>('Select…');
+  readonly selectedText = input<(count: number) => string>((count) => `${count} selected`);
+  readonly clearText = input<string>('Clear');
   readonly searchable = input<boolean>(true);
   readonly searchPlaceholder = input<string>('Filter…');
   readonly searchLabel = input<string>('Filter options');
@@ -180,9 +58,18 @@ export class MultiSelectComponent implements ControlValueAccessor {
   readonly noMatchText = input<string>('No match.');
   readonly invalid = input<boolean>(false);
 
+  protected readonly uid = `flr-ms-${nextId++}`;
   protected readonly query = signal('');
   protected readonly disabled = signal(false);
+  protected readonly open = signal(false);
+  protected readonly active = signal(0);
   private readonly selected = signal<ReadonlySet<string>>(new Set());
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly injector = inject(Injector);
+  private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
+  private readonly search = viewChild<ElementRef<HTMLInputElement>>('search');
+  private readonly listbox = viewChild<ElementRef<HTMLElement>>('listbox');
 
   protected readonly visible = computed<readonly MultiSelectOption[]>(() => {
     const q = this.query().trim().toLowerCase();
@@ -194,6 +81,22 @@ export class MultiSelectComponent implements ControlValueAccessor {
 
   protected readonly selectedCount = computed(() => this.selected().size);
 
+  protected readonly countText = computed(() => this.selectedText()(this.selectedCount()));
+
+  protected readonly summary = computed(() => {
+    const picked = this.selected();
+    if (picked.size === 0) return this.placeholder();
+    if (picked.size === 1) {
+      const [id] = picked;
+      return this.options().find((o) => o.id === id)?.label ?? id;
+    }
+    return this.countText();
+  });
+
+  protected readonly activeOptionId = computed(() =>
+    this.open() && this.visible().length > 0 ? this.optionId(this.active()) : null,
+  );
+
   private onChange: (value: string[]) => void = () => {};
   private onTouched: () => void = () => {};
 
@@ -201,8 +104,13 @@ export class MultiSelectComponent implements ControlValueAccessor {
     return this.selected().has(id);
   }
 
+  protected optionId(index: number): string {
+    return `${this.uid}-opt-${index}`;
+  }
+
   protected onQuery(event: Event): void {
     this.query.set((event.target as HTMLInputElement).value);
+    this.active.set(0);
   }
 
   protected toggle(id: string): void {
@@ -219,6 +127,108 @@ export class MultiSelectComponent implements ControlValueAccessor {
     if (this.disabled()) return;
     this.selected.set(new Set());
     this.emit();
+  }
+
+  protected toggleOpen(): void {
+    if (this.open()) this.close(true);
+    else this.openPanel();
+  }
+
+  protected onTriggerKeydown(event: KeyboardEvent): void {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.openPanel();
+    }
+  }
+
+  protected onPanelKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.close(true);
+    }
+  }
+
+  protected onSearchKeydown(event: KeyboardEvent): void {
+    if (event.key === 'ArrowDown' && this.visible().length > 0) {
+      event.preventDefault();
+      this.listbox()?.nativeElement.focus();
+    }
+  }
+
+  protected onListKeydown(event: KeyboardEvent): void {
+    const count = this.visible().length;
+    if (count === 0) return;
+    switch (event.key) {
+      case 'ArrowDown':
+        this.moveActive(Math.min(this.active() + 1, count - 1));
+        break;
+      case 'ArrowUp':
+        if (this.active() === 0 && this.search()) {
+          this.search()?.nativeElement.focus();
+        } else {
+          this.moveActive(Math.max(this.active() - 1, 0));
+        }
+        break;
+      case 'Home':
+        this.moveActive(0);
+        break;
+      case 'End':
+        this.moveActive(count - 1);
+        break;
+      case ' ':
+      case 'Enter': {
+        const option = this.visible()[this.active()];
+        if (option) this.toggle(option.id);
+        break;
+      }
+      default:
+        return;
+    }
+    event.preventDefault();
+  }
+
+  protected onListClick(event: MouseEvent): void {
+    const row = (event.target as HTMLElement).closest<HTMLElement>('[role="option"]');
+    const index = Number(row?.dataset['index']);
+    const option = this.visible()[index];
+    if (!option) return;
+    this.active.set(index);
+    this.toggle(option.id);
+  }
+
+  protected onDocumentPointerDown(event: PointerEvent): void {
+    if (!this.open()) return;
+    if (!this.host.nativeElement.contains(event.target as Node)) this.close(false);
+  }
+
+  protected onFocusOut(event: FocusEvent): void {
+    const next = event.relatedTarget as Node | null;
+    if (this.open() && next && !this.host.nativeElement.contains(next)) this.close(false);
+  }
+
+  private openPanel(): void {
+    if (this.disabled() || this.open()) return;
+    const firstSelected = this.visible().findIndex((o) => this.isSelected(o.id));
+    this.active.set(Math.max(firstSelected, 0));
+    this.open.set(true);
+    afterNextRender(() => (this.search() ?? this.listbox())?.nativeElement.focus(), {
+      injector: this.injector,
+    });
+  }
+
+  private close(restoreFocus: boolean): void {
+    this.open.set(false);
+    this.query.set('');
+    this.onTouched();
+    if (restoreFocus) this.trigger()?.nativeElement.focus();
+  }
+
+  private moveActive(index: number): void {
+    this.active.set(index);
+    this.host.nativeElement
+      .querySelector(`#${this.optionId(index)}`)
+      ?.scrollIntoView({ block: 'nearest' });
   }
 
   private emit(): void {
@@ -240,5 +250,6 @@ export class MultiSelectComponent implements ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled.set(isDisabled);
+    if (isDisabled && this.open()) this.close(false);
   }
 }

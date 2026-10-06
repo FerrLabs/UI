@@ -56,7 +56,7 @@ export type { SwitchSize } from './lib/switch/switch.component';
 
 export { SelectComponent } from './lib/select/select.component';
 export { MultiSelectComponent } from './lib/multi-select/multi-select.component';
-export type { MultiSelectOption } from './lib/multi-select/multi-select.component';
+export type { MultiSelectMode, MultiSelectOption } from './lib/multi-select/multi-select.component';
 export { BarChartComponent } from './lib/bar-chart/bar-chart.component';
 export type { BarChartPoint } from './lib/bar-chart/bar-chart.component';
 export { TreeSelectComponent } from './lib/tree-select/tree-select.component';

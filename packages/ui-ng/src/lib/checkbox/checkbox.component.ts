@@ -114,18 +114,19 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: 12px 12px;
+      background: var(--color-on-accent, #ffffff);
+      mask-repeat: no-repeat;
+      mask-position: center;
+      mask-size: 12px 12px;
       opacity: 0;
       transition: opacity 120ms;
     }
     .flr-checkbox__icon--on {
       opacity: 1;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m4 8 3 3 5-6'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m4 8 3 3 5-6'/%3E%3C/svg%3E");
     }
     .flr-checkbox__icon--indeterminate {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath stroke='white' stroke-linecap='round' stroke-width='2' d='M4 8h8'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath stroke='black' stroke-linecap='round' stroke-width='2' d='M4 8h8'/%3E%3C/svg%3E");
     }
     .flr-checkbox__text {
       display: flex;
