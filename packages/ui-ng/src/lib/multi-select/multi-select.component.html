@@ -1,0 +1,156 @@
+@if (mode() === 'dropdown') {
+  <button
+    #trigger
+    cdkOverlayOrigin
+    #origin="cdkOverlayOrigin"
+    type="button"
+    class="flr-ms__trigger"
+    [class.flr-ms__trigger--invalid]="invalid()"
+    [class.flr-ms__trigger--placeholder]="selectedCount() === 0"
+    [attr.id]="triggerId()"
+    [attr.aria-label]="label() + ': ' + summary()"
+    aria-haspopup="listbox"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="open() ? uid + '-list' : null"
+    [attr.aria-invalid]="invalid() || null"
+    [disabled]="disabled()"
+    (click)="toggleOpen()"
+    (keydown)="onTriggerKeydown($event)"
+  >
+    <span class="flr-ms__summary">{{ summary() }}</span>
+  </button>
+
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="open()"
+    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayMinWidth]="panelMinWidth()"
+    (overlayOutsideClick)="onOutsideClick($event)"
+    (detach)="close(false)"
+  >
+    <div
+      #panel
+      class="flr-ms flr-ms__panel"
+      role="presentation"
+      [style]="panelTokens()"
+      (keydown)="onPanelKeydown($event)"
+      (focusout)="onFocusOut($event)"
+    >
+      @if (searchable()) {
+        <input
+          #search
+          class="flr-ms__search"
+          type="search"
+          [attr.aria-label]="searchLabel()"
+          [attr.aria-controls]="uid + '-list'"
+          [placeholder]="searchPlaceholder()"
+          [value]="query()"
+          (input)="onQuery($event)"
+          (keydown)="onSearchKeydown($event)"
+        />
+      }
+
+      <div
+        #listbox
+        class="flr-ms__list"
+        role="listbox"
+        aria-multiselectable="true"
+        tabindex="0"
+        [attr.id]="uid + '-list'"
+        [attr.aria-label]="label()"
+        [attr.aria-activedescendant]="activeOptionId()"
+        (keydown)="onListKeydown($event)"
+        (click)="onListClick($event)"
+      >
+        @for (o of visible(); track o.id; let i = $index) {
+          <div
+            class="flr-ms__row"
+            role="option"
+            [attr.id]="optionId(i)"
+            [attr.aria-selected]="isSelected(o.id)"
+            [class.flr-ms__row--on]="isSelected(o.id)"
+            [class.flr-ms__row--active]="i === active()"
+            [attr.data-index]="i"
+          >
+            <span class="flr-ms__check" aria-hidden="true"></span>
+            <span class="flr-ms__text">
+              <span class="flr-ms__label">{{ o.label }}</span>
+              @if (o.hint) {
+                <span class="flr-ms__hint">{{ o.hint }}</span>
+              }
+            </span>
+          </div>
+        }
+      </div>
+
+      @if (visible().length === 0) {
+        <p class="flr-ms__empty">
+          @if (loading()) {
+            {{ loadingText() }}
+          } @else {
+            {{ options().length === 0 ? emptyText() : noMatchText() }}
+          }
+        </p>
+      }
+
+      <div class="flr-ms__foot">
+        <span class="flr-ms__count">{{ countText() }}</span>
+        @if (selectedCount() > 0 && !disabled()) {
+          <button type="button" class="flr-ms__clear" (click)="clear()">{{ clearText() }}</button>
+        }
+      </div>
+    </div>
+  </ng-template>
+} @else {
+  <div class="flr-ms" [class.flr-ms--invalid]="invalid()">
+    @if (searchable()) {
+      <input
+        class="flr-ms__search"
+        type="search"
+        [attr.aria-label]="searchLabel()"
+        [placeholder]="searchPlaceholder()"
+        [value]="query()"
+        (input)="onQuery($event)"
+      />
+    }
+
+    <div class="flr-ms__list" role="group" [attr.aria-label]="label()">
+      @for (o of visible(); track o.id) {
+        <label class="flr-ms__row" [class.flr-ms__row--on]="isSelected(o.id)">
+          <input
+            type="checkbox"
+            class="flr-ms__native"
+            [checked]="isSelected(o.id)"
+            [disabled]="disabled()"
+            (change)="toggle(o.id)"
+          />
+          <span class="flr-ms__check" aria-hidden="true"></span>
+          <span class="flr-ms__text">
+            <span class="flr-ms__label">{{ o.label }}</span>
+            @if (o.hint) {
+              <span class="flr-ms__hint">{{ o.hint }}</span>
+            }
+          </span>
+        </label>
+      }
+
+      @if (visible().length === 0) {
+        <p class="flr-ms__empty">
+          @if (loading()) {
+            {{ loadingText() }}
+          } @else {
+            {{ options().length === 0 ? emptyText() : noMatchText() }}
+          }
+        </p>
+      }
+    </div>
+
+    <div class="flr-ms__foot">
+      <span class="flr-ms__count">{{ countText() }}</span>
+      @if (selectedCount() > 0 && !disabled()) {
+        <button type="button" class="flr-ms__clear" (click)="clear()">{{ clearText() }}</button>
+      }
+    </div>
+  </div>
+}
