@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.44.1] - 2026-10-07
+
+### Bug Fixes
+
+- fix(deps): update dependency @ferrlabs/ui-foundation to ^5.5.0 (#645)
+
 ## [1.44.0] - 2026-10-06
 
 ### Features
