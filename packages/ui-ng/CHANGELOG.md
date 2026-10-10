@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.44.2] - 2026-10-10
+
+### Bug Fixes
+
+- fix(ui-ng): let the collapsed rail switchers fill the rail (#648)
+
 ## [1.44.1] - 2026-10-07
 
 ### Bug Fixes
