@@ -256,12 +256,6 @@ export interface ProjectSwitcherPlaceholder {
       width: 280px;
       border-radius: 10px;
     }
-    @media (prefers-reduced-motion: reduce) {
-      .flr-ps__brand,
-      :host(.flr-ps--compact) .flr-ps__monogram {
-        transition: none;
-      }
-    }
     .flr-ps__monogram {
       display: flex;
       align-items: center;
@@ -420,6 +414,14 @@ export interface ProjectSwitcherPlaceholder {
     }
     .flr-ps__footer-label {
       flex: 1;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .flr-ps__brand,
+      :host(.flr-ps--compact) .flr-ps__monogram,
+      .flr-ps__item,
+      .flr-ps__footer-btn {
+        transition: none;
+      }
     }
   `,
 })
