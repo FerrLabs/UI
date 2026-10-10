@@ -256,6 +256,12 @@ export interface ProjectSwitcherPlaceholder {
       width: 280px;
       border-radius: 10px;
     }
+    @media (prefers-reduced-motion: reduce) {
+      .flr-ps__brand,
+      :host(.flr-ps--compact) .flr-ps__monogram {
+        transition: none;
+      }
+    }
     .flr-ps__monogram {
       display: flex;
       align-items: center;
