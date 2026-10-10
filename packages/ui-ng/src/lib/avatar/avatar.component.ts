@@ -29,6 +29,8 @@ const SIZE_MAP: Record<Exclude<AvatarSize, number>, number> = {
     } @else {
       <span
         class="flr-avatar__fallback"
+        role="img"
+        [attr.aria-label]="alt() ?? name()"
         [title]="name()"
         [style.width.px]="px()"
         [style.height.px]="px()"
