@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.44.4] - 2026-10-10
+
+### Bug Fixes
+
+- fix(ui-ng): honour reduced motion on the project switcher items and buttons (#652)
+
 ## [1.44.3] - 2026-10-10
 
 ### Bug Fixes
