@@ -422,6 +422,9 @@ export interface ProjectSwitcherPlaceholder {
       .flr-ps__footer-btn {
         transition: none;
       }
+      .flr-ps__panel {
+        animation: none;
+      }
     }
   `,
 })
