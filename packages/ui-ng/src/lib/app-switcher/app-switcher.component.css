@@ -281,6 +281,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .flr-as__trigger,
+  .flr-as--collapsed .flr-as__mark,
   .flr-as__item,
   .flr-as__customize,
   .flr-as__footer ::ng-deep a {
