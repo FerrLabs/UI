@@ -43,7 +43,27 @@
 
 .flr-as--collapsed .flr-as__trigger {
   justify-content: center;
-  padding: 9px 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.flr-as--collapsed .flr-as__mark {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  transition:
+    background 130ms ease,
+    box-shadow 130ms ease;
+}
+
+.flr-as--collapsed .flr-as__trigger:hover .flr-as__mark {
+  background: color-mix(in srgb, var(--flr-as-accent, #ffffff) 26%, #101012);
+}
+
+.flr-as--collapsed .flr-as__trigger[aria-expanded='true'] .flr-as__mark {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--flr-as-accent, #ffffff) 55%, transparent);
 }
 
 .flr-as__mark {

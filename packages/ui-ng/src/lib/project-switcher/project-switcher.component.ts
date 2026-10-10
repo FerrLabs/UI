@@ -235,7 +235,19 @@ export interface ProjectSwitcherPlaceholder {
     }
     :host(.flr-ps--compact) .flr-ps__brand {
       justify-content: center;
-      padding: 0;
+      padding: 8px;
+    }
+    :host(.flr-ps--compact) .flr-ps__brand:hover {
+      background: transparent;
+    }
+    :host(.flr-ps--compact) .flr-ps__monogram {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      transition: background 140ms ease;
+    }
+    :host(.flr-ps--compact) .flr-ps__brand:hover .flr-ps__monogram {
+      background: var(--color-app-nav-active, rgba(30, 41, 59, 0.06));
     }
     :host(.flr-ps--compact) .flr-ps__panel {
       left: calc(100% + 10px);

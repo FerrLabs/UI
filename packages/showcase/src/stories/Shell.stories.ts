@@ -312,6 +312,29 @@ export const CollapsedRailKeepsTheOrgReadable: Story = {
   },
 };
 
+export const CollapsedRailSwitchersFillTheRail: Story = {
+  ...CollapsedRailKeepsTheOrgReadable,
+  play: async ({ canvasElement }) => {
+    const app = canvasElement.querySelector<HTMLElement>('flr-app-switcher .flr-as__trigger');
+    const mark = canvasElement.querySelector<HTMLElement>('flr-app-switcher .flr-as__mark');
+    const org = canvasElement.querySelector<HTMLElement>('flr-project-switcher .flr-ps__brand');
+    const monogram = canvasElement.querySelector<HTMLElement>(
+      'flr-project-switcher .flr-ps__monogram',
+    );
+    if (!app || !mark || !org || !monogram) throw new Error('collapsed switchers not found');
+    await waitFor(() => {
+      expect(getComputedStyle(app).borderTopWidth).toBe('0px');
+      expect(getComputedStyle(app).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+      expect(
+        Math.abs(mark.getBoundingClientRect().width - app.getBoundingClientRect().width),
+      ).toBeLessThanOrEqual(1);
+      expect(
+        Math.abs(monogram.getBoundingClientRect().width - (org.getBoundingClientRect().width - 16)),
+      ).toBeLessThanOrEqual(1);
+    });
+  },
+};
+
 export const CollapsedRailOrgSwitcherOpensBesideTheRail: Story = {
   ...CollapsedRailKeepsTheOrgReadable,
   play: async ({ canvasElement }) => {

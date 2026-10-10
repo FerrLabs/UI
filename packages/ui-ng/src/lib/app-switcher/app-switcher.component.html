@@ -11,7 +11,11 @@
   >
     @if (currentItem(); as item) {
       <span class="flr-as__mark" aria-hidden="true">
-        <flr-logo-mark [product]="glyph(item)" [accent]="markColor(item)" [size]="21" />
+        <flr-logo-mark
+          [product]="glyph(item)"
+          [accent]="markColor(item)"
+          [size]="compact() ? 26 : 21"
+        />
       </span>
       @if (!compact()) {
         <span class="flr-as__text">
