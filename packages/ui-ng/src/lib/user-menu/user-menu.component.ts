@@ -33,9 +33,9 @@ export interface UserMenuItem {
         [class.flr-um__trigger--rail]="inRail"
         [class.flr-um__trigger--compact]="compact()"
         [title]="name()"
-        [attr.aria-label]="compact() ? name() : null"
       >
         <flr-avatar
+          [attr.aria-hidden]="nameShown() || null"
           [name]="name()"
           [src]="avatarSrc()"
           [accent]="accent()"
@@ -192,4 +192,5 @@ export class UserMenuComponent {
   private readonly shell = inject(SHELL_CONTEXT, { optional: true });
   protected readonly inRail = this.shell !== null;
   protected readonly compact = computed(() => this.shell?.collapsed() ?? false);
+  protected readonly nameShown = computed(() => (this.inRail ? !this.compact() : this.showName()));
 }

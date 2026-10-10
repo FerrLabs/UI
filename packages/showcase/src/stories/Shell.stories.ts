@@ -14,7 +14,7 @@ import {
 import { icons } from '@ferrlabs/ui-foundation/icons';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
-import { expect, waitFor } from 'storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 
 const ORGS: readonly ProjectSwitcherItem[] = [
   { id: 'ferrlabs', label: 'FerrLabs', meta: 'ferrlabs' },
@@ -293,9 +293,8 @@ export const CollapsedRailShowsOnlyTheAvatar: Story = {
   ...Merged,
   args: { collapsed: true },
   play: async ({ canvasElement }) => {
-    const trigger = canvasElement.querySelector<HTMLButtonElement>('flr-user-menu button');
-    if (!trigger) throw new Error('user menu trigger not found');
-    await expect(trigger.getAttribute('aria-label')).toBe('Ada Doe');
+    const trigger = within(canvasElement).getByRole('button', { name: 'Ada Doe' });
+    await expect(trigger.closest('flr-user-menu')).not.toBeNull();
     await expect(trigger.textContent).not.toContain('ada@ferrlabs.com');
   },
 };

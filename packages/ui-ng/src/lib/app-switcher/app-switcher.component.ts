@@ -89,6 +89,7 @@ export class AppSwitcherComponent {
     const label = this.ariaLabel();
     if (label) return label;
     const item = this.currentItem();
+    if (item && !this.compact()) return null;
     return item ? `${this.caption()}, ${item.label}` : this.caption();
   });
 
