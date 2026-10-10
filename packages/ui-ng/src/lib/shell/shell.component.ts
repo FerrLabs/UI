@@ -110,11 +110,11 @@ export interface ShellNavGroup {
               <button
                 type="button"
                 class="flr-shell__search mono"
-                aria-label="Open search (Cmd+K)"
+                aria-keyshortcuts="Meta+K Control+K"
                 (click)="search.emit()"
               >
                 <span>Search</span>
-                <kbd class="flr-shell__kbd">⌘K</kbd>
+                <kbd class="flr-shell__kbd" aria-hidden="true">⌘K</kbd>
               </button>
             }
             <div class="flr-shell__slot"><ng-content select="[shell-actions]" /></div>
