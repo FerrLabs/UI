@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   forwardRef,
   inject,
   input,
@@ -15,6 +16,7 @@ import {
 } from '../sidebar/sidebar.component';
 import { isTrustedIconMarkup } from '../icon/icon-markup';
 import { RailToggleComponent } from '../rail-toggle/rail-toggle.component';
+import { activeNavItemId } from './active-nav-item';
 import { SHELL_CONTEXT, type ShellContext } from './shell-context';
 
 export interface ShellNavItem {
@@ -303,12 +305,12 @@ export class ShellComponent implements ShellContext {
 
   private readonly sanitizer = inject(DomSanitizer);
 
+  private readonly activeItemId = computed(() =>
+    activeNavItemId(this.sections(), this.currentPath()),
+  );
+
   protected isActive(item: ShellNavItem): boolean {
-    const href = item.href;
-    if (!href) return false;
-    const path = this.currentPath();
-    if (href === '/') return path === '/';
-    return path === href || path.startsWith(`${href}/`);
+    return item.href !== undefined && item.id === this.activeItemId();
   }
 
   protected onSelect(item: ShellNavItem): void {
