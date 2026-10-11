@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.44.5] - 2026-10-11
+
+### Bug Fixes
+
+- fix(shell): mark only the most specific nav item active (#654)
+
 ## [1.44.4] - 2026-10-10
 
 ### Bug Fixes
