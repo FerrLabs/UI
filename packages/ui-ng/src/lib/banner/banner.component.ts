@@ -5,7 +5,6 @@ export type BannerVariant = 'info' | 'success' | 'warning' | 'danger';
 interface BannerTokens {
   readonly bg: string;
   readonly fg: string;
-  readonly bar: string;
   readonly border: string;
 }
 
@@ -13,25 +12,21 @@ const TOKENS: Record<BannerVariant, BannerTokens> = {
   info: {
     bg: 'color-mix(in oklab, var(--color-ink-3, #64748b) 8%, var(--color-paper, #faf8f4))',
     fg: 'var(--color-ink, #1e293b)',
-    bar: 'var(--color-ink-3, #64748b)',
     border: 'var(--color-rule, rgba(30, 41, 59, 0.14))',
   },
   success: {
     bg: 'color-mix(in oklab, var(--color-success, #10b981) 10%, var(--color-paper, #faf8f4))',
     fg: 'var(--color-success-fg, #065f46)',
-    bar: 'var(--color-success, #10b981)',
     border: 'color-mix(in oklab, var(--color-success, #10b981) 24%, transparent)',
   },
   warning: {
     bg: 'color-mix(in oklab, var(--color-warning, #f59e0b) 12%, var(--color-paper, #faf8f4))',
     fg: 'var(--color-warning-fg, #78350f)',
-    bar: 'var(--color-warning, #f59e0b)',
     border: 'color-mix(in oklab, var(--color-warning, #f59e0b) 28%, transparent)',
   },
   danger: {
     bg: 'color-mix(in oklab, var(--color-danger, #dc2626) 10%, var(--color-paper, #faf8f4))',
     fg: 'var(--color-danger-fg, #7f1d1d)',
-    bar: 'var(--color-danger, #dc2626)',
     border: 'color-mix(in oklab, var(--color-danger, #dc2626) 26%, transparent)',
   },
 };
@@ -46,7 +41,6 @@ const TOKENS: Record<BannerVariant, BannerTokens> = {
         [attr.role]="variant() === 'danger' ? 'alert' : 'status'"
         [style]="styles()"
       >
-        <span class="flr-banner__bar" aria-hidden="true" [style.background]="tokens().bar"></span>
         <div class="flr-banner__body">
           @if (title(); as t) {
             <div class="flr-banner__title">{{ t }}</div>
@@ -82,17 +76,9 @@ const TOKENS: Record<BannerVariant, BannerTokens> = {
       padding: 12px 16px;
       overflow: hidden;
     }
-    .flr-banner__bar {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-    }
     .flr-banner__body {
       flex: 1;
       min-width: 0;
-      margin-left: 4px;
     }
     .flr-banner__title {
       font-size: 14px;
