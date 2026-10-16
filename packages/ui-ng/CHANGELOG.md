@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.44.6] - 2026-10-16
+
+### Bug Fixes
+
+- fix(ui-ng): drop the left accent bar from banner (#662)
+
 ## [1.44.5] - 2026-10-11
 
 ### Bug Fixes
