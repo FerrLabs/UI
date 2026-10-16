@@ -68,7 +68,6 @@ const TOKENS: Record<BannerVariant, BannerTokens> = {
       display: contents;
     }
     .flr-banner {
-      position: relative;
       display: flex;
       align-items: flex-start;
       gap: 12px;
