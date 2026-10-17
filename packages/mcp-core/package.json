@@ -21,14 +21,25 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "prepare": "tsc"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/FerrLabs/MCP.git",
+    "url": "git+https://github.com/FerrLabs/UI.git",
     "directory": "packages/mcp-core"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^6.0.0",
+    "vitest": "^5.0.0"
+  },
+  "homepage": "https://github.com/FerrLabs/UI/tree/main/packages/mcp-core#readme",
+  "bugs": {
+    "url": "https://github.com/FerrLabs/UI/issues"
   }
 }

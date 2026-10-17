@@ -61,6 +61,8 @@ jobs:
           else
             pnpm -r typecheck
           fi
+      - name: Test mcp-core
+        run: pnpm --filter @ferrlabs/mcp-core test
 
   a11y:
     name: Storybook accessibility

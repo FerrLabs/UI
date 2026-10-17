@@ -8,6 +8,7 @@
   },
   "package": [
     { "name": "foundation", "path": "packages/foundation", "changelog": "packages/foundation/CHANGELOG.md", "versionedFiles": [{ "path": "packages/foundation/package.json", "format": "json" }] },
-    { "name": "ui-ng", "path": "packages/ui-ng", "changelog": "packages/ui-ng/CHANGELOG.md", "versionedFiles": [{ "path": "packages/ui-ng/package.json", "format": "json" }] }
+    { "name": "ui-ng", "path": "packages/ui-ng", "changelog": "packages/ui-ng/CHANGELOG.md", "versionedFiles": [{ "path": "packages/ui-ng/package.json", "format": "json" }] },
+    { "name": "mcp-core", "path": "packages/mcp-core", "changelog": "packages/mcp-core/CHANGELOG.md", "versionedFiles": [{ "path": "packages/mcp-core/package.json", "format": "json" }] }
   ]
 }
