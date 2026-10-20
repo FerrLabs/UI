@@ -4,6 +4,7 @@ import {
   computed,
   effect,
   input,
+  linkedSignal,
   output,
   signal,
 } from '@angular/core';
@@ -42,22 +43,19 @@ export class AccessPickerComponent {
   protected readonly groupName = `flr-access-picker-${nextId++}`;
   protected readonly allOrgs = signal(true);
   protected readonly pickedOrgs = signal<ReadonlySet<string>>(new Set());
-  protected readonly pickedScopes = signal<ReadonlySet<string>>(new Set());
+  protected readonly pickedScopes = linkedSignal<ReadonlySet<string>>(() =>
+    initialScopeSet(this.initialScopes(), this.catalogue(), this.presets()),
+  );
 
   protected readonly activePreset = computed(() =>
     matchingPreset(this.presets(), this.pickedScopes()),
   );
 
   private readonly selection = computed(() =>
-    buildAccessSelection(this.allOrgs(), this.pickedOrgs(), this.pickedScopes()),
+    buildAccessSelection(this.allOrgs(), this.pickedOrgs(), this.pickedScopes(), this.orgs()),
   );
 
   constructor() {
-    effect(() => {
-      this.pickedScopes.set(
-        initialScopeSet(this.initialScopes(), this.catalogue(), this.presets()),
-      );
-    });
     effect(() => this.selectionChange.emit(this.selection()));
   }
 

@@ -48,6 +48,16 @@ const meta: Meta<AccessPickerComponent> = {
   component: AccessPickerComponent,
   decorators: [moduleMetadata({ imports: [AccessPickerComponent] })],
   args: { orgs, catalogue, presets, initialScopes: [], selectionChange: fn() },
+  render: (args) => ({
+    props: args,
+    template: `<flr-access-picker
+      [orgs]="orgs"
+      [catalogue]="catalogue"
+      [presets]="presets"
+      [initialScopes]="initialScopes"
+      (selectionChange)="selectionChange($event)"
+    />`,
+  }),
 };
 
 export default meta;
