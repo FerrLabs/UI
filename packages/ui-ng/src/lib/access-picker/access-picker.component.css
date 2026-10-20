@@ -1,0 +1,137 @@
+:host {
+  display: block;
+}
+
+.flr-ap__group {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.flr-ap__group + .flr-ap__group {
+  margin-top: 20px;
+}
+
+.flr-ap__legend {
+  padding: 0;
+  color: var(--color-ink, #1e293b);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.flr-ap__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--color-ink-2, #334155);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.flr-ap__row--center {
+  align-items: center;
+  margin-top: 0;
+}
+
+.flr-ap__row input {
+  accent-color: var(--color-accent, #1e293b);
+}
+
+.flr-ap__row input[type='radio'] {
+  margin-top: 4px;
+}
+
+.flr-ap__row input:focus-visible {
+  outline: 2px solid var(--color-accent, #1e293b);
+  outline-offset: 2px;
+}
+
+.flr-ap__orgs {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.flr-ap__slug,
+.flr-ap__scope {
+  font-family: var(--font-mono, 'DM Mono', ui-monospace, monospace);
+}
+
+.flr-ap__slug {
+  color: var(--color-ink-3, #64748b);
+  font-size: 12px;
+}
+
+.flr-ap__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.flr-ap__preset {
+  padding: 4px 12px;
+  border: 1px solid var(--color-rule-strong, rgba(30, 41, 59, 0.28));
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-ink-2, #334155);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.flr-ap__preset:focus-visible {
+  outline: 2px solid var(--color-accent, #1e293b);
+  outline-offset: 2px;
+}
+
+.flr-ap__preset--on {
+  border-color: var(--color-accent, #1e293b);
+  background: var(--color-accent, #1e293b);
+  color: var(--color-on-accent, #ffffff);
+}
+
+.flr-ap__products {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.flr-ap__product {
+  margin: 0;
+  color: var(--color-ink-3, #64748b);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.flr-ap__scopes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 4px;
+}
+
+.flr-ap__scope {
+  font-size: 14px;
+}
+
+.flr-ap__scope--admin {
+  color: var(--color-warning-fg, #78350f);
+}
+
+.flr-ap__warn {
+  margin: 8px 0 0;
+  color: var(--color-warning-fg, #78350f);
+  font-size: 12px;
+}
+
+.flr-ap__warn--indented {
+  margin-left: 24px;
+}
