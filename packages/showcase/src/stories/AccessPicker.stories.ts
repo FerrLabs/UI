@@ -7,7 +7,7 @@ import {
 } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 
 const orgs: readonly AccessOrg[] = [
   { id: 'org-1', name: 'Acme', slug: 'acme' },
@@ -63,21 +63,25 @@ const meta: Meta<AccessPickerComponent> = {
 export default meta;
 type Story = StoryObj<AccessPickerComponent>;
 
-function lastEmission(spy: unknown): AccessSelection | null {
-  const calls = (spy as ReturnType<typeof fn>).mock.calls;
-  return calls[calls.length - 1][0] as AccessSelection | null;
+async function expectLast(spy: unknown, expected: AccessSelection | null): Promise<void> {
+  await waitFor(() => {
+    const lastCall = (spy as ReturnType<typeof fn>).mock.lastCall;
+    expect(lastCall?.[0]).toEqual(expected);
+  });
 }
 
 export const Default: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(lastEmission(args.selectionChange)).toEqual({
+    await expectLast(args.selectionChange, {
       orgIds: null,
       scopes: ['flow:read', 'vault:read'],
     });
-    await expect(canvas.getByRole('button', { name: 'Read only' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
+    await waitFor(() =>
+      expect(canvas.getByRole('button', { name: 'Read only' })).toHaveAttribute(
+        'aria-pressed',
+        'true',
+      ),
     );
   },
 };
@@ -85,7 +89,7 @@ export const Default: Story = {
 export const InitialScopes: Story = {
   args: { initialScopes: ['flow:write', 'unknown:scope'] },
   play: async ({ args }) => {
-    await expect(lastEmission(args.selectionChange)).toEqual({
+    await expectLast(args.selectionChange, {
       orgIds: null,
       scopes: ['flow:write'],
     });
@@ -95,7 +99,7 @@ export const InitialScopes: Story = {
 export const OnlyUnknownInitialScopesFallBackToReadOnly: Story = {
   args: { initialScopes: ['unknown:scope'] },
   play: async ({ args }) => {
-    await expect(lastEmission(args.selectionChange)).toEqual({
+    await expectLast(args.selectionChange, {
       orgIds: null,
       scopes: ['flow:read', 'vault:read'],
     });
@@ -106,17 +110,17 @@ export const ChosenOrgsNeedAtLeastOne: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('radio', { name: 'Only these organizations' }));
-    await expect(lastEmission(args.selectionChange)).toBeNull();
-    await expect(canvas.getByText('Pick at least one organization.')).toBeVisible();
+    await expectLast(args.selectionChange, null);
+    await expect(await canvas.findByText('Pick at least one organization.')).toBeVisible();
 
     await userEvent.click(canvas.getByRole('checkbox', { name: /Globex/ }));
-    await expect(lastEmission(args.selectionChange)).toEqual({
+    await expectLast(args.selectionChange, {
       orgIds: ['org-2'],
       scopes: ['flow:read', 'vault:read'],
     });
 
     await userEvent.click(canvas.getByRole('radio', { name: /All my organizations/ }));
-    await expect(lastEmission(args.selectionChange)).toEqual({
+    await expectLast(args.selectionChange, {
       orgIds: null,
       scopes: ['flow:read', 'vault:read'],
     });
@@ -126,28 +130,24 @@ export const ChosenOrgsNeedAtLeastOne: Story = {
 export const PresetsAndManualToggles: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
+    const pressed = (name: string, value: string) =>
+      waitFor(() =>
+        expect(canvas.getByRole('button', { name })).toHaveAttribute('aria-pressed', value),
+      );
+
     await userEvent.click(canvas.getByRole('button', { name: 'Full access' }));
-    await expect(lastEmission(args.selectionChange)?.scopes).toEqual([
-      'flow:admin',
-      'flow:read',
-      'flow:write',
-      'vault:read',
-      'vault:write',
-    ]);
-    await expect(canvas.getByRole('button', { name: 'Full access' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
+    await expectLast(args.selectionChange, {
+      orgIds: null,
+      scopes: ['flow:admin', 'flow:read', 'flow:write', 'vault:read', 'vault:write'],
+    });
+    await pressed('Full access', 'true');
 
     await userEvent.click(canvas.getByRole('checkbox', { name: 'flow:admin' }));
-    await expect(canvas.getByRole('button', { name: 'Read and write' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
+    await pressed('Read and write', 'true');
 
     await userEvent.click(canvas.getByRole('checkbox', { name: 'vault:write' }));
     for (const name of ['Read only', 'Read and write', 'Full access']) {
-      await expect(canvas.getByRole('button', { name })).toHaveAttribute('aria-pressed', 'false');
+      await pressed(name, 'false');
     }
   },
 };
@@ -157,7 +157,7 @@ export const NoScopeEmitsNull: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('checkbox', { name: 'flow:read' }));
     await userEvent.click(canvas.getByRole('checkbox', { name: 'vault:read' }));
-    await expect(lastEmission(args.selectionChange)).toBeNull();
-    await expect(canvas.getByText('Pick at least one permission.')).toBeVisible();
+    await expectLast(args.selectionChange, null);
+    await expect(await canvas.findByText('Pick at least one permission.')).toBeVisible();
   },
 };
