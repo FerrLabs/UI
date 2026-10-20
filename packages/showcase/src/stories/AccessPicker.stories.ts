@@ -7,7 +7,7 @@ import {
 } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
-import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 const orgs: readonly AccessOrg[] = [
   { id: 'org-1', name: 'Acme', slug: 'acme' },
@@ -47,33 +47,45 @@ const meta: Meta<AccessPickerComponent> = {
   title: 'Forms/Access picker',
   component: AccessPickerComponent,
   decorators: [moduleMetadata({ imports: [AccessPickerComponent] })],
-  args: { orgs, catalogue, presets, initialScopes: [], selectionChange: fn() },
-  render: (args) => ({
-    props: { ...args, report: args.selectionChange },
-    template: `<flr-access-picker
-      [orgs]="orgs"
-      [catalogue]="catalogue"
-      [presets]="presets"
-      [initialScopes]="initialScopes"
-      (selectionChange)="report($event)"
-    />`,
-  }),
+  args: { orgs, catalogue, presets, initialScopes: [] },
+  render: (args) => {
+    const output = { text: 'pending' };
+    return {
+      props: {
+        ...args,
+        output,
+        report: (value: AccessSelection | null) => (output.text = JSON.stringify(value)),
+      },
+      template: `<flr-access-picker
+        [orgs]="orgs"
+        [catalogue]="catalogue"
+        [presets]="presets"
+        [initialScopes]="initialScopes"
+        (selectionChange)="report($event)"
+      />
+      <pre data-testid="selection">{{ output.text }}</pre>`,
+    };
+  },
 };
 
 export default meta;
 type Story = StoryObj<AccessPickerComponent>;
 
-async function expectLast(spy: unknown, expected: AccessSelection | null): Promise<void> {
-  await waitFor(() => {
-    const lastCall = (spy as ReturnType<typeof fn>).mock.lastCall;
-    expect(lastCall?.[0]).toEqual(expected);
-  });
+async function expectLast(
+  canvasElement: HTMLElement,
+  expected: AccessSelection | null,
+): Promise<void> {
+  await waitFor(() =>
+    expect(within(canvasElement).getByTestId('selection')).toHaveTextContent(
+      JSON.stringify(expected),
+    ),
+  );
 }
 
 export const Default: Story = {
-  play: async ({ args, canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expectLast(args.selectionChange, {
+    await expectLast(canvasElement, {
       orgIds: null,
       scopes: ['flow:read', 'vault:read'],
     });
@@ -88,8 +100,8 @@ export const Default: Story = {
 
 export const InitialScopes: Story = {
   args: { initialScopes: ['flow:write', 'unknown:scope'] },
-  play: async ({ args }) => {
-    await expectLast(args.selectionChange, {
+  play: async ({ canvasElement }) => {
+    await expectLast(canvasElement, {
       orgIds: null,
       scopes: ['flow:write'],
     });
@@ -98,8 +110,8 @@ export const InitialScopes: Story = {
 
 export const OnlyUnknownInitialScopesFallBackToReadOnly: Story = {
   args: { initialScopes: ['unknown:scope'] },
-  play: async ({ args }) => {
-    await expectLast(args.selectionChange, {
+  play: async ({ canvasElement }) => {
+    await expectLast(canvasElement, {
       orgIds: null,
       scopes: ['flow:read', 'vault:read'],
     });
@@ -107,20 +119,20 @@ export const OnlyUnknownInitialScopesFallBackToReadOnly: Story = {
 };
 
 export const ChosenOrgsNeedAtLeastOne: Story = {
-  play: async ({ args, canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('radio', { name: 'Only these organizations' }));
-    await expectLast(args.selectionChange, null);
+    await expectLast(canvasElement, null);
     await expect(await canvas.findByText('Pick at least one organization.')).toBeVisible();
 
     await userEvent.click(canvas.getByRole('checkbox', { name: /Globex/ }));
-    await expectLast(args.selectionChange, {
+    await expectLast(canvasElement, {
       orgIds: ['org-2'],
       scopes: ['flow:read', 'vault:read'],
     });
 
     await userEvent.click(canvas.getByRole('radio', { name: /All my organizations/ }));
-    await expectLast(args.selectionChange, {
+    await expectLast(canvasElement, {
       orgIds: null,
       scopes: ['flow:read', 'vault:read'],
     });
@@ -128,7 +140,7 @@ export const ChosenOrgsNeedAtLeastOne: Story = {
 };
 
 export const PresetsAndManualToggles: Story = {
-  play: async ({ args, canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const pressed = (name: string, value: string) =>
       waitFor(() =>
@@ -136,7 +148,7 @@ export const PresetsAndManualToggles: Story = {
       );
 
     await userEvent.click(canvas.getByRole('button', { name: 'Full access' }));
-    await expectLast(args.selectionChange, {
+    await expectLast(canvasElement, {
       orgIds: null,
       scopes: ['flow:admin', 'flow:read', 'flow:write', 'vault:read', 'vault:write'],
     });
@@ -153,11 +165,11 @@ export const PresetsAndManualToggles: Story = {
 };
 
 export const NoScopeEmitsNull: Story = {
-  play: async ({ args, canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('checkbox', { name: 'flow:read' }));
     await userEvent.click(canvas.getByRole('checkbox', { name: 'vault:read' }));
-    await expectLast(args.selectionChange, null);
+    await expectLast(canvasElement, null);
     await expect(await canvas.findByText('Pick at least one permission.')).toBeVisible();
   },
 };
