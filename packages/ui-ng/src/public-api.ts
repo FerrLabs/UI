@@ -232,3 +232,19 @@ export {
   WAITLIST_FORM_LABELS_FR,
 } from './lib/waitlist-form/waitlist-form.model';
 export type { WaitlistFormLabels } from './lib/waitlist-form/waitlist-form.model';
+
+export { AccessPickerComponent } from './lib/access-picker/access-picker.component';
+export {
+  ACCESS_PICKER_LABELS_EN,
+  ACCESS_PICKER_LABELS_FR,
+} from './lib/access-picker/access-picker.model';
+export type {
+  AccessLevel,
+  AccessOrg,
+  AccessPickerLabels,
+  AccessPreset,
+  AccessPresetId,
+  AccessProduct,
+  AccessScope,
+  AccessSelection,
+} from './lib/access-picker/access-picker.model';

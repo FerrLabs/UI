@@ -1,0 +1,72 @@
+<fieldset class="flr-ap__group">
+  <legend class="flr-ap__legend">{{ labels().orgsTitle }}</legend>
+  <label class="flr-ap__row">
+    <input type="radio" [name]="groupName" [checked]="allOrgs()" (change)="useAllOrgs()" />
+    <span>{{ labels().allOrgs }}</span>
+  </label>
+  <label class="flr-ap__row">
+    <input type="radio" [name]="groupName" [checked]="!allOrgs()" (change)="useChosenOrgs()" />
+    <span>{{ labels().someOrgs }}</span>
+  </label>
+  @if (!allOrgs()) {
+    <ul class="flr-ap__orgs">
+      @for (org of orgs(); track org.id) {
+        <li>
+          <label class="flr-ap__row flr-ap__row--center">
+            <input
+              type="checkbox"
+              [checked]="pickedOrgs().has(org.id)"
+              (change)="toggleOrg(org.id)"
+            />
+            <span>{{ org.name }}</span>
+            <span class="flr-ap__slug">{{ org.slug }}</span>
+          </label>
+        </li>
+      }
+    </ul>
+    @if (pickedOrgs().size === 0) {
+      <p class="flr-ap__warn flr-ap__warn--indented" role="status">{{ labels().noOrgPicked }}</p>
+    }
+  }
+</fieldset>
+
+<fieldset class="flr-ap__group">
+  <legend class="flr-ap__legend">{{ labels().scopesTitle }}</legend>
+  <div class="flr-ap__presets" role="group" [attr.aria-label]="labels().presetsLabel">
+    @for (preset of presets(); track preset.id) {
+      <button
+        type="button"
+        class="flr-ap__preset"
+        [class.flr-ap__preset--on]="activePreset() === preset.id"
+        [attr.aria-pressed]="activePreset() === preset.id"
+        (click)="applyPreset(preset)"
+      >
+        {{ presetLabel(preset.id) }}
+      </button>
+    }
+  </div>
+  <div class="flr-ap__products">
+    @for (product of catalogue(); track product.product) {
+      <div>
+        <p class="flr-ap__product">{{ product.label }}</p>
+        <div class="flr-ap__scopes">
+          @for (entry of product.scopes; track entry.scope) {
+            <label class="flr-ap__row flr-ap__row--center">
+              <input
+                type="checkbox"
+                [checked]="pickedScopes().has(entry.scope)"
+                (change)="toggleScope(entry.scope)"
+              />
+              <span class="flr-ap__scope" [class.flr-ap__scope--admin]="entry.access === 'admin'">{{
+                entry.scope
+              }}</span>
+            </label>
+          }
+        </div>
+      </div>
+    }
+  </div>
+  @if (pickedScopes().size === 0) {
+    <p class="flr-ap__warn" role="status">{{ labels().noScopePicked }}</p>
+  }
+</fieldset>
