@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.45.0] - 2026-10-20
+
+### Features
+
+- feat(ui-ng): add access picker component (#671)
+
 ## [1.44.7] - 2026-10-16
 
 ### Bug Fixes
