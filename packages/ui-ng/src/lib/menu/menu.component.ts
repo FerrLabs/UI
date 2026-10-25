@@ -1,17 +1,24 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
+  afterNextRender,
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
+  contentChildren,
   ElementRef,
   inject,
+  Injector,
   input,
   model,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { FocusKeyManager, type FocusableOption } from '@angular/cdk/a11y';
 import { type ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
+
+const FOCUSABLE = 'button, a[href], input, select, textarea, [tabindex]';
 
 export type MenuAlign = 'start' | 'end';
 export type MenuDirection = 'down' | 'up';
@@ -42,14 +49,16 @@ export type MenuDirection = 'down' | 'up';
       [cdkConnectedOverlayHasBackdrop]="true"
       cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
       (backdropClick)="open.set(false)"
-      (detach)="open.set(false)"
+      (attach)="onAttach()"
+      (detach)="onDetach()"
     >
-      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+      <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
       <div
         class="flr-menu__panel"
         role="menu"
         [style.min-width.px]="minWidth()"
         (click)="open.set(false)"
+        (keydown)="onKeydown($event)"
       >
         <ng-content select="[flr-menu-content]" />
       </div>
@@ -82,6 +91,7 @@ export class MenuComponent {
   readonly open = model(false);
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly injector = inject(Injector);
 
   constructor() {
     afterRenderEffect(() => {
@@ -117,6 +127,53 @@ export class MenuComponent {
   protected toggle(): void {
     this.open.set(!this.open());
   }
+
+  private readonly items = contentChildren(MenuItemComponent, { descendants: true });
+
+  private readonly optionsByItem = new WeakMap<MenuItemComponent, FocusableOption>();
+
+  private readonly options = computed<FocusableOption[]>(() =>
+    this.items().map((item) => {
+      const option = this.optionsByItem.get(item) ?? {
+        focus: () => item.focus(),
+        get disabled() {
+          return item.disabled();
+        },
+      };
+      this.optionsByItem.set(item, option);
+      return option;
+    }),
+  );
+
+  private readonly keyManager = new FocusKeyManager(this.options, this.injector)
+    .withWrap()
+    .withHomeAndEnd()
+    .withTypeAhead()
+    .skipPredicate((item) => item.disabled === true);
+
+  protected onAttach(): void {
+    afterNextRender(() => this.keyManager.setFirstItemActive(), { injector: this.injector });
+  }
+
+  protected onDetach(): void {
+    this.open.set(false);
+    const active = document.activeElement;
+    if (!active || active === document.body) {
+      const trigger = this.host.nativeElement.querySelector<HTMLElement>('[flr-menu-trigger]');
+      const target = trigger?.matches(FOCUSABLE)
+        ? trigger
+        : trigger?.querySelector<HTMLElement>(FOCUSABLE);
+      target?.focus();
+    }
+  }
+
+  protected onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Tab') {
+      this.open.set(false);
+      return;
+    }
+    this.keyManager.onKeydown(event);
+  }
 }
 
 @Component({
@@ -130,6 +187,7 @@ export class MenuComponent {
         [class.flr-menu-item--danger]="destructive()"
         [href]="href()"
         role="menuitem"
+        #control
       >
         <ng-container [ngTemplateOutlet]="body" />
       </a>
@@ -139,6 +197,7 @@ export class MenuComponent {
         class="flr-menu-item"
         [class.flr-menu-item--danger]="destructive()"
         role="menuitem"
+        #control
         [disabled]="disabled()"
         (click)="onClick()"
       >
@@ -232,6 +291,12 @@ export class MenuItemComponent {
   readonly destructive = input(false);
 
   readonly selected = output<void>();
+
+  private readonly control = viewChild<ElementRef<HTMLElement>>('control');
+
+  focus(): void {
+    this.control()?.nativeElement.focus();
+  }
 
   protected onClick(): void {
     if (this.disabled()) return;
