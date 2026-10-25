@@ -52,30 +52,40 @@ export const Default: Story = {};
 
 export const AlignEnd: Story = { args: { align: 'end' } };
 
+const keyboardMap = [
+  { code: 'Enter', key: 'Enter', keyCode: 13 },
+  { code: 'Escape', key: 'Escape', keyCode: 27 },
+  { code: 'End', key: 'End', keyCode: 35 },
+  { code: 'Home', key: 'Home', keyCode: 36 },
+  { code: 'ArrowUp', key: 'ArrowUp', keyCode: 38 },
+  { code: 'ArrowDown', key: 'ArrowDown', keyCode: 40 },
+];
+
 export const KeyboardNavigation: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const overlay = within(canvasElement.ownerDocument.body);
+    const user = userEvent.setup({ keyboardMap });
     const trigger = canvas.getByRole('button', { name: 'Actions' });
 
     trigger.focus();
-    await userEvent.keyboard('{Enter}');
+    await user.keyboard('{Enter}');
     const first = await overlay.findByRole('menuitem', { name: 'Trigger now' });
     await waitFor(() => expect(first).toHaveFocus());
 
-    await userEvent.keyboard('{ArrowDown}');
+    await user.keyboard('{ArrowDown}');
     await expect(overlay.getByRole('menuitem', { name: 'Trigger with overrides' })).toHaveFocus();
 
-    await userEvent.keyboard('{End}');
+    await user.keyboard('{End}');
     await expect(overlay.getByRole('menuitem', { name: 'Delete agent' })).toHaveFocus();
 
-    await userEvent.keyboard('{ArrowDown}');
+    await user.keyboard('{ArrowDown}');
     await expect(first).toHaveFocus();
 
-    await userEvent.keyboard('{Home}{ArrowUp}');
+    await user.keyboard('{Home}{ArrowUp}');
     await expect(overlay.getByRole('menuitem', { name: 'Delete agent' })).toHaveFocus();
 
-    await userEvent.keyboard('{Escape}');
+    await user.keyboard('{Escape}');
     await waitFor(() => expect(overlay.queryByRole('menu')).toBeNull());
     await expect(trigger).toHaveFocus();
   },
