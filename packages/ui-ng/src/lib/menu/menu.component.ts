@@ -1,11 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
+  afterNextRender,
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
   ElementRef,
   inject,
+  Injector,
   input,
   model,
   output,
@@ -36,20 +38,23 @@ export type MenuDirection = 'down' | 'up';
 
     <ng-template
       cdkConnectedOverlay
+      #overlay="cdkConnectedOverlay"
       [cdkConnectedOverlayOrigin]="origin"
       [cdkConnectedOverlayOpen]="open()"
       [cdkConnectedOverlayPositions]="positions()"
       [cdkConnectedOverlayHasBackdrop]="true"
       cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
       (backdropClick)="open.set(false)"
-      (detach)="open.set(false)"
+      (attach)="onAttach(overlay.overlayRef.overlayElement)"
+      (detach)="onDetach()"
     >
-      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+      <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
       <div
         class="flr-menu__panel"
         role="menu"
         [style.min-width.px]="minWidth()"
         (click)="open.set(false)"
+        (keydown)="onKeydown($event)"
       >
         <ng-content select="[flr-menu-content]" />
       </div>
@@ -82,6 +87,7 @@ export class MenuComponent {
   readonly open = model(false);
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly injector = inject(Injector);
 
   constructor() {
     afterRenderEffect(() => {
@@ -116,6 +122,55 @@ export class MenuComponent {
 
   protected toggle(): void {
     this.open.set(!this.open());
+  }
+
+  private panel: HTMLElement | null = null;
+
+  protected onAttach(overlayElement: HTMLElement): void {
+    afterNextRender(
+      () => {
+        this.panel = overlayElement.querySelector<HTMLElement>('.flr-menu__panel');
+        this.items()[0]?.focus();
+      },
+      { injector: this.injector },
+    );
+  }
+
+  protected onDetach(): void {
+    this.panel = null;
+    this.open.set(false);
+    this.host.nativeElement.querySelector<HTMLElement>('[flr-menu-trigger]')?.focus();
+  }
+
+  protected onKeydown(event: KeyboardEvent): void {
+    const items = this.items();
+    const current = items.indexOf(document.activeElement as HTMLElement);
+    switch (event.key) {
+      case 'ArrowDown':
+        items[(current + 1) % items.length]?.focus();
+        break;
+      case 'ArrowUp':
+        items[(current - 1 + items.length) % items.length]?.focus();
+        break;
+      case 'Home':
+        items[0]?.focus();
+        break;
+      case 'End':
+        items.at(-1)?.focus();
+        break;
+      case 'Tab':
+        this.open.set(false);
+        return;
+      default:
+        return;
+    }
+    event.preventDefault();
+  }
+
+  private items(): HTMLElement[] {
+    return Array.from(
+      this.panel?.querySelectorAll<HTMLElement>('[role="menuitem"]:not(:disabled)') ?? [],
+    );
   }
 }
 

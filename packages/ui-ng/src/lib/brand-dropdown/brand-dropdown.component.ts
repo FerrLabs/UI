@@ -59,7 +59,6 @@ interface BrandRow {
     <button
       type="button"
       class="flr-bd__trigger"
-      [attr.aria-haspopup]="'menu'"
       [attr.aria-expanded]="open()"
       [title]="triggerTitle()"
       (click)="open.set(!open())"
@@ -71,7 +70,7 @@ interface BrandRow {
     </button>
 
     @if (open()) {
-      <div class="flr-bd__panel" role="menu">
+      <div class="flr-bd__panel">
         @if (!collapsed()) {
           <div class="mono flr-bd__eyebrow">Switch app</div>
         }
@@ -86,7 +85,6 @@ interface BrandRow {
             [class.flr-bd__app--current]="row.app.id === current()"
             [class.flr-bd__app--collapsed]="collapsed()"
             [href]="row.app.href"
-            role="menuitem"
             [attr.target]="row.app.newTab ? '_blank' : null"
             [attr.rel]="row.app.newTab ? 'noreferrer noopener' : null"
             [attr.aria-current]="row.app.id === current() ? 'page' : null"

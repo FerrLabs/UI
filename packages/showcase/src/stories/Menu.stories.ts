@@ -7,6 +7,7 @@ import {
 } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 const meta: Meta<MenuComponent> = {
   title: 'Overlays/Menu',
@@ -50,3 +51,32 @@ type Story = StoryObj<MenuComponent>;
 export const Default: Story = {};
 
 export const AlignEnd: Story = { args: { align: 'end' } };
+
+export const KeyboardNavigation: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const overlay = within(canvasElement.ownerDocument.body);
+    const trigger = canvas.getByRole('button', { name: 'Actions' });
+
+    trigger.focus();
+    await userEvent.keyboard('{Enter}');
+    const first = await overlay.findByRole('menuitem', { name: 'Trigger now' });
+    await waitFor(() => expect(first).toHaveFocus());
+
+    await userEvent.keyboard('{ArrowDown}');
+    await expect(overlay.getByRole('menuitem', { name: 'Trigger with overrides' })).toHaveFocus();
+
+    await userEvent.keyboard('{End}');
+    await expect(overlay.getByRole('menuitem', { name: 'Delete agent' })).toHaveFocus();
+
+    await userEvent.keyboard('{ArrowDown}');
+    await expect(first).toHaveFocus();
+
+    await userEvent.keyboard('{Home}{ArrowUp}');
+    await expect(overlay.getByRole('menuitem', { name: 'Delete agent' })).toHaveFocus();
+
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(overlay.queryByRole('menu')).toBeNull());
+    await expect(trigger).toHaveFocus();
+  },
+};
