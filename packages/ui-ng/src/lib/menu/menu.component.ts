@@ -128,11 +128,19 @@ export class MenuComponent {
 
   private readonly items = contentChildren(MenuItemComponent, { descendants: true });
 
+  private readonly optionsByItem = new WeakMap<MenuItemComponent, FocusableOption>();
+
   private readonly options = computed<FocusableOption[]>(() =>
-    this.items().map((item) => ({
-      focus: () => item.focus(),
-      disabled: item.disabled(),
-    })),
+    this.items().map((item) => {
+      const option = this.optionsByItem.get(item) ?? {
+        focus: () => item.focus(),
+        get disabled() {
+          return item.disabled();
+        },
+      };
+      this.optionsByItem.set(item, option);
+      return option;
+    }),
   );
 
   private readonly keyManager = new FocusKeyManager(this.options, this.injector)
