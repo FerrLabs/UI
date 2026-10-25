@@ -52,40 +52,50 @@ export const Default: Story = {};
 
 export const AlignEnd: Story = { args: { align: 'end' } };
 
-const keyboardMap = [
-  { code: 'Enter', key: 'Enter', keyCode: 13 },
-  { code: 'Escape', key: 'Escape', keyCode: 27 },
-  { code: 'End', key: 'End', keyCode: 35 },
-  { code: 'Home', key: 'Home', keyCode: 36 },
-  { code: 'ArrowUp', key: 'ArrowUp', keyCode: 38 },
-  { code: 'ArrowDown', key: 'ArrowDown', keyCode: 40 },
-];
+const keyCodes: Record<string, number> = {
+  Escape: 27,
+  End: 35,
+  Home: 36,
+  ArrowUp: 38,
+  ArrowDown: 40,
+};
+
+function press(key: string): void {
+  document.activeElement?.dispatchEvent(
+    new KeyboardEvent('keydown', {
+      key,
+      keyCode: keyCodes[key],
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+}
 
 export const KeyboardNavigation: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const overlay = within(canvasElement.ownerDocument.body);
-    const user = userEvent.setup({ keyboardMap });
     const trigger = canvas.getByRole('button', { name: 'Actions' });
 
     trigger.focus();
-    await user.keyboard('{Enter}');
+    await userEvent.keyboard('{Enter}');
     const first = await overlay.findByRole('menuitem', { name: 'Trigger now' });
     await waitFor(() => expect(first).toHaveFocus());
 
-    await user.keyboard('{ArrowDown}');
+    press('ArrowDown');
     await expect(overlay.getByRole('menuitem', { name: 'Trigger with overrides' })).toHaveFocus();
 
-    await user.keyboard('{End}');
+    press('End');
     await expect(overlay.getByRole('menuitem', { name: 'Delete agent' })).toHaveFocus();
 
-    await user.keyboard('{ArrowDown}');
+    press('ArrowDown');
     await expect(first).toHaveFocus();
 
-    await user.keyboard('{Home}{ArrowUp}');
+    press('Home');
+    press('ArrowUp');
     await expect(overlay.getByRole('menuitem', { name: 'Delete agent' })).toHaveFocus();
 
-    await user.keyboard('{Escape}');
+    press('Escape');
     await waitFor(() => expect(overlay.queryByRole('menu')).toBeNull());
     await expect(trigger).toHaveFocus();
   },

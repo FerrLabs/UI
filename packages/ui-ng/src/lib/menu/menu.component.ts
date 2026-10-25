@@ -18,6 +18,8 @@ import {
 import { FocusKeyManager, type FocusableOption } from '@angular/cdk/a11y';
 import { type ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
 
+const FOCUSABLE = 'button, a[href], input, select, textarea, [tabindex]';
+
 export type MenuAlign = 'start' | 'end';
 export type MenuDirection = 'down' | 'up';
 
@@ -157,7 +159,11 @@ export class MenuComponent {
     this.open.set(false);
     const active = document.activeElement;
     if (!active || active === document.body) {
-      this.host.nativeElement.querySelector<HTMLElement>('[flr-menu-trigger]')?.focus();
+      const trigger = this.host.nativeElement.querySelector<HTMLElement>('[flr-menu-trigger]');
+      const target = trigger?.matches(FOCUSABLE)
+        ? trigger
+        : trigger?.querySelector<HTMLElement>(FOCUSABLE);
+      target?.focus();
     }
   }
 
