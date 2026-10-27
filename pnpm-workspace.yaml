@@ -1,5 +1,8 @@
 packages:
   - 'packages/*'
+
+minimumReleaseAgeExclude:
+  - '@ferrlabs/*'
 allowBuilds:
   '@parcel/watcher': false
   '@swc/core': true
