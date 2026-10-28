@@ -83,7 +83,7 @@ const ERROR = 'var(--color-danger, #dc2626)';
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      border-radius: 8px;
+      border-radius: 4px;
       outline: none;
       background-repeat: no-repeat;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
