@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.46.0] - 2026-10-28
+
+### Features
+
+- feat(ui-ng): align tags and control radii with the admin styling (#685)
+
 ## [1.45.1] - 2026-10-25
 
 ### Bug Fixes
