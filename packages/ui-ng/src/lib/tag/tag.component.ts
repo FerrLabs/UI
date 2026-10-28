@@ -20,8 +20,8 @@ const VARIANT_TEXT: Record<TagVariant, string> = {
 };
 
 const SIZE: Record<TagSize, { padding: string; fontSize: string; gap: string; dot: number }> = {
-  sm: { padding: '2px 7px', fontSize: '9.5px', gap: '5px', dot: 4 },
-  md: { padding: '3px 9px', fontSize: '10.5px', gap: '6px', dot: 5 },
+  sm: { padding: '2px 6px', fontSize: '9.5px', gap: '5px', dot: 4 },
+  md: { padding: '3px 8px', fontSize: '10px', gap: '6px', dot: 5 },
 };
 
 @Component({
@@ -62,8 +62,8 @@ const SIZE: Record<TagSize, { padding: string; fontSize: string; gap: string; do
     .flr-tag {
       display: inline-flex;
       align-items: center;
-      border-radius: 999px;
-      letter-spacing: 0.05em;
+      border-radius: 3px;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       white-space: nowrap;
     }
@@ -90,8 +90,8 @@ const SIZE: Record<TagSize, { padding: string; fontSize: string; gap: string; do
 export class TagComponent {
   readonly variant = input<TagVariant | null>(null);
   readonly color = input<string | null>(null);
-  readonly soft = input(false);
-  readonly dot = input(true);
+  readonly soft = input(true);
+  readonly dot = input(false);
   readonly size = input<TagSize>('md');
   readonly removable = input(false);
 
@@ -120,7 +120,7 @@ export class TagComponent {
       gap: dim.gap,
       padding: dim.padding,
       'font-size': dim.fontSize,
-      background: this.soft() ? `color-mix(in oklab, ${c} 14%, transparent)` : 'transparent',
+      background: this.soft() ? `color-mix(in oklab, ${c} 20%, transparent)` : 'transparent',
       border: this.soft() ? 'none' : '1px solid var(--color-rule, rgba(30, 41, 59, 0.14))',
       color: this.resolvedTextColor(),
     };

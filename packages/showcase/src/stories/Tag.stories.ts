@@ -6,7 +6,7 @@ const meta: Meta<TagComponent> = {
   title: 'Primitives/Tag',
   component: TagComponent,
   decorators: [moduleMetadata({ imports: [TagComponent] })],
-  args: { variant: 'neutral', size: 'md', soft: false, dot: true, removable: false },
+  args: { variant: 'neutral', size: 'md', soft: true, dot: false, removable: false },
   argTypes: {
     variant: {
       control: 'inline-radio',
@@ -38,6 +38,6 @@ export const Variants: Story = {
   }),
 };
 
-export const Soft: Story = { args: { soft: true, variant: 'accent' } };
+export const Outlined: Story = { args: { soft: false, dot: true, variant: 'accent' } };
 
 export const Removable: Story = { args: { removable: true, variant: 'accent' } };
