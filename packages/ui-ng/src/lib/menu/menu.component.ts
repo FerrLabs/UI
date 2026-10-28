@@ -77,7 +77,7 @@ export type MenuDirection = 'down' | 'up';
     .flr-menu__panel {
       background: var(--color-card, #ffffff);
       border: 1px solid var(--color-card-rule, rgba(30, 41, 59, 0.1));
-      border-radius: 10px;
+      border-radius: 6px;
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
       padding: 6px;
     }
@@ -220,7 +220,7 @@ export class MenuComponent {
       align-items: center;
       gap: 10px;
       padding: 8px 12px;
-      border-radius: 6px;
+      border-radius: 4px;
       font-size: 14px;
       font-family: var(--font-mono, 'DM Mono', ui-monospace, monospace);
       color: var(--color-ink-2, #475569);

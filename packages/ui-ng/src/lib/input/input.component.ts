@@ -56,7 +56,7 @@ const ERROR = 'var(--color-danger, #dc2626)';
       font-family: var(--font-sans, 'Fraunces', Georgia, ui-serif, serif);
       line-height: 1.4;
       color: var(--color-ink, #1e293b);
-      border-radius: 8px;
+      border-radius: 4px;
       outline: none;
       transition:
         border-color 140ms,
