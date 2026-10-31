@@ -1,16 +1,17 @@
 <div align="center">
 
-# UI
+<h1><img src=".github/logo.svg" alt="" width="48" height="48" align="absmiddle"> UI</h1>
 
 **The FerrLabs design system.**
 
-Angular components, Astro site chrome, and the framework-agnostic foundation of tokens,<br />
+Angular components, site chrome, and the framework-agnostic foundation of tokens,<br />
 fonts and icons. One source for every product surface, so nothing gets rebuilt per app.
 
 [![CI](https://github.com/FerrLabs/UI/actions/workflows/ci.yml/badge.svg)](https://github.com/FerrLabs/UI/actions/workflows/ci.yml)
-[![Storybook](https://img.shields.io/badge/storybook-internal-ff4785)](https://storybook.ferrlabs)
 [![Quality Gate](https://sonar.ferrlabs.com/api/project_badges/measure?project=UI&metric=alert_status&token=sqb_7d6cc1066e2478f22cf47dc08aca4991295c4039)](https://sonar.ferrlabs.com/dashboard?id=UI)
 [![Maintainability](https://sonar.ferrlabs.com/api/project_badges/measure?project=UI&metric=sqale_rating&token=sqb_7d6cc1066e2478f22cf47dc08aca4991295c4039)](https://sonar.ferrlabs.com/dashboard?id=UI)
+[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](#license)
+[![Storybook](https://img.shields.io/badge/storybook-internal-ff4785)](https://storybook.ferrlabs)
 
 [Storybook](https://storybook.ferrlabs) (VPN-only) | [Changelog](https://ferrlabs.com/changelog/) | [FerrLabs](https://github.com/FerrLabs)
 
@@ -41,7 +42,7 @@ rather than kept as second and third component surfaces inviting drift. Site chr
 }
 ```
 
-Published to GitHub Packages under the `@ferrlabs` scope.
+Published to npmjs.com under the `@ferrlabs` scope. `@ferrlabs/ui-ng` and `@ferrlabs/ui-foundation` install without a token.
 
 ```ts
 import { ButtonComponent, PaginationComponent, ShellComponent } from '@ferrlabs/ui-ng';
@@ -82,7 +83,7 @@ One product, one accent, never mixed:
 | FerrFlow   | orange `#e8733a`  |
 | FerrVault  | emerald `#10b981` |
 | FerrTrack  | indigo `#6366f1`  |
-| FerrGrowth | violet `#7c3aed`  |
+| FerrGrowth | violet `#8b5cf6`  |
 | FerrFleet  | amber `#f59e0b`   |
 | FerrLens   | teal `#14b8a6`    |
 
