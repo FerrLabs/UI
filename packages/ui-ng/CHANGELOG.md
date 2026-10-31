@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.46.1] - 2026-10-31
+
+### Bug Fixes
+
+- fix(ui-ng): drop tree roles from flr-tree-select and expose its strings as inputs (#692)
+
 ## [1.46.0] - 2026-10-28
 
 ### Features
