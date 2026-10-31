@@ -17,6 +17,8 @@ export interface TreeSelectGroup {
   readonly options: readonly MultiSelectOption[];
 }
 
+let nextId = 0;
+
 @Component({
   selector: 'flr-tree-select',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,14 +42,14 @@ export interface TreeSelectGroup {
         />
       }
 
-      <div class="flr-ts__tree" role="tree" [attr.aria-label]="label()">
+      <div class="flr-ts__tree" role="group" [attr.aria-label]="label()">
         @for (g of visible(); track g.id) {
-          <div class="flr-ts__group" role="treeitem" [attr.aria-selected]="groupState(g) === 'all'">
+          <div class="flr-ts__group" role="group" [attr.aria-labelledby]="idBase + '-h-' + g.id">
             <div class="flr-ts__grouprow">
               <input
                 type="checkbox"
                 class="flr-ts__box"
-                [attr.aria-label]="'Select all in ' + g.label"
+                [attr.aria-label]="selectAllText()(g.label)"
                 [checked]="groupState(g) === 'all'"
                 [indeterminate]="groupState(g) === 'some'"
                 [disabled]="disabled()"
@@ -56,7 +58,9 @@ export interface TreeSelectGroup {
               <button
                 type="button"
                 class="flr-ts__toggle"
+                [id]="idBase + '-h-' + g.id"
                 [attr.aria-expanded]="isOpen(g.id)"
+                [attr.aria-controls]="idBase + '-l-' + g.id"
                 (click)="toggleOpen(g.id)"
               >
                 <span class="flr-ts__chev" [class.flr-ts__chev--open]="isOpen(g.id)">›</span>
@@ -71,7 +75,7 @@ export interface TreeSelectGroup {
             </div>
 
             @if (isOpen(g.id)) {
-              <div class="flr-ts__leaves" role="group">
+              <div class="flr-ts__leaves" [id]="idBase + '-l-' + g.id">
                 @for (o of g.options; track o.id) {
                   <label class="flr-ts__row" [class.flr-ts__row--on]="isSelected(o.id)">
                     <input
@@ -102,9 +106,9 @@ export interface TreeSelectGroup {
       </div>
 
       <div class="flr-ts__foot">
-        <span class="flr-ts__count">{{ selectedCount() }} selected</span>
+        <span class="flr-ts__count">{{ countText() }}</span>
         @if (selectedCount() > 0 && !disabled()) {
-          <button type="button" class="flr-ts__clear" (click)="clear()">Clear</button>
+          <button type="button" class="flr-ts__clear" (click)="clear()">{{ clearText() }}</button>
         }
       </div>
     </div>
@@ -256,6 +260,11 @@ export class TreeSelectComponent implements ControlValueAccessor {
   readonly emptyText = input<string>('Nothing to choose from.');
   readonly noMatchText = input<string>('No match.');
   readonly invalid = input<boolean>(false);
+  readonly selectAllText = input<(groupLabel: string) => string>((g) => `Select all in ${g}`);
+  readonly selectedText = input<(count: number) => string>((count) => `${count} selected`);
+  readonly clearText = input<string>('Clear');
+
+  protected readonly idBase = `flr-ts-${nextId++}`;
 
   protected readonly query = signal('');
   protected readonly disabled = signal(false);
@@ -275,6 +284,7 @@ export class TreeSelectComponent implements ControlValueAccessor {
   });
 
   protected readonly selectedCount = computed(() => this.selected().size);
+  protected readonly countText = computed(() => this.selectedText()(this.selectedCount()));
 
   private onChange: (value: string[]) => void = () => {};
   private onTouched: () => void = () => {};
