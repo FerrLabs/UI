@@ -16,6 +16,10 @@ const meta: Meta<CodeComponent> = {
   title: 'Content/Code',
   component: CodeComponent,
   decorators: [moduleMetadata({ imports: [CodeComponent] })],
+  render: (args) => ({
+    props: args,
+    template: `<flr-code [code]="code" [language]="language" />`,
+  }),
   args: { code: RUST, language: 'rust' },
   argTypes: {
     language: {

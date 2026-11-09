@@ -53,6 +53,7 @@ const meta: Meta<MarkdownComponent> = {
   title: 'Content/Markdown',
   component: MarkdownComponent,
   decorators: [moduleMetadata({ imports: [MarkdownComponent] })],
+  render: (args) => ({ props: args, template: `<flr-markdown [source]="source" />` }),
   args: { source: AUDIT_REPORT },
 };
 
