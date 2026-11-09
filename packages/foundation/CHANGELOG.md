@@ -4,6 +4,12 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.6.0] - 2026-11-09
+
+### Features
+
+- feat(ui-ng): add markdown and code components (#707)
+
 ## [5.5.0] - 2026-09-29
 
 ### Features
