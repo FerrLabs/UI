@@ -74,6 +74,19 @@
   --color-warning-fg: #78350f;
   --color-danger: #dc2626;
   --color-danger-fg: #7f1d1d;
+
+  --color-code-bg: #f3efe7;
+  --color-code-fg: #1e293b;
+  --color-code-comment: #5d6b80;
+  --color-code-keyword: #6d28d9;
+  --color-code-string: #0f766e;
+  --color-code-number: #a04a08;
+  --color-code-function: #1d4ed8;
+  --color-code-operator: #475569;
+  --color-code-punctuation: #475569;
+  --color-code-property: #be185d;
+  --color-code-inserted: #166534;
+  --color-code-deleted: #b91c1c;
 }
 
 /* Dark mode tokens — opt-in via `<html data-theme="dark">`. The marketing
@@ -106,4 +119,17 @@ html[data-theme='dark'] {
   --color-success-fg: #6ee7b7;
   --color-warning-fg: #fcd34d;
   --color-danger-fg: #fca5a5;
+
+  --color-code-bg: #0a101d;
+  --color-code-fg: #e2e8f0;
+  --color-code-comment: #8b9ab0;
+  --color-code-keyword: #c4b5fd;
+  --color-code-string: #5eead4;
+  --color-code-number: #fdba74;
+  --color-code-function: #93c5fd;
+  --color-code-operator: #cbd5e1;
+  --color-code-punctuation: #cbd5e1;
+  --color-code-property: #f9a8d4;
+  --color-code-inserted: #86efac;
+  --color-code-deleted: #fca5a5;
 }
