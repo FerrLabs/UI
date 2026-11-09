@@ -10,7 +10,7 @@ export interface BarChartPoint {
 const STEPS = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10];
 
 function niceCeil(raw: number): number {
-  if (!(raw > 0) || !Number.isFinite(raw)) return 1;
+  if (raw <= 0 || !Number.isFinite(raw)) return 1;
   const pow = Math.pow(10, Math.floor(Math.log10(raw)));
   const n = raw / pow;
   return (STEPS.find((s) => n <= s + 1e-9) ?? 10) * pow;
@@ -323,9 +323,12 @@ export class BarChartComponent {
     const b = bars[i];
     if (!b) return null;
     const at = ((i + 0.5) / bars.length) * 100;
+    let edge: 'start' | 'mid' | 'end' = 'mid';
+    if (at < 12) edge = 'start';
+    else if (at > 88) edge = 'end';
     return {
       at,
-      edge: at < 12 ? 'start' : at > 88 ? 'end' : 'mid',
+      edge,
       label: b.label,
       value: b.value,
       danger: b.danger,

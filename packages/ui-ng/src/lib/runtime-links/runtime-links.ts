@@ -71,8 +71,10 @@ export function userMenuItems(
   const items: UserMenuItem[] = [];
 
   if (base) {
-    items.push({ id: 'profile', label: 'Profile', href: `${base}/profile`, icon: '◯' });
-    items.push({ id: 'prefs', label: 'Preferences', href: `${base}/prefs`, icon: '⚙' });
+    items.push(
+      { id: 'profile', label: 'Profile', href: `${base}/profile`, icon: '◯' },
+      { id: 'prefs', label: 'Preferences', href: `${base}/prefs`, icon: '⚙' },
+    );
   }
   if (options.extra?.length) {
     items.push(...options.extra);

@@ -59,7 +59,7 @@ function attributesAreSafe(raw: string): boolean {
     if (!ATTRIBUTES.has(name)) return false;
     rest = rest.replace(match, ' ');
   }
-  return rest.replace(/\//g, ' ').trim() === '';
+  return rest.replaceAll('/', ' ').trim() === '';
 }
 
 export function isTrustedIconMarkup(markup: string): boolean {

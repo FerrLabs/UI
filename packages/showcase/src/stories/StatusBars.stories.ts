@@ -6,11 +6,17 @@ const DAY_MS = 86_400_000;
 const START = Date.parse('2026-05-17T00:00:00Z');
 
 const BUCKETS = Array.from({ length: 90 }, (_, i) => {
-  const status = i === 61 ? 'down' : i % 17 === 0 ? 'degraded' : i < 4 ? 'unknown' : 'up';
+  let status: 'up' | 'degraded' | 'down' | 'unknown' = 'up';
+  if (i === 61) status = 'down';
+  else if (i % 17 === 0) status = 'degraded';
+  else if (i < 4) status = 'unknown';
+  let uptimePct = 62.1;
+  if (status === 'up') uptimePct = 100;
+  else if (status === 'degraded') uptimePct = 97.4;
   return {
     at: new Date(START + i * DAY_MS).toISOString(),
-    status: status as 'up' | 'degraded' | 'down' | 'unknown',
-    uptimePct: status === 'up' ? 100 : status === 'degraded' ? 97.4 : 62.1,
+    status,
+    uptimePct,
     sampleCount: 288,
   };
 });

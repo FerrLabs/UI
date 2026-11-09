@@ -50,11 +50,14 @@ export class SkeletonComponent {
     const shape = this.shape();
     const w = this.width();
     const h = this.height();
+    const defaultWidth = shape === 'circle' ? '32px' : '100%';
+    let defaultHeight = '16px';
+    if (shape === 'circle') defaultHeight = '32px';
+    else if (shape === 'text') defaultHeight = '12px';
     return {
       'border-radius': RADIUS[shape],
-      width: w != null ? toLength(w) : shape === 'circle' ? '32px' : '100%',
-      height:
-        h != null ? toLength(h) : shape === 'circle' ? '32px' : shape === 'text' ? '12px' : '16px',
+      width: w != null ? toLength(w) : defaultWidth,
+      height: h != null ? toLength(h) : defaultHeight,
     };
   });
 }

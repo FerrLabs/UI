@@ -39,7 +39,7 @@ const BUBBLE_GAP = 6;
 
 function caretRect(mark: HTMLElement, offset: number): DOMRect | undefined {
   const node = mark.firstChild;
-  if (!node || node.nodeType !== Node.TEXT_NODE) return mark.getClientRects()[0];
+  if (node?.nodeType !== Node.TEXT_NODE) return mark.getClientRects()[0];
 
   const range = document.createRange();
   const at = Math.min(Math.max(offset, 0), node.textContent?.length ?? 0);
@@ -289,11 +289,10 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
   });
 
   protected readonly frameStyles = computed<Record<string, string | null>>(() => {
-    const border = this.hasErrors()
-      ? 'var(--color-danger, #dc2626)'
-      : this.focused()
-        ? 'var(--color-accent, var(--color-ink, #1e293b))'
-        : 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))';
+    let border: string;
+    if (this.hasErrors()) border = 'var(--color-danger, #dc2626)';
+    else if (this.focused()) border = 'var(--color-accent, var(--color-ink, #1e293b))';
+    else border = 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))';
     const ring = this.hasErrors()
       ? 'color-mix(in oklab, var(--color-danger, #dc2626) 25%, transparent)'
       : 'color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent)';
@@ -449,8 +448,7 @@ export class AnnotatedTextareaComponent implements ControlValueAccessor {
     };
     const current = this.bubble();
     if (
-      !current ||
-      current.message !== next.message ||
+      current?.message !== next.message ||
       current.left !== next.left ||
       current.anchorTop !== next.anchorTop ||
       current.anchorBottom !== next.anchorBottom
