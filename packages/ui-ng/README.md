@@ -79,6 +79,39 @@ Import the markdown-content stylesheet once (it styles `.ferr-prose`,
 @import '@ferrlabs/ui-ng/docs/styles.css';
 ```
 
+## Markdown and code (`@ferrlabs/ui-ng/markdown`)
+
+Syntax-highlighted code and sanitized GFM rendering, in a secondary entry point so
+the main entry stays free of these dependencies. Install the optional peers only if
+you import it:
+
+```sh
+pnpm add marked marked-highlight prismjs
+```
+
+```ts
+import { CodeComponent, MarkdownComponent } from '@ferrlabs/ui-ng/markdown';
+```
+
+```html
+<flr-code [code]="snippet" language="rust" /> <flr-markdown [source]="report" />
+```
+
+- `flr-code`: inputs `code` (required) and `language`. Unknown or missing languages
+  render as escaped plain text. The header shows the language and a copy button.
+- `flr-markdown`: input `source`. Renders GFM (tables, task lists, strikethrough),
+  highlights fenced code, and passes the result through Angular's `[innerHTML]`
+  sanitizer, so scripts and event handlers in the source are stripped. Links get
+  `rel="noopener noreferrer"`.
+- Languages: javascript, typescript, json, bash, rust, python, yaml, toml, sql,
+  diff, markdown, css, markup (html/xml), go, docker. Common aliases (`ts`, `sh`,
+  `yml`, `rs`, `html`, ...) resolve.
+- Theming: `--color-code-*` tokens from `@ferrlabs/ui-foundation` (bg, fg, comment,
+  keyword, string, number, function, operator, punctuation, property, inserted,
+  deleted), with light and dark values. No stylesheet import is needed; styles ship
+  with the components (`ViewEncapsulation.None`, scoped by the `.flr-code` and
+  `.flr-markdown` host classes so the rendered HTML can be styled).
+
 ## Conventions
 
 - **Standalone** components, no NgModules.
