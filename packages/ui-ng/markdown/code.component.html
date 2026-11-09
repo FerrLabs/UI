@@ -1,0 +1,12 @@
+<div class="flr-code__header">
+  <span class="flr-code__lang">{{ label() }}</span>
+  <button
+    type="button"
+    class="flr-code__copy"
+    [attr.aria-label]="copied() ? 'Copied' : 'Copy code'"
+    (click)="copy()"
+  >
+    {{ copied() ? 'Copied' : 'Copy' }}
+  </button>
+</div>
+<pre class="flr-code__pre" tabindex="0"><code [innerHTML]="html()"></code></pre>

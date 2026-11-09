@@ -1,0 +1,91 @@
+.flr-code .token.comment,
+.flr-code .token.prolog,
+.flr-code .token.doctype,
+.flr-code .token.cdata,
+.flr-markdown .token.comment,
+.flr-markdown .token.prolog,
+.flr-markdown .token.doctype,
+.flr-markdown .token.cdata {
+  color: var(--color-code-comment, #5d6b80);
+  font-style: italic;
+}
+.flr-code .token.keyword,
+.flr-code .token.atrule,
+.flr-code .token.boolean,
+.flr-code .token.important,
+.flr-code .token.selector,
+.flr-markdown .token.keyword,
+.flr-markdown .token.atrule,
+.flr-markdown .token.boolean,
+.flr-markdown .token.important,
+.flr-markdown .token.selector {
+  color: var(--color-code-keyword, #6d28d9);
+}
+.flr-code .token.string,
+.flr-code .token.char,
+.flr-code .token.attr-value,
+.flr-code .token.regex,
+.flr-code .token.url,
+.flr-markdown .token.string,
+.flr-markdown .token.char,
+.flr-markdown .token.attr-value,
+.flr-markdown .token.regex,
+.flr-markdown .token.url {
+  color: var(--color-code-string, #0f766e);
+}
+.flr-code .token.number,
+.flr-code .token.constant,
+.flr-code .token.symbol,
+.flr-markdown .token.number,
+.flr-markdown .token.constant,
+.flr-markdown .token.symbol {
+  color: var(--color-code-number, #a04a08);
+}
+.flr-code .token.function,
+.flr-code .token.class-name,
+.flr-code .token.builtin,
+.flr-code .token.macro,
+.flr-markdown .token.function,
+.flr-markdown .token.class-name,
+.flr-markdown .token.builtin,
+.flr-markdown .token.macro {
+  color: var(--color-code-function, #1d4ed8);
+}
+.flr-code .token.operator,
+.flr-code .token.entity,
+.flr-markdown .token.operator,
+.flr-markdown .token.entity {
+  color: var(--color-code-operator, #475569);
+}
+.flr-code .token.punctuation,
+.flr-markdown .token.punctuation {
+  color: var(--color-code-punctuation, #475569);
+}
+.flr-code .token.property,
+.flr-code .token.tag,
+.flr-code .token.attr-name,
+.flr-code .token.variable,
+.flr-markdown .token.property,
+.flr-markdown .token.tag,
+.flr-markdown .token.attr-name,
+.flr-markdown .token.variable {
+  color: var(--color-code-property, #be185d);
+}
+.flr-code .token.inserted,
+.flr-markdown .token.inserted {
+  color: var(--color-code-inserted, #166534);
+}
+.flr-code .token.deleted,
+.flr-markdown .token.deleted {
+  color: var(--color-code-deleted, #b91c1c);
+}
+.flr-code .token.bold,
+.flr-code .token.title,
+.flr-markdown .token.bold,
+.flr-markdown .token.title {
+  font-weight: 700;
+}
+.flr-code .token.italic,
+.flr-markdown .token.italic {
+  font-style: italic;
+}

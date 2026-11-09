@@ -23,6 +23,6 @@
     "strictInjectionParameters": true,
     "enableI18nLegacyMessageIdFormat": false
   },
-  "include": ["src/**/*.ts", "docs/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts", "docs/**/*.spec.ts", "dist"]
+  "include": ["src/**/*.ts", "docs/**/*.ts", "markdown/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts", "docs/**/*.spec.ts", "markdown/**/*.spec.ts", "dist"]
 }
