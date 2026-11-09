@@ -42,7 +42,7 @@ fn verify(token: &str) -> Result<Claims, AuthError> {
 
 ## Hostile input (must render inert)
 
-<img src="x" onerror="alert('img onerror')">
+<img src="x" alt="" onerror="alert('img onerror')">
 
 <script>alert('script')</script>
 
@@ -64,7 +64,7 @@ export const AuditReport: Story = {};
 
 export const Sanitizing: Story = {
   args: {
-    source: `before <img src="x" onerror="alert(1)"> <script>alert(2)</script> <a href="javascript:alert(3)">link</a> after`,
+    source: `before <img src="x" alt="" onerror="alert(1)"> <script>alert(2)</script> <a href="javascript:alert(3)">link</a> after`,
   },
 };
 

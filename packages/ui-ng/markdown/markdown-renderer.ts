@@ -12,6 +12,9 @@ const marked = new Marked(
   }),
   {
     gfm: true,
+    hooks: {
+      postprocess: (html) => html.replaceAll('<pre>', '<pre tabindex="0">'),
+    },
     renderer: {
       link({ href, title, tokens }) {
         const text = this.parser.parseInline(tokens);
