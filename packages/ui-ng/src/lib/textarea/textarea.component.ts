@@ -85,7 +85,7 @@ export class TextareaComponent implements ControlValueAccessor {
       ? 'color-mix(in oklab, var(--color-danger, #dc2626) 25%, transparent)'
       : 'color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent)';
     return {
-      background: this.disabled() ? 'var(--color-paper-2, #f3efe7)' : 'var(--color-card, #ffffff)',
+      background: this.disabled() ? 'var(--color-paper-2, #f1f5f9)' : 'var(--color-card, #ffffff)',
       border: `1px solid ${border}`,
       'box-shadow': this.focused() ? `0 0 0 3px ${ring}` : null,
       cursor: this.disabled() ? 'not-allowed' : 'text',

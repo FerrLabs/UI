@@ -62,7 +62,7 @@ import {
     .footer {
       padding: 96px 0 48px;
       border-top: 1px solid var(--paper-rule, var(--color-rule, rgba(30, 41, 59, 0.14)));
-      background: var(--paper, var(--color-paper, #faf8f4));
+      background: var(--paper, var(--color-paper, #f8fafc));
       color: var(--paper-ink, var(--color-ink, #1e293b));
     }
     .footer__grid {

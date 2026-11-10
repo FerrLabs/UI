@@ -264,7 +264,7 @@ export interface ProjectSwitcherPlaceholder {
       height: 34px;
       flex: none;
       border-radius: 10px;
-      background: var(--color-app-bg-2, #f4f4f2);
+      background: var(--color-app-bg-2, #f1f5f9);
       color: var(--color-ink, #1e293b);
       font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
       font-weight: 700;

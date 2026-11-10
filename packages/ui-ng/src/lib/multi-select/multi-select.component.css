@@ -61,7 +61,7 @@ flr-multi-select {
 .flr-ms__trigger:disabled {
   cursor: not-allowed;
   opacity: 0.65;
-  background-color: var(--color-paper-2, #f3efe7);
+  background-color: var(--color-paper-2, #f1f5f9);
 }
 
 .flr-ms__trigger--placeholder .flr-ms__summary {

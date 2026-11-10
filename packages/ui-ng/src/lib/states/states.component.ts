@@ -92,7 +92,7 @@ export class LoadingStateComponent {
       background: color-mix(
         in oklab,
         var(--color-danger, #dc2626) 10%,
-        var(--color-paper, #faf8f4)
+        var(--color-paper, #f8fafc)
       );
       border-radius: 10px;
       padding: 20px;
