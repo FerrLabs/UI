@@ -212,7 +212,7 @@ import {
     }
     .nav__lang-opt.is-active {
       background: var(--color-ink, #1e293b);
-      color: var(--color-paper, #faf8f4);
+      color: var(--color-paper, #f8fafc);
     }
     .nav__cta {
       display: inline-flex;
@@ -259,7 +259,7 @@ import {
       position: fixed;
       inset: 0;
       z-index: 100;
-      background: var(--color-paper, #faf8f4);
+      background: var(--color-paper, #f8fafc);
     }
     .nav__mobile-bar {
       justify-content: space-between;
