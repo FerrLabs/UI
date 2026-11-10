@@ -143,7 +143,7 @@ let nextPanelId = 0;
       gap: 7px;
       padding: 6px 10px 6px 12px;
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      border-radius: 999px;
+      border-radius: var(--radius-full, 999px);
       background: transparent;
       color: var(--color-ink-2, #475569);
       font-family: var(
@@ -186,7 +186,7 @@ let nextPanelId = 0;
       padding: 6px;
       background: var(--color-card, #ffffff);
       border: 1px solid var(--color-card-rule, rgba(30, 41, 59, 0.1));
-      border-radius: 6px;
+      border-radius: var(--radius-card, 8px);
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
     }
     .flr-locale-picker__option {
@@ -194,7 +194,7 @@ let nextPanelId = 0;
       align-items: center;
       gap: 12px;
       padding: 8px 12px;
-      border-radius: 4px;
+      border-radius: var(--radius-control, 4px);
       color: var(--color-ink-2, #475569);
       font-size: 14px;
       text-decoration: none;

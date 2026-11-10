@@ -211,7 +211,7 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
       letter-spacing: 0.06em;
       text-transform: uppercase;
       padding: 10px 16px;
-      border-radius: 999px;
+      border-radius: var(--radius-full, 999px);
       background: var(--accent, #1e293b);
       color: #fff;
       text-decoration: none;
@@ -227,7 +227,7 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
       display: none;
       margin-left: auto;
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      border-radius: 999px;
+      border-radius: var(--radius-full, 999px);
       background: transparent;
       color: var(--color-ink, #1e293b);
       padding: 8px 14px;
@@ -290,7 +290,7 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
     .nav__mobile-lang {
       padding: 8px 16px;
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      border-radius: 999px;
+      border-radius: var(--radius-full, 999px);
       color: var(--color-ink-2, #475569);
       font-size: 14px;
       text-decoration: none;

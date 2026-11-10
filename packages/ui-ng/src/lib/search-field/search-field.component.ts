@@ -112,7 +112,7 @@ const SIZE: Record<SearchFieldSize, SearchDim> = {
     .flr-search__input {
       width: 100%;
       box-sizing: border-box;
-      border-radius: 4px;
+      border-radius: var(--radius-control, 4px);
       font-family: var(--font-sans, 'Fraunces', Georgia, ui-serif, serif);
       font-weight: 400;
       line-height: 1.4;

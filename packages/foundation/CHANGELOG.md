@@ -4,6 +4,12 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.8.0] - 2026-11-10
+
+### Features
+
+- feat(foundation): add radius token scale (#719)
+
 ## [5.7.0] - 2026-11-10
 
 ### Features
