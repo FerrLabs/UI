@@ -38,7 +38,6 @@ const POSITIONS: ConnectedPosition[] = [
       translate="no"
       aria-haspopup="true"
       [attr.aria-expanded]="open()"
-      [attr.aria-label]="label()"
       (click)="open.set(!open())"
     >
       <svg
@@ -57,7 +56,7 @@ const POSITIONS: ConnectedPosition[] = [
           d="M1.75 8h12.5M8 1.75c1.8 1.7 2.7 3.8 2.7 6.25S9.8 12.55 8 14.25C6.2 12.55 5.3 10.45 5.3 8S6.2 3.45 8 1.75Z"
         />
       </svg>
-      <span>{{ current() }}</span>
+      <span class="flr-locale-picker__sr">{{ label() }}: </span><span>{{ current() }}</span>
       <svg
         class="flr-locale-picker__chevron"
         viewBox="0 0 10 10"
@@ -125,6 +124,14 @@ const POSITIONS: ConnectedPosition[] = [
   styles: `
     flr-site-locale-picker {
       display: inline-flex;
+    }
+    .flr-locale-picker__sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
     .flr-locale-picker__trigger {
       display: inline-flex;
