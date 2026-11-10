@@ -62,13 +62,13 @@ const SIZE: Record<TagSize, { padding: string; fontSize: string; gap: string; do
     .flr-tag {
       display: inline-flex;
       align-items: center;
-      border-radius: 3px;
+      border-radius: var(--radius-control, 4px);
       letter-spacing: 0.06em;
       text-transform: uppercase;
       white-space: nowrap;
     }
     .flr-tag__dot {
-      border-radius: 999px;
+      border-radius: var(--radius-full, 999px);
       flex-shrink: 0;
     }
     .flr-tag__remove {
