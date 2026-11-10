@@ -12,7 +12,7 @@ import {
   localeEntry,
   localeSwitchHref,
   matchSiteLocale,
-  resolveLocale,
+  resolveSiteLocale,
   SITE_CHROME,
   siteLocales,
   type SiteLocale,
@@ -118,9 +118,10 @@ function writeDismissed(locale: SiteLocale): void {
 export class SiteLocaleBannerComponent {
   readonly path = input.required<string>();
 
-  private readonly enabled = siteLocales(inject(SITE_CHROME));
+  private readonly chrome = inject(SITE_CHROME);
+  private readonly enabled = siteLocales(this.chrome);
 
-  protected readonly current = resolveLocale(inject(LOCALE_ID));
+  protected readonly current = resolveSiteLocale(this.chrome, inject(LOCALE_ID));
   protected readonly stayLabel = localeEntry(this.current).suggestion.stay;
 
   private readonly suggestion = signal<SiteLocale | null>(null);

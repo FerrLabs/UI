@@ -15,25 +15,21 @@ import {
   SITE_CHROME,
   type SiteLocale,
   siteLocales,
-  resolveLocale,
+  resolveSiteLocale,
   withLocaleBase,
   withTrailingSlash,
 } from '../site-chrome/site-chrome.model';
-import { SiteLocaleBannerComponent } from '../site-locale-banner/site-locale-banner.component';
 import { toLocaleOptions } from '../site-locale-picker/site-locale-option';
 import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-picker.component';
 
 @Component({
   selector: 'flr-site-navbar',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SiteLocaleBannerComponent, SiteLocalePickerComponent],
+  imports: [SiteLocalePickerComponent],
   host: {
     '(window:scroll)': 'onScroll()',
   },
   template: `
-    @if (locales.length > 1) {
-      <flr-site-locale-banner [path]="path()" />
-    }
     <header class="nav" [class.nav--scrolled]="scrolled()">
       <div class="nav__container">
         <a [href]="homeHref" class="nav__brand" translate="no">
@@ -321,7 +317,7 @@ export class SiteNavbarComponent {
   protected readonly logo: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
     isTrustedIconMarkup(this.chrome.logoSvg) ? this.chrome.logoSvg : '',
   );
-  protected readonly locale: SiteLocale = resolveLocale(inject(LOCALE_ID));
+  protected readonly locale: SiteLocale = resolveSiteLocale(this.chrome, inject(LOCALE_ID));
   protected readonly wordmark = this.chrome.wordmark;
   protected readonly wordmarkAccent = this.chrome.wordmarkAccent ?? '';
   protected readonly labels = this.chrome.labels;

@@ -1,27 +1,34 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   effect,
   inject,
   input,
   LOCALE_ID,
+  signal,
 } from '@angular/core';
 import { DOCUMENT, Location } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { SiteNavbarComponent } from '../site-navbar/site-navbar.component';
 import { SiteFooterComponent } from '../site-footer/site-footer.component';
+import { SiteLocaleBannerComponent } from '../site-locale-banner/site-locale-banner.component';
 import {
+  DEFAULT_LOCALE,
   SITE_CHROME,
   siteLocales,
   localeSwitchHref,
-  resolveLocale,
+  resolveSiteLocale,
 } from '../site-chrome/site-chrome.model';
 
 @Component({
   selector: 'flr-site-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SiteNavbarComponent, SiteFooterComponent],
+  imports: [SiteLocaleBannerComponent, SiteNavbarComponent, SiteFooterComponent],
   template: `
+    @if (hasLocaleChoice) {
+      <flr-site-locale-banner [path]="path()" />
+    }
     <flr-site-navbar />
     <main><ng-content /></main>
     <flr-site-footer />
@@ -47,13 +54,21 @@ export class SiteShellComponent {
   private readonly titleService = inject(Title);
   private readonly meta = inject(Meta);
   private readonly document = inject(DOCUMENT);
-  private readonly locale = resolveLocale(inject(LOCALE_ID));
+  private readonly locale = resolveSiteLocale(this.chrome, inject(LOCALE_ID));
+
+  protected readonly hasLocaleChoice = siteLocales(this.chrome).length > 1;
+  protected readonly path = signal(this.location.path() || '/');
 
   constructor() {
+    const stopListening = this.location.onUrlChange(() =>
+      this.path.set(this.location.path() || '/'),
+    );
+    inject(DestroyRef).onDestroy(stopListening);
+
     effect(() => {
       const title = this.title();
       const description = this.description();
-      const path = this.location.path().split(/[?#]/)[0] || '/';
+      const path = this.path().split(/[?#]/)[0] || '/';
       const canonical =
         this.canonical() ??
         `${this.chrome.origin}${localeSwitchHref(this.locale, path, siteLocales(this.chrome))}`;
@@ -84,7 +99,7 @@ export class SiteShellComponent {
       const href = `${this.chrome.origin}${localeSwitchHref(locale, barePath, locales)}`;
       this.setLink('alternate', href, locale);
     }
-    const def = `${this.chrome.origin}${localeSwitchHref('en', barePath, locales)}`;
+    const def = `${this.chrome.origin}${localeSwitchHref(DEFAULT_LOCALE, barePath, locales)}`;
     this.setLink('alternate', def, 'x-default');
   }
 

@@ -226,12 +226,17 @@ export function withLocaleBase(locale: SiteLocale, href: string): string {
   return `${base}${href}`;
 }
 
+function collapseLeadingSlashes(path: string): string {
+  return path.replace(/^[/\\]+/, '/');
+}
+
 export function stripLocalePrefix(
   path: string,
   locales: readonly SiteLocale[] = ALL_SITE_LOCALES,
 ): string {
-  const match = localePrefix(locales)?.exec(path);
-  const rest = (match ? path.slice(match[0].length) : path).replace(/^\/{2,}/, '/');
+  const rooted = collapseLeadingSlashes(path);
+  const match = localePrefix(locales)?.exec(rooted);
+  const rest = collapseLeadingSlashes(match ? rooted.slice(match[0].length) : rooted);
   return rest === '' || /^[?#]/.test(rest) ? `/${rest}` : rest;
 }
 
@@ -250,4 +255,12 @@ export function localeSwitchHref(
 
 export function resolveLocale(localeId: string | null | undefined): SiteLocale {
   return matchSiteLocale(localeId) ?? DEFAULT_LOCALE;
+}
+
+export function resolveSiteLocale(
+  config: SiteChromeConfig,
+  localeId: string | null | undefined,
+): SiteLocale {
+  const locale = resolveLocale(localeId);
+  return siteLocales(config).includes(locale) ? locale : DEFAULT_LOCALE;
 }

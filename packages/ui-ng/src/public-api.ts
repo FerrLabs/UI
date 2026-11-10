@@ -187,6 +187,7 @@ export {
   localeSwitchHref,
   stripLocalePrefix,
   resolveLocale,
+  resolveSiteLocale,
 } from './lib/site-chrome/site-chrome.model';
 export type {
   LocaleEntry,
