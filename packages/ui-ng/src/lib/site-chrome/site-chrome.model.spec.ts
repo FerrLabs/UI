@@ -99,10 +99,27 @@ describe('localeSwitchHref', () => {
     );
   });
 
+  it.each([
+    ['en', '/fr/fr', '/fr/'],
+    ['fr', '/fr/', '/fr/'],
+    ['fr', '/fr/fr', '/fr/fr/'],
+  ] as const)(
+    '%s from %s -> %s (locale-like first slug is read as a prefix)',
+    (target, path, expected) => {
+      expect(localeSwitchHref(target, path)).toBe(expected);
+    },
+  );
+
   describe('properties', () => {
     const locale = fc.constantFrom(...ALL_SITE_LOCALES);
     const segment = fc.stringMatching(/^[a-z0-9._~?#\-/]{0,12}$/);
     const path = fc.tuple(segment, segment).map(([a, b]) => `/${a}${b}`);
+    const startsWithLocale = new RegExp(
+      `^/(?:${ALL_SITE_LOCALES.filter((code) => code !== DEFAULT_LOCALE).join('|')})(?=[/?#]|$)`,
+    );
+    const pathWithoutLocaleLikeSlug = path.filter(
+      (p) => !startsWithLocale.test(stripLocalePrefix(p)),
+    );
 
     it('never produces a protocol-relative href', () => {
       fc.assert(
@@ -114,7 +131,7 @@ describe('localeSwitchHref', () => {
 
     it('is independent of the previous hop', () => {
       fc.assert(
-        fc.property(locale, locale, path, (target, via, p) => {
+        fc.property(locale, locale, pathWithoutLocaleLikeSlug, (target, via, p) => {
           expect(localeSwitchHref(target, localeSwitchHref(via, p))).toBe(
             localeSwitchHref(target, p),
           );
