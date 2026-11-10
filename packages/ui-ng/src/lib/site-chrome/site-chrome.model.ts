@@ -1,6 +1,119 @@
 import { InjectionToken, makeEnvironmentProviders, type EnvironmentProviders } from '@angular/core';
 
-export type SiteLocale = 'en' | 'fr';
+export interface LocaleSuggestionStrings {
+  readonly label: string;
+  readonly message: string;
+  readonly read: string;
+  readonly stay: string;
+}
+
+export interface LocaleEntry {
+  readonly code: string;
+  readonly endonym: string;
+  readonly suggestion: LocaleSuggestionStrings;
+}
+
+export const LOCALE_CATALOG = [
+  {
+    code: 'en',
+    endonym: 'English',
+    suggestion: {
+      label: 'Language suggestion',
+      message: 'This page is also available in English.',
+      read: 'Read in English',
+      stay: 'Stay in English',
+    },
+  },
+  {
+    code: 'fr',
+    endonym: 'Français',
+    suggestion: {
+      label: 'Suggestion de langue',
+      message: 'Cette page est aussi disponible en français.',
+      read: 'Lire en français',
+      stay: 'Rester en français',
+    },
+  },
+  {
+    code: 'de',
+    endonym: 'Deutsch',
+    suggestion: {
+      label: 'Sprachvorschlag',
+      message: 'Diese Seite ist auch auf Deutsch verfügbar.',
+      read: 'Auf Deutsch lesen',
+      stay: 'Auf Deutsch bleiben',
+    },
+  },
+  {
+    code: 'es',
+    endonym: 'Español',
+    suggestion: {
+      label: 'Sugerencia de idioma',
+      message: 'Esta página también está disponible en español.',
+      read: 'Leer en español',
+      stay: 'Seguir en español',
+    },
+  },
+  {
+    code: 'it',
+    endonym: 'Italiano',
+    suggestion: {
+      label: 'Suggerimento lingua',
+      message: 'Questa pagina è disponibile anche in italiano.',
+      read: 'Leggi in italiano',
+      stay: 'Resta in italiano',
+    },
+  },
+  {
+    code: 'pt',
+    endonym: 'Português',
+    suggestion: {
+      label: 'Sugestão de idioma',
+      message: 'Esta página também está disponível em português.',
+      read: 'Ler em português',
+      stay: 'Continuar em português',
+    },
+  },
+  {
+    code: 'nl',
+    endonym: 'Nederlands',
+    suggestion: {
+      label: 'Taalsuggestie',
+      message: 'Deze pagina is ook beschikbaar in het Nederlands.',
+      read: 'Lees in het Nederlands',
+      stay: 'Blijf in het Nederlands',
+    },
+  },
+  {
+    code: 'ja',
+    endonym: '日本語',
+    suggestion: {
+      label: '言語の提案',
+      message: 'このページは日本語でもご覧いただけます。',
+      read: '日本語で読む',
+      stay: '日本語のまま閲覧する',
+    },
+  },
+] as const satisfies readonly LocaleEntry[];
+
+export type SiteLocale = (typeof LOCALE_CATALOG)[number]['code'];
+
+export const DEFAULT_LOCALE: SiteLocale = 'en';
+
+export const ALL_SITE_LOCALES: readonly SiteLocale[] = LOCALE_CATALOG.map((entry) => entry.code);
+
+export function isSiteLocale(code: string): code is SiteLocale {
+  return (ALL_SITE_LOCALES as readonly string[]).includes(code);
+}
+
+export function localeEntry(locale: SiteLocale): LocaleEntry {
+  return LOCALE_CATALOG.find((entry) => entry.code === locale) ?? LOCALE_CATALOG[0];
+}
+
+export function matchSiteLocale(languageTag: string | null | undefined): SiteLocale | null {
+  const primary = languageTag?.toLowerCase().split(/[-_]/)[0] ?? '';
+  return isSiteLocale(primary) ? primary : null;
+}
 
 export interface SiteNavLink {
   readonly label: string;
@@ -37,6 +150,7 @@ export interface SiteChromeLabels {
   readonly menu: string;
   readonly close: string;
   readonly openMenu: string;
+  readonly language?: string;
 }
 
 export interface SiteChromeConfig {
@@ -73,8 +187,12 @@ export function provideSiteChrome(
 }
 
 export function localeBase(locale: SiteLocale): string {
-  return locale === 'fr' ? '/fr' : '';
+  return locale === DEFAULT_LOCALE ? '' : `/${locale}`;
 }
+
+const LOCALE_PREFIX = new RegExp(
+  `^/(?:${ALL_SITE_LOCALES.filter((code) => code !== DEFAULT_LOCALE).join('|')})(?=/|$)`,
+);
 
 function isAbsolute(href: string): boolean {
   return /^[a-z]+:/i.test(href) || href.startsWith('//') || href.startsWith('#');
@@ -99,9 +217,8 @@ export function withLocaleBase(locale: SiteLocale, href: string): string {
 }
 
 export function stripLocalePrefix(path: string): string {
-  if (path === '/fr' || path === '/fr/') return '/';
-  if (path.startsWith('/fr/')) return path.slice(3);
-  return path || '/';
+  const match = LOCALE_PREFIX.exec(path);
+  return (match ? path.slice(match[0].length) : path) || '/';
 }
 
 export function localeSwitchHref(target: SiteLocale, path: string): string {
@@ -112,5 +229,5 @@ export function localeSwitchHref(target: SiteLocale, path: string): string {
 }
 
 export function resolveLocale(localeId: string | null | undefined): SiteLocale {
-  return localeId?.toLowerCase().startsWith('fr') ? 'fr' : 'en';
+  return matchSiteLocale(localeId) ?? DEFAULT_LOCALE;
 }

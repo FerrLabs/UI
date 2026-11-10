@@ -170,6 +170,12 @@ export { SiteShellComponent } from './lib/site-shell/site-shell.component';
 export {
   SITE_CHROME,
   SITE_LOCALES,
+  ALL_SITE_LOCALES,
+  DEFAULT_LOCALE,
+  LOCALE_CATALOG,
+  isSiteLocale,
+  localeEntry,
+  matchSiteLocale,
   siteLocales,
   provideSiteChrome,
   localeBase,
@@ -179,6 +185,8 @@ export {
   resolveLocale,
 } from './lib/site-chrome/site-chrome.model';
 export type {
+  LocaleEntry,
+  LocaleSuggestionStrings,
   SiteLocale,
   SiteNavLink,
   SiteFooterLink,
