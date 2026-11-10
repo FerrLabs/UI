@@ -226,8 +226,15 @@ export function withLocaleBase(locale: SiteLocale, href: string): string {
   return `${base}${href}`;
 }
 
+function isIgnoredLead(char: string): boolean {
+  return char <= ' ' || char === '/' || char === '\\';
+}
+
 function rooted(path: string): string {
-  return path.replace(/^[/\\]*/, '/');
+  const cleaned = path.replace(/[\t\n\r]/g, '');
+  let start = 0;
+  while (start < cleaned.length && isIgnoredLead(cleaned[start])) start++;
+  return `/${cleaned.slice(start)}`;
 }
 
 export function stripLocalePrefix(
