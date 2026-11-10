@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, LOCALE_ID } from '@angular/core';
-import { isTrustedIconMarkup } from '../icon/icon-markup';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
+import { isTrustedIconMarkup } from '../icon/icon-markup';
 import {
   SITE_CHROME,
   resolveLocale,
