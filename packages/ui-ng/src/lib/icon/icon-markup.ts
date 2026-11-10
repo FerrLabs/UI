@@ -50,8 +50,9 @@ const ATTRIBUTES: ReadonlySet<string> = new Set([
   'y2',
 ]);
 
-const TAG = /<\/?([a-zA-Z][a-zA-Z0-9-]*)((?:\s[^<>]*)?)\/?>/g;
-const ATTRIBUTE = /([a-zA-Z_:][-a-zA-Z0-9_:.]*)\s*=\s*"([^"<>]*)"/g;
+const TAG = /<\/?([a-zA-Z][a-zA-Z0-9-]*)((?:[\t\n\f\r ][^<>]*)?)\/?>/g;
+const ATTRIBUTE = /([a-zA-Z_:][-a-zA-Z0-9_:.]*)[\t\n\f\r ]*=[\t\n\f\r ]*"([^"<>]*)"/g;
+const NON_HTML_WHITESPACE = /[^\S\t\n\f\r ]/;
 
 function attributesAreSafe(raw: string): boolean {
   let rest = raw;
@@ -59,10 +60,11 @@ function attributesAreSafe(raw: string): boolean {
     if (!ATTRIBUTES.has(name)) return false;
     rest = rest.replace(match, ' ');
   }
-  return rest.replace(/\//g, ' ').trim() === '';
+  return rest.replaceAll('/', ' ').trim() === '';
 }
 
 export function isTrustedIconMarkup(markup: string): boolean {
+  if (NON_HTML_WHITESPACE.test(markup)) return false;
   const value = markup.trim();
   if (!value.startsWith('<svg') || !value.endsWith('</svg>')) return false;
   if (value.includes('<!') || value.includes('<?')) return false;

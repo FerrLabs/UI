@@ -108,11 +108,10 @@ export class SelectComponent implements ControlValueAccessor {
 
   protected readonly styles = computed<Record<string, string | null>>(() => {
     const dim = SIZE[this.size()];
-    const border = this.invalid()
-      ? ERROR
-      : this.focused()
-        ? 'var(--color-accent, var(--color-ink, #1e293b))'
-        : 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))';
+    let border: string;
+    if (this.invalid()) border = ERROR;
+    else if (this.focused()) border = 'var(--color-accent, var(--color-ink, #1e293b))';
+    else border = 'var(--color-rule-strong, rgba(30, 41, 59, 0.28))';
     const ring = this.invalid()
       ? 'color-mix(in oklab, var(--color-danger, #dc2626) 25%, transparent)'
       : 'color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent)';

@@ -40,12 +40,9 @@ export class SpinnerComponent {
 
   protected readonly styles = computed<Record<string, string>>(() => {
     const dim = SIZE[this.size()];
-    const ring =
-      this.color() === 'accent'
-        ? 'var(--color-accent, #e8733a)'
-        : this.color() === 'current'
-          ? 'currentColor'
-          : 'var(--color-ink-3, #64748b)';
+    let ring = 'var(--color-ink-3, #64748b)';
+    if (this.color() === 'accent') ring = 'var(--color-accent, #e8733a)';
+    else if (this.color() === 'current') ring = 'currentColor';
     return {
       width: dim.box,
       height: dim.box,

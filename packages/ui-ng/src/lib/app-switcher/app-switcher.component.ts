@@ -22,6 +22,11 @@ import { SHELL_CONTEXT } from '../shell/shell-context';
 
 let panelCount = 0;
 
+function nextPanelId(): number {
+  panelCount += 1;
+  return panelCount;
+}
+
 const PRODUCT_SLUGS: ReadonlySet<string> = new Set<ProductSlug>([
   'ferrflow',
   'ferrvault',
@@ -68,7 +73,7 @@ export class AppSwitcherComponent {
     () => this.collapsed() || (this.shell?.collapsed() ?? false),
   );
 
-  protected readonly panelId = `flr-as-list-${(panelCount += 1)}`;
+  protected readonly panelId = `flr-as-list-${nextPanelId()}`;
   protected readonly open = signal(false);
   protected readonly customizing = signal(false);
 

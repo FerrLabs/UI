@@ -112,5 +112,5 @@ export function localeSwitchHref(target: SiteLocale, path: string): string {
 }
 
 export function resolveLocale(localeId: string | null | undefined): SiteLocale {
-  return localeId && localeId.toLowerCase().startsWith('fr') ? 'fr' : 'en';
+  return localeId?.toLowerCase().startsWith('fr') ? 'fr' : 'en';
 }

@@ -33,9 +33,10 @@ export class TabComponent implements TabsStripItem {
 
   protected readonly isPanel = computed(() => this.strip.mode() === 'panel');
   protected readonly asLink = computed(() => !this.isPanel() && !!this.href() && !this.disabled());
-  protected readonly tabIndex = computed(() =>
-    this.isPanel() ? (this.strip.isFocusable(this) ? 0 : -1) : null,
-  );
+  protected readonly tabIndex = computed(() => {
+    if (!this.isPanel()) return null;
+    return this.strip.isFocusable(this) ? 0 : -1;
+  });
 
   focus(): void {
     this.control()?.nativeElement.focus();

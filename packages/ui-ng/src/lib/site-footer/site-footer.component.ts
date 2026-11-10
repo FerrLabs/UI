@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, LOCALE_ID } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
+import { isTrustedIconMarkup } from '../icon/icon-markup';
 import {
   SITE_CHROME,
   resolveLocale,
@@ -170,7 +171,9 @@ export class SiteFooterComponent {
   private readonly chrome = inject(SITE_CHROME);
   private readonly sanitizer = inject(DomSanitizer);
 
-  protected readonly logo: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(this.chrome.logoSvg);
+  protected readonly logo: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
+    isTrustedIconMarkup(this.chrome.logoSvg) ? this.chrome.logoSvg : '',
+  );
   protected readonly wordmark = this.chrome.wordmark;
   protected readonly wordmarkAccent = this.chrome.wordmarkAccent ?? '';
 

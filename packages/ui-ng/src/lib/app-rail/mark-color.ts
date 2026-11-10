@@ -8,6 +8,6 @@ export function markColorOnDark(accent: string): string {
           .map((c) => c + c)
           .join('')
       : hex;
-  const [r, g, b] = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16));
+  const [r, g, b] = [0, 2, 4].map((i) => Number.parseInt(full.slice(i, i + 2), 16));
   return 0.2126 * r + 0.7152 * g + 0.0722 * b > 70 ? accent : '#ffffff';
 }

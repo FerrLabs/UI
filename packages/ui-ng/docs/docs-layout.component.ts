@@ -471,9 +471,11 @@ export class DocsLayoutComponent {
     return { label: item.label, href: this.docHref(item.slug) };
   });
 
-  protected readonly sidebarLabel = computed(() =>
-    this.sidebarOpen() ? (this.isFr() ? 'Fermer' : 'Close') : this.isFr() ? 'Sommaire' : 'Menu',
-  );
+  protected readonly sidebarLabel = computed(() => {
+    const fr = this.isFr();
+    if (this.sidebarOpen()) return fr ? 'Fermer' : 'Close';
+    return fr ? 'Sommaire' : 'Menu';
+  });
   protected readonly navLabel = 'Documentation';
   protected readonly sidebarLandmarkLabel = computed(() =>
     this.isFr() ? 'Sommaire de la documentation' : 'Documentation menu',
