@@ -31,7 +31,7 @@
   "scripts": {
     "build": "ng-packagr -p ng-package.json -c tsconfig.lib.json",
     "watch": "ng-packagr -p ng-package.json -c tsconfig.lib.json --watch",
-    "typecheck": "tsc -p tsconfig.lib.json --noEmit --inlineSources false --declarationMap false",
+    "typecheck": "tsc -p tsconfig.lib.json --noEmit --inlineSources false --declarationMap false && tsc -p tsconfig.spec.json --noEmit --inlineSources false --declarationMap false",
     "test": "vitest run"
   },
   "peerDependencies": {
