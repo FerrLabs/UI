@@ -131,7 +131,7 @@ export class SiteLocaleBannerComponent {
     return {
       code,
       target: localeEntry(code).suggestion,
-      href: localeSwitchHref(code, this.path()),
+      href: localeSwitchHref(code, this.path(), this.enabled),
     };
   });
 

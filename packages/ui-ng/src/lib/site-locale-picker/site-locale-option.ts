@@ -13,6 +13,6 @@ export function toLocaleOptions(
   return locales.map((code) => ({
     code,
     endonym: localeEntry(code).endonym,
-    href: localeSwitchHref(code, path),
+    href: localeSwitchHref(code, path, locales),
   }));
 }

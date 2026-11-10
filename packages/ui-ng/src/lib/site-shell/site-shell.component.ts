@@ -55,7 +55,8 @@ export class SiteShellComponent {
       const description = this.description();
       const path = this.location.path().split(/[?#]/)[0] || '/';
       const canonical =
-        this.canonical() ?? `${this.chrome.origin}${localeSwitchHref(this.locale, path)}`;
+        this.canonical() ??
+        `${this.chrome.origin}${localeSwitchHref(this.locale, path, siteLocales(this.chrome))}`;
 
       if (title) {
         this.titleService.setTitle(title);
@@ -80,10 +81,10 @@ export class SiteShellComponent {
     }
 
     for (const locale of locales) {
-      const href = `${this.chrome.origin}${localeSwitchHref(locale, barePath)}`;
+      const href = `${this.chrome.origin}${localeSwitchHref(locale, barePath, locales)}`;
       this.setLink('alternate', href, locale);
     }
-    const def = `${this.chrome.origin}${localeSwitchHref('en', barePath)}`;
+    const def = `${this.chrome.origin}${localeSwitchHref('en', barePath, locales)}`;
     this.setLink('alternate', def, 'x-default');
   }
 

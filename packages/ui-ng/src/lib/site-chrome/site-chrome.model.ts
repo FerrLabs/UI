@@ -199,9 +199,10 @@ export function localeBase(locale: SiteLocale): string {
   return locale === DEFAULT_LOCALE ? '' : `/${locale}`;
 }
 
-const LOCALE_PREFIX = new RegExp(
-  `^/(?:${ALL_SITE_LOCALES.filter((code) => code !== DEFAULT_LOCALE).join('|')})(?=[/?#]|$)`,
-);
+function localePrefix(locales: readonly SiteLocale[]): RegExp | null {
+  const codes = locales.filter((code) => code !== DEFAULT_LOCALE);
+  return codes.length > 0 ? new RegExp(`^/(?:${codes.join('|')})(?=[/?#]|$)`) : null;
+}
 
 function isAbsolute(href: string): boolean {
   return /^[a-z]+:/i.test(href) || href.startsWith('//') || href.startsWith('#');
@@ -225,14 +226,21 @@ export function withLocaleBase(locale: SiteLocale, href: string): string {
   return `${base}${href}`;
 }
 
-export function stripLocalePrefix(path: string): string {
-  const match = LOCALE_PREFIX.exec(path);
-  const rest = match ? path.slice(match[0].length) : path;
+export function stripLocalePrefix(
+  path: string,
+  locales: readonly SiteLocale[] = ALL_SITE_LOCALES,
+): string {
+  const match = localePrefix(locales)?.exec(path);
+  const rest = (match ? path.slice(match[0].length) : path).replace(/^\/{2,}/, '/');
   return rest === '' || /^[?#]/.test(rest) ? `/${rest}` : rest;
 }
 
-export function localeSwitchHref(target: SiteLocale, path: string): string {
-  const bare = stripLocalePrefix(path);
+export function localeSwitchHref(
+  target: SiteLocale,
+  path: string,
+  locales: readonly SiteLocale[] = ALL_SITE_LOCALES,
+): string {
+  const bare = stripLocalePrefix(path, locales);
   const base = localeBase(target);
   const cut = bare.search(/[?#]/);
   const pathname = cut === -1 ? bare : bare.slice(0, cut);
