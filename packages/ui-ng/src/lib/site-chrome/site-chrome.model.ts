@@ -226,24 +226,23 @@ export function withLocaleBase(locale: SiteLocale, href: string): string {
   return `${base}${href}`;
 }
 
-function collapseLeadingSlashes(path: string): string {
-  return path.replace(/^[/\\]+/, '/');
+function rooted(path: string): string {
+  return path.replace(/^[/\\]*/, '/');
 }
 
 export function stripLocalePrefix(
   path: string,
-  locales: readonly SiteLocale[] = ALL_SITE_LOCALES,
+  locales: readonly SiteLocale[] = SITE_LOCALES,
 ): string {
-  const rooted = collapseLeadingSlashes(path);
-  const match = localePrefix(locales)?.exec(rooted);
-  const rest = collapseLeadingSlashes(match ? rooted.slice(match[0].length) : rooted);
-  return rest === '' || /^[?#]/.test(rest) ? `/${rest}` : rest;
+  const full = rooted(path);
+  const match = localePrefix(locales)?.exec(full);
+  return rooted(match ? full.slice(match[0].length) : full);
 }
 
 export function localeSwitchHref(
   target: SiteLocale,
   path: string,
-  locales: readonly SiteLocale[] = ALL_SITE_LOCALES,
+  locales: readonly SiteLocale[] = SITE_LOCALES,
 ): string {
   const bare = stripLocalePrefix(path, locales);
   const base = localeBase(target);
@@ -261,6 +260,8 @@ export function resolveSiteLocale(
   config: SiteChromeConfig,
   localeId: string | null | undefined,
 ): SiteLocale {
+  const enabled = siteLocales(config);
   const locale = resolveLocale(localeId);
-  return siteLocales(config).includes(locale) ? locale : DEFAULT_LOCALE;
+  if (enabled.includes(locale)) return locale;
+  return enabled.includes(DEFAULT_LOCALE) ? DEFAULT_LOCALE : enabled[0];
 }

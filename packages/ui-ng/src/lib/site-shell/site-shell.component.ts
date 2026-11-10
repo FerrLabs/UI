@@ -1,14 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   effect,
   inject,
   input,
   LOCALE_ID,
-  signal,
 } from '@angular/core';
-import { DOCUMENT, Location } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { SiteNavbarComponent } from '../site-navbar/site-navbar.component';
 import { SiteFooterComponent } from '../site-footer/site-footer.component';
@@ -20,6 +18,7 @@ import {
   localeSwitchHref,
   resolveSiteLocale,
 } from '../site-chrome/site-chrome.model';
+import { injectSitePath } from '../site-chrome/site-path';
 
 @Component({
   selector: 'flr-site-shell',
@@ -50,21 +49,15 @@ export class SiteShellComponent {
   readonly canonical = input<string | null>(null);
 
   private readonly chrome = inject(SITE_CHROME);
-  private readonly location = inject(Location);
   private readonly titleService = inject(Title);
   private readonly meta = inject(Meta);
   private readonly document = inject(DOCUMENT);
   private readonly locale = resolveSiteLocale(this.chrome, inject(LOCALE_ID));
 
   protected readonly hasLocaleChoice = siteLocales(this.chrome).length > 1;
-  protected readonly path = signal(this.location.path() || '/');
+  protected readonly path = injectSitePath();
 
   constructor() {
-    const stopListening = this.location.onUrlChange(() =>
-      this.path.set(this.location.path() || '/'),
-    );
-    inject(DestroyRef).onDestroy(stopListening);
-
     effect(() => {
       const title = this.title();
       const description = this.description();

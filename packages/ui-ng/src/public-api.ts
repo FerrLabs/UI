@@ -201,6 +201,7 @@ export type {
   SiteChromeLabels,
   SiteChromeConfig,
 } from './lib/site-chrome/site-chrome.model';
+export { injectSitePath } from './lib/site-chrome/site-path';
 
 export {
   readRuntimeEnv,
