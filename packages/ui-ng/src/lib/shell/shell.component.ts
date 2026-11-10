@@ -160,6 +160,7 @@ export interface ShellNavGroup {
       --color-app-nav-hover: rgba(255, 255, 255, 0.06);
       --color-app-nav-active: rgba(255, 255, 255, 0.1);
       --color-danger: #f87171;
+      --color-danger-fg: #fca5a5;
       --color-avatar-bg: rgba(255, 255, 255, 0.16);
       --color-card: var(--color-app-rail-tip, #1a1b20);
       --color-app-bg-2: rgba(255, 255, 255, 0.06);
