@@ -27,6 +27,8 @@ describe('stripLocalePrefix', () => {
     ['/\\evil.com', '/evil.com', ALL_SITE_LOCALES],
     ['\\\\evil.com', '/evil.com', ALL_SITE_LOCALES],
     ['//fr/pricing', '/pricing', ALL_SITE_LOCALES],
+    ['\t/evil.com', '/evil.com', ALL_SITE_LOCALES],
+    ['/f\tr/pricing', '/pricing', ALL_SITE_LOCALES],
     ['/', '/', ALL_SITE_LOCALES],
     ['/en/x', '/en/x', ALL_SITE_LOCALES],
     ['/it/', '/it/', ['en', 'fr']],
@@ -65,6 +67,14 @@ describe('localeSwitchHref', () => {
     ['fr', '///evil.com', '/fr/evil.com'],
     ['en', '//fr/pricing', '/pricing/'],
     ['en', '/\\evil.com', '/evil.com'],
+    ['en', '\t/evil.com', '/evil.com'],
+    ['de', '\t/evil.com', '/de/evil.com'],
+    ['en', '\n//evil.com', '/evil.com'],
+    ['de', '\n//evil.com', '/de/evil.com'],
+    ['en', '/fr/\n/evil.com', '/evil.com'],
+    ['en', ' //evil.com', '/evil.com'],
+    ['en', '\u0000//evil.com', '/evil.com'],
+    ['en', '/f\tr/pricing', '/pricing/'],
   ];
 
   it.each(cases)('%s from %s -> %s', (target, path, expected) => {
@@ -94,6 +104,13 @@ describe('localeSwitchHref', () => {
     '/ja///evil.com?a=1',
     '/de?//evil.com',
     '/fr#//evil.com',
+    '\t/evil.com',
+    '\n//evil.com',
+    '\r\n//evil.com',
+    '/fr/\n/evil.com',
+    ' //evil.com',
+    '\u0000//evil.com',
+    '/\\evil.com',
   ];
 
   it.each(ALL_SITE_LOCALES.flatMap((t) => hostilePaths.map((p) => [t, p] as const)))(
@@ -102,6 +119,7 @@ describe('localeSwitchHref', () => {
       const href = localeSwitchHref(target, path, ALL_SITE_LOCALES);
       expect(href.startsWith('/')).toBe(true);
       expect(href.startsWith('//')).toBe(false);
+      expect(new URL(href, 'https://site.example').host).toBe('site.example');
     },
   );
 
@@ -136,6 +154,22 @@ describe('localeSwitchHref', () => {
     const pathWithoutLocaleLikeSlug = path.filter(
       (p) => !startsWithLocale.test(stripLocalePrefix(p, ALL_SITE_LOCALES)),
     );
+
+    const hostileChars = fc
+      .array(fc.constantFrom('a', 'b', '.', '/', '\\', '\t', '\n', '\r', ' ', '\u0000', '?', '#'), {
+        maxLength: 16,
+      })
+      .map((chars) => chars.join(''));
+    const hostilePath = fc.tuple(hostileChars, hostileChars).map(([a, b]) => `${a}/${b}`);
+
+    it('always resolves to the site host', () => {
+      fc.assert(
+        fc.property(locale, hostilePath, (target, p) => {
+          const href = localeSwitchHref(target, p, ALL_SITE_LOCALES);
+          expect(new URL(href, 'https://site.example').host).toBe('site.example');
+        }),
+      );
+    });
 
     it('never produces a protocol-relative href', () => {
       fc.assert(
