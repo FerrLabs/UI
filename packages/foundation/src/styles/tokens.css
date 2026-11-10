@@ -57,7 +57,7 @@
   /* App dashboards — same ink, lighter neutrals for sidebar density. */
   --color-app-bg: #f8fafc;
   --color-app-bg-2: #f1f5f9;
-  --color-app-sidebar: #f4f7fb;
+  --color-app-sidebar: #f6f8fb;
   --color-app-rule: rgba(30, 41, 59, 0.1);
   --color-app-rule-strong: rgba(30, 41, 59, 0.24);
   --color-app-nav-active: rgba(30, 41, 59, 0.06);

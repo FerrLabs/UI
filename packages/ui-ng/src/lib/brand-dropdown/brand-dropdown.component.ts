@@ -190,7 +190,7 @@ interface BrandRow {
       left: 0;
       right: 0;
       height: calc(100vh - 64px - 56px);
-      background: var(--color-app-sidebar, #f4f7fb);
+      background: var(--color-app-sidebar, #f6f8fb);
       border-bottom: 1px solid var(--color-rule, rgba(30, 41, 59, 0.1));
       padding: 8px 8px 12px;
       z-index: 60;

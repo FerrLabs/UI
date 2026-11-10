@@ -27,7 +27,7 @@ import { markColorOnDark } from '../app-rail/mark-color';
       top: 0;
       display: flex;
       flex-direction: column;
-      background: var(--color-app-sidebar, #f4f7fb);
+      background: var(--color-app-sidebar, #f6f8fb);
       border-right: 1px solid var(--flr-sidebar-border, var(--color-rule, rgba(30, 41, 59, 0.14)));
       transition: width 220ms ease;
     }
