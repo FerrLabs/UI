@@ -121,7 +121,7 @@ export class SelectComponent implements ControlValueAccessor {
       'padding-right': `${dim.paddingRight}px`,
       'font-size': `${dim.fontSize}px`,
       'background-color': this.disabled()
-        ? 'var(--color-paper-2, #f3efe7)'
+        ? 'var(--color-paper-2, #f1f5f9)'
         : 'var(--color-card, #ffffff)',
       'background-position': `right ${dim.chevronOffset}px center`,
       'background-size': `${dim.chevronSize}px ${dim.chevronSize}px`,

@@ -4,6 +4,12 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.7.0] - 2026-11-10
+
+### Features
+
+- feat(foundation): replace cream surfaces with cool slate neutrals (#714)
+
 ## [5.6.0] - 2026-11-09
 
 ### Features

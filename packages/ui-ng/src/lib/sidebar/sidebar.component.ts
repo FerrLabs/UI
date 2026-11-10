@@ -27,7 +27,7 @@ import { markColorOnDark } from '../app-rail/mark-color';
       top: 0;
       display: flex;
       flex-direction: column;
-      background: var(--color-app-sidebar, #f7f7f5);
+      background: var(--color-app-sidebar, #f6f8fb);
       border-right: 1px solid var(--flr-sidebar-border, var(--color-rule, rgba(30, 41, 59, 0.14)));
       transition: width 220ms ease;
     }
@@ -225,7 +225,7 @@ export class SidebarSectionComponent {
       background: var(--color-app-nav-active, rgba(30, 41, 59, 0.06));
     }
     .flr-sb-item--danger {
-      color: var(--color-danger, #dc2626);
+      color: var(--color-danger-fg, #7f1d1d);
     }
     .flr-sb-item:disabled {
       cursor: not-allowed;

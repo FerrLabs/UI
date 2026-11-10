@@ -249,7 +249,7 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
       position: fixed;
       inset: 0;
       z-index: 100;
-      background: var(--color-paper, #faf8f4);
+      background: var(--color-paper, #f8fafc);
     }
     .nav__mobile-bar {
       justify-content: space-between;
@@ -299,7 +299,7 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
     .nav__mobile-lang[aria-current='true'] {
       background: var(--color-ink, #1e293b);
       border-color: var(--color-ink, #1e293b);
-      color: var(--color-paper, #faf8f4);
+      color: var(--color-paper, #f8fafc);
     }
     .nav__mobile-link .mono {
       font-size: 12px;

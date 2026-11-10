@@ -170,7 +170,7 @@ export class SearchFieldComponent implements ControlValueAccessor {
       'padding-right': `${dim.padX}px`,
       'font-size': `${dim.fontSize}px`,
       border: `1px solid ${border}`,
-      background: this.disabled() ? 'var(--color-paper-2, #f4f4f2)' : 'var(--color-card, #ffffff)',
+      background: this.disabled() ? 'var(--color-paper-2, #f1f5f9)' : 'var(--color-card, #ffffff)',
       color: this.disabled() ? 'var(--color-ink-3, #64748b)' : 'var(--color-ink, #1e293b)',
       'box-shadow': this.focused() ? ring : 'none',
     };

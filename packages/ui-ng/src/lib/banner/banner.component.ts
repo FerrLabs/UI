@@ -10,22 +10,22 @@ interface BannerTokens {
 
 const TOKENS: Record<BannerVariant, BannerTokens> = {
   info: {
-    bg: 'color-mix(in oklab, var(--color-ink-3, #64748b) 8%, var(--color-paper, #faf8f4))',
+    bg: 'color-mix(in oklab, var(--color-ink-3, #64748b) 8%, var(--color-paper, #f8fafc))',
     fg: 'var(--color-ink, #1e293b)',
     border: 'var(--color-rule, rgba(30, 41, 59, 0.14))',
   },
   success: {
-    bg: 'color-mix(in oklab, var(--color-success, #10b981) 10%, var(--color-paper, #faf8f4))',
+    bg: 'color-mix(in oklab, var(--color-success, #10b981) 10%, var(--color-paper, #f8fafc))',
     fg: 'var(--color-success-fg, #065f46)',
     border: 'color-mix(in oklab, var(--color-success, #10b981) 24%, transparent)',
   },
   warning: {
-    bg: 'color-mix(in oklab, var(--color-warning, #f59e0b) 12%, var(--color-paper, #faf8f4))',
+    bg: 'color-mix(in oklab, var(--color-warning, #f59e0b) 12%, var(--color-paper, #f8fafc))',
     fg: 'var(--color-warning-fg, #78350f)',
     border: 'color-mix(in oklab, var(--color-warning, #f59e0b) 28%, transparent)',
   },
   danger: {
-    bg: 'color-mix(in oklab, var(--color-danger, #dc2626) 10%, var(--color-paper, #faf8f4))',
+    bg: 'color-mix(in oklab, var(--color-danger, #dc2626) 10%, var(--color-paper, #f8fafc))',
     fg: 'var(--color-danger-fg, #7f1d1d)',
     border: 'color-mix(in oklab, var(--color-danger, #dc2626) 26%, transparent)',
   },
