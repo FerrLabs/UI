@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.47.1] - 2026-11-10
+
+### Refactoring
+
+- refactor: apply sonar findings (#708)
+
 ## [1.47.0] - 2026-11-09
 
 ### Features
