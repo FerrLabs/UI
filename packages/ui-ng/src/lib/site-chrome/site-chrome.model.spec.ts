@@ -6,6 +6,8 @@ import {
   localeSwitchHref,
   matchSiteLocale,
   resolveLocale,
+  resolveSiteLocale,
+  type SiteChromeConfig,
   stripLocalePrefix,
   type SiteLocale,
 } from './site-chrome.model';
@@ -22,6 +24,9 @@ describe('stripLocalePrefix', () => {
     ['/fr//evil.com', '/evil.com', undefined],
     ['//evil.com', '/evil.com', undefined],
     ['///evil.com/x', '/evil.com/x', undefined],
+    ['/\\evil.com', '/evil.com', undefined],
+    ['\\\\evil.com', '/evil.com', undefined],
+    ['//fr/pricing', '/pricing', undefined],
     ['/', '/', undefined],
     ['/en/x', '/en/x', undefined],
     ['/it/', '/it/', ['en', 'fr']],
@@ -51,6 +56,8 @@ describe('localeSwitchHref', () => {
     ['en', '//evil.com', '/evil.com'],
     ['en', '/fr//evil.com', '/evil.com'],
     ['fr', '///evil.com', '/fr/evil.com'],
+    ['en', '//fr/pricing', '/pricing/'],
+    ['en', '/\\evil.com', '/evil.com'],
   ];
 
   it.each(cases)('%s from %s -> %s', (target, path, expected) => {
@@ -135,5 +142,26 @@ describe('matchSiteLocale and resolveLocale', () => {
   it.each(cases)('%s -> %s', (tag, expected) => {
     expect(matchSiteLocale(tag)).toBe(expected);
     expect(resolveLocale(tag)).toBe(expected ?? DEFAULT_LOCALE);
+  });
+});
+
+describe('resolveSiteLocale', () => {
+  const configWith = (locales?: readonly SiteLocale[]): SiteChromeConfig =>
+    ({ locales }) as SiteChromeConfig;
+
+  const cases: readonly [readonly SiteLocale[] | undefined, string | null, SiteLocale][] = [
+    [['en', 'fr', 'de'], 'de-CH', 'de'],
+    [['en', 'fr'], 'de-CH', 'en'],
+    [['en', 'fr'], 'FR', 'fr'],
+    [['fr', 'de'], 'ja', 'en'],
+    [['en', 'fr'], 'xx', 'en'],
+    [['en', 'fr'], null, 'en'],
+    [undefined, 'fr', 'fr'],
+    [undefined, 'de', 'en'],
+    [[], 'fr', 'fr'],
+  ];
+
+  it.each(cases)('locales %j with %s -> %s', (locales, localeId, expected) => {
+    expect(resolveSiteLocale(configWith(locales), localeId)).toBe(expected);
   });
 });
