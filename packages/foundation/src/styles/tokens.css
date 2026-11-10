@@ -88,6 +88,17 @@
   --color-code-deleted: #b91c1c;
 }
 
+/* Border radius scale. `static` keeps the variables in :root even when no
+ * utility references them, since ui-ng components read them via var().
+ * Utilities: `rounded-control`, `rounded-card`, `rounded-modal`.
+ */
+@theme static {
+  --radius-control: 4px; /* Buttons, inputs, selects, tabs, small chips */
+  --radius-card: 8px; /* Cards, menus, popovers, rail items */
+  --radius-modal: 12px; /* Modals, switcher panels, large surfaces */
+  --radius-full: 999px; /* Switch, avatar, badges, status dots */
+}
+
 /* Dark mode tokens — opt-in via `<html data-theme="dark">`. The marketing
  * sites mount a tweaks panel that flips this; the apps don't have one yet
  * but inherit the same vars so a future toggle Just Works.

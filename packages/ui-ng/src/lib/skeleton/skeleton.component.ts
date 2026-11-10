@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 export type SkeletonShape = 'rect' | 'text' | 'circle';
 
 const RADIUS: Record<SkeletonShape, string> = {
-  rect: '8px',
-  text: '4px',
-  circle: '999px',
+  rect: 'var(--radius-card)',
+  text: 'var(--radius-control)',
+  circle: 'var(--radius-full)',
 };
 
 function toLength(value: string | number): string {

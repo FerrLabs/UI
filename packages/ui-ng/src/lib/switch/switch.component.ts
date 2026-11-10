@@ -72,7 +72,7 @@ const SIZE: Record<SwitchSize, { trackW: number; trackH: number; thumb: number; 
       display: inline-flex;
       align-items: center;
       padding: 0;
-      border-radius: 999px;
+      border-radius: var(--radius-full);
       border: 1px solid transparent;
       cursor: inherit;
       flex-shrink: 0;
@@ -80,7 +80,7 @@ const SIZE: Record<SwitchSize, { trackW: number; trackH: number; thumb: number; 
     }
     .flr-switch__thumb {
       display: inline-block;
-      border-radius: 999px;
+      border-radius: var(--radius-full);
       background: #fff;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
       transition: transform 160ms;

@@ -187,7 +187,7 @@ import {
       display: flex;
       align-items: center;
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      border-radius: 999px;
+      border-radius: var(--radius-full);
       overflow: hidden;
     }
     .nav__lang-opt {
@@ -222,7 +222,7 @@ import {
       letter-spacing: 0.06em;
       text-transform: uppercase;
       padding: 10px 16px;
-      border-radius: 999px;
+      border-radius: var(--radius-full);
       background: var(--accent, #1e293b);
       color: #fff;
       text-decoration: none;
@@ -238,7 +238,7 @@ import {
       display: none;
       margin-left: auto;
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      border-radius: 999px;
+      border-radius: var(--radius-full);
       background: transparent;
       color: var(--color-ink, #1e293b);
       padding: 8px 14px;

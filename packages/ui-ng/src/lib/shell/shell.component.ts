@@ -145,7 +145,7 @@ export interface ShellNavGroup {
     .flr-shell:has(.flr-shell__rail:not(:empty)) .flr-shell__surface {
       --flr-sidebar-height: calc(100dvh - var(--flr-shell-inset, 10px));
       margin-top: var(--flr-shell-inset, 10px);
-      border-top-left-radius: var(--flr-shell-radius, 14px);
+      border-top-left-radius: var(--flr-shell-radius, var(--radius-modal));
       overflow: clip;
     }
     .flr-shell:not(:has(.flr-shell__rail:not(:empty))):not(:has(.flr-shell__switcher:not(:empty))) {
@@ -174,7 +174,7 @@ export interface ShellNavGroup {
     }
     .flr-shell:has(.flr-shell__switcher:not(:empty)) .flr-shell__body {
       margin-top: var(--flr-shell-inset, 10px);
-      border-top-left-radius: var(--flr-shell-radius, 14px);
+      border-top-left-radius: var(--flr-shell-radius, var(--radius-modal));
       overflow: clip;
       background: var(--color-app-bg, #f8fafc);
     }
@@ -238,7 +238,7 @@ export interface ShellNavGroup {
       align-items: center;
       gap: 8px;
       padding: 6px 10px 6px 12px;
-      border-radius: 8px;
+      border-radius: var(--radius-control);
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
       background: var(--color-app-bg-2, #f1f5f9);
       color: var(--color-ink-3, #64748b);
@@ -257,7 +257,7 @@ export interface ShellNavGroup {
       display: inline-flex;
       align-items: center;
       padding: 1px 5px;
-      border-radius: 4px;
+      border-radius: var(--radius-control);
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
       background: var(--color-card, #fff);
       font-family: inherit;

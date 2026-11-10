@@ -186,7 +186,7 @@ function niceCeil(raw: number): number {
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      border-radius: 2px 2px 0 0;
+      border-radius: var(--radius-control) var(--radius-control) 0 0;
       overflow: hidden;
     }
     .flr-bc__slot--on .flr-bc__stack {
@@ -194,7 +194,7 @@ function niceCeil(raw: number): number {
     }
     .flr-bc__bar {
       width: 100%;
-      border-radius: 2px 2px 0 0;
+      border-radius: var(--radius-control) var(--radius-control) 0 0;
     }
     .flr-bc__bar--zero {
       opacity: 0.28;
@@ -214,7 +214,7 @@ function niceCeil(raw: number): number {
       flex-direction: column;
       gap: 1px;
       padding: 5px 8px;
-      border-radius: 4px;
+      border-radius: var(--radius-control);
       background: var(--flr-tooltip-bg, rgba(20, 20, 20, 0.94));
       color: var(--flr-tooltip-fg, #fff);
       box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);

@@ -76,7 +76,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       width: 16px;
       height: 16px;
       flex-shrink: 0;
-      border-radius: 4px;
+      border-radius: var(--radius-control);
       background: var(--color-card, #ffffff);
       border: 1px solid var(--color-rule-strong, rgba(30, 41, 59, 0.28));
       transition:

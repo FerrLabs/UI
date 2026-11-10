@@ -119,7 +119,7 @@ let nextId = 0;
     }
     .flr-ts {
       border: 1px solid var(--flr-rule, #e2e8f0);
-      border-radius: 8px;
+      border-radius: var(--radius-card);
       overflow: hidden;
       background: var(--flr-bg, #fff);
     }
