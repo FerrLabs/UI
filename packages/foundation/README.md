@@ -40,6 +40,17 @@ import { icons } from '@ferrlabs/ui-foundation/icons';
 @import '@ferrlabs/ui-foundation/styles/global.css';
 ```
 
+## Radius tokens
+
+| Token              | Value | Tailwind utility  | Use                                                 |
+| ------------------ | ----- | ----------------- | --------------------------------------------------- |
+| `--radius-control` | 4px   | `rounded-control` | Buttons, inputs, selects, search, tabs, small chips |
+| `--radius-card`    | 8px   | `rounded-card`    | Cards, menus, popovers, rail items                  |
+| `--radius-modal`   | 12px  | `rounded-modal`   | Modals, switcher panels, large surfaces             |
+| `--radius-full`    | 999px | `rounded-full`    | Switch, avatar, badges, status dots                 |
+
+`.btn-primary` and `.btn-ghost` use `--radius-control`.
+
 ## Migration from old packages
 
 The old packages (`@ferrlabs/ui-icons`, `@ferrlabs/styles`,

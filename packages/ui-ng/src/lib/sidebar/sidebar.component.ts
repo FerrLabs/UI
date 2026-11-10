@@ -201,7 +201,7 @@ export class SidebarSectionComponent {
       gap: 12px;
       padding: 10px 12px;
       margin: 1px 0;
-      border-radius: 8px;
+      border-radius: var(--radius-card, 8px);
       background: transparent;
       border: none;
       cursor: pointer;
@@ -275,7 +275,7 @@ export class SidebarSectionComponent {
       font-family: var(--font-mono, 'DM Mono', ui-monospace, monospace);
       font-size: 10px;
       padding: 1px 7px;
-      border-radius: 999px;
+      border-radius: var(--radius-full, 999px);
       background: var(--color-rule, rgba(30, 41, 59, 0.14));
       color: var(--color-ink-2, #475569);
       white-space: nowrap;

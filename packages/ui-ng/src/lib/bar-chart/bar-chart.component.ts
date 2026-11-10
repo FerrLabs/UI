@@ -214,7 +214,7 @@ function niceCeil(raw: number): number {
       flex-direction: column;
       gap: 1px;
       padding: 5px 8px;
-      border-radius: 4px;
+      border-radius: var(--radius-control, 4px);
       background: var(--flr-tooltip-bg, rgba(20, 20, 20, 0.94));
       color: var(--flr-tooltip-fg, #fff);
       box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);

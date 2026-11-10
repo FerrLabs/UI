@@ -47,7 +47,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       padding: 10px 12px;
       background: var(--color-card, #fff);
       border: 1px solid var(--color-rule, #e2e8f0);
-      border-radius: 8px;
+      border-radius: var(--radius-card, 8px);
       display: flex;
       align-items: center;
       gap: 10px;

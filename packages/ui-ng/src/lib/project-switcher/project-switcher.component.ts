@@ -231,7 +231,7 @@ export interface ProjectSwitcherPlaceholder {
       left: 0;
       right: 0;
       top: 100%;
-      border-radius: 0 0 10px 10px;
+      border-radius: 0 0 var(--radius-card, 8px) var(--radius-card, 8px);
     }
     :host(.flr-ps--compact) .flr-ps__brand {
       justify-content: center;
@@ -243,7 +243,7 @@ export interface ProjectSwitcherPlaceholder {
     :host(.flr-ps--compact) .flr-ps__monogram {
       width: 100%;
       height: 100%;
-      border-radius: 12px;
+      border-radius: var(--radius-modal, 12px);
       transition: background 140ms ease;
     }
     :host(.flr-ps--compact) .flr-ps__brand:hover .flr-ps__monogram {
@@ -254,7 +254,7 @@ export interface ProjectSwitcherPlaceholder {
       right: auto;
       top: 8px;
       width: 280px;
-      border-radius: 10px;
+      border-radius: var(--radius-modal, 12px);
     }
     .flr-ps__monogram {
       display: flex;
@@ -263,7 +263,7 @@ export interface ProjectSwitcherPlaceholder {
       width: 34px;
       height: 34px;
       flex: none;
-      border-radius: 10px;
+      border-radius: var(--radius-card, 8px);
       background: var(--color-app-bg-2, #f1f5f9);
       color: var(--color-ink, #1e293b);
       font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
@@ -289,7 +289,7 @@ export interface ProjectSwitcherPlaceholder {
       right: 12px;
       background: var(--color-card, #fff);
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      border-radius: 10px;
+      border-radius: var(--radius-modal, 12px);
       box-shadow: 0 10px 30px rgba(15, 23, 42, 0.14);
       padding: 6px;
       z-index: 60;
@@ -325,7 +325,7 @@ export interface ProjectSwitcherPlaceholder {
       padding: 6px 10px;
       font-size: 13px;
       border: 1px solid var(--color-rule, #e2e8f0);
-      border-radius: 6px;
+      border-radius: var(--radius-control, 4px);
       background: var(--color-app-bg-2, #f8fafc);
       color: var(--color-ink, #0f172a);
       outline: none;
@@ -352,7 +352,7 @@ export interface ProjectSwitcherPlaceholder {
       gap: 10px;
       background: transparent;
       border: none;
-      border-radius: 6px;
+      border-radius: var(--radius-control, 4px);
       cursor: pointer;
       color: var(--color-ink, #0f172a);
       text-align: left;
@@ -402,7 +402,7 @@ export interface ProjectSwitcherPlaceholder {
       gap: 10px;
       background: transparent;
       border: none;
-      border-radius: 6px;
+      border-radius: var(--radius-control, 4px);
       cursor: pointer;
       color: var(--color-ink-2, #475569);
       text-align: left;

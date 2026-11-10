@@ -169,7 +169,7 @@ export interface BreadcrumbCrumb {
       justify-content: center;
       width: 32px;
       height: 32px;
-      border-radius: 999px;
+      border-radius: var(--radius-full, 999px);
       color: var(--color-ink-3, #64748b);
       transition:
         color 120ms ease,
