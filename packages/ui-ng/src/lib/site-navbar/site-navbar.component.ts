@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { isTrustedIconMarkup } from '../icon/icon-markup';
 import {
+  localeEntry,
   SITE_CHROME,
   type SiteLocale,
   siteLocales,
@@ -31,7 +32,7 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
   },
   template: `
     @if (locales.length > 1) {
-      <flr-site-locale-banner />
+      <flr-site-locale-banner [path]="path()" />
     }
     <header class="nav" [class.nav--scrolled]="scrolled()">
       <div class="nav__container">
@@ -342,9 +343,9 @@ export class SiteNavbarComponent {
   protected readonly mobileOpen = signal(false);
 
   protected readonly locales = siteLocales(this.chrome);
-  protected readonly languageLabel = this.labels.language ?? 'Language';
+  protected readonly languageLabel = this.labels.language ?? localeEntry(this.locale).language;
 
-  private readonly path = signal(this.location.path() || '/');
+  protected readonly path = signal(this.location.path() || '/');
   protected readonly localeOptions = computed(() => toLocaleOptions(this.locales, this.path()));
 
   constructor() {

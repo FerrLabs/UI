@@ -1,10 +1,10 @@
-import { Location } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
   inject,
+  input,
   LOCALE_ID,
   signal,
 } from '@angular/core';
@@ -116,7 +116,8 @@ function writeDismissed(locale: SiteLocale): void {
   `,
 })
 export class SiteLocaleBannerComponent {
-  private readonly location = inject(Location);
+  readonly path = input.required<string>();
+
   private readonly enabled = siteLocales(inject(SITE_CHROME));
 
   protected readonly current = resolveLocale(inject(LOCALE_ID));
@@ -130,7 +131,7 @@ export class SiteLocaleBannerComponent {
     return {
       code,
       target: localeEntry(code).suggestion,
-      href: localeSwitchHref(code, this.location.path() || '/'),
+      href: localeSwitchHref(code, this.path()),
     };
   });
 

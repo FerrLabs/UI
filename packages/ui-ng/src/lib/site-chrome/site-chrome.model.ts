@@ -10,6 +10,7 @@ export interface LocaleSuggestionStrings {
 export interface LocaleEntry {
   readonly code: string;
   readonly endonym: string;
+  readonly language: string;
   readonly suggestion: LocaleSuggestionStrings;
 }
 
@@ -17,6 +18,7 @@ export const LOCALE_CATALOG = [
   {
     code: 'en',
     endonym: 'English',
+    language: 'Language',
     suggestion: {
       label: 'Language suggestion',
       message: 'This page is also available in English.',
@@ -27,6 +29,7 @@ export const LOCALE_CATALOG = [
   {
     code: 'fr',
     endonym: 'Français',
+    language: 'Langue',
     suggestion: {
       label: 'Suggestion de langue',
       message: 'Cette page est aussi disponible en français.',
@@ -37,6 +40,7 @@ export const LOCALE_CATALOG = [
   {
     code: 'de',
     endonym: 'Deutsch',
+    language: 'Sprache',
     suggestion: {
       label: 'Sprachvorschlag',
       message: 'Diese Seite ist auch auf Deutsch verfügbar.',
@@ -47,6 +51,7 @@ export const LOCALE_CATALOG = [
   {
     code: 'es',
     endonym: 'Español',
+    language: 'Idioma',
     suggestion: {
       label: 'Sugerencia de idioma',
       message: 'Esta página también está disponible en español.',
@@ -57,6 +62,7 @@ export const LOCALE_CATALOG = [
   {
     code: 'it',
     endonym: 'Italiano',
+    language: 'Lingua',
     suggestion: {
       label: 'Suggerimento lingua',
       message: 'Questa pagina è disponibile anche in italiano.',
@@ -67,6 +73,7 @@ export const LOCALE_CATALOG = [
   {
     code: 'pt',
     endonym: 'Português',
+    language: 'Idioma',
     suggestion: {
       label: 'Sugestão de idioma',
       message: 'Esta página também está disponível em português.',
@@ -77,6 +84,7 @@ export const LOCALE_CATALOG = [
   {
     code: 'nl',
     endonym: 'Nederlands',
+    language: 'Taal',
     suggestion: {
       label: 'Taalsuggestie',
       message: 'Deze pagina is ook beschikbaar in het Nederlands.',
@@ -87,6 +95,7 @@ export const LOCALE_CATALOG = [
   {
     code: 'ja',
     endonym: '日本語',
+    language: '言語',
     suggestion: {
       label: '言語の提案',
       message: 'このページは日本語でもご覧いただけます。',
@@ -191,7 +200,7 @@ export function localeBase(locale: SiteLocale): string {
 }
 
 const LOCALE_PREFIX = new RegExp(
-  `^/(?:${ALL_SITE_LOCALES.filter((code) => code !== DEFAULT_LOCALE).join('|')})(?=/|$)`,
+  `^/(?:${ALL_SITE_LOCALES.filter((code) => code !== DEFAULT_LOCALE).join('|')})(?=[/?#]|$)`,
 );
 
 function isAbsolute(href: string): boolean {
@@ -218,13 +227,16 @@ export function withLocaleBase(locale: SiteLocale, href: string): string {
 
 export function stripLocalePrefix(path: string): string {
   const match = LOCALE_PREFIX.exec(path);
-  return (match ? path.slice(match[0].length) : path) || '/';
+  const rest = match ? path.slice(match[0].length) : path;
+  return rest === '' || /^[?#]/.test(rest) ? `/${rest}` : rest;
 }
 
 export function localeSwitchHref(target: SiteLocale, path: string): string {
   const bare = stripLocalePrefix(path);
   const base = localeBase(target);
-  if (bare === '/' || bare === '') return base ? `${base}/` : '/';
+  const cut = bare.search(/[?#]/);
+  const pathname = cut === -1 ? bare : bare.slice(0, cut);
+  if (pathname === '/') return `${base}${bare}`;
   return withTrailingSlash(`${base}${bare}`);
 }
 
