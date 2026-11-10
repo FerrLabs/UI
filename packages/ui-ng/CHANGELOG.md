@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.48.0] - 2026-11-10
+
+### Features
+
+- feat(foundation): replace cream surfaces with cool slate neutrals (#714)
+
 ## [1.47.2] - 2026-11-10
 
 ### Bug Fixes
