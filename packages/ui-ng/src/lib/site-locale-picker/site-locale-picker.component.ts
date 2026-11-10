@@ -13,8 +13,10 @@ import {
   viewChildren,
   ViewEncapsulation,
 } from '@angular/core';
+import { FocusKeyManager } from '@angular/cdk/a11y';
 import { OverlayModule, type ConnectedPosition } from '@angular/cdk/overlay';
 import type { SiteLocale } from '../site-chrome/site-chrome.model';
+import { SiteLocaleLinkDirective } from './site-locale-link.directive';
 import type { SiteLocaleOption } from './site-locale-option';
 
 const POSITIONS: ConnectedPosition[] = [
@@ -22,12 +24,14 @@ const POSITIONS: ConnectedPosition[] = [
   { originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6 },
 ];
 
+let nextPanelId = 0;
+
 @Component({
   selector: 'flr-site-locale-picker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['../overlay/cdk-overlay.css'],
-  imports: [OverlayModule],
+  imports: [OverlayModule, SiteLocaleLinkDirective],
   template: `
     <button
       #trigger
@@ -36,8 +40,8 @@ const POSITIONS: ConnectedPosition[] = [
       type="button"
       class="flr-locale-picker__trigger"
       translate="no"
-      aria-haspopup="true"
       [attr.aria-expanded]="open()"
+      [attr.aria-controls]="open() ? panelId : null"
       (click)="open.set(!open())"
     >
       <svg
@@ -85,11 +89,11 @@ const POSITIONS: ConnectedPosition[] = [
       (detach)="onDetach()"
       (overlayKeydown)="onKeydown($event)"
     >
-      <ul class="flr-locale-picker__panel" role="list">
+      <ul class="flr-locale-picker__panel" role="list" [id]="panelId">
         @for (option of options(); track option.code) {
           <li>
             <a
-              #link
+              [flrSiteLocaleLink]="option.endonym"
               class="flr-locale-picker__option"
               [class.is-current]="option.code === current()"
               [href]="option.href"
@@ -237,15 +241,16 @@ const POSITIONS: ConnectedPosition[] = [
 export class SiteLocalePickerComponent {
   readonly options = input.required<readonly SiteLocaleOption[]>();
   readonly current = input.required<SiteLocale>();
-  readonly label = input('Language');
+  readonly label = input.required<string>();
 
   protected readonly open = signal(false);
   protected readonly positions = POSITIONS;
+  protected readonly panelId = `flr-locale-picker-panel-${nextPanelId++}`;
 
   private readonly document = inject(DOCUMENT);
   private readonly injector = inject(Injector);
   private readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
-  private readonly links = viewChildren<ElementRef<HTMLAnchorElement>>('link');
+  private readonly links = viewChildren(SiteLocaleLinkDirective);
   private readonly currentIndex = computed(() =>
     Math.max(
       0,
@@ -253,45 +258,30 @@ export class SiteLocalePickerComponent {
     ),
   );
 
+  private readonly keyManager = new FocusKeyManager(this.links, this.injector)
+    .withWrap()
+    .withHomeAndEnd()
+    .withTypeAhead();
+
   protected focusCurrent(): void {
-    afterNextRender(() => this.focusAt(this.currentIndex()), { injector: this.injector });
+    afterNextRender(() => this.keyManager.setActiveItem(this.currentIndex()), {
+      injector: this.injector,
+    });
   }
 
   protected onDetach(): void {
     this.open.set(false);
-    this.trigger().nativeElement.focus();
+    const active = this.document.activeElement;
+    if (!active || active === this.document.body) {
+      this.trigger().nativeElement.focus();
+    }
   }
 
   protected onKeydown(event: KeyboardEvent): void {
-    const target = this.targetIndex(event.key);
     if (event.key === 'Tab') {
       this.open.set(false);
-    } else if (target !== null) {
-      event.preventDefault();
-      this.focusAt(target);
+      return;
     }
-  }
-
-  private targetIndex(key: string): number | null {
-    const last = this.links().length - 1;
-    const active = this.links().findIndex(
-      (link) => link.nativeElement === this.document.activeElement,
-    );
-    switch (key) {
-      case 'ArrowDown':
-        return active >= last ? 0 : active + 1;
-      case 'ArrowUp':
-        return active <= 0 ? last : active - 1;
-      case 'Home':
-        return 0;
-      case 'End':
-        return last;
-      default:
-        return null;
-    }
-  }
-
-  private focusAt(index: number): void {
-    this.links()[index]?.nativeElement.focus();
+    this.keyManager.onKeydown(event);
   }
 }
