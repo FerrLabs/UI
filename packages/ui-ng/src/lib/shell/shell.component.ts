@@ -140,7 +140,7 @@ export interface ShellNavGroup {
       display: flex;
       flex: 1;
       min-width: 0;
-      background: var(--color-app-bg, #fafaf9);
+      background: var(--color-app-bg, #f8fafc);
     }
     .flr-shell:has(.flr-shell__rail:not(:empty)) .flr-shell__surface {
       --flr-sidebar-height: calc(100dvh - var(--flr-shell-inset, 10px));
@@ -149,7 +149,7 @@ export interface ShellNavGroup {
       overflow: clip;
     }
     .flr-shell:not(:has(.flr-shell__rail:not(:empty))):not(:has(.flr-shell__switcher:not(:empty))) {
-      background: var(--color-app-bg, #fafaf9);
+      background: var(--color-app-bg, #f8fafc);
     }
     .flr-shell:has(.flr-shell__switcher:not(:empty)) flr-sidebar {
       --color-app-sidebar: var(--color-app-rail, #101012);
@@ -175,7 +175,7 @@ export interface ShellNavGroup {
       margin-top: var(--flr-shell-inset, 10px);
       border-top-left-radius: var(--flr-shell-radius, 14px);
       overflow: clip;
-      background: var(--color-app-bg, #fafaf9);
+      background: var(--color-app-bg, #f8fafc);
     }
     .flr-shell__rail {
       display: flex;
@@ -203,7 +203,7 @@ export interface ShellNavGroup {
       padding: 0 28px;
       gap: 16px;
       border-bottom: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      background: var(--color-app-bg, #fafaf9);
+      background: var(--color-app-bg, #f8fafc);
       position: sticky;
       top: 0;
       z-index: 5;
@@ -239,7 +239,7 @@ export interface ShellNavGroup {
       padding: 6px 10px 6px 12px;
       border-radius: 8px;
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      background: var(--color-app-bg-2, #f4f4f2);
+      background: var(--color-app-bg-2, #f1f5f9);
       color: var(--color-ink-3, #64748b);
       font-family: var(--font-mono, 'DM Mono', ui-monospace, monospace);
       font-size: 12px;
@@ -285,7 +285,7 @@ export interface ShellNavGroup {
       min-height: 0;
       overflow-y: auto;
       padding-bottom: var(--flr-shell-main-pad-bottom, 40px);
-      background: var(--color-app-bg, #fafaf9);
+      background: var(--color-app-bg, #f8fafc);
     }
   `,
 })

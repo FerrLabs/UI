@@ -99,7 +99,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-danger, #dc2626) 30%, transparent);
     }
     .flr-checkbox--disabled .flr-checkbox__box {
-      background: var(--color-paper-2, #f3efe7);
+      background: var(--color-paper-2, #f1f5f9);
     }
     .flr-checkbox__input {
       position: absolute;

@@ -90,7 +90,7 @@
   font-size: 0.88em;
   padding: 0.15em 0.4em;
   border-radius: 5px;
-  background: var(--color-code-bg, #f3efe7);
+  background: var(--color-code-bg, #f1f5f9);
   color: var(--color-code-fg, #1e293b);
   border: 1px solid var(--color-card-rule, rgba(30, 41, 59, 0.1));
 }
@@ -100,7 +100,7 @@
   overflow-x: auto;
   border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
   border-radius: 10px;
-  background: var(--color-code-bg, #f3efe7);
+  background: var(--color-code-bg, #f1f5f9);
   color: var(--color-code-fg, #1e293b);
   font-size: 13px;
   line-height: 1.6;
@@ -128,7 +128,7 @@
   vertical-align: top;
 }
 .flr-markdown th {
-  background: var(--color-paper-2, #f3efe7);
+  background: var(--color-paper-2, #f1f5f9);
   color: var(--color-ink, #1e293b);
   font-weight: 600;
 }
@@ -154,7 +154,7 @@
   width: 0.3em;
   height: 0.55em;
   margin: 0.05em auto 0;
-  border: solid var(--color-paper, #faf8f4);
+  border: solid var(--color-paper, #f8fafc);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }

@@ -98,7 +98,7 @@ export class InputComponent implements ControlValueAccessor {
       height: dim.height,
       padding: dim.padding,
       'font-size': dim.fontSize,
-      background: this.disabled() ? 'var(--color-paper-2, #f3efe7)' : 'var(--color-card, #ffffff)',
+      background: this.disabled() ? 'var(--color-paper-2, #f1f5f9)' : 'var(--color-card, #ffffff)',
       border: `1px solid ${border}`,
       'box-shadow': this.focused() ? `0 0 0 3px ${ring}` : null,
       cursor: this.disabled() ? 'not-allowed' : 'text',

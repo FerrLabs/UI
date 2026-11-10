@@ -113,7 +113,7 @@ let modalCounter = 0;
     }
     .flr-modal__footer {
       padding: 16px 24px;
-      background: var(--color-paper-2, #f3efe7);
+      background: var(--color-paper-2, #f1f5f9);
       border-top: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
       display: flex;
       align-items: center;

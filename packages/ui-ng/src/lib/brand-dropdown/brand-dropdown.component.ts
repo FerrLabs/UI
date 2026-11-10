@@ -190,7 +190,7 @@ interface BrandRow {
       left: 0;
       right: 0;
       height: calc(100vh - 64px - 56px);
-      background: var(--color-app-sidebar, #f7f7f5);
+      background: var(--color-app-sidebar, #f4f7fb);
       border-bottom: 1px solid var(--color-rule, rgba(30, 41, 59, 0.1));
       padding: 8px 8px 12px;
       z-index: 60;
@@ -298,7 +298,7 @@ interface BrandRow {
       border: 0;
       overflow: hidden;
       color: inherit;
-      background: var(--color-paper, #faf8f4);
+      background: var(--color-paper, #f8fafc);
       backdrop-filter: blur(10px) saturate(140%);
       -webkit-backdrop-filter: blur(10px) saturate(140%);
       z-index: 2147483600;
