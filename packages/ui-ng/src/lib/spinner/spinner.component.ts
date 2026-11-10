@@ -22,7 +22,7 @@ const SIZE: Record<SpinnerSize, { box: string; border: string }> = {
     }
     .flr-spinner {
       display: inline-block;
-      border-radius: var(--radius-full);
+      border-radius: var(--radius-full, 999px);
       border-style: solid;
       animation: flr-spinner-rotate 0.8s linear infinite;
     }

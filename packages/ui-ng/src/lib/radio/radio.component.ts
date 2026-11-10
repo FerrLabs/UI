@@ -143,7 +143,7 @@ export class RadioGroupComponent implements ControlValueAccessor {
       width: 16px;
       height: 16px;
       flex-shrink: 0;
-      border-radius: var(--radius-full);
+      border-radius: var(--radius-full, 999px);
       background: var(--color-card, #ffffff);
       border: 1px solid var(--color-rule-strong, rgba(30, 41, 59, 0.28));
       transition:
@@ -175,7 +175,7 @@ export class RadioGroupComponent implements ControlValueAccessor {
     .flr-radio__dot {
       width: 8px;
       height: 8px;
-      border-radius: var(--radius-full);
+      border-radius: var(--radius-full, 999px);
       background: var(--color-accent, var(--color-ink, #1e293b));
       opacity: 0;
       transition: opacity 120ms;

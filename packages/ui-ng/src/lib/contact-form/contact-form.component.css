@@ -25,7 +25,7 @@
 .flr-contact__error {
   margin: 0;
   padding: 10px 12px;
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-card, 8px);
   font-size: 14px;
   color: var(--color-danger, #b91c1c);
   background: color-mix(in srgb, var(--color-danger, #b91c1c) 8%, transparent);
@@ -38,7 +38,7 @@
 
 .flr-contact__sent {
   padding: 24px;
-  border-radius: var(--radius-modal);
+  border-radius: var(--radius-modal, 12px);
   background: color-mix(in srgb, var(--color-accent, #1e293b) 7%, transparent);
 }
 

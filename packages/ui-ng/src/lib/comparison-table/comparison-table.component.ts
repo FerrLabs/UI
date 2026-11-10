@@ -182,8 +182,8 @@ interface RenderCell {
     .flr-cmp__head--ours {
       color: var(--color-ink, #1e293b);
       background: color-mix(in oklab, var(--ours-accent, #1e293b) 10%, transparent);
-      border-top-left-radius: var(--radius-card);
-      border-top-right-radius: var(--radius-card);
+      border-top-left-radius: var(--radius-card, 8px);
+      border-top-right-radius: var(--radius-card, 8px);
     }
     .flr-cmp__group th {
       text-align: left;

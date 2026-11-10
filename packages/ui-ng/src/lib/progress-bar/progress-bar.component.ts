@@ -79,12 +79,12 @@ const FILL: Record<ProgressBarVariant, string> = {
     .flr-progress__track {
       width: 100%;
       background: var(--color-rule, rgba(30, 41, 59, 0.14));
-      border-radius: var(--radius-full);
+      border-radius: var(--radius-full, 999px);
       overflow: hidden;
     }
     .flr-progress__fill {
       height: 100%;
-      border-radius: var(--radius-full);
+      border-radius: var(--radius-full, 999px);
       transition: width 300ms ease-out;
     }
     .flr-progress__fill--indeterminate {

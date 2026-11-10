@@ -23,7 +23,7 @@ const PADDING: Record<CardPadding, string> = {
       display: contents;
     }
     .flr-card {
-      border-radius: var(--radius-card);
+      border-radius: var(--radius-card, 8px);
       transition:
         box-shadow 160ms ease,
         transform 160ms ease;

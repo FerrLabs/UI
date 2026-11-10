@@ -25,7 +25,7 @@ export type StatDelta = 'up' | 'down' | 'flat';
     .flr-stat {
       background: var(--color-card, #ffffff);
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      border-radius: var(--radius-card);
+      border-radius: var(--radius-card, 8px);
       padding: 20px;
     }
     .flr-stat__label {

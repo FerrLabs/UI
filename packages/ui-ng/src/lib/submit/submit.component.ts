@@ -47,7 +47,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
       color: #fff;
       background: var(--color-accent, var(--color-ink, #1e293b));
       border: 1px solid var(--color-accent, var(--color-ink, #1e293b));
-      border-radius: var(--radius-control);
+      border-radius: var(--radius-control, 4px);
       cursor: pointer;
       transition:
         background 160ms ease-out,

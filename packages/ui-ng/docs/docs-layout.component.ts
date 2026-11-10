@@ -136,7 +136,7 @@ interface SiblingLink {
       grid-column: 1 / -1;
       justify-self: start;
       border: 1px solid var(--paper-rule);
-      border-radius: var(--radius-full);
+      border-radius: var(--radius-full, 999px);
       background: transparent;
       color: var(--paper-ink);
       padding: 8px 16px;
@@ -178,7 +178,7 @@ interface SiblingLink {
       background-repeat: no-repeat;
       background-position: right 10px center;
       border: 1px solid var(--paper-rule);
-      border-radius: var(--radius-card);
+      border-radius: var(--radius-card, 8px);
       padding: 7px 30px 7px 12px;
       cursor: pointer;
       transition:
@@ -237,7 +237,7 @@ interface SiblingLink {
     .docs__section-label:focus-visible {
       outline: 2px solid var(--paper-accent, currentColor);
       outline-offset: 2px;
-      border-radius: var(--radius-control);
+      border-radius: var(--radius-control, 4px);
     }
     @media (prefers-reduced-motion: reduce) {
       .docs__section-label::after {
@@ -294,7 +294,7 @@ interface SiblingLink {
       gap: 6px;
       padding: 16px 20px;
       border: 1px solid var(--paper-rule);
-      border-radius: var(--radius-modal);
+      border-radius: var(--radius-modal, 12px);
       text-decoration: none;
       transition:
         border-color 160ms ease,

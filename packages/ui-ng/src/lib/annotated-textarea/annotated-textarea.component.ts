@@ -159,7 +159,7 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
     }
     .flr-at {
       position: relative;
-      border-radius: var(--radius-card);
+      border-radius: var(--radius-card, 8px);
       overflow: visible;
       transition:
         border-color 140ms,
@@ -215,7 +215,7 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
       max-width: 34ch;
       padding: 6px 9px;
       transform: translateY(-100%);
-      border-radius: var(--radius-card);
+      border-radius: var(--radius-card, 8px);
       background: var(--color-ink, #1e293b);
       color: var(--color-paper, #faf7f2);
       font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);

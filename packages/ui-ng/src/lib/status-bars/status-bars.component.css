@@ -13,7 +13,7 @@
 .flr-status-bars__bar {
   flex: 1 1 0;
   min-width: 2px;
-  border-radius: var(--radius-control);
+  border-radius: 1px;
   background: var(--color-rule);
 }
 

@@ -58,7 +58,7 @@
   height: var(--flr-pg-box);
   padding: 0 6px;
   border: none;
-  border-radius: var(--radius-control);
+  border-radius: var(--radius-control, 4px);
   background: transparent;
   color: var(--color-fg-2, #475569);
   font-family: inherit;

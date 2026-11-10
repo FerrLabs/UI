@@ -12,9 +12,9 @@ interface SizeDim {
 }
 
 const SIZE: Record<ButtonSize, SizeDim> = {
-  sm: { padding: '5px 10px', fontSize: '11px', gap: '6px', radius: 'var(--radius-control)' },
-  md: { padding: '8px 14px', fontSize: '12px', gap: '8px', radius: 'var(--radius-control)' },
-  lg: { padding: '12px 20px', fontSize: '14px', gap: '10px', radius: 'var(--radius-control)' },
+  sm: { padding: '5px 10px', fontSize: '11px', gap: '6px', radius: 'var(--radius-control, 4px)' },
+  md: { padding: '8px 14px', fontSize: '12px', gap: '8px', radius: 'var(--radius-control, 4px)' },
+  lg: { padding: '12px 20px', fontSize: '14px', gap: '10px', radius: 'var(--radius-control, 4px)' },
 };
 
 const DANGER = 'var(--color-danger, #dc2626)';

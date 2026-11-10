@@ -68,7 +68,7 @@ let modalCounter = 0;
     .flr-modal__panel {
       width: calc(100vw - 2rem);
       background: var(--color-card, #fff);
-      border-radius: var(--radius-modal);
+      border-radius: var(--radius-modal, 12px);
       box-shadow: 0 20px 48px rgba(15, 23, 42, 0.18);
       border: 1px solid var(--color-card-rule, rgba(30, 41, 59, 0.1));
       overflow: hidden;
