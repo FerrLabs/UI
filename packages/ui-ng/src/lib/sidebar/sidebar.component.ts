@@ -225,7 +225,7 @@ export class SidebarSectionComponent {
       background: var(--color-app-nav-active, rgba(30, 41, 59, 0.06));
     }
     .flr-sb-item--danger {
-      color: var(--color-danger, #dc2626);
+      color: var(--color-danger-fg, #7f1d1d);
     }
     .flr-sb-item:disabled {
       cursor: not-allowed;
