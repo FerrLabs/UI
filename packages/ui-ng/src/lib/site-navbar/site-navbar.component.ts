@@ -2,12 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   inject,
   LOCALE_ID,
   signal,
 } from '@angular/core';
-import { Location } from '@angular/common';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { isTrustedIconMarkup } from '../icon/icon-markup';
 import {
@@ -19,6 +17,7 @@ import {
   withLocaleBase,
   withTrailingSlash,
 } from '../site-chrome/site-chrome.model';
+import { injectSitePath } from '../site-chrome/site-path';
 import { toLocaleOptions } from '../site-locale-picker/site-locale-option';
 import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-picker.component';
 
@@ -311,7 +310,6 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
 })
 export class SiteNavbarComponent {
   private readonly chrome = inject(SITE_CHROME);
-  private readonly location = inject(Location);
   private readonly sanitizer = inject(DomSanitizer);
 
   protected readonly logo: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
@@ -341,15 +339,8 @@ export class SiteNavbarComponent {
   protected readonly locales = siteLocales(this.chrome);
   protected readonly languageLabel = this.labels.language ?? localeEntry(this.locale).language;
 
-  protected readonly path = signal(this.location.path() || '/');
+  protected readonly path = injectSitePath();
   protected readonly localeOptions = computed(() => toLocaleOptions(this.locales, this.path()));
-
-  constructor() {
-    const stopListening = this.location.onUrlChange(() =>
-      this.path.set(this.location.path() || '/'),
-    );
-    inject(DestroyRef).onDestroy(stopListening);
-  }
 
   protected onScroll(): void {
     this.scrolled.set(typeof window !== 'undefined' && window.scrollY > 8);

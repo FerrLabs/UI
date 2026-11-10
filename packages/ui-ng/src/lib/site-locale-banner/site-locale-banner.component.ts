@@ -71,7 +71,9 @@ function writeDismissed(locale: SiteLocale): void {
   `,
   styles: `
     :host {
-      display: block;
+      position: fixed;
+      inset: auto 0 0;
+      z-index: 60;
     }
     .banner {
       display: flex;
@@ -80,8 +82,9 @@ function writeDismissed(locale: SiteLocale): void {
       justify-content: center;
       gap: 6px 16px;
       padding: 8px 20px;
-      background: var(--color-paper-2, rgba(30, 41, 59, 0.04));
-      border-bottom: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
+      background: var(--color-paper-2, #f1f5f9);
+      border-top: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
+      padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
       color: var(--color-ink-2, #475569);
       font-size: 13px;
     }
