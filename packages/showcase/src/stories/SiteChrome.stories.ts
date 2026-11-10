@@ -62,6 +62,20 @@ type Story = StoryObj;
 
 export const Navbar: Story = { render: () => ({ template: `<flr-site-navbar />` }) };
 
+export const NavbarAllLocales: Story = {
+  decorators: [
+    applicationConfig({
+      providers: [
+        provideSiteChrome({
+          ...CHROME,
+          locales: ['en', 'fr', 'de', 'es', 'it', 'pt', 'nl', 'ja'],
+        }),
+      ],
+    }),
+  ],
+  render: () => ({ template: `<flr-site-navbar />` }),
+};
+
 export const Footer: Story = { render: () => ({ template: `<flr-site-footer />` }) };
 
 // A site that ships one language. The switcher is not rendered at all, because

@@ -166,6 +166,10 @@ export type { Paged } from './lib/pagination/paged';
 
 export { SiteNavbarComponent } from './lib/site-navbar/site-navbar.component';
 export { SiteFooterComponent } from './lib/site-footer/site-footer.component';
+export { SiteLocalePickerComponent } from './lib/site-locale-picker/site-locale-picker.component';
+export { SiteLocaleBannerComponent } from './lib/site-locale-banner/site-locale-banner.component';
+export { toLocaleOptions } from './lib/site-locale-picker/site-locale-option';
+export type { SiteLocaleOption } from './lib/site-locale-picker/site-locale-option';
 export { SiteShellComponent } from './lib/site-shell/site-shell.component';
 export {
   SITE_CHROME,
