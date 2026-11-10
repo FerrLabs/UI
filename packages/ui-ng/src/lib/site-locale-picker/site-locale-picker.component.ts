@@ -89,7 +89,7 @@ let nextPanelId = 0;
       (detach)="onDetach()"
       (overlayKeydown)="onKeydown($event)"
     >
-      <ul class="flr-locale-picker__panel" role="list" [id]="panelId">
+      <ul class="flr-locale-picker__panel" role="list" translate="no" [id]="panelId">
         @for (option of options(); track option.code) {
           <li>
             <a

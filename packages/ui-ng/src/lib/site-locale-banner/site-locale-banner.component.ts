@@ -71,8 +71,8 @@ function writeDismissed(locale: SiteLocale): void {
   `,
   styles: `
     :host {
-      position: fixed;
-      inset: auto 0 0;
+      position: sticky;
+      bottom: 0;
       z-index: 60;
     }
     .banner {

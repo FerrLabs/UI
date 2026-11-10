@@ -94,7 +94,7 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
             }
             @if (locales.length > 1) {
               <p class="nav__mobile-eyebrow mono">{{ languageLabel }}</p>
-              <div class="nav__mobile-langs">
+              <div class="nav__mobile-langs" translate="no">
                 @for (option of localeOptions(); track option.code) {
                   <a
                     [href]="option.href"
