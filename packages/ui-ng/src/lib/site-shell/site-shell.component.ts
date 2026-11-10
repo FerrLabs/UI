@@ -25,12 +25,12 @@ import { injectSitePath } from '../site-chrome/site-path';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SiteLocaleBannerComponent, SiteNavbarComponent, SiteFooterComponent],
   template: `
-    @if (hasLocaleChoice) {
-      <flr-site-locale-banner [path]="path()" />
-    }
     <flr-site-navbar />
     <main><ng-content /></main>
     <flr-site-footer />
+    @if (hasLocaleChoice) {
+      <flr-site-locale-banner [path]="path()" />
+    }
   `,
   styles: `
     :host {
