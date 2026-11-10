@@ -13,31 +13,38 @@ import {
 } from './site-chrome.model';
 
 describe('stripLocalePrefix', () => {
-  const cases: readonly [string, string, readonly SiteLocale[] | undefined][] = [
-    ['/de', '/', undefined],
-    ['/de/', '/', undefined],
-    ['/de/x', '/x', undefined],
-    ['/design/', '/design/', undefined],
-    ['/fresh', '/fresh', undefined],
-    ['/de?ref=nav', '/?ref=nav', undefined],
-    ['/de#top', '/#top', undefined],
-    ['/fr//evil.com', '/evil.com', undefined],
-    ['//evil.com', '/evil.com', undefined],
-    ['///evil.com/x', '/evil.com/x', undefined],
-    ['/\\evil.com', '/evil.com', undefined],
-    ['\\\\evil.com', '/evil.com', undefined],
-    ['//fr/pricing', '/pricing', undefined],
-    ['/', '/', undefined],
-    ['/en/x', '/en/x', undefined],
+  const cases: readonly [string, string, readonly SiteLocale[]][] = [
+    ['/de', '/', ALL_SITE_LOCALES],
+    ['/de/', '/', ALL_SITE_LOCALES],
+    ['/de/x', '/x', ALL_SITE_LOCALES],
+    ['/design/', '/design/', ALL_SITE_LOCALES],
+    ['/fresh', '/fresh', ALL_SITE_LOCALES],
+    ['/de?ref=nav', '/?ref=nav', ALL_SITE_LOCALES],
+    ['/de#top', '/#top', ALL_SITE_LOCALES],
+    ['/fr//evil.com', '/evil.com', ALL_SITE_LOCALES],
+    ['//evil.com', '/evil.com', ALL_SITE_LOCALES],
+    ['///evil.com/x', '/evil.com/x', ALL_SITE_LOCALES],
+    ['/\\evil.com', '/evil.com', ALL_SITE_LOCALES],
+    ['\\\\evil.com', '/evil.com', ALL_SITE_LOCALES],
+    ['//fr/pricing', '/pricing', ALL_SITE_LOCALES],
+    ['/', '/', ALL_SITE_LOCALES],
+    ['/en/x', '/en/x', ALL_SITE_LOCALES],
     ['/it/', '/it/', ['en', 'fr']],
     ['/fr/x', '/x', ['en', 'fr']],
     ['/fr/x', '/fr/x', ['en']],
   ];
 
   it.each(cases)('%s with %j -> %s', (path, expected, locales) => {
-    const result =
-      locales === undefined ? stripLocalePrefix(path) : stripLocalePrefix(path, locales);
-    expect(result).toBe(expected);
+    expect(stripLocalePrefix(path, locales)).toBe(expected);
+  });
+
+  it.each([
+    ['/fr/x', '/x'],
+    ['/de/x', '/de/x'],
+    ['', '/'],
+    ['x', '/x'],
+  ])('defaults to the en and fr locales: %j -> %s', (path, expected) => {
+    expect(stripLocalePrefix(path)).toBe(expected);
   });
 });
 
@@ -61,12 +68,21 @@ describe('localeSwitchHref', () => {
   ];
 
   it.each(cases)('%s from %s -> %s', (target, path, expected) => {
-    expect(localeSwitchHref(target, path)).toBe(expected);
+    expect(localeSwitchHref(target, path, ALL_SITE_LOCALES)).toBe(expected);
   });
 
   it('only strips locales that are enabled', () => {
     expect(localeSwitchHref('fr', '/it/x', ['en', 'fr'])).toBe('/fr/it/x/');
-    expect(localeSwitchHref('fr', '/it/x')).toBe('/fr/x/');
+    expect(localeSwitchHref('fr', '/it/x', ALL_SITE_LOCALES)).toBe('/fr/x/');
+  });
+
+  it.each([
+    ['fr', '/de/x', '/fr/de/x/'],
+    ['en', '/fr/x', '/x/'],
+    ['en', 'https://evil.example', '/https://evil.example'],
+    ['fr', '', '/fr/'],
+  ] as const)('defaults to the en and fr locales: %s from %j -> %s', (target, path, expected) => {
+    expect(localeSwitchHref(target, path)).toBe(expected);
   });
 
   const hostilePaths = [
@@ -83,7 +99,7 @@ describe('localeSwitchHref', () => {
   it.each(ALL_SITE_LOCALES.flatMap((t) => hostilePaths.map((p) => [t, p] as const)))(
     '%s from %s stays same-origin',
     (target, path) => {
-      const href = localeSwitchHref(target, path);
+      const href = localeSwitchHref(target, path, ALL_SITE_LOCALES);
       expect(href.startsWith('/')).toBe(true);
       expect(href.startsWith('//')).toBe(false);
     },
@@ -94,9 +110,9 @@ describe('localeSwitchHref', () => {
       ALL_SITE_LOCALES.flatMap((u) => hostilePaths.map((p) => [t, u, p] as const)),
     ),
   )('hopping %s via %s from %s equals switching directly', (target, via, path) => {
-    expect(localeSwitchHref(target, localeSwitchHref(via, path))).toBe(
-      localeSwitchHref(target, path),
-    );
+    expect(
+      localeSwitchHref(target, localeSwitchHref(via, path, ALL_SITE_LOCALES), ALL_SITE_LOCALES),
+    ).toBe(localeSwitchHref(target, path, ALL_SITE_LOCALES));
   });
 
   it.each([
@@ -118,13 +134,13 @@ describe('localeSwitchHref', () => {
       `^/(?:${ALL_SITE_LOCALES.filter((code) => code !== DEFAULT_LOCALE).join('|')})(?=[/?#]|$)`,
     );
     const pathWithoutLocaleLikeSlug = path.filter(
-      (p) => !startsWithLocale.test(stripLocalePrefix(p)),
+      (p) => !startsWithLocale.test(stripLocalePrefix(p, ALL_SITE_LOCALES)),
     );
 
     it('never produces a protocol-relative href', () => {
       fc.assert(
         fc.property(locale, path, (target, p) => {
-          expect(localeSwitchHref(target, p).startsWith('//')).toBe(false);
+          expect(localeSwitchHref(target, p, ALL_SITE_LOCALES).startsWith('//')).toBe(false);
         }),
       );
     });
@@ -132,9 +148,9 @@ describe('localeSwitchHref', () => {
     it('is independent of the previous hop', () => {
       fc.assert(
         fc.property(locale, locale, pathWithoutLocaleLikeSlug, (target, via, p) => {
-          expect(localeSwitchHref(target, localeSwitchHref(via, p))).toBe(
-            localeSwitchHref(target, p),
-          );
+          expect(
+            localeSwitchHref(target, localeSwitchHref(via, p, ALL_SITE_LOCALES), ALL_SITE_LOCALES),
+          ).toBe(localeSwitchHref(target, p, ALL_SITE_LOCALES));
         }),
       );
     });
@@ -170,12 +186,15 @@ describe('resolveSiteLocale', () => {
     [['en', 'fr', 'de'], 'de-CH', 'de'],
     [['en', 'fr'], 'de-CH', 'en'],
     [['en', 'fr'], 'FR', 'fr'],
-    [['fr', 'de'], 'ja', 'en'],
     [['en', 'fr'], 'xx', 'en'],
     [['en', 'fr'], null, 'en'],
     [undefined, 'fr', 'fr'],
     [undefined, 'de', 'en'],
     [[], 'fr', 'fr'],
+    [['fr', 'de'], 'en-US', 'fr'],
+    [['fr', 'de'], 'ja', 'fr'],
+    [['fr', 'de'], null, 'fr'],
+    [['de'], 'fr', 'de'],
   ];
 
   it.each(cases)('locales %j with %s -> %s', (locales, localeId, expected) => {
