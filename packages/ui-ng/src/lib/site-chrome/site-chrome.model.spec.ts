@@ -134,13 +134,22 @@ describe('localeSwitchHref', () => {
   });
 
   it.each([
-    ['en', '/fr/fr', '/fr/'],
-    ['fr', '/fr/', '/fr/'],
-    ['fr', '/fr/fr', '/fr/fr/'],
-  ] as const)(
-    '%s from %s -> %s (locale-like first slug is read as a prefix)',
-    (target, path, expected) => {
-      expect(localeSwitchHref(target, path)).toBe(expected);
+    ['en', '/fr/fr/docs', ['en', 'fr'], '/docs/'],
+    ['en', '/fr//fr/docs', ['en', 'fr'], '/docs/'],
+    ['en', '/fr/ fr/docs', ['en', 'fr'], '/docs/'],
+    ['ja', 'ja/fr', ['en', 'fr', 'ja'], '/ja/'],
+    ['en', '/fr/fr', ['en', 'fr'], '/'],
+    ['fr', '/fr/fr', ['en', 'fr'], '/fr/'],
+    ['fr', '/fr/de/x', ['en', 'fr'], '/fr/de/x/'],
+  ] as const)('%s from %s with %j -> %s (repeated prefixes)', (target, path, locales, expected) => {
+    expect(localeSwitchHref(target, path, locales)).toBe(expected);
+  });
+
+  it.each(ALL_SITE_LOCALES.flatMap((t) => hostilePaths.map((p) => [t, p] as const)))(
+    'switching %s from %s twice is idempotent',
+    (target, path) => {
+      const once = localeSwitchHref(target, path, ALL_SITE_LOCALES);
+      expect(localeSwitchHref(target, once, ALL_SITE_LOCALES)).toBe(once);
     },
   );
 
@@ -148,12 +157,6 @@ describe('localeSwitchHref', () => {
     const locale = fc.constantFrom(...ALL_SITE_LOCALES);
     const segment = fc.stringMatching(/^[a-z0-9._~?#\-/]{0,12}$/);
     const path = fc.tuple(segment, segment).map(([a, b]) => `/${a}${b}`);
-    const startsWithLocale = new RegExp(
-      `^/(?:${ALL_SITE_LOCALES.filter((code) => code !== DEFAULT_LOCALE).join('|')})(?=[/?#]|$)`,
-    );
-    const pathWithoutLocaleLikeSlug = path.filter(
-      (p) => !startsWithLocale.test(stripLocalePrefix(p, ALL_SITE_LOCALES)),
-    );
 
     const hostileChars = fc
       .array(fc.constantFrom('a', 'b', '.', '/', '\\', '\t', '\n', '\r', ' ', '\u0000', '?', '#'), {
@@ -179,9 +182,18 @@ describe('localeSwitchHref', () => {
       );
     });
 
+    it('is idempotent', () => {
+      fc.assert(
+        fc.property(locale, path, (target, p) => {
+          const once = localeSwitchHref(target, p, ALL_SITE_LOCALES);
+          expect(localeSwitchHref(target, once, ALL_SITE_LOCALES)).toBe(once);
+        }),
+      );
+    });
+
     it('is independent of the previous hop', () => {
       fc.assert(
-        fc.property(locale, locale, pathWithoutLocaleLikeSlug, (target, via, p) => {
+        fc.property(locale, locale, path, (target, via, p) => {
           expect(
             localeSwitchHref(target, localeSwitchHref(via, p, ALL_SITE_LOCALES), ALL_SITE_LOCALES),
           ).toBe(localeSwitchHref(target, p, ALL_SITE_LOCALES));
