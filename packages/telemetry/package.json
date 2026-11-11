@@ -1,0 +1,62 @@
+{
+  "name": "@ferrlabs/telemetry",
+  "version": "0.0.0",
+  "description": "Grafana Faro setup shared by FerrLabs fronts: opt-out, fail-closed payload redaction and an Angular ErrorHandler.",
+  "license": "MIT OR Apache-2.0",
+  "homepage": "https://github.com/FerrLabs/UI#readme",
+  "bugs": {
+    "url": "https://github.com/FerrLabs/UI/issues"
+  },
+  "repository": {
+    "directory": "packages/telemetry",
+    "type": "git",
+    "url": "git+https://github.com/FerrLabs/UI.git"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./angular": {
+      "types": "./dist/angular/index.d.ts",
+      "default": "./dist/angular/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE-MIT",
+    "LICENSE-APACHE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@grafana/faro-web-sdk": "~2.13.0"
+  },
+  "peerDependencies": {
+    "@angular/core": "^22.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/core": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@angular/core": "^22.0.0",
+    "fast-check": "^4.10.2",
+    "typescript": "~6.0.0",
+    "vitest": "^5.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}

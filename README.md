@@ -23,6 +23,7 @@ fonts and icons. One source for every product surface, so nothing gets rebuilt p
 | -------------------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | [`packages/ui-ng`](packages/ui-ng)           | `@ferrlabs/ui-ng`         | Angular components: app chrome, forms, surfaces, overlays, plus a `docs` entry point carrying the versioned-docs engine |
 | [`packages/foundation`](packages/foundation) | `@ferrlabs/ui-foundation` | Design tokens, self-hosted Fraunces and DM Mono, SVG icons. Framework-agnostic                                          |
+| [`packages/telemetry`](packages/telemetry)   | `@ferrlabs/telemetry`     | Grafana Faro setup shared by every front: opt-out, fail-closed redaction, Angular `ErrorHandler`                        |
 | [`packages/showcase`](packages/showcase)     | `@ferrlabs/ui-showcase`   | Storybook on `@storybook/angular`. Private, shipped as a container image                                                |
 
 `@ferrlabs/ui-react` and `@ferrlabs/ui-astro` are both gone. Every product frontend and every

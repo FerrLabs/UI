@@ -46,7 +46,7 @@ jobs:
       - name: Lint
         run: pnpm lint
       - name: Unit tests
-        run: pnpm --filter @ferrlabs/ui-ng test
+        run: pnpm --filter @ferrlabs/ui-ng --filter @ferrlabs/telemetry test
       - name: Build library packages
         # ui-ng resolves @ferrlabs/ui-foundation through its dist/ exports, so
         # the topological order matters. Use
