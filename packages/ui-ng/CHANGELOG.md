@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.50.0] - 2026-11-11
+
+### Features
+
+- feat(ui-ng): site language picker with six new locales (#715)
+
 ## [1.49.0] - 2026-11-10
 
 ### Features
