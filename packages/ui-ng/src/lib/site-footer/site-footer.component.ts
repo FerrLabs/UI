@@ -3,7 +3,7 @@ import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { isTrustedIconMarkup } from '../icon/icon-markup';
 import {
   SITE_CHROME,
-  resolveLocale,
+  resolveSiteLocale,
   withLocaleBase,
   withTrailingSlash,
 } from '../site-chrome/site-chrome.model';
@@ -177,7 +177,7 @@ export class SiteFooterComponent {
   protected readonly wordmark = this.chrome.wordmark;
   protected readonly wordmarkAccent = this.chrome.wordmarkAccent ?? '';
 
-  private readonly locale = resolveLocale(inject(LOCALE_ID));
+  private readonly locale = resolveSiteLocale(this.chrome, inject(LOCALE_ID));
 
   protected readonly footer = this.chrome.footer;
   protected readonly columns = this.chrome.footer.columns.map((col) => ({

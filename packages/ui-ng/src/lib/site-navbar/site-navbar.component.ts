@@ -1,20 +1,30 @@
-import { ChangeDetectionStrategy, Component, inject, LOCALE_ID, signal } from '@angular/core';
-import { Location } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  LOCALE_ID,
+  signal,
+} from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { isTrustedIconMarkup } from '../icon/icon-markup';
 import {
+  localeEntry,
   SITE_CHROME,
   type SiteLocale,
-  localeSwitchHref,
   siteLocales,
-  resolveLocale,
+  resolveSiteLocale,
   withLocaleBase,
   withTrailingSlash,
 } from '../site-chrome/site-chrome.model';
+import { injectSitePath } from '../site-chrome/site-path';
+import { toLocaleOptions } from '../site-locale-picker/site-locale-option';
+import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-picker.component';
 
 @Component({
   selector: 'flr-site-navbar',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [SiteLocalePickerComponent],
   host: {
     '(window:scroll)': 'onScroll()',
   },
@@ -39,16 +49,11 @@ import {
           }
 
           @if (locales.length > 1) {
-            <div class="nav__lang mono" translate="no">
-              @for (option of locales; track option) {
-                <a
-                  [href]="langHref(option)"
-                  class="nav__lang-opt"
-                  [class.is-active]="locale === option"
-                  >{{ option.toUpperCase() }}</a
-                >
-              }
-            </div>
+            <flr-site-locale-picker
+              [options]="localeOptions()"
+              [current]="locale"
+              [label]="languageLabel"
+            />
           }
 
           @if (cta) {
@@ -86,6 +91,21 @@ import {
                 <span class="mono">{{ pad(i + 1) }}</span
                 >{{ link.label }}
               </a>
+            }
+            @if (locales.length > 1) {
+              <p class="nav__mobile-eyebrow mono">{{ languageLabel }}</p>
+              <div class="nav__mobile-langs" translate="no">
+                @for (option of localeOptions(); track option.code) {
+                  <a
+                    [href]="option.href"
+                    class="nav__mobile-lang"
+                    [attr.lang]="option.code"
+                    [attr.hreflang]="option.code"
+                    [attr.aria-current]="option.code === locale ? 'true' : null"
+                    >{{ option.endonym }}</a
+                  >
+                }
+              </div>
             }
           </div>
         </div>
@@ -183,37 +203,6 @@ import {
     .nav__link:hover::after {
       transform: scaleX(1);
     }
-    .nav__lang {
-      display: flex;
-      align-items: center;
-      border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      border-radius: var(--radius-full, 999px);
-      overflow: hidden;
-    }
-    .nav__lang-opt {
-      font-family: var(
-        --font-mono,
-        'DM Mono',
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        Consolas,
-        monospace
-      );
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 6px 12px;
-      color: var(--color-ink-2, #475569);
-      text-decoration: none;
-      transition:
-        background 180ms,
-        color 180ms;
-    }
-    .nav__lang-opt.is-active {
-      background: var(--color-ink, #1e293b);
-      color: var(--color-paper, #f8fafc);
-    }
     .nav__cta {
       display: inline-flex;
       align-items: center;
@@ -286,6 +275,31 @@ import {
       gap: 16px;
       text-decoration: none;
     }
+    .nav__mobile-eyebrow {
+      margin: 32px 0 12px;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-ink-3, #64748b);
+    }
+    .nav__mobile-langs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .nav__mobile-lang {
+      padding: 8px 16px;
+      border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
+      border-radius: var(--radius-full, 999px);
+      color: var(--color-ink-2, #475569);
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .nav__mobile-lang[aria-current='true'] {
+      background: var(--color-ink, #1e293b);
+      border-color: var(--color-ink, #1e293b);
+      color: var(--color-paper, #f8fafc);
+    }
     .nav__mobile-link .mono {
       font-size: 12px;
       color: var(--color-ink-3, #64748b);
@@ -296,13 +310,12 @@ import {
 })
 export class SiteNavbarComponent {
   private readonly chrome = inject(SITE_CHROME);
-  private readonly location = inject(Location);
   private readonly sanitizer = inject(DomSanitizer);
 
   protected readonly logo: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
     isTrustedIconMarkup(this.chrome.logoSvg) ? this.chrome.logoSvg : '',
   );
-  protected readonly locale: SiteLocale = resolveLocale(inject(LOCALE_ID));
+  protected readonly locale: SiteLocale = resolveSiteLocale(this.chrome, inject(LOCALE_ID));
   protected readonly wordmark = this.chrome.wordmark;
   protected readonly wordmarkAccent = this.chrome.wordmarkAccent ?? '';
   protected readonly labels = this.chrome.labels;
@@ -324,10 +337,10 @@ export class SiteNavbarComponent {
   protected readonly mobileOpen = signal(false);
 
   protected readonly locales = siteLocales(this.chrome);
+  protected readonly languageLabel = this.labels.language ?? localeEntry(this.locale).language;
 
-  protected langHref(target: SiteLocale): string {
-    return localeSwitchHref(target, this.location.path() || '/');
-  }
+  protected readonly path = injectSitePath();
+  protected readonly localeOptions = computed(() => toLocaleOptions(this.locales, this.path()));
 
   protected onScroll(): void {
     this.scrolled.set(typeof window !== 'undefined' && window.scrollY > 8);

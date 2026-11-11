@@ -166,10 +166,20 @@ export type { Paged } from './lib/pagination/paged';
 
 export { SiteNavbarComponent } from './lib/site-navbar/site-navbar.component';
 export { SiteFooterComponent } from './lib/site-footer/site-footer.component';
+export { SiteLocalePickerComponent } from './lib/site-locale-picker/site-locale-picker.component';
+export { SiteLocaleBannerComponent } from './lib/site-locale-banner/site-locale-banner.component';
+export { toLocaleOptions } from './lib/site-locale-picker/site-locale-option';
+export type { SiteLocaleOption } from './lib/site-locale-picker/site-locale-option';
 export { SiteShellComponent } from './lib/site-shell/site-shell.component';
 export {
   SITE_CHROME,
   SITE_LOCALES,
+  ALL_SITE_LOCALES,
+  DEFAULT_LOCALE,
+  LOCALE_CATALOG,
+  isSiteLocale,
+  localeEntry,
+  matchSiteLocale,
   siteLocales,
   provideSiteChrome,
   localeBase,
@@ -177,8 +187,11 @@ export {
   localeSwitchHref,
   stripLocalePrefix,
   resolveLocale,
+  resolveSiteLocale,
 } from './lib/site-chrome/site-chrome.model';
 export type {
+  LocaleEntry,
+  LocaleSuggestionStrings,
   SiteLocale,
   SiteNavLink,
   SiteFooterLink,
@@ -188,6 +201,7 @@ export type {
   SiteChromeLabels,
   SiteChromeConfig,
 } from './lib/site-chrome/site-chrome.model';
+export { injectSitePath } from './lib/site-chrome/site-path';
 
 export {
   readRuntimeEnv,
