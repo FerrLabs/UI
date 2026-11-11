@@ -241,9 +241,12 @@ export function stripLocalePrefix(
   path: string,
   locales: readonly SiteLocale[] = SITE_LOCALES,
 ): string {
-  const full = rooted(path);
-  const match = localePrefix(locales)?.exec(full);
-  return rooted(match ? full.slice(match[0].length) : full);
+  const prefix = localePrefix(locales);
+  let bare = rooted(path);
+  for (let match = prefix?.exec(bare); match; match = prefix?.exec(bare)) {
+    bare = rooted(bare.slice(match[0].length));
+  }
+  return bare;
 }
 
 export function localeSwitchHref(
