@@ -29,7 +29,7 @@ describe('TelemetryErrorHandler', () => {
   it('wraps non-Error values', () => {
     handler.handleError('plain string');
     const pushed = pushError.mock.calls[0]?.[0];
-    expect(pushed instanceof Error).toBe(true);
+    expect(pushed).toBeInstanceOf(Error);
     expect(pushed.message).toBe('plain string');
     expect(consoleError).toHaveBeenCalledTimes(1);
   });
@@ -37,7 +37,7 @@ describe('TelemetryErrorHandler', () => {
   it('keeps the message of Error-like objects such as HttpErrorResponse', () => {
     handler.handleError({ message: 'Http failure response for /api: 500', status: 500 });
     const pushed = pushError.mock.calls[0]?.[0];
-    expect(pushed instanceof Error).toBe(true);
+    expect(pushed).toBeInstanceOf(Error);
     expect(pushed.message).toBe('Http failure response for /api: 500');
   });
 

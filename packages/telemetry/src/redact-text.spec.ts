@@ -226,12 +226,14 @@ describe('redactText', () => {
 
   it('masks a JWT that follows Basic entirely', () => {
     const output = redactText('Basic eyJhbGciOiJIUzI1.eyJzdWIiOiJTRUNSRVQ.SIGSECRET');
-    expect(output.includes('SECRET') && !output).not.toContain('eyJ');
+    expect(output).not.toContain('SECRET');
+    expect(output).not.toContain('eyJ');
   });
 
   it('does not leak part of a credential split by truncation', () => {
     const output = redactText(`${'x'.repeat(2035)} Bearer abcdefghijklmnopSECRET`);
-    expect(output.includes('SECRET') && !output).not.toContain('abcdefghijklmnop');
+    expect(output).not.toContain('SECRET');
+    expect(output).not.toContain('abcdefghijklmnop');
   });
 
   it('does not leak a credential split by the input cut', () => {
@@ -342,8 +344,9 @@ describe('redactText', () => {
     for (const sample of samples) {
       const start = performance.now();
       const output = redactText(sample);
-      expect(performance.now() - start < 1000).toBe(true);
-      expect(output.length <= 2048 && output.length <= sample.length).toBe(true);
+      expect(performance.now() - start).toBeLessThan(1000);
+      expect(output.length).toBeLessThanOrEqual(2048);
+      expect(output.length).toBeLessThanOrEqual(sample.length);
       expect(redactText(output)).toBe(output);
     }
   });

@@ -3,7 +3,15 @@ import { isLocalHostname, isOptedOut } from './opt-out.js';
 
 describe('isLocalHostname', () => {
   it('treats loopback names and addresses as local', () => {
-    for (const host of ['localhost', 'LOCALHOST.', '127.0.0.1', '127.1.2.3', '[::1]', '::1']) {
+    for (const host of [
+      'localhost',
+      'LOCALHOST.',
+      'app.localhost',
+      '127.0.0.1',
+      '127.1.2.3',
+      '[::1]',
+      '::1',
+    ]) {
       expect(isLocalHostname(host)).toBe(true);
     }
   });

@@ -12,6 +12,8 @@ const COLON_KEYS = `[\\w-]{0,64}${COLON_WORDS}`;
 const JWT = /\beyJ[\w-]*\.[\w-]+\.[\w-]*/g;
 const BASIC =
   /\b([Bb][Aa][Ss][Ii][Cc])\s+(?:(?=[A-Za-z0-9+/]*[0-9A-Z+/])[A-Za-z0-9+/]{8,}={0,2}|[A-Za-z0-9+/]{2,}={1,2})(?![\w+/:=])/g;
+const SCHEME_PADDED =
+  /\b((?:basic|token|digest|apikey|bot))[ \t]+[A-Za-z0-9+/_-]{2,}={1,2}(?![\w+/:=\\"'])/gi;
 const EMAIL = /[\w.!#$%&*+?^`{|}~-]{1,64}@[\w-]{1,63}(?:\.[\w-]{1,63})+/g;
 const USERINFO =
   /(\/\/)(?!(?:[\w-]+(?:\.[\w-]+)+|localhost|\[[\da-f:.]+\]):\d+[?#])[^\s/?#@[]*(?::[^\s/@[]*)?@/gi;
@@ -19,7 +21,7 @@ const QUOTE = `(?:\\\\{0,4}["'])?`;
 const KEY_AHEAD = `\\\\{0,4}["']?[ \\t]*[\\w.$-]{0,64}${KEY_WORDS}[ \\t]*\\\\{0,4}["']?[ \\t]*[:=]`;
 const VALUE = `(?:\\\\{0,4}"[^"]*"?|\\\\{0,4}'[^']*'?|(?:(?:bearer|basic|token|digest|apikey|bot)[ \\t]+(?!${KEY_AHEAD})|[a-z][\\w-]{0,20}[ \\t]+(?!${KEY_AHEAD})(?=[^\\s"'<>&;,]{8}))?(?:(?![,;&|][ \\t]*${KEY_AHEAD})[^\\s"'<>])+)`;
 const QUOTED = `\\\\{0,4}"[^"]*"?|\\\\{0,4}'[^']*'?`;
-const SEGMENT = `(?:${QUOTED}|[^\\s,;"'<>{}\\]\\\\])(?:(?![ \\t]+${KEY_AHEAD})(?:[^\\r\\n,;"'<>{}\\]\\\\]|${QUOTED}))*`;
+const SEGMENT = `(?:${QUOTED}|[^\\s,;"'<>{}\\]\\\\])(?:(?![ \\t]+${KEY_AHEAD})(?:[^\\r\\n,;"'<>{}\\]\\\\]|${QUOTED}|[,;]+(?=[^\\s"'<>{}\\]\\\\])))*`;
 const BREAKS = `(?:\\r?\\n[ \\t]*){0,4}`;
 const TOKEN_CHARS = `[^\\s"',;:=\\\\]`;
 const BEARER_KEYED = `(?=[^\\s"',;:=\\\\]{0,64}${KEY_WORDS}\\\\{0,4}["']?[ \\t]*[:=])(?=(${TOKEN_CHARS}+))\\2\\\\{0,4}["']?[ \\t]*[:=]+[ \\t]*${BREAKS}(?:${SEGMENT})?`;
@@ -63,6 +65,7 @@ function redactPass(text: string): string {
     .replace(JWT, MASK)
     .replace(USERINFO, '$1')
     .replace(BEARER, `$1 ${MASK}`)
+    .replace(SCHEME_PADDED, `$1 ${MASK}`)
     .replace(SENSITIVE_COLON, maskColon)
     .replace(SENSITIVE_PARAM, `$1${MASK}`)
     .replace(BASIC, `$1 ${MASK}`)

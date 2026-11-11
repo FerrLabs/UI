@@ -69,8 +69,8 @@ describe('redactItem', () => {
     );
     const serialized = JSON.stringify(out.payload);
     expect(serialized).not.toContain('S3CR3T');
-    expect(serialized.includes('https://a.com/main.js')).toBe(true);
-    expect(serialized.includes('"lineno":1')).toBe(true);
+    expect(serialized).toContain('https://a.com/main.js');
+    expect(serialized).toContain('"lineno":1');
   });
 
   it('redacts log messages and context', () => {
@@ -188,6 +188,17 @@ describe('redactItem', () => {
       sessionId: '*',
       note: 'ok',
     });
+  });
+
+  it('masks object and array values of secret-like fields', () => {
+    const out = scrub(
+      item(TransportItemType.EVENT, {
+        name: 'x',
+        password: ['hunter2'],
+        token: { value: 'hunter2' },
+      }),
+    );
+    expect(out.payload).toEqual({ name: 'x', password: '*', token: '*' });
   });
 
   it('leaves non-string values of secret-like fields and Dates alone', () => {

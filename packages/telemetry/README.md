@@ -33,12 +33,12 @@ export const appConfig: ApplicationConfig = {
 
 ## Behaviour
 
-- Nothing is sent on `localhost` or loopback addresses, or when the browser sends Do Not Track or
+- Nothing is sent on `localhost` (including `*.localhost`) or loopback addresses, or when the browser sends Do Not Track or
   Global Privacy Control.
 - Faro runs with `captureConsole: false` and session tracking off.
 - Every string in an item (meta and payload) goes through `capabilityPaths`, then `redactText`.
-  String fields whose name looks like a secret (`password`, `apiKey`, `authorization`, ...) are
-  replaced by `*` whatever their value.
+  String, array and object fields whose name looks like a secret (`password`, `apiKey`,
+  `authorization`, ...) are replaced by `*` whatever their value.
 - The walk fails closed: if an item cannot be scrubbed, it is dropped.
 - `environment` is derived from the hostname: `.dev.ferrlabs` is `dev`, `.ferrlabs` is `interne`,
   `.home` is `home`, anything else is `prod`.

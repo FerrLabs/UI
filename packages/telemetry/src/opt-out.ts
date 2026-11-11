@@ -1,4 +1,4 @@
-const LOOPBACK_HOSTNAME = /^(?:localhost|::1|127(?:\.\d{1,3}){3})$/;
+const LOOPBACK_HOSTNAME = /^(?:(?:[^.]+\.)*localhost|::1|127(?:\.\d{1,3}){3})$/;
 
 export function isLocalHostname(hostname: string): boolean {
   const normalized = hostname

@@ -28,10 +28,12 @@ function redactDeep(
   const container = node as Record<string, unknown>;
   for (const key of Object.keys(container)) {
     const value = container[key];
+    if (value instanceof Date) continue;
     if (typeof value === 'string') {
       container[key] = SENSITIVE_FIELD.test(key) ? MASK : redactString(value, capabilityPaths);
-    } else if (value instanceof Date) continue;
-    else if (typeof value === 'object' && value !== null && !isPlainContainer(value)) {
+    } else if (typeof value === 'object' && value !== null && SENSITIVE_FIELD.test(key)) {
+      container[key] = MASK;
+    } else if (typeof value === 'object' && value !== null && !isPlainContainer(value)) {
       container[key] = redactString(String(value), capabilityPaths);
     } else redactDeep(value, visited, capabilityPaths);
   }
