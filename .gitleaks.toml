@@ -1,0 +1,8 @@
+title = "FerrLabs UI"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Redaction fixtures: fake credentials the tests must scrub"
+paths = ['''packages/telemetry/src/.*\.spec\.ts''']
