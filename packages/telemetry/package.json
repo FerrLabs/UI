@@ -1,6 +1,6 @@
 {
   "name": "@ferrlabs/telemetry",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Grafana Faro setup shared by FerrLabs fronts: opt-out, fail-closed payload redaction and an Angular ErrorHandler.",
   "license": "MIT OR Apache-2.0",
   "homepage": "https://github.com/FerrLabs/UI#readme",
