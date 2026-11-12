@@ -162,8 +162,8 @@ importers:
   packages/telemetry:
     dependencies:
       '@grafana/faro-web-sdk':
-        specifier: ~2.13.0
-        version: 2.13.0
+        specifier: ~2.14.0
+        version: 2.14.0
     devDependencies:
       '@angular/core':
         specifier: ^22.0.0
@@ -1411,8 +1411,8 @@ packages:
   '@grafana/faro-core@2.14.0':
     resolution: {integrity: sha512-U1dydD2pQa3sgnaoGQsmsDoecef2S90Y6kVYyhdXjaSg8+bzJWwW5mGtO+7V15PjZSKA4tdXGKRHa1RGGJPY8Q==}
 
-  '@grafana/faro-web-sdk@2.13.0':
-    resolution: {integrity: sha512-k/vZL73Ii4PR6IyhyZZU/wWAlLL8HyPQ1re9CFyyIN2bXuX5b0dTYTLBHlEAK3oGqi7Nj/jGwKXoM27BNLPLuQ==}
+  '@grafana/faro-web-sdk@2.14.0':
+    resolution: {integrity: sha512-ZZu5GmNvx+2pA+ma8dMER7GiJ/UVbI5qXWV5rK5ms6uK6hrh2xXKNETp9s1R+U/yVfHlo7n/ArtjQB/8/8noTw==}
 
   '@hapi/address@5.1.1':
     resolution: {integrity: sha512-A+po2d/dVoY7cYajycYI43ZbYMXukuopIsqCjh5QzsBCipDtdofHntljDlpccMjIfTy6UOkg+5KPriwYch2bXA==}
@@ -9063,7 +9063,7 @@ snapshots:
       '@opentelemetry/api': 1.10.0
       '@opentelemetry/otlp-transformer': 0.223.1(@opentelemetry/api@1.10.0)
 
-  '@grafana/faro-web-sdk@2.13.0':
+  '@grafana/faro-web-sdk@2.14.0':
     dependencies:
       '@grafana/faro-core': 2.14.0
       ua-parser-js: 1.0.41

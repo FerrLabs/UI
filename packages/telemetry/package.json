@@ -39,7 +39,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@grafana/faro-web-sdk": "~2.13.0"
+    "@grafana/faro-web-sdk": "~2.14.0"
   },
   "peerDependencies": {
     "@angular/core": "^22.0.0"
