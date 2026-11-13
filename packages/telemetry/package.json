@@ -36,7 +36,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@grafana/faro-web-sdk": "~2.14.0"
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "@angular/core": "^22.0.0",
+    "@vitest/coverage-v8": "^5.1.0",
     "fast-check": "^4.10.2",
     "typescript": "~6.0.0",
     "vitest": "^5.1.0"

@@ -9,7 +9,37 @@ permissions:
   contents: read
 
 jobs:
+  coverage:
+    name: Unit test coverage
+    runs-on: ${{ github.event.repository.private && 'ferrlabs-k8s' || 'ubuntu-latest' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+        with:
+          version: 12.8.2
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Unit tests with coverage
+        run: pnpm --filter @ferrlabs/ui-ng --filter @ferrlabs/telemetry test:coverage
+      - name: Rebase lcov paths to the repo root
+        run: |
+          mkdir -p .sonarcov
+          for pkg in ui-ng telemetry; do
+            sed "s|^SF:|SF:packages/${pkg}/|" "packages/${pkg}/coverage/lcov.info"
+          done > .sonarcov/sonar-coverage-ui.lcov
+      - name: Upload coverage for SonarQube
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: sonar-coverage-ui
+          path: .sonarcov/sonar-coverage-ui.lcov
+          if-no-files-found: error
+
   scan:
+    needs: coverage
     name: SonarQube analysis
     permissions:
       contents: read
@@ -17,4 +47,6 @@ jobs:
     uses: FerrLabs/.github/.github/workflows/reusable-sonarqube-scan.yml@d0c70730b0b7234aafc7cffd1cba606313d241ff # main
     with:
       project-key: UI
+      coverage-artifact-pattern: sonar-coverage-*
+      args: -Dsonar.javascript.lcov.reportPaths=.sonarcov/sonar-coverage-ui.lcov -Dsonar.sources=. -Dsonar.tests=. -Dsonar.test.inclusions=**/*.spec.ts
     secrets: inherit
