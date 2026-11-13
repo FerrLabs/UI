@@ -11,6 +11,7 @@ permissions:
 jobs:
   coverage:
     name: Unit test coverage
+    if: github.event_name != 'pull_request'
     runs-on: ${{ github.event.repository.private && 'ferrlabs-k8s' || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -40,6 +41,7 @@ jobs:
 
   scan:
     needs: coverage
+    if: ${{ !cancelled() }}
     name: SonarQube analysis
     permissions:
       contents: read
@@ -47,6 +49,7 @@ jobs:
     uses: FerrLabs/.github/.github/workflows/reusable-sonarqube-scan.yml@d0c70730b0b7234aafc7cffd1cba606313d241ff # main
     with:
       project-key: UI
+      exclusions: '**/node_modules/**,**/dist/**,**/build/**,**/target/**,**/coverage/**,**/.next/**,**/out/**,**/vendor/**,**/*.min.js,**/*.min.css,**/*.spec.ts'
       coverage-artifact-pattern: sonar-coverage-*
       args: -Dsonar.javascript.lcov.reportPaths=.sonarcov/sonar-coverage-ui.lcov -Dsonar.sources=. -Dsonar.tests=. -Dsonar.test.inclusions=**/*.spec.ts
     secrets: inherit
