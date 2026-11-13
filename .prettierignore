@@ -8,3 +8,4 @@ pnpm-lock.yaml
 packages/showcase/.storybook/preview.css
 *.tsbuildinfo
 CHANGELOG.md
+coverage
