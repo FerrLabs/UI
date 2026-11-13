@@ -7,12 +7,14 @@ export interface TelemetryOptions {
   appName: string;
   collectorUrl: string;
   capabilityPaths?: readonly CapabilityPath[];
+  dropSessionMeta?: boolean;
 }
 
 export function initTelemetry({
   appName,
   collectorUrl,
   capabilityPaths = [],
+  dropSessionMeta = false,
 }: TelemetryOptions): void {
   if (typeof window === 'undefined') return;
   const { hostname } = window.location;
@@ -22,7 +24,7 @@ export function initTelemetry({
       url: collectorUrl,
       app: { name: appName, environment: environmentFromHostname(hostname) },
       instrumentations: getWebInstrumentations({ captureConsole: false }),
-      beforeSend: (item) => redactItem(item, capabilityPaths),
+      beforeSend: (item) => redactItem(item, capabilityPaths, { dropSessionMeta }),
       sessionTracking: { enabled: false },
     });
   } catch {
