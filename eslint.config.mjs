@@ -10,6 +10,7 @@ export default ts.config(
       '**/dist/**',
       '**/node_modules/**',
       '**/.angular/**',
+      '**/coverage/**',
       'packages/showcase/.storybook/preview.css',
     ],
   },
