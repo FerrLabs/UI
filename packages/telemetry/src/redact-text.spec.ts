@@ -373,3 +373,13 @@ describe('redactText on 16 KB inputs', () => {
     });
   }
 });
+
+describe('redactText padded basic credentials after an equals sign', () => {
+  it.each([
+    ['password=Basic dTcyOnZiaUtHTDd3NWtFZjgzbQ==', 'password=*'],
+    ['Authorization=Basic dTcyOnZiaUtHTDd3NWtFZjgzbQ==', 'Authorization=*'],
+    ['password=Basic dTcyOnZiaUtHTDd3NWtFZjgz', 'password=*'],
+  ])('gives %j for %j', (input, expected) => {
+    expect(redactText(input)).toBe(expected);
+  });
+});
