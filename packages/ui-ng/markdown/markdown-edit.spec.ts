@@ -156,6 +156,13 @@ describe('toggleLinePrefix', () => {
     expect(toggleLinePrefix(out, NUMBERED).value).toBe('a\n\nb');
   });
 
+  it('leaves a blank-only multi-line selection untouched and selected', () => {
+    const state = at('\n\na', 0, 2);
+    const once = toggleLinePrefix(state, TASK);
+    expect(once).toEqual(state);
+    expect(toggleLinePrefix(once, TASK).value).toBe('\n\na');
+  });
+
   it('works on an empty document', () => {
     expect(toggleLinePrefix(at('', 0), BULLET).value).toBe('- ');
   });
@@ -184,6 +191,26 @@ describe('cycleHeading', () => {
       seen.push(state.value);
     }
     expect(seen).toEqual(['#  x', '##  x', '###  x', ' x']);
+  });
+
+  it('reads the level from the first non-blank line', () => {
+    let state = at('\ntitle', 0, 6);
+    const seen: string[] = [];
+    for (let i = 0; i < 4; i++) {
+      state = cycleHeading(state);
+      seen.push(state.value);
+    }
+    expect(seen).toEqual(['\n# title', '\n## title', '\n### title', '\ntitle']);
+  });
+
+  it('keeps cycling after a heading collapses to a blank first line', () => {
+    let state = at('# \n ', 0, 4);
+    const seen: string[] = [];
+    for (let i = 0; i < 4; i++) {
+      state = cycleHeading(state);
+      seen.push(state.value);
+    }
+    expect(seen).toEqual(['## \n ', '### \n ', '\n ', '# \n#  ']);
   });
 
   it('leaves blank lines alone in a multi-line selection', () => {

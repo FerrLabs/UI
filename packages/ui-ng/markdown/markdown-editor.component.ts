@@ -66,8 +66,8 @@ const ACTIONS: readonly ToolbarAction[] = [
   { id: 'bullet', glyph: '•', label: 'Bulleted list', apply: (s) => toggleLinePrefix(s, BULLET) },
   {
     id: 'numbered',
-    glyph: '1.',
-    label: 'Numbered list 1.',
+    glyph: '⒈',
+    label: 'Numbered list',
     apply: (s) => toggleLinePrefix(s, NUMBERED),
   },
   { id: 'task', glyph: '[ ]', label: 'Task list', apply: (s) => toggleLinePrefix(s, TASK) },

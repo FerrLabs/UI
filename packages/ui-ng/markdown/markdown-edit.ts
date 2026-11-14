@@ -115,6 +115,7 @@ function lineRange({ value, start, end }: EditState): LineRange {
 
 function replaceLines(state: EditState, range: LineRange, lines: string[]): EditState {
   const joined = lines.join('\n');
+  if (joined === state.value.slice(range.from, range.to)) return state;
   return {
     value: state.value.slice(0, range.from) + joined + state.value.slice(range.to),
     start: range.from,
@@ -137,15 +138,16 @@ export function toggleLinePrefix(state: EditState, prefix: LinePrefix): EditStat
 
 export function cycleHeading(state: EditState): EditState {
   const range = lineRange(state);
-  const current = HEADING.exec(range.lines[0])?.[1].length ?? 0;
+  const hasContent = range.lines.some((line) => line.trim() !== '');
+  const reference = range.lines.find((line) => line.trim() !== '') ?? range.lines[0];
+  const current = HEADING.exec(reference)?.[1].length ?? 0;
   const next = current === MAX_HEADING_LEVEL ? 0 : current > MAX_HEADING_LEVEL ? 1 : current + 1;
   const marker = next === 0 ? '' : `${'#'.repeat(next)} `;
-  const multiline = range.lines.length > 1;
   return replaceLines(
     state,
     range,
     range.lines.map((line) =>
-      multiline && line.trim() === '' ? line : marker + line.replace(HEADING, ''),
+      hasContent && line.trim() === '' ? line : marker + line.replace(HEADING, ''),
     ),
   );
 }
