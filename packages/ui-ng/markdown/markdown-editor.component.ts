@@ -155,8 +155,9 @@ export class MarkdownEditorComponent implements ControlValueAccessor {
   protected readonly written = signal('');
   protected readonly disabled = signal(false);
   protected readonly mode = signal<EditorMode>('write');
-  protected readonly writeId = `flr-md-editor-write-${++sequence}`;
-  protected readonly previewId = `flr-md-editor-preview-${sequence}`;
+  private readonly uid = ++sequence;
+  protected readonly writeId = `flr-md-editor-write-${this.uid}`;
+  protected readonly previewId = `flr-md-editor-preview-${this.uid}`;
   protected readonly previewing = computed(() => this.mode() === 'preview');
 
   private readonly textarea = viewChild<ElementRef<HTMLTextAreaElement>>('textarea');

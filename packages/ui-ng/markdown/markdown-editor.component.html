@@ -18,7 +18,6 @@
       class="flr-md-editor__toolbar"
       role="group"
       [attr.aria-label]="resolvedLabels().formatting"
-      [attr.aria-controls]="writeId"
       [hidden]="previewing()"
     >
       @for (action of actions; track action.id) {

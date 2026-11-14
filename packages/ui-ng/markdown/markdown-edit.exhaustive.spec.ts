@@ -109,9 +109,55 @@ describe('exhaustive small-alphabet checks', () => {
 
   it('four heading cycles restore text that has no hash', () => {
     for (const s of states('a \n', 6)) {
+      const picked = s.value.slice(s.start, s.end);
+      if (picked.includes('\n') && picked.trim() === '') continue;
       let state = s;
       for (let i = 0; i < 4; i++) state = cycleHeading(state);
       if (state.value !== s.value) expect.fail(`${JSON.stringify(s)} -> ${JSON.stringify(state)}`);
+    }
+  });
+
+  it('heading cycles over multi-line selections keep text and share one level', () => {
+    const parse = (line: string) => /^(#{1,6}) (.*)$/.exec(line);
+    for (const s of states('a# \n', 7)) {
+      const lines = s.value.split('\n');
+      const before = cycleHeading(s);
+      const outLines = before.value.split('\n');
+      if (outLines.length !== lines.length) expect.fail(`count ${JSON.stringify(s)}`);
+      const levels = new Set<number>();
+      outLines.forEach((line, i) => {
+        if (line === lines[i]) return;
+        const m = parse(line);
+        const original = parse(lines[i]);
+        const remainder = original ? original[2] : lines[i];
+        if (m && m[2] !== remainder)
+          expect.fail(`text ${JSON.stringify(s)} -> ${JSON.stringify(line)}`);
+        if (!m && line !== remainder)
+          expect.fail(`plain ${JSON.stringify(s)} -> ${JSON.stringify(line)}`);
+        levels.add(m ? m[1].length : 0);
+      });
+      if (levels.size > 1) expect.fail(`levels ${JSON.stringify(s)} -> ${JSON.stringify(before)}`);
+    }
+  });
+
+  it('heading cycles return to the start when the selection has one level', () => {
+    for (const s of states('a# \n', 6)) {
+      const levels = new Set(
+        s.value
+          .split('\n')
+          .filter((l) => l.trim() !== '')
+          .map((l) => /^(#{1,3}) /.exec(l)?.[1].length ?? (/^#/.test(l) ? -1 : 0)),
+      );
+      if (levels.size > 1 || levels.has(-1)) continue;
+      const picked = s.value.slice(s.start, s.end);
+      if (picked.includes('\n') && picked.trim() === '') continue;
+      let state: EditState = s;
+      let restored = false;
+      for (let i = 0; i < 4 && !restored; i++) {
+        state = cycleHeading(state);
+        restored = state.value === s.value;
+      }
+      if (!restored) expect.fail(`${JSON.stringify(s)} -> ${JSON.stringify(state)}`);
     }
   });
 
@@ -140,12 +186,12 @@ describe('exhaustive small-alphabet checks', () => {
       const out = insertLink(s);
       const label = out.value.slice(s.start + 1, out.start - 2);
       const unescaped = label.replace(/\\(.)/g, '$1');
-      const expected = s.value.slice(s.start, s.end).replace(/\n[^\S\n]*(?:\n[^\S\n]*)+/g, '\n');
+      const expected = s.value.slice(s.start, s.end).replace(/\s*\n\s*/g, ' ');
       if (s.end > s.start && unescaped !== expected) expect.fail(JSON.stringify(s));
       if (/(^|[^\\])(\\\\)*[[\]]/.test(label.replace(/\\./g, ''))) {
         expect.fail(`unescaped bracket ${JSON.stringify(s)}`);
       }
-      if (/\n\s*\n/.test(label)) expect.fail(`blank line ${JSON.stringify(s)}`);
+      if (label.includes('\n')) expect.fail(`newline ${JSON.stringify(s)}`);
     }
   });
 

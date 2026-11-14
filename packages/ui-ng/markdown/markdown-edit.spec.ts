@@ -227,6 +227,22 @@ describe('cycleHeading', () => {
     expect(seen).toEqual(['## # Release', '### # Release', '# # Release']);
   });
 
+  it('keeps literal hash text on every selected line', () => {
+    let state = at('### a\n### # b', 0, 13);
+    const seen: string[] = [];
+    for (let i = 0; i < 3; i++) {
+      state = cycleHeading(state);
+      seen.push(state.value);
+    }
+    expect(seen).toEqual(['# a\n# # b', '## a\n## # b', '### a\n### # b']);
+  });
+
+  it('never collapses empty headings of a multi-line selection into blank lines', () => {
+    let state = at('\n# ', 0, 3);
+    for (let i = 0; i < 3; i++) state = cycleHeading(state);
+    expect(state.value).toBe('\n# ');
+  });
+
   it('reads the level from the first non-blank line', () => {
     let state = at('\ntitle', 0, 6);
     const seen: string[] = [];
@@ -237,14 +253,14 @@ describe('cycleHeading', () => {
     expect(seen).toEqual(['\n# title', '\n## title', '\n### title', '\ntitle']);
   });
 
-  it('keeps cycling after a heading collapses to a blank first line', () => {
+  it('keeps an empty heading cycling instead of collapsing it', () => {
     let state = at('# \n ', 0, 4);
     const seen: string[] = [];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 3; i++) {
       state = cycleHeading(state);
       seen.push(state.value);
     }
-    expect(seen).toEqual(['## \n ', '### \n ', '\n ', '# \n ']);
+    expect(seen).toEqual(['## \n ', '### \n ', '# \n ']);
   });
 
   it('leaves blank lines alone in a multi-line selection', () => {
@@ -305,10 +321,11 @@ describe('insertLink', () => {
     expect(insertLink(at('C:\\', 0, 3)).value).toBe('[C:\\\\](https://)');
   });
 
-  it('keeps a multi-paragraph selection in one link', () => {
-    const out = insertLink(at('a\n\n \nb', 0, 6));
-    expect(out.value).toBe('[a\nb](https://)');
-    expect(selection(out)).toBe('https://');
+  it('keeps a multi-line selection on one line so it cannot open a block', () => {
+    expect(insertLink(at('a\n\n \nb', 0, 6)).value).toBe('[a b](https://)');
+    expect(insertLink(at('Intro\n# Setup', 0, 13)).value).toBe('[Intro # Setup](https://)');
+    expect(insertLink(at('Title\n---', 0, 9)).value).toBe('[Title ---](https://)');
+    expect(selection(insertLink(at('a\nb', 0, 3)))).toBe('https://');
   });
 
   it('uses a placeholder label when nothing is selected', () => {

@@ -179,19 +179,22 @@ export function toggleLinePrefix(state: EditState, prefix: LinePrefix): EditStat
 export function cycleHeading(state: EditState): EditState {
   const range = lineRange(state);
   const hasContent = range.lines.some((line) => line.trim() !== '');
-  const reference = range.lines.find((line) => line.trim() !== '') ?? range.lines[0];
+  const isTouched = (line: string, index: number) =>
+    hasContent ? line.trim() !== '' : index === 0;
+  const touched = range.lines.filter(isTouched);
+  const remainders = touched.map((line) => line.replace(HEADING, ''));
+  const reference = touched[0] ?? range.lines[0];
   const current = HEADING.exec(reference)?.[1].length ?? 0;
-  const plainWouldBeHeading = HEADING.test(reference.replace(HEADING, ''));
-  const wraps = current === MAX_HEADING_LEVEL && !plainWouldBeHeading;
+  const keepsHeading =
+    remainders.some((text) => HEADING.test(text)) ||
+    (hasContent && range.lines.length > 1 && remainders.some((text) => text.trim() === ''));
+  const wraps = current === MAX_HEADING_LEVEL && !keepsHeading;
   const next = wraps ? 0 : current >= MAX_HEADING_LEVEL ? 1 : current + 1;
   const marker = next === 0 ? '' : `${'#'.repeat(next)} `;
   return replaceLines(
     state,
     range,
-    range.lines.map((line, i) => {
-      const touched = hasContent ? line.trim() !== '' : i === 0;
-      return touched ? marker + line.replace(HEADING, '') : line;
-    }),
+    range.lines.map((line, i) => (isTouched(line, i) ? marker + line.replace(HEADING, '') : line)),
   );
 }
 
@@ -216,7 +219,7 @@ export function insertBlock(
 
 export function insertLink({ value, start, end }: EditState, url = 'https://'): EditState {
   const label = (value.slice(start, end) || 'text')
-    .replace(/\n[^\S\n]*(?:\n[^\S\n]*)+/g, '\n')
+    .replace(/\s*\n\s*/g, ' ')
     .replace(/[\\[\]]/g, '\\$&');
   const link = `[${label}](${url})`;
   const urlStart = start + label.length + 3;
