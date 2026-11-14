@@ -1143,3 +1143,80 @@ describe('sanitizeItem key cache', () => {
     assert.strictEqual(calls, 2);
   });
 });
+
+function dropped(payload: object): unknown {
+  return sanitizeItem({ type: 'log', meta: {}, payload } as unknown as TransportItem);
+}
+
+describe('Date handling in redactDeep', () => {
+  it('copies a real Date instead of returning the same reference', () => {
+    const original = new Date('2026-01-02T03:04:05.000Z');
+    const out = redactDeep({ when: original }) as { when: Date };
+    assert.instanceOf(out.when, Date);
+    assert.notStrictEqual(out.when, original);
+    assert.strictEqual(out.when.getTime(), original.getTime());
+  });
+
+  it('keeps an invalid Date as an invalid Date', () => {
+    const out = redactDeep({ when: new Date(Number.NaN) }) as { when: Date };
+    assert.instanceOf(out.when, Date);
+    assert.isTrue(Number.isNaN(out.when.getTime()));
+  });
+
+  it('copies a Date nested in an array and in an object', () => {
+    const first = new Date(1000);
+    const second = new Date(2000);
+    const out = redactDeep({ list: [first], nested: { at: second } }) as {
+      list: Date[];
+      nested: { at: Date };
+    };
+    assert.notStrictEqual(out.list[0], first);
+    assert.strictEqual(out.list[0]?.getTime(), 1000);
+    assert.notStrictEqual(out.nested.at, second);
+    assert.strictEqual(out.nested.at.getTime(), 2000);
+  });
+
+  it('drops the item for an object that only inherits from Date.prototype', () => {
+    const lookalike = Object.setPrototypeOf({ toJSON: () => MARKER, note: MARKER }, Date.prototype);
+    assert.isNull(dropped({ when: lookalike }));
+  });
+
+  it('drops the item for Object.create(Date.prototype) carrying a secret field', () => {
+    const lookalike = Object.create(Date.prototype, {
+      secret: { value: MARKER, enumerable: true },
+    }) as object;
+    assert.isNull(dropped({ when: lookalike }));
+  });
+
+  it('turns a stringifiable lookalike into a string instead of passing it through', () => {
+    const lookalike = Object.setPrototypeOf(
+      { toString: () => 'plain text', toJSON: () => MARKER },
+      Date.prototype,
+    );
+    assert.deepEqual<unknown>(payloadOf({ when: lookalike }), { when: 'plain text' });
+  });
+
+  it('does not let a Date subclass override toJSON to emit a secret', () => {
+    class Leaky extends Date {
+      override toJSON(): string {
+        return MARKER;
+      }
+    }
+    const out = redactDeep({ when: new Leaky(0) }) as { when: unknown };
+    assert.isFalse(JSON.stringify(out).includes(MARKER));
+    assert.instanceOf(out.when, Date);
+    assert.strictEqual((out.when as Date).getTime(), 0);
+  });
+
+  it('stringifies a Proxy whose getPrototypeOf returns Date.prototype', () => {
+    const proxy = new Proxy({ toJSON: () => MARKER }, { getPrototypeOf: () => Date.prototype });
+    const out = payloadOf({ when: proxy });
+    assert.strictEqual(typeof out['when'], 'string');
+    assert.isFalse(JSON.stringify(out).includes(MARKER));
+  });
+
+  it('masks a Date under a secret key', () => {
+    const out = redactDeep({ token: new Date(0) });
+    assert.deepEqual<unknown>(out, { token: '*' });
+  });
+});
