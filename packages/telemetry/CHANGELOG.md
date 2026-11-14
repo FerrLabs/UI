@@ -4,6 +4,14 @@ All notable changes to `telemetry` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.5.1] - 2026-11-14
+
+### Bug Fixes
+
+- fix(telemetry): close redaction leaks in quoted emails, spaced keys and glued separators (#755)
+- fix(telemetry): copy real Dates and redact lookalikes (#749)
+- fix(telemetry): host classification regressions from the FerrLens migration (#746)
+
 ## [0.5.0] - 2026-11-14
 
 ### Features
