@@ -5,6 +5,7 @@ import {
   QUOTE,
   TASK,
   cycleHeading,
+  diffReplacement,
   insertBlock,
   insertLink,
   toggleLinePrefix,
@@ -49,6 +50,18 @@ describe('toggleWrap', () => {
   it('supports asymmetric markers', () => {
     const out = toggleWrap(at('x', 0, 1), '<u>', '</u>');
     expect(out.value).toBe('<u>x</u>');
+  });
+
+  it('restores when italic is toggled twice next to a stray marker', () => {
+    const once = toggleWrap(at('a* b', 0, 1), '*');
+    expect(once.value).toBe('*a** b');
+    expect(toggleWrap(once, '*').value).toBe('a* b');
+  });
+
+  it('restores inline code next to a stray backtick', () => {
+    const once = toggleWrap(at('`x', 1, 2), '`');
+    expect(once.value).toBe('``x`');
+    expect(toggleWrap(once, '`').value).toBe('`x');
   });
 
   it('round-trips', () => {
@@ -104,6 +117,16 @@ describe('toggleLinePrefix', () => {
     expect(out.value).toBe('- a\nb');
   });
 
+  it('prefixes an empty first line when the caret is at the start', () => {
+    expect(toggleLinePrefix(at('\nabc', 0), BULLET).value).toBe('- \nabc');
+  });
+
+  it('skips blank lines and numbers only content lines', () => {
+    const out = toggleLinePrefix(at('a\n\nb', 0, 4), NUMBERED);
+    expect(out.value).toBe('1. a\n\n2. b');
+    expect(toggleLinePrefix(out, NUMBERED).value).toBe('a\n\nb');
+  });
+
   it('works on an empty document', () => {
     expect(toggleLinePrefix(at('', 0), BULLET).value).toBe('- ');
   });
@@ -122,6 +145,10 @@ describe('cycleHeading', () => {
 
   it('normalises deeper headings to H1', () => {
     expect(cycleHeading(at('#### deep', 0)).value).toBe('# deep');
+  });
+
+  it('heads an empty first line when the caret is at the start', () => {
+    expect(cycleHeading(at('\nabc', 0)).value).toBe('# \nabc');
   });
 
   it('only touches the lines of the selection', () => {
@@ -160,5 +187,38 @@ describe('insertLink', () => {
     const out = insertLink(at('', 0));
     expect(out.value).toBe('[text](https://)');
     expect(selection(out)).toBe('https://');
+  });
+});
+
+describe('diffReplacement', () => {
+  const apply = (before: string, r: { from: number; to: number; text: string }) =>
+    before.slice(0, r.from) + r.text + before.slice(r.to);
+
+  it('reports the minimal changed range', () => {
+    expect(diffReplacement('say hello now', 'say **hello** now')).toEqual({
+      from: 4,
+      to: 9,
+      text: '**hello**',
+    });
+  });
+
+  it('reports an empty replacement for identical strings', () => {
+    expect(diffReplacement('abc', 'abc')).toEqual({ from: 3, to: 3, text: '' });
+  });
+
+  it('does not let prefix and suffix overlap on repeated characters', () => {
+    const r = diffReplacement('aa', 'aaa');
+    expect(apply('aa', r)).toBe('aaa');
+  });
+
+  it('applies back to the target for deletions and rewrites', () => {
+    for (const [a, b] of [
+      ['**hi**', 'hi'],
+      ['a\nb', '- a\n- b'],
+      ['', 'x'],
+      ['x', ''],
+    ]) {
+      expect(apply(a, diffReplacement(a, b))).toBe(b);
+    }
   });
 });

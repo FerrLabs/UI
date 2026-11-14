@@ -23,7 +23,7 @@ function isWrapped(value: string, start: number, end: number, before: string, af
   if (value.slice(start - before.length, start) !== before) return false;
   if (value.slice(end, end + after.length) !== after) return false;
   if (before === after && before.length === 1) {
-    return value[start - 2] !== before && value[end + 1] !== after;
+    return !(value[start - 2] === before && value[end + 1] === after);
   }
   return true;
 }
@@ -73,7 +73,7 @@ interface LineRange {
 }
 
 function lineRange({ value, start, end }: EditState): LineRange {
-  const from = value.lastIndexOf('\n', start - 1) + 1;
+  const from = start === 0 ? 0 : value.lastIndexOf('\n', start - 1) + 1;
   const stop = end > start && value[end - 1] === '\n' ? end - 1 : end;
   const next = value.indexOf('\n', stop);
   const to = next === -1 ? value.length : next;
@@ -91,10 +91,14 @@ function replaceLines(state: EditState, range: LineRange, lines: string[]): Edit
 
 export function toggleLinePrefix(state: EditState, prefix: LinePrefix): EditState {
   const range = lineRange(state);
-  const allPrefixed = range.lines.every((line) => prefix.match.test(line));
-  const lines = allPrefixed
-    ? range.lines.map((line) => line.replace(prefix.match, ''))
-    : range.lines.map((line, i) => prefix.make(i) + line.replace(ANY_LIST_PREFIX, ''));
+  const content = range.lines.filter((line) => line.trim() !== '');
+  const allPrefixed = content.length > 0 && content.every((line) => prefix.match.test(line));
+  let index = 0;
+  const lines = range.lines.map((line) => {
+    if (line.trim() === '' && range.lines.length > 1) return line;
+    if (allPrefixed) return line.replace(prefix.match, '');
+    return prefix.make(index++) + line.replace(ANY_LIST_PREFIX, '');
+  });
   return replaceLines(state, range, lines);
 }
 
@@ -135,5 +139,29 @@ export function insertLink({ value, start, end }: EditState, url = 'https://'): 
     value: value.slice(0, start) + link + value.slice(end),
     start: urlStart,
     end: urlStart + url.length,
+  };
+}
+
+export interface Replacement {
+  readonly from: number;
+  readonly to: number;
+  readonly text: string;
+}
+
+export function diffReplacement(before: string, after: string): Replacement {
+  const limit = Math.min(before.length, after.length);
+  let prefix = 0;
+  while (prefix < limit && before[prefix] === after[prefix]) prefix++;
+  let suffix = 0;
+  while (
+    suffix < limit - prefix &&
+    before[before.length - 1 - suffix] === after[after.length - 1 - suffix]
+  ) {
+    suffix++;
+  }
+  return {
+    from: prefix,
+    to: before.length - suffix,
+    text: after.slice(prefix, after.length - suffix),
   };
 }

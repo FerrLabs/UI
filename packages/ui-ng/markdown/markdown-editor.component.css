@@ -22,7 +22,6 @@
 
 .flr-md-editor__frame--disabled {
   background: var(--color-paper-2, #f1f5f9);
-  opacity: 0.65;
   cursor: not-allowed;
 }
 

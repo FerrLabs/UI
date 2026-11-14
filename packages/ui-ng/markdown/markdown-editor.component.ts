@@ -17,6 +17,7 @@ import {
   QUOTE,
   TASK,
   cycleHeading,
+  diffReplacement,
   insertBlock,
   insertLink,
   toggleLinePrefix,
@@ -64,10 +65,10 @@ const ACTIONS: readonly ToolbarAction[] = [
   {
     id: 'numbered',
     glyph: '1.',
-    label: 'Numbered list',
+    label: 'Numbered list 1.',
     apply: (s) => toggleLinePrefix(s, NUMBERED),
   },
-  { id: 'task', glyph: '[x]', label: 'Task list', apply: (s) => toggleLinePrefix(s, TASK) },
+  { id: 'task', glyph: '[ ]', label: 'Task list', apply: (s) => toggleLinePrefix(s, TASK) },
   { id: 'quote', glyph: '"', label: 'Quote', apply: (s) => toggleLinePrefix(s, QUOTE) },
 ];
 
@@ -98,19 +99,24 @@ export class MarkdownEditorComponent implements ControlValueAccessor {
 
   protected readonly actions = ACTIONS;
   protected readonly value = signal('');
+  protected readonly written = signal('');
   protected readonly disabled = signal(false);
   protected readonly mode = signal<EditorMode>('write');
   protected readonly writeId = `flr-md-editor-write-${++sequence}`;
   protected readonly previewId = `flr-md-editor-preview-${sequence}`;
   protected readonly previewing = computed(() => this.mode() === 'preview');
 
-  private readonly textarea = viewChild.required<ElementRef<HTMLTextAreaElement>>('textarea');
+  private readonly textarea = viewChild<ElementRef<HTMLTextAreaElement>>('textarea');
 
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
 
   writeValue(value: string | null): void {
-    this.value.set(value ?? '');
+    const text = value ?? '';
+    this.value.set(text);
+    this.written.set(text);
+    const element = this.textarea()?.nativeElement;
+    if (element) element.value = text;
   }
 
   registerOnChange(fn: (value: string) => void): void {
@@ -142,16 +148,21 @@ export class MarkdownEditorComponent implements ControlValueAccessor {
   }
 
   protected run(action: ToolbarAction): void {
-    const element = this.textarea().nativeElement;
+    const element = this.textarea()?.nativeElement;
+    if (!element) return;
     const next = action.apply({
       value: element.value,
       start: element.selectionStart,
       end: element.selectionEnd,
     });
-    element.value = next.value;
-    element.setSelectionRange(next.start, next.end);
+    const change = diffReplacement(element.value, next.value);
     element.focus();
-    this.commit(next.value);
+    element.setSelectionRange(change.from, change.to);
+    if (!document.execCommand('insertText', false, change.text)) {
+      element.value = next.value;
+    }
+    element.setSelectionRange(next.start, next.end);
+    this.commit(element.value);
   }
 
   private commit(value: string): void {
