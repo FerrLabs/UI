@@ -1,6 +1,6 @@
 import { assert, describe, it } from 'vitest';
 import { redactText } from './redact-text.js';
-import { keptInputs, leakInputs } from './redaction-cases.fixture.js';
+import { exactCases, keptInputs, leakInputs } from './redaction-cases.fixture.js';
 
 const LEAK_MARKER = 'abc';
 
@@ -138,6 +138,13 @@ describe('redactText tables', () => {
   for (const input of keptInputs) {
     it(`keeps ${JSON.stringify(input.slice(0, 60))}`, () => {
       assert.strictEqual(redactText(input), input);
+    });
+  }
+
+  for (const [input, expected] of exactCases) {
+    it(`turns ${JSON.stringify(input.slice(0, 60))} into ${JSON.stringify(expected.slice(0, 60))}`, () => {
+      assert.strictEqual(redactText(input), expected);
+      assert.strictEqual(redactText(expected), expected);
     });
   }
 });
@@ -898,6 +905,17 @@ describe('userinfo, yaml blocks, glued separators and query values', () => {
     ['8000 dashed segments before an equals sign', 'a-'.repeat(8000) + '='],
     ['8000 dashed segments before a colon', 'a-'.repeat(8000) + ':'],
     ['8000 spaced pairs before an inline yaml block key', 'x '.repeat(8000) + 'password: |\n x'],
+    ['8000 glued semicolons in a colon value', 'password: a' + ';a'.repeat(8000)],
+    ['1700 glued semicolon keys', ';password'.repeat(1700)],
+    ['8000 ampersands in one query', '?' + 'a&'.repeat(8000)],
+    ['16000 query characters before a secret key', '?' + 'x'.repeat(16000) + '&token=abc failed'],
+    ['160 long query keys', '?' + ('&' + 'a'.repeat(100)).repeat(160)],
+    ['3000 glued semicolons before a spaced key in a query', '?token=a' + ';key '.repeat(3000)],
+    ['8000 glued semicolons in a bearer token', 'Bearer abcdefgh' + ';x'.repeat(8000)],
+    [
+      '4000 glued semicolons before a spaced equals in a basic credential',
+      'Basic dXNlcjpw' + ';a ='.repeat(4000),
+    ],
   ];
 
   for (const [name, input] of timed) {
