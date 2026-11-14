@@ -1112,3 +1112,34 @@ describe('Date and Map values under plain and secret keys', () => {
     );
   });
 });
+
+describe('sanitizeItem key cache', () => {
+  const payload = {
+    first: { 'k@e.com': 1, plain: 'v' },
+    second: { 'k@e.com': 2, plain: 'v' },
+    list: [{ 'k@e.com': 3 }],
+  };
+  const item = { type: 'log', meta: {}, payload } as unknown as TransportItem;
+
+  it('redacts a repeated key once per item without changing the output', () => {
+    const keyCalls: string[] = [];
+    const counting = (value: string): string => {
+      if (value === 'k@e.com') keyCalls.push(value);
+      return redactText(value);
+    };
+    const cached = sanitizeItem(item, { redactString: counting });
+    assert.strictEqual(keyCalls.length, 1);
+    assert.deepEqual<unknown>(cached, sanitizeItem(item));
+  });
+
+  it('starts a fresh cache for every item', () => {
+    let calls = 0;
+    const counting = (value: string): string => {
+      if (value === 'k@e.com') calls++;
+      return redactText(value);
+    };
+    sanitizeItem(item, { redactString: counting });
+    sanitizeItem(item, { redactString: counting });
+    assert.strictEqual(calls, 2);
+  });
+});

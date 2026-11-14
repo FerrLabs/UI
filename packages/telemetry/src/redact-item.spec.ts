@@ -281,3 +281,66 @@ describe('redactItem', () => {
     expect((out.payload as { message: string }).message).toBe('GET /s/abcDEF123 failed');
   });
 });
+
+describe('redactItem measurements and session meta', () => {
+  const secret = ['hunter2', 'SECRET', 'zq'].join('');
+
+  it('keeps numeric measurement values and still masks secret strings elsewhere in the item', () => {
+    const source = {
+      type: TransportItemType.MEASUREMENT,
+      meta: {},
+      payload: {
+        type: 'login',
+        values: { authFlow: 1200, token: 3 },
+        context: { password: secret },
+      },
+    } as unknown as TransportItem;
+    const out = scrub(source).payload as {
+      values: Record<string, number>;
+      context: Record<string, string>;
+    };
+    expect(out.values).toEqual({ authFlow: 1200, token: 3 });
+    expect(out.context['password']).toBe('*');
+  });
+
+  it('still redacts strings inside measurement values', () => {
+    const source = {
+      type: TransportItemType.MEASUREMENT,
+      meta: {},
+      payload: { type: 'login', values: { authFlow: secret, ok: 1 } },
+    } as unknown as TransportItem;
+    const out = scrub(source).payload as { values: Record<string, unknown> };
+    expect(out.values['authFlow']).toBe('*');
+    expect(out.values['ok']).toBe(1);
+  });
+
+  it('masks numbers under secret names for non-measurement items', () => {
+    const source = {
+      type: TransportItemType.LOG,
+      meta: {},
+      payload: { values: { authFlow: 1200 } },
+    } as unknown as TransportItem;
+    const out = scrub(source).payload as { values: Record<string, unknown> };
+    expect(out.values['authFlow']).toBe('*');
+  });
+
+  it('keeps the item and a null meta when dropSessionMeta is set', () => {
+    const source = {
+      type: TransportItemType.LOG,
+      meta: null,
+      payload: {},
+    } as unknown as TransportItem;
+    const out = redactItem(source, [], { dropSessionMeta: true });
+    expect(out).not.toBeNull();
+    expect(out?.meta).toBeNull();
+  });
+
+  it('does not mutate the caller meta when dropping the session', () => {
+    const meta = { session: { id: 's1' }, page: { url: 'https://a.com/x' } };
+    const source = { type: TransportItemType.LOG, meta, payload: {} } as unknown as TransportItem;
+    const out = redactItem(source, [], { dropSessionMeta: true });
+    expect(out?.meta).toEqual({ page: { url: 'https://a.com/x' } });
+    expect(meta).toEqual({ session: { id: 's1' }, page: { url: 'https://a.com/x' } });
+    expect(out?.meta).not.toBe(meta);
+  });
+});

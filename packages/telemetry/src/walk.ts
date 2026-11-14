@@ -30,6 +30,8 @@ interface Snapshot {
 interface Walk extends Snapshot {
   readonly secret: WeakSet<object>;
   readonly copies: WeakMap<object, unknown>;
+  readonly keys: Map<string, string>;
+  readonly measurementValues: object | undefined;
 }
 
 function elementsOf(snapshot: Snapshot, array: readonly unknown[]): readonly unknown[] {
@@ -109,7 +111,13 @@ function collectSecretContainers(
   return secret;
 }
 
-function newWalk(meta: unknown, payload: unknown): Walk {
+function measurementValuesOf(snapshot: Snapshot, item: TransportItem): object | undefined {
+  if (item.type !== 'measurement') return undefined;
+  const values = (item.payload as { values?: unknown } | null | undefined)?.values;
+  return isPlainRecord(snapshot, values) ? (values as object) : undefined;
+}
+
+function newWalk(meta: unknown, payload: unknown, item?: TransportItem): Walk {
   const snapshot: Snapshot = {
     plain: new WeakMap(),
     elements: new WeakMap(),
@@ -119,7 +127,17 @@ function newWalk(meta: unknown, payload: unknown): Walk {
     ...snapshot,
     secret: collectSecretContainers(meta, payload, snapshot),
     copies: new WeakMap(),
+    keys: new Map(),
+    measurementValues: item === undefined ? undefined : measurementValuesOf(snapshot, item),
   };
+}
+
+function redactKey(key: string, redactString: StringRedactor, walk: Walk): string {
+  const known = walk.keys.get(key);
+  if (known !== undefined) return known;
+  const redacted = redactString(key);
+  walk.keys.set(key, redacted);
+  return redacted;
 }
 
 function redactWalk(value: unknown, redactString: StringRedactor, walk: Walk): unknown {
@@ -142,12 +160,18 @@ function redactWalk(value: unknown, redactString: StringRedactor, walk: Walk): u
   const copy: Record<string, unknown> = {};
   walk.copies.set(value, copy);
   const taken = new Set<string>();
+  const holdsMetrics = value === walk.measurementValues;
   for (const [key, entry] of entriesOf(walk, value)) {
-    const base = inSecret ? MASK : redactString(key);
+    const base = inSecret ? MASK : redactKey(key, redactString, walk);
     let target = base;
     for (let n = 2; taken.has(target); n++) target = `${base}#${n}`;
     taken.add(target);
-    const masked = inSecret ? isSecretValue(walk, entry) : isSecretField(walk, key, entry);
+    const masked =
+      holdsMetrics && typeof entry === 'number'
+        ? false
+        : inSecret
+          ? isSecretValue(walk, entry)
+          : isSecretField(walk, key, entry);
     defineEntry(copy, target, masked ? MASK : redactWalk(entry, redactString, walk));
   }
   return copy;
@@ -157,9 +181,12 @@ export function redactDeep(value: unknown, redactString: StringRedactor = redact
   return redactWalk(value, redactString, newWalk(undefined, value));
 }
 
-function removeSessionMeta(meta: object): void {
-  for (const key of Object.keys(meta))
-    if (SESSION_FIELD.test(key)) Reflect.deleteProperty(meta, key);
+function withoutSessionMeta(meta: unknown): unknown {
+  if (meta === null || typeof meta !== 'object' || Array.isArray(meta)) return meta;
+  const copy: Record<string, unknown> = {};
+  for (const [key, entry] of Object.entries(meta))
+    if (!SESSION_FIELD.test(key)) defineEntry(copy, key, entry);
+  return copy;
 }
 
 export function sanitizeItem(
@@ -169,9 +196,11 @@ export function sanitizeItem(
   const { redactString = redactText, dropSessionMeta = false } = options;
   try {
     const { meta: itemMeta, payload: itemPayload } = item;
-    const walk = newWalk(itemMeta, itemPayload);
-    const meta = redactWalk(itemMeta, redactString, walk) as TransportItem['meta'];
-    if (dropSessionMeta) removeSessionMeta(meta);
+    const walk = newWalk(itemMeta, itemPayload, item);
+    const redactedMeta = redactWalk(itemMeta, redactString, walk);
+    const meta = (
+      dropSessionMeta ? withoutSessionMeta(redactedMeta) : redactedMeta
+    ) as TransportItem['meta'];
     return {
       ...item,
       meta,
