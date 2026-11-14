@@ -3,16 +3,18 @@ import { environmentFromHostname } from './environment.js';
 import { isLocalHostname, isOptedOut } from './opt-out.js';
 import { redactItem, type CapabilityPath } from './redact-item.js';
 
+export const DEFAULT_COLLECTOR_URL = 'https://rum.ferrlabs.com/collect';
+
 export interface TelemetryOptions {
   appName: string;
-  collectorUrl: string;
+  collectorUrl?: string;
   capabilityPaths?: readonly CapabilityPath[];
   dropSessionMeta?: boolean;
 }
 
 export function initTelemetry({
   appName,
-  collectorUrl,
+  collectorUrl = DEFAULT_COLLECTOR_URL,
   capabilityPaths = [],
   dropSessionMeta = false,
 }: TelemetryOptions): void {
