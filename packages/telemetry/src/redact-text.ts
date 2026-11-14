@@ -17,7 +17,7 @@ const PARAM_KEYS = `\\b(?=\\w)(?:(?=[\\w.-]{65})${BENIGN_LONG}(?:[\\w.-]{32}){2,
 const COLON_KEYS = `\\b(?=\\w)(?:(?=\\w{65})${BENIGN_LONG}(?:\\w{32}){2,64}?)?${BENIGN}(?:[\\w[\\]-]{0,64}${COLON_WORDS}|[\\w[\\]-]{1,64}(?:code|state))[\\])}>]{0,4}`;
 const JWT = /\beyJ[\w-]*\.[\w-]+\.[\w-]*/g;
 const BASIC =
-  /\b([Bb][Aa][Ss][Ii][Cc])\s+(?:(?:(?=[A-Za-z0-9+/]*[0-9A-Z+/])[A-Za-z0-9+/]{8,}|[A-Za-z0-9+/]{2,})={1,2}(?![\w+/=])|(?=[A-Za-z0-9+/]*[0-9+/])[A-Za-z0-9+/]{16,}(?![\w+/=])|(?=[A-Za-z0-9+/]*[0-9A-Z+/])[A-Za-z0-9+/]{8,}(?![\w+/:=]))(?:[,;](?![\w.$[\]-]+(?:=(?![=\s]|$)|[ \t]*:(?:[ \t]|$))|(?:[Bb][Aa][Ss][Ii][Cc]|[Bb][Ee][Aa][Rr][Ee][Rr]|[Tt][Oo][Kk][Ee][Nn]|[Dd][Ii][Gg][Ee][Ss][Tt])[ \t])[^\s,;"']+)*/g;
+  /\b([Bb][Aa][Ss][Ii][Cc])\s+(?:(?:(?=[A-Za-z0-9+/]*[0-9A-Z+/])[A-Za-z0-9+/]{8,}|[A-Za-z0-9+/]{2,})={1,2}(?![\w+/=])|(?=[A-Za-z0-9+/]*[0-9+/])[A-Za-z0-9+/]{16,}(?![\w+/=])|(?=[A-Za-z0-9+/]*[0-9A-Z+/])[A-Za-z0-9+/]{8,}(?![\w+/:=]))(?:[,;](?![\w.$[\]-]+(?:[ \t]*(?:=(?![=\s]|$)|:(?:[ \t]|$))|[ \t]+=[ \t])|(?:[Bb][Aa][Ss][Ii][Cc]|[Bb][Ee][Aa][Rr][Ee][Rr]|[Tt][Oo][Kk][Ee][Nn]|[Dd][Ii][Gg][Ee][Ss][Tt])[ \t])[^\s,;"']+)*/g;
 const EMAIL = /[\w.!#$%&*+?^`{|}~-][\w.!#$%&'*+?^`{|}~-]{0,63}=*@[\w-]{1,63}(?:\.[\w-]{1,63})+/g;
 const WORD_EMAIL = /(?!['/=])[\w.!#$%&'*+/=?^`{|}~-]{1,64}@[\w-]{1,63}(?:\.[\w-]{1,63})+/g;
 const QUOTED_EMAIL =
@@ -27,21 +27,22 @@ const USERINFO =
 const QUOTE = `(?:\\\\{0,4}["'])?`;
 const KEY_HEAD = `(?:\\\\{0,4}["'][ \\t]*)?[([{<]?${KEY_WORDS}[ \\t]*(?:\\\\{0,4}["'][ \\t]*)?`;
 const KEY_AHEAD = `${KEY_HEAD}[:=]`;
+const GLUED = `[,;](?![ \\t\\r\\n]|$|[\\w.$[\\]-]+(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$))|(?:basic|bearer|token|digest)[ \\t]|${KEY_AHEAD})`;
 const REAL_KEY_AHEAD = `${KEY_HEAD}(?::|=(?!=*(?:[\\s,;"']|$)))`;
 const QVAL = `(?:\\\\{0,4}"[^"]*"?|\\\\{0,4}'[^']*'?)(?:\\\\{0,4}"[^"]*"?|\\\\{0,4}'[^']*'?|(?![?#][ \\t]*${KEY_AHEAD})[^\\s"',;&|])*`;
 const VALUE_JOIN = `|[ \\t]+(?![ \\t-])(?!(?:basic|bearer|token|digest)[ \\t])(?![\\w.$[\\]-]{1,64}(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$)))(?!${KEY_AHEAD})(?=[^\\r\\n,;&|])`;
-const VALUE = `(?:${QVAL}|(?:(?:bearer|basic|token|digest|apikey|bot)[ \\t]+(?![ \\t])(?!${REAL_KEY_AHEAD})|[a-z][\\w-]{0,20}[ \\t]+(?![ \\t])(?![\\w.$[\\]-]{1,64}(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$)))(?!${REAL_KEY_AHEAD})(?=[^\\s"'<>&;,]{8}))?(?:(?![,;&|?#][ \\t]*${KEY_AHEAD})[^\\t\\n\\r ,;"']|[,;](?![ \\t\\r\\n]|$|[\\w.$[\\]-]+(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$))|(?:basic|bearer|token|digest)[ \\t]))+(?:\\\\{0,4}"[^"]*"?|\\\\{0,4}'[^']*'?|(?![,;&|?#][ \\t]*${KEY_AHEAD})[^\\t\\n\\r ,;"']|[,;](?![ \\t\\r\\n]|$|[\\w.$[\\]-]+(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$))|(?:basic|bearer|token|digest)[ \\t])${VALUE_JOIN})*)`;
+const VALUE = `(?:${QVAL}|(?:(?:bearer|basic|token|digest|apikey|bot)[ \\t]+(?![ \\t])(?!${REAL_KEY_AHEAD})|[a-z][\\w-]{0,20}[ \\t]+(?![ \\t])(?![\\w.$[\\]-]{1,64}(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$)))(?!${REAL_KEY_AHEAD})(?=[^\\s"'<>&;,]{8}))?(?:(?![,;&|?#][ \\t]*${KEY_AHEAD})[^\\t\\n\\r ,;"']|${GLUED})+(?:\\\\{0,4}"[^"]*"?|\\\\{0,4}'[^']*'?|(?![,;&|?#][ \\t]*${KEY_AHEAD})[^\\t\\n\\r ,;"']|${GLUED}${VALUE_JOIN})*)`;
 const VALUE_WORD = VALUE.replace(VALUE_JOIN, '');
 const QUOTED = `\\\\{0,4}"[^"]*"?|\\\\{0,4}'[^']*'?`;
 const CLOSE = `[}\\]>)](?=[\\s"']|$|[,;](?:[\\s"'{\\[]|$|[\\w.$[\\]-]+[ \\t]*[:=]))`;
 const CLOSED = `\\\\{0,4}"[^"]*"|\\\\{0,4}'[^']*'`;
 const SCHEME_LEAD = `(?:(?:bearer|basic|token|digest|apikey|api-key|bot|hmac|negotiate|ntlm)[ \\t]+(?![ \\t])(?!${REAL_KEY_AHEAD})(?=[^\\s,;"']))?`;
-const SEGMENT = `${SCHEME_LEAD}(?:(?:${CLOSED})(?=[\\s,;}\\]>)]|$)(?![ \\t]*[:=])|(?:${QUOTED}|(?!${CLOSE})[^\\t\\n\\r ,;"']|[,;](?![ \\t\\r\\n]|$|[\\w.$[\\]-]+(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$))|(?:basic|bearer|token|digest)[ \\t]))(?:[ \\t]+(?![ \\t])(?![\\w.$[\\]-]{1,64}(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$)))(?!${KEY_AHEAD})(?=[^\\r\\n,;])|(?!${CLOSE})(?![|&#?]${KEY_AHEAD})[^\\t\\n\\r ,;"']|[,;](?![ \\t\\r\\n]|$|[\\w.$[\\]-]+(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$))|(?:basic|bearer|token|digest)[ \\t])|${QUOTED})*)`;
+const SEGMENT = `${SCHEME_LEAD}(?:(?:${CLOSED})(?=[\\s,;}\\]>)]|$)(?![ \\t]*[:=])|(?:${QUOTED}|(?!${CLOSE})[^\\t\\n\\r ,;"']|${GLUED})(?:[ \\t]+(?![ \\t])(?![\\w.$[\\]-]{1,64}(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$)))(?!${KEY_AHEAD})(?=[^\\r\\n,;])|(?!${CLOSE})(?![|&#?]${KEY_AHEAD})[^\\t\\n\\r ,;"']|${GLUED}|${QUOTED})*)`;
 const BREAKS = `(?:\\r?\\n[ \\t]*(?![ \\t])){0,4}`;
 const TOKEN_CHARS = `(?:(?![&#|?{(\\[<]${KEY_AHEAD})[^\\s"',;:=\\\\])`;
 const BEARER_KEYED = `(?=${BENIGN}(?:[^\\s"',;:=\\\\]{0,64}(?:${WORDS})|${CODE_WORDS})\\\\{0,4}["']?[ \\t]*[:=])(?=(${TOKEN_CHARS}+))\\2\\\\{0,4}["']?[ \\t]*[:=]+[ \\t]*(?![ \\t])${BREAKS}(?:${SEGMENT})?`;
 const BEARER = new RegExp(
-  `\\b(bearer)(?:\\s+bearer){0,3}\\s+(?:\\\\{0,4}["'][ \\t]*[\\w.$-]{0,64}\\\\{0,4}["']?[ \\t]*[:=][ \\t]*(?![ \\t])${BREAKS}(?:${SEGMENT})?|${QUOTED}|${BEARER_KEYED}|(?=(?:[^\\s"',;]|[,;](?![ \\t\\r\\n]|$|[\\w.$[\\]-]+(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$))|(?:basic|bearer|token|digest)[ \\t])){8})(?=((?:${TOKEN_CHARS}|[,;](?![ \\t\\r\\n]|$|[\\w.$[\\]-]+(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$))|(?:basic|bearer|token|digest)[ \\t])|\\\\(?!\\\\{0,3}["'])|[:=]+(?!${KEY_AHEAD}))+))\\3)`,
+  `\\b(bearer)(?:\\s+bearer){0,3}\\s+(?:\\\\{0,4}["'][ \\t]*[\\w.$-]{0,64}\\\\{0,4}["']?[ \\t]*[:=][ \\t]*(?![ \\t])${BREAKS}(?:${SEGMENT})?|${QUOTED}|${BEARER_KEYED}|(?=(?:[^\\s"',;]|${GLUED}){8})(?=((?:${TOKEN_CHARS}|${GLUED}|\\\\(?!\\\\{0,3}["'])|[:=]+(?!${KEY_AHEAD}))+))\\3)`,
   'gi',
 );
 const YAML_BLOCK = new RegExp(

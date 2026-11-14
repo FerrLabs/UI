@@ -905,6 +905,14 @@ describe('userinfo, yaml blocks, glued separators and query values', () => {
     ['8000 dashed segments before an equals sign', 'a-'.repeat(8000) + '='],
     ['8000 dashed segments before a colon', 'a-'.repeat(8000) + ':'],
     ['8000 spaced pairs before an inline yaml block key', 'x '.repeat(8000) + 'password: |\n x'],
+    ['8000 glued semicolons in a colon value', 'password: a' + ';a'.repeat(8000)],
+    ['1700 glued semicolon keys', ';password'.repeat(1700)],
+    ['3000 glued semicolons before a spaced key in a query', '?token=a' + ';key '.repeat(3000)],
+    ['8000 glued semicolons in a bearer token', 'Bearer abcdefgh' + ';x'.repeat(8000)],
+    [
+      '4000 glued semicolons before a spaced equals in a basic credential',
+      'Basic dXNlcjpw' + ';a ='.repeat(4000),
+    ],
   ];
 
   for (const [name, input] of timed) {
