@@ -140,11 +140,24 @@ function redactKey(key: string, redactString: StringRedactor, walk: Walk): strin
   return redacted;
 }
 
+function dateTime(value: object): number | undefined {
+  try {
+    return Date.prototype.getTime.call(value);
+  } catch {
+    return undefined;
+  }
+}
+
+function redactOpaque(value: object, redactString: StringRedactor): unknown {
+  const time = dateTime(value);
+  if (time !== undefined) return new Date(time);
+  return redactString(String(value));
+}
+
 function redactWalk(value: unknown, redactString: StringRedactor, walk: Walk): unknown {
   if (typeof value === 'string') return redactString(value);
   if (value === null || typeof value !== 'object') return value;
-  if (!isTraversable(walk, value))
-    return value instanceof Date ? value : redactString(String(value));
+  if (!isTraversable(walk, value)) return redactOpaque(value, redactString);
   const known = walk.copies.get(value);
   if (known !== undefined) return known;
   const inSecret = walk.secret.has(value);
