@@ -4,6 +4,12 @@ All notable changes to `telemetry` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.5.0] - 2026-11-14
+
+### Features
+
+- feat(telemetry): add enabled option to initTelemetry (#738)
+
 ## [0.4.0] - 2026-11-14
 
 ### Features
