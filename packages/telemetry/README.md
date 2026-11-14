@@ -38,6 +38,20 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
+Report a bootstrap failure before any Angular `ErrorHandler` exists:
+
+```ts
+import { reportError } from '@ferrlabs/telemetry';
+
+bootstrapApplication(App, appConfig).catch((error: unknown) => {
+  reportError(error);
+  console.error(error);
+});
+```
+
+`reportError(value)` pushes an `Error` as is and wraps anything else into one. It is a no-op when
+Faro is not initialised (opt-out, localhost, SSR) and never throws.
+
 ## Behaviour
 
 - Nothing is sent on `localhost` (including `*.localhost`) or loopback addresses, or when the browser sends Do Not Track or
@@ -67,10 +81,10 @@ export const appConfig: ApplicationConfig = {
 
 ## Exports
 
-| Entry                         | Exports                                                                                                 |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `@ferrlabs/telemetry`         | `initTelemetry`, `isOptedOut`, `isLocalHostname`, `redactText`, `redactItem`, `environmentFromHostname` |
-| `@ferrlabs/telemetry/angular` | `provideTelemetryErrorHandler`, `TelemetryErrorHandler`                                                 |
+| Entry                         | Exports                                                                                                                |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `@ferrlabs/telemetry`         | `initTelemetry`, `reportError`, `isOptedOut`, `isLocalHostname`, `redactText`, `redactItem`, `environmentFromHostname` |
+| `@ferrlabs/telemetry/angular` | `provideTelemetryErrorHandler`, `TelemetryErrorHandler`                                                                |
 
 `redactItem(item, capabilityPaths?, { dropSessionMeta? })` returns the scrubbed copy, or `null`
 when the item must be dropped.
