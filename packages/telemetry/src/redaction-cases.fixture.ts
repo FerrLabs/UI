@@ -247,4 +247,10 @@ export const exactCases: ReadonlyArray<readonly [string, string]> = [
   ['""jane doe"@corp.io', '"*'],
   ['"""jane doe""@corp.io"', '""*"'],
   ['{"password":"@home.Town!2024"}', '{"password":*}'],
+  ['password: correct horse =x', 'password: *'],
+  ['Bearer state: password: hunter2abcd =1', 'Bearer *'],
+  ['password=hunter2 secretpart =1', 'password=*'],
+  ['token: abc secretpart =1, user: bob', 'token: *, user: bob'],
+  ['Basic dXNlcjpwYXNz,secretpart =1', 'Basic * =1'],
+  ['password=x user=bob', 'password=* user=bob'],
 ];
