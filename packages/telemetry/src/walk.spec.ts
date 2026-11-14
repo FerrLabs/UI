@@ -145,10 +145,10 @@ describe('redactDeep', () => {
     assert.deepEqual(redactDeep({ 'a@b.com': 1, 'c@d.com': 2 }), { '*': 1, '*#2': 2 });
   });
 
-  it('scrubs string values with the given redactor', () => {
+  it('scrubs keys and string values with the given redactor', () => {
     assert.deepEqual(
       redactDeep({ url: 'x' }, (value) => value.toUpperCase()),
-      { url: 'X' },
+      { URL: 'X' },
     );
   });
 
@@ -172,13 +172,6 @@ describe('sanitizeItem', () => {
     };
     assert.ok(!out.meta.page.url.includes('abc'));
     assert.ok(!out.payload.value.includes('abc'));
-  });
-
-  it('applies the page url redactor', () => {
-    const out = sanitizeItem(item({ page: { url: 'https://h.example.com/p' } }, {}), {
-      redactPageUrl: () => 'rewritten',
-    }) as never as { meta: { page: { url: string } } };
-    assert.equal(out.meta.page.url, 'rewritten');
   });
 
   it('drops the item when the walk throws', () => {

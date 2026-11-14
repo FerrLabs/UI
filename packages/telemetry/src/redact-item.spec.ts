@@ -243,6 +243,25 @@ describe('redactItem', () => {
     expect(out?.meta).toEqual({});
   });
 
+  it.each(['session', 'Session', 'SESSION'])('drops meta.%s with dropSessionMeta', (name) => {
+    const out = redactItem(
+      {
+        type: TransportItemType.LOG,
+        payload: {},
+        meta: { [name]: { id: 'abc123' }, page: { url: 'https://h.example.com/p' } },
+      } as unknown as TransportItem,
+      [],
+      { dropSessionMeta: true },
+    );
+    expect(out?.meta).toEqual({ page: { url: 'https://h.example.com/p' } });
+  });
+
+  it('applies capability paths to object keys as well as values', () => {
+    const capabilityPaths: CapabilityPath[] = [[/(\/s\/)[^/?#\s]+/g, '$1:token']];
+    const out = scrub(item(TransportItemType.LOG, { '/s/abcdef123456': 'x' }), capabilityPaths);
+    expect(out.payload).toEqual({ '/s/:token': 'x' });
+  });
+
   it('applies capability paths before redaction, to meta and payload', () => {
     const capabilityPaths: CapabilityPath[] = [[/(\/s\/)[^/?#\s]+/g, '$1:token']];
     const out = scrub(

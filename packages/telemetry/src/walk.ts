@@ -5,7 +5,6 @@ export type StringRedactor = (value: string) => string;
 
 export interface SanitizeOptions {
   redactString?: StringRedactor;
-  redactPageUrl?: StringRedactor;
   dropSessionMeta?: boolean;
 }
 
@@ -144,7 +143,7 @@ function redactWalk(value: unknown, redactString: StringRedactor, walk: Walk): u
   walk.copies.set(value, copy);
   const taken = new Set<string>();
   for (const [key, entry] of entriesOf(walk, value)) {
-    const base = inSecret ? MASK : redactText(key);
+    const base = inSecret ? MASK : redactString(key);
     let target = base;
     for (let n = 2; taken.has(target); n++) target = `${base}#${n}`;
     taken.add(target);
@@ -158,19 +157,21 @@ export function redactDeep(value: unknown, redactString: StringRedactor = redact
   return redactWalk(value, redactString, newWalk(undefined, value));
 }
 
+function removeSessionMeta(meta: object): void {
+  for (const key of Object.keys(meta))
+    if (SESSION_FIELD.test(key)) Reflect.deleteProperty(meta, key);
+}
+
 export function sanitizeItem(
   item: TransportItem,
   options: SanitizeOptions = {},
 ): TransportItem | null {
-  const { redactString = redactText, redactPageUrl, dropSessionMeta = false } = options;
+  const { redactString = redactText, dropSessionMeta = false } = options;
   try {
     const { meta: itemMeta, payload: itemPayload } = item;
     const walk = newWalk(itemMeta, itemPayload);
     const meta = redactWalk(itemMeta, redactString, walk) as TransportItem['meta'];
-    const pageUrl = itemMeta.page?.url;
-    if (pageUrl !== undefined && redactPageUrl)
-      meta.page = { ...meta.page, url: redactPageUrl(pageUrl) };
-    if (dropSessionMeta) delete meta.session;
+    if (dropSessionMeta) removeSessionMeta(meta);
     return {
       ...item,
       meta,
