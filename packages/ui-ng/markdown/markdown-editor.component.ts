@@ -159,6 +159,10 @@ export class MarkdownEditorComponent implements ControlValueAccessor {
       start: element.selectionStart,
       end: element.selectionEnd,
     });
+    if (next.value === element.value) {
+      element.setSelectionRange(next.start, next.end);
+      return;
+    }
     const change = diffReplacement(element.value, next.value);
     element.focus();
     element.setSelectionRange(change.from, change.to);

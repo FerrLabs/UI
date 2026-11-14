@@ -209,6 +209,16 @@ describe('cycleHeading', () => {
     expect(seen).toEqual(['#  x', '##  x', '###  x', ' x']);
   });
 
+  it('does not turn heading text that starts with a hash into a heading', () => {
+    let state = at('# # Release', 0);
+    const seen: string[] = [];
+    for (let i = 0; i < 3; i++) {
+      state = cycleHeading(state);
+      seen.push(state.value);
+    }
+    expect(seen).toEqual(['## # Release', '### # Release', '# # Release']);
+  });
+
   it('reads the level from the first non-blank line', () => {
     let state = at('\ntitle', 0, 6);
     const seen: string[] = [];
