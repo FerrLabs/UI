@@ -1,5 +1,4 @@
-import assert from 'node:assert/strict';
-import { describe, it } from 'vitest';
+import { assert, describe, it } from 'vitest';
 import { redactText } from './redact-text.js';
 import { keptInputs, leakInputs } from './redaction-cases.fixture.js';
 
@@ -7,41 +6,47 @@ const LEAK_MARKER = 'abc';
 
 describe('redactText query and host handling', () => {
   it('keeps the host and cuts the query when the query contains an @', () => {
-    assert.equal(redactText('https://app.example.com/x?next=a@b.c'), 'https://app.example.com/x');
+    assert.strictEqual(
+      redactText('https://app.example.com/x?next=a@b.c'),
+      'https://app.example.com/x',
+    );
   });
 
   it('keeps the host when the query follows the host directly', () => {
-    assert.equal(redactText('https://app.example.com?next=a@b.c'), 'https://app.example.com');
-    assert.equal(
+    assert.strictEqual(redactText('https://app.example.com?next=a@b.c'), 'https://app.example.com');
+    assert.strictEqual(
       redactText('https://app.example.com:8443?next=a@b.c'),
       'https://app.example.com:8443',
     );
   });
 
   it('keeps the port of a host whose name looks sensitive', () => {
-    assert.equal(
+    assert.strictEqual(
       redactText('failed GET https://authserver:11020#f while (x)'),
       'failed GET https://authserver:11020 while (x)',
     );
-    assert.equal(redactText('GET http://authelia:9091 -> 502'), 'GET http://authelia:9091 -> 502');
+    assert.strictEqual(
+      redactText('GET http://authelia:9091 -> 502'),
+      'GET http://authelia:9091 -> 502',
+    );
   });
 
   it('parses userinfo like a URL parser', () => {
-    assert.equal(redactText('https://u:123?x@h.com/a'), 'https://u:123');
-    assert.equal(redactText('http://db:5432?redirect=x@y'), 'http://db:5432');
-    assert.equal(redactText('http://api-gw:3000#a@b'), 'http://api-gw:3000');
-    assert.equal(
+    assert.strictEqual(redactText('https://u:123?x@h.com/a'), 'https://u:123');
+    assert.strictEqual(redactText('http://db:5432?redirect=x@y'), 'http://db:5432');
+    assert.strictEqual(redactText('http://api-gw:3000#a@b'), 'http://api-gw:3000');
+    assert.strictEqual(
       redactText('http://authelia:9091: 504 Gateway Timeout'),
       'http://authelia:9091: 504 Gateway Timeout',
     );
-    assert.equal(redactText('email=a@b.com'), '*');
-    assert.equal(redactText('code == 200'), 'code == 200');
-    assert.equal(redactText('{"a":{"password":"x"}}'), '{"a":{"password":*}}');
-    assert.equal(redactText('http://u:+[)v~5-pc[g1A|@[::1]:39503/x'), 'http://[::1]:39503/x');
+    assert.strictEqual(redactText('email=a@b.com'), '*');
+    assert.strictEqual(redactText('code == 200'), 'code == 200');
+    assert.strictEqual(redactText('{"a":{"password":"x"}}'), '{"a":{"password":*}}');
+    assert.strictEqual(redactText('http://u:+[)v~5-pc[g1A|@[::1]:39503/x'), 'http://[::1]:39503/x');
   });
 
   it('keeps the port of a host with a sensitive name when a quote follows', () => {
-    assert.equal(redactText('https://authserver:11020"'), 'https://authserver:11020"');
+    assert.strictEqual(redactText('https://authserver:11020"'), 'https://authserver:11020"');
   });
 
   it('keeps a port only right after a colon', () => {
@@ -63,8 +68,14 @@ describe('redactText query and host handling', () => {
   });
 
   it('keeps host:port while masking a numeric password', () => {
-    assert.equal(redactText('connect host.example.com:8443'), 'connect host.example.com:8443');
-    assert.equal(redactText('https://host.example.com:8443/x'), 'https://host.example.com:8443/x');
+    assert.strictEqual(
+      redactText('connect host.example.com:8443'),
+      'connect host.example.com:8443',
+    );
+    assert.strictEqual(
+      redactText('https://host.example.com:8443/x'),
+      'https://host.example.com:8443/x',
+    );
     const masked = redactText('login password: 8443');
     assert.ok(!masked.includes('8443'), masked);
   });
@@ -126,7 +137,7 @@ describe('redactText tables', () => {
 
   for (const input of keptInputs) {
     it(`keeps ${JSON.stringify(input.slice(0, 60))}`, () => {
-      assert.equal(redactText(input), input);
+      assert.strictEqual(redactText(input), input);
     });
   }
 });
@@ -153,7 +164,7 @@ describe('redactText bounds', () => {
   it('is idempotent', () => {
     for (const input of leakInputs) {
       const once = redactText(input);
-      assert.equal(redactText(once), once, input);
+      assert.strictEqual(redactText(once), once, input);
     }
   });
 
@@ -194,7 +205,7 @@ describe('redactText bracketed keys, multi-chunk quotes and whitespace runs', ()
 
   it('is idempotent on auth=""\'\'""\'\'{', () => {
     const once = redactText('auth=""\'\'""\'\'{');
-    assert.equal(redactText(once), once);
+    assert.strictEqual(redactText(once), once);
   });
 
   const runs: ReadonlyArray<readonly [string, string]> = [
@@ -239,7 +250,7 @@ describe('redactText', () => {
   }
 
   it('keeps the host-less userinfo lookalike text around the masked value', () => {
-    assert.equal(redactText('see //password:aJ@+QvZ7 end'), 'see //password:*');
+    assert.strictEqual(redactText('see //password:aJ@+QvZ7 end'), 'see //password:*');
   });
 
   for (const input of [
@@ -252,7 +263,7 @@ describe('redactText', () => {
     'readyState=complete',
   ]) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.equal(redactText(input), input);
+      assert.strictEqual(redactText(input), input);
     });
   }
 
@@ -281,7 +292,7 @@ describe('redactText', () => {
   ];
   for (const word of benignKeyWords) {
     it(`keeps ${word}=3`, () => {
-      assert.equal(redactText(`${word}=3`), `${word}=3`);
+      assert.strictEqual(redactText(`${word}=3`), `${word}=3`);
     });
   }
 });
@@ -307,12 +318,15 @@ describe('redactText', () => {
     '//auth:8080/x',
   ]) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.equal(redactText(input), input);
+      assert.strictEqual(redactText(input), input);
     });
   }
 
   it('does not treat a bracketed host as userinfo', () => {
-    assert.equal(redactText('https://[::1]:8080/users/jane@corp.io'), 'https://[::1]:8080/users/*');
+    assert.strictEqual(
+      redactText('https://[::1]:8080/users/jane@corp.io'),
+      'https://[::1]:8080/users/*',
+    );
   });
 });
 
@@ -325,7 +339,7 @@ describe('redactText bare //host:port', () => {
   });
 
   it('keeps a port followed by a path', () => {
-    assert.equal(redactText('//auth:8080/x'), '//auth:8080/x');
+    assert.strictEqual(redactText('//auth:8080/x'), '//auth:8080/x');
   });
 });
 
@@ -340,8 +354,8 @@ describe('redactText doubled equals and long or punctuated prefixes', () => {
 
   for (const [input, expected] of exact) {
     it(`turns ${JSON.stringify(input)} into ${JSON.stringify(expected)}`, () => {
-      assert.equal(redactText(input), expected);
-      assert.equal(redactText(expected), expected);
+      assert.strictEqual(redactText(input), expected);
+      assert.strictEqual(redactText(expected), expected);
     });
   }
 
@@ -356,7 +370,7 @@ describe('redactText doubled equals and long or punctuated prefixes', () => {
     'dial_code=33',
   ]) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.equal(redactText(input), input);
+      assert.strictEqual(redactText(input), input);
     });
   }
 
@@ -375,7 +389,7 @@ describe('redactText doubled equals and long or punctuated prefixes', () => {
 
   it('keeps a long benign prefix before a non-secret key', () => {
     const input = 'a'.repeat(300) + '_monkey=3';
-    assert.equal(redactText(input), input);
+    assert.strictEqual(redactText(input), input);
   });
 
   it('stays under 250 ms on 16 KB behind a long prefix and a run of equals', () => {
@@ -410,7 +424,7 @@ describe('redactText chained values, slashed passwords and non-ASCII spaces', ()
 
   for (const [input, expected] of exact) {
     it(`turns ${JSON.stringify(input)} into ${JSON.stringify(expected)}`, () => {
-      assert.equal(redactText(input), expected);
+      assert.strictEqual(redactText(input), expected);
     });
   }
 
@@ -420,15 +434,15 @@ describe('redactText chained values, slashed passwords and non-ASCII spaces', ()
     "auth=&\"\"''''\"\"'",
   ]) {
     it(`is idempotent on ${JSON.stringify(input)}`, () => {
-      assert.equal(redactText(redactText(input)), redactText(input));
+      assert.strictEqual(redactText(redactText(input)), redactText(input));
     });
   }
 
   for (let code = 0x2000; code <= 0x200a; code++) {
     const space = String.fromCharCode(code);
     it(`masks a value split by U+${code.toString(16).toUpperCase()}`, () => {
-      assert.equal(redactText(`password: correct${space}horse`), 'password: *');
-      assert.equal(redactText(`password=correct${space}horse`), 'password=*');
+      assert.strictEqual(redactText(`password: correct${space}horse`), 'password: *');
+      assert.strictEqual(redactText(`password=correct${space}horse`), 'password=*');
     });
   }
 
@@ -464,13 +478,13 @@ describe('redactText primary and query keys, narrowed state words', () => {
 
   for (const [input, expected] of masked) {
     it(`masks ${JSON.stringify(input)} as ${JSON.stringify(expected)}`, () => {
-      assert.equal(redactText(input), expected);
+      assert.strictEqual(redactText(input), expected);
     });
   }
 
   for (const input of kept) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.equal(redactText(input), input);
+      assert.strictEqual(redactText(input), input);
     });
   }
 
@@ -501,7 +515,7 @@ describe('bearer tail stops before a following secret key', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual(redactText(input), output);
     });
   }
 });
@@ -517,7 +531,7 @@ describe('secret words deep inside long keys', () => {
 
   rows.forEach(([input, output], index) => {
     it(`redacts row ${index}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual(redactText(input), output);
     });
   });
 
@@ -543,7 +557,7 @@ describe('a secret value stops before a following query key', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual(redactText(input), output);
     });
   }
 
@@ -580,7 +594,7 @@ describe('bearer and colon values stop before a separated key', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input.slice(0, 48))} to ${JSON.stringify(output.slice(-24))}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual(redactText(input), output);
     });
   }
 });
@@ -596,7 +610,7 @@ describe('nested bracket keys', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual(redactText(input), output);
     });
   }
 
@@ -616,7 +630,7 @@ describe('backslashes inside bearer tokens', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual(redactText(input), output);
     });
   }
 
@@ -638,7 +652,7 @@ describe('quoted values before a query key and keys behind long prefixes', () =>
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input.slice(0, 48))} to ${JSON.stringify(output.slice(-24))}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual(redactText(input), output);
     });
   }
 
@@ -666,13 +680,13 @@ describe('cookie headers anywhere and narrowed auth bypass', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual(redactText(input), output);
     });
   }
 
   for (const input of ['author_status_code=200']) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.equal(redactText(input), input);
+      assert.strictEqual(redactText(input), input);
     });
   }
 });
@@ -693,7 +707,7 @@ describe('glued commas and semicolons inside secret values', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual(redactText(input), output);
     });
   }
 
@@ -729,7 +743,7 @@ describe('equals values spanning spaces', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual(redactText(input), output);
     });
   }
 
@@ -870,7 +884,7 @@ describe('userinfo, yaml blocks, glued separators and query values', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual(redactText(input), output);
     });
   }
 

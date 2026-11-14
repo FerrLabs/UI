@@ -1,11 +1,9 @@
-import assert from 'node:assert/strict';
 import { isSecretName, redactText } from './redact-text.js';
-import { readdirSync, readFileSync } from 'node:fs';
-import { describe, it } from 'vitest';
+import { assert, describe, it } from 'vitest';
 import type { TransportItem } from '@grafana/faro-web-sdk';
 import { redactDeep, sanitizeItem } from './walk.js';
 
-const MARKER = 'hunter2SECRETzq';
+const MARKER = ['hunter2', 'SECRET', 'zq'].join('');
 
 function sanitized(payload: unknown, meta: object = {}): unknown {
   const out = sanitizeItem({ type: 'log', meta, payload } as unknown as TransportItem);
@@ -29,46 +27,48 @@ function containsMarker(value: unknown, seen = new WeakSet<object>()): boolean {
 
 describe('redactDeep', () => {
   it('masks a string field named like a secret', () => {
-    assert.deepEqual(redactDeep({ token: 'abc123def' }), { token: '*' });
-    assert.deepEqual(redactDeep({ password: 'hunter2' }), { password: '*' });
-    assert.deepEqual(redactDeep({ apiKey: 'x' }), { apiKey: '*' });
-    assert.deepEqual(redactDeep({ 'x-auth-token': 'x' }), { 'x-auth-token': '*' });
+    assert.deepEqual<unknown>(redactDeep({ token: 'abc123def' }), { token: '*' });
+    assert.deepEqual<unknown>(redactDeep({ password: 'hunter2' }), { password: '*' });
+    assert.deepEqual<unknown>(redactDeep({ apiKey: 'x' }), { apiKey: '*' });
+    assert.deepEqual<unknown>(redactDeep({ 'x-auth-token': 'x' }), { 'x-auth-token': '*' });
   });
 
   it('masks a nested field named like a secret', () => {
-    assert.deepEqual(redactDeep({ a: { apiKey: 'x' } }), { a: { apiKey: '*' } });
-    assert.deepEqual(redactDeep({ list: [{ session_id: 'x' }] }), { list: [{ session_id: '*' }] });
+    assert.deepEqual<unknown>(redactDeep({ a: { apiKey: 'x' } }), { a: { apiKey: '*' } });
+    assert.deepEqual<unknown>(redactDeep({ list: [{ session_id: 'x' }] }), {
+      list: [{ session_id: '*' }],
+    });
   });
 
   it('keeps a field that is not named like a secret', () => {
-    assert.deepEqual(redactDeep({ name: 'ok' }), { name: 'ok' });
+    assert.deepEqual<unknown>(redactDeep({ name: 'ok' }), { name: 'ok' });
   });
 
   it('masks every leaf under a sensitive key including numbers', () => {
-    assert.deepEqual(redactDeep({ token: { value: 'x', note: 'password=abc12345' } }), {
+    assert.deepEqual<unknown>(redactDeep({ token: { value: 'x', note: 'password=abc12345' } }), {
       token: { '*': '*', '*#2': '*' },
     });
-    assert.deepEqual(redactDeep({ key: 42 }), { key: '*' });
+    assert.deepEqual<unknown>(redactDeep({ key: 42 }), { key: '*' });
   });
 
   it('masks numbers, bigints and array elements under a sensitive key', () => {
-    assert.deepEqual(redactDeep({ password: 123456 }), { password: '*' });
-    assert.deepEqual(redactDeep({ session_id: 987654321 }), { session_id: '*' });
-    assert.deepEqual(redactDeep({ sessionId: 123456789n }), { sessionId: '*' });
-    assert.deepEqual(redactDeep({ token: ['abc123def', 5, 7n, ['nested']] }), {
+    assert.deepEqual<unknown>(redactDeep({ password: 123456 }), { password: '*' });
+    assert.deepEqual<unknown>(redactDeep({ session_id: 987654321 }), { session_id: '*' });
+    assert.deepEqual<unknown>(redactDeep({ sessionId: 123456789n }), { sessionId: '*' });
+    assert.deepEqual<unknown>(redactDeep({ token: ['abc123def', 5, 7n, ['nested']] }), {
       token: ['*', '*', '*', ['*']],
     });
-    assert.deepEqual(
+    assert.deepEqual<unknown>(
       redactDeep({ apiKey: ['k1', { note: 'x', url: 'https://a.test/x?code=abc' }] }),
       {
         apiKey: ['*', { '*': '*', '*#2': '*' }],
       },
     );
-    assert.deepEqual(redactDeep({ list: ['plain'] }), { list: ['plain'] });
+    assert.deepEqual<unknown>(redactDeep({ list: ['plain'] }), { list: ['plain'] });
   });
 
   it('masks field names with dots, dollars and spaces and keeps benign names', () => {
-    assert.deepEqual(
+    assert.deepEqual<unknown>(
       redactDeep({
         'user.password': 'hunter2',
         $password: 'h',
@@ -84,7 +84,7 @@ describe('redactDeep', () => {
         'auth.token': '*',
       },
     );
-    assert.deepEqual(redactDeep({ cacheKey: 'home', authMethod: 'sso', author: 'jane' }), {
+    assert.deepEqual<unknown>(redactDeep({ cacheKey: 'home', authMethod: 'sso', author: 'jane' }), {
       cacheKey: 'home',
       authMethod: 'sso',
       author: 'jane',
@@ -92,7 +92,7 @@ describe('redactDeep', () => {
   });
 
   it('matches benign field exclusions on the key suffix only', () => {
-    assert.deepEqual(
+    assert.deepEqual<unknown>(
       redactDeep({ homeCacheKey: 'a', x: { idempotencyKey: 'b' }, user: { authType: 'sso' } }),
       {
         homeCacheKey: 'a',
@@ -100,16 +100,19 @@ describe('redactDeep', () => {
         user: { authType: 'sso' },
       },
     );
-    assert.deepEqual(redactDeep({ daemonKey: 'a', commonKey: 'b', codeSig: 'c', escrowKey: 'd' }), {
-      daemonKey: '*',
-      commonKey: '*',
-      codeSig: '*',
-      escrowKey: '*',
-    });
+    assert.deepEqual<unknown>(
+      redactDeep({ daemonKey: 'a', commonKey: 'b', codeSig: 'c', escrowKey: 'd' }),
+      {
+        daemonKey: '*',
+        commonKey: '*',
+        codeSig: '*',
+        escrowKey: '*',
+      },
+    );
   });
 
   it('masks plural and prefixed code and state field names', () => {
-    assert.deepEqual(
+    assert.deepEqual<unknown>(
       redactDeep({
         storageKey: 'abc',
         tokens: ['x'],
@@ -138,15 +141,15 @@ describe('redactDeep', () => {
       readyState: 'e',
       homeCacheKeys: 'f',
     };
-    assert.deepEqual(redactDeep(input), input);
+    assert.deepEqual<unknown>(redactDeep(input), input);
   });
 
   it('keeps every key that redacts to the same string', () => {
-    assert.deepEqual(redactDeep({ 'a@b.com': 1, 'c@d.com': 2 }), { '*': 1, '*#2': 2 });
+    assert.deepEqual<unknown>(redactDeep({ 'a@b.com': 1, 'c@d.com': 2 }), { '*': 1, '*#2': 2 });
   });
 
   it('scrubs keys and string values with the given redactor', () => {
-    assert.deepEqual(
+    assert.deepEqual<unknown>(
       redactDeep({ url: 'x' }, (value) => value.toUpperCase()),
       { URL: 'X' },
     );
@@ -156,7 +159,7 @@ describe('redactDeep', () => {
     const node: Record<string, unknown> = { name: 'a' };
     node['self'] = node;
     const copy = redactDeep(node) as Record<string, unknown>;
-    assert.equal(copy['self'], copy);
+    assert.strictEqual<unknown>(copy['self'], copy);
   });
 });
 
@@ -181,7 +184,7 @@ describe('sanitizeItem', () => {
       },
       payload: {},
     };
-    assert.equal(sanitizeItem(hostile as never), null);
+    assert.strictEqual<unknown>(sanitizeItem(hostile as never), null);
   });
 });
 
@@ -195,35 +198,35 @@ describe('aliased containers and metric fields', () => {
   it('masks a container reached under a secret field after a benign field', () => {
     const shared = ['hunter2'];
     const { payload } = run({}, { list: shared, password: shared });
-    assert.deepEqual(payload['password'], ['*']);
+    assert.deepEqual<unknown>(payload['password'], ['*']);
   });
 
   it('masks a container reached under a secret field before a benign field', () => {
     const shared = ['hunter2'];
     const { payload } = run({}, { password: shared, list: shared });
-    assert.deepEqual(payload['password'], ['*']);
+    assert.deepEqual<unknown>(payload['password'], ['*']);
   });
 
   it('masks a container shared between meta and payload', () => {
     const shared = ['hunter2'];
     const { payload } = run({ list: shared }, { password: shared });
-    assert.deepEqual(payload['password'], ['*']);
+    assert.deepEqual<unknown>(payload['password'], ['*']);
   });
 
   it('masks a container shared between meta and payload with the secret field in meta', () => {
     const shared = ['hunter2'];
     const { meta } = run({ token: shared }, { list: shared });
-    assert.deepEqual(meta['token'], ['*']);
+    assert.deepEqual<unknown>(meta['token'], ['*']);
   });
 
   it('terminates on a self-referencing object under a secret field', () => {
     const loop: Record<string, unknown> = { note: 'x', password: 'hunter2' };
     loop['self'] = loop;
     const { payload } = run({}, { token: loop });
-    assert.deepEqual(Object.values(payload['token'] as Record<string, unknown>).slice(0, 2), [
-      '*',
-      '*',
-    ]);
+    assert.deepEqual<unknown>(
+      Object.values(payload['token'] as Record<string, unknown>).slice(0, 2),
+      ['*', '*'],
+    );
     assert.ok(!Object.keys(payload['token'] as object).includes('password'));
   });
 
@@ -231,7 +234,7 @@ describe('aliased containers and metric fields', () => {
     const loop: unknown[] = ['hunter2'];
     loop.push(loop);
     const { payload } = run({}, { token: loop });
-    assert.deepEqual((payload['token'] as unknown[])[0], '*');
+    assert.deepEqual<unknown>((payload['token'] as unknown[])[0], '*');
   });
 
   it('keeps numbers and bigints under measurement-named secret fields', () => {
@@ -243,17 +246,22 @@ describe('aliased containers and metric fields', () => {
       authSessionAgeSecs: 5n,
     };
     const { payload } = run({}, { ...fields });
-    assert.deepEqual(payload, fields);
+    assert.deepEqual<unknown>(payload, fields);
   });
 
   it('masks numbers under other secret fields', () => {
     const { payload } = run({}, { password: 4829, pin_key: 1234, sessionId: 77n, authCode: 5 });
-    assert.deepEqual(payload, { password: '*', pin_key: '*', sessionId: '*', authCode: '*' });
+    assert.deepEqual<unknown>(payload, {
+      password: '*',
+      pin_key: '*',
+      sessionId: '*',
+      authCode: '*',
+    });
   });
 
   it('masks strings under measurement-named secret fields', () => {
     const { payload } = run({}, { authentication_duration: 'abc123', authLatencyMs: '8' });
-    assert.deepEqual(payload, { authentication_duration: '*', authLatencyMs: '*' });
+    assert.deepEqual<unknown>(payload, { authentication_duration: '*', authLatencyMs: '*' });
   });
 });
 
@@ -266,12 +274,12 @@ describe('walk keys, non-plain values and metric names', () => {
 
   it('masks numbers in an array reached under a metric-named secret field, in either order', () => {
     const pins = [4829];
-    assert.deepEqual(payloadOf({ authCount: pins, password: pins }), {
+    assert.deepEqual<unknown>(payloadOf({ authCount: pins, password: pins }), {
       authCount: ['*'],
       password: ['*'],
     });
     const reversed = [4829];
-    assert.deepEqual(payloadOf({ password: reversed, authCount: reversed }), {
+    assert.deepEqual<unknown>(payloadOf({ password: reversed, authCount: reversed }), {
       password: ['*'],
       authCount: ['*'],
     });
@@ -280,23 +288,23 @@ describe('walk keys, non-plain values and metric names', () => {
   it('masks an array shared between meta and payload under a secret name on either side', () => {
     const pins = [4829];
     const first = run({ authCount: pins }, { password: pins });
-    assert.deepEqual(first.meta['authCount'], ['*']);
-    assert.deepEqual(first.payload['password'], ['*']);
+    assert.deepEqual<unknown>(first.meta['authCount'], ['*']);
+    assert.deepEqual<unknown>(first.payload['password'], ['*']);
     const others = [4829];
     const second = run({ password: others }, { authCount: others });
-    assert.deepEqual(second.meta['password'], ['*']);
-    assert.deepEqual(second.payload['authCount'], ['*']);
+    assert.deepEqual<unknown>(second.meta['password'], ['*']);
+    assert.deepEqual<unknown>(second.payload['authCount'], ['*']);
   });
 
   it('keeps a number stored directly under a metric-named secret field', () => {
-    assert.deepEqual(
+    assert.deepEqual<unknown>(
       payloadOf({ authCount: 3, authLatencyMs: 8, authentication_duration: 120, tokenTtl: 3600 }),
       { authCount: 3, authLatencyMs: 8, authentication_duration: 120, tokenTtl: 3600 },
     );
   });
 
   it('masks a number under a name that only ends in a metric suffix by accident', () => {
-    assert.deepEqual(payloadOf({ authSms: 482913 }), { authSms: '*' });
+    assert.deepEqual<unknown>(payloadOf({ authSms: 482913 }), { authSms: '*' });
   });
 
   it('masks values under secret names written with brackets, colons and slashes', () => {
@@ -307,7 +315,7 @@ describe('walk keys, non-plain values and metric names', () => {
       'a/b/secret': 'hunter2',
       name: 'ok',
     });
-    assert.deepEqual(out, {
+    assert.deepEqual<unknown>(out, {
       'user[password]': '*',
       'db:password': '*',
       'credentials[0].token': '*',
@@ -333,17 +341,20 @@ describe('walk keys, non-plain values and metric names', () => {
   for (const [label, make] of nonPlain) {
     it(`masks ${label} under a secret name`, () => {
       const out = payloadOf({ password: make(), authCount: make(), token: [make()] });
-      assert.deepEqual(out, { password: '*', authCount: '*', token: ['*'] });
+      assert.deepEqual<unknown>(out, { password: '*', authCount: '*', token: ['*'] });
     });
   }
 
   it('keeps null, undefined and booleans under a secret name', () => {
-    assert.deepEqual(payloadOf({ password: null, token: undefined, secret: true, apiKey: false }), {
-      password: null,
-      token: undefined,
-      secret: true,
-      apiKey: false,
-    });
+    assert.deepEqual<unknown>(
+      payloadOf({ password: null, token: undefined, secret: true, apiKey: false }),
+      {
+        password: null,
+        token: undefined,
+        secret: true,
+        apiKey: false,
+      },
+    );
   });
 
   it('redacts object keys that carry a secret', () => {
@@ -358,30 +369,31 @@ describe('walk keys, non-plain values and metric names', () => {
       context: { 'a?token=ZqSECRETa': 'first', 'a?token=ZqSECRETb': 'second' },
     });
     const context = out['context'] as Record<string, unknown>;
-    assert.deepEqual(Object.values(context), ['first', 'second']);
+    assert.deepEqual<unknown>(Object.values(context), ['first', 'second']);
     assert.ok(!JSON.stringify(out).includes('ZqSECRET'));
   });
 
   it('keeps ordinary keys untouched', () => {
-    assert.deepEqual(payloadOf({ context: { userId: 'u1', 'x-request-id': 'r1' } }), {
+    assert.deepEqual<unknown>(payloadOf({ context: { userId: 'u1', 'x-request-id': 'r1' } }), {
       context: { userId: 'u1', 'x-request-id': 'r1' },
     });
   });
 
   it('keeps hotkey and error codes and masks apikey in text', () => {
-    assert.deepEqual(redactText('hotkey: Ctrl'), 'hotkey: Ctrl');
-    assert.deepEqual(redactText('errorCode=E42'), 'errorCode=E42');
+    assert.deepEqual<unknown>(redactText('hotkey: Ctrl'), 'hotkey: Ctrl');
+    assert.deepEqual<unknown>(redactText('errorCode=E42'), 'errorCode=E42');
     assert.ok(!redactText('apikey=S3cret').includes('S3cret'));
   });
 
   it('has no regex lookbehind in any shipped module source', () => {
-    const shipped = readdirSync(new URL('.', import.meta.url), {
-      recursive: true,
-      encoding: 'utf8',
-    }).filter((file) => file.endsWith('.ts') && !/\.(spec|fixture)\.ts$/.test(file));
-    assert.ok(shipped.includes('redact-text.ts'));
-    for (const file of shipped) {
-      const source = readFileSync(new URL(file, import.meta.url), 'utf8');
+    const sources = import.meta.glob<string>('./**/*.ts', {
+      query: '?raw',
+      import: 'default',
+      eager: true,
+    });
+    const shipped = Object.entries(sources).filter(([file]) => !/\.(spec|fixture)\.ts$/.test(file));
+    assert.ok(shipped.some(([file]) => file === './redact-text.ts'));
+    for (const [file, source] of shipped) {
       assert.ok(!source.includes('(?<'), file);
     }
   });
@@ -408,17 +420,19 @@ describe('secret subtrees, metric names and key normalization', () => {
   }
 
   it('keeps shape, booleans and null under a secret field and leaves other fields alone', () => {
-    assert.deepEqual(
+    assert.deepEqual<unknown>(
       redactDeep({ password: { enabled: true, value: null, deep: { ok: false, v: 'x' } } }),
       {
         password: { '*': true, '*#2': null, '*#3': { '*': false, '*#2': '*' } },
       },
     );
-    assert.deepEqual(redactDeep({ settings: { theme: 'dark' } }), { settings: { theme: 'dark' } });
+    assert.deepEqual<unknown>(redactDeep({ settings: { theme: 'dark' } }), {
+      settings: { theme: 'dark' },
+    });
   });
 
   it('keeps numbers under metric names in any case and masks other secret numbers', () => {
-    assert.deepEqual(
+    assert.deepEqual<unknown>(
       redactDeep({
         AUTH_COUNT: 3,
         auth_count: 3,
@@ -434,23 +448,23 @@ describe('secret subtrees, metric names and key normalization', () => {
         TOKEN_TTL: 9,
       },
     );
-    assert.deepEqual(redactDeep({ AUTH_TOKEN: 3 }), { AUTH_TOKEN: '*' });
+    assert.deepEqual<unknown>(redactDeep({ AUTH_TOKEN: 3 }), { AUTH_TOKEN: '*' });
   });
 
   it('keeps colliding redacted keys under a secret field', () => {
-    assert.deepEqual(redactDeep({ password: { 'a@b.com': 'x', 'c@d.com': 'y' } }), {
+    assert.deepEqual<unknown>(redactDeep({ password: { 'a@b.com': 'x', 'c@d.com': 'y' } }), {
       password: { '*': '*', '*#2': '*' },
     });
   });
 
   it('does not treat separator-joined benign key names as secret', () => {
     for (const key of ['i18n:key', 'cache:key', 'cache/key'])
-      assert.equal(isSecretName(key), false, key);
+      assert.strictEqual<unknown>(isSecretName(key), false, key);
   });
 
   it('treats bracketed, slashed, colon-joined and dotted secret names as secret', () => {
     for (const key of ['user[password]', 'headers/authorization', 'a:b:token', 'x.password'])
-      assert.equal(isSecretName(key), true, key);
+      assert.strictEqual<unknown>(isSecretName(key), true, key);
   });
 });
 describe('redactText code and state keys', () => {
@@ -472,13 +486,13 @@ describe('redactText code and state keys', () => {
 
   for (const [input, expected] of masked) {
     it(`masks ${JSON.stringify(input)}`, () => {
-      assert.equal(redactText(input), expected);
+      assert.strictEqual<unknown>(redactText(input), expected);
     });
   }
 
   for (const input of kept) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.equal(redactText(input), input);
+      assert.strictEqual<unknown>(redactText(input), input);
     });
   }
 
@@ -493,7 +507,7 @@ describe('redactText code and state keys', () => {
 
 describe('spaced field names', () => {
   it('masks benign-looking prefixes before a secret word', () => {
-    assert.deepEqual(
+    assert.deepEqual<unknown>(
       redactDeep({
         'Monkey api_key': 'v0',
         'hotkey password': 'v1',
@@ -513,7 +527,11 @@ describe('spaced field names', () => {
 
   it('keeps spaced names that are not secret', () => {
     const payload = { 'cache key': 'ok', monkey: 'ok', hotkey: 'ok' };
-    assert.deepEqual(redactDeep(payload), { 'cache key': 'ok', monkey: 'ok', hotkey: 'ok' });
+    assert.deepEqual<unknown>(redactDeep(payload), {
+      'cache key': 'ok',
+      monkey: 'ok',
+      hotkey: 'ok',
+    });
   });
 });
 
@@ -533,13 +551,13 @@ describe('field names with punctuation and long prefixes', () => {
     'a'.repeat(80) + '_password',
   ]) {
     it(`masks ${JSON.stringify(name.length > 40 ? `${name.slice(0, 4)}...${name.slice(-9)}` : name)}`, () => {
-      assert.equal(valueOf(name), '*');
+      assert.strictEqual<unknown>(valueOf(name), '*');
     });
   }
 
   for (const name of ['cache key', 'i18n:key', 'homeCacheKey', 'a'.repeat(80) + '_monkey']) {
     it(`keeps ${JSON.stringify(name.length > 40 ? `${name.slice(0, 4)}...${name.slice(-7)}` : name)}`, () => {
-      assert.equal(valueOf(name), 'ZqVal1');
+      assert.strictEqual<unknown>(valueOf(name), 'ZqVal1');
     });
   }
 });
@@ -557,26 +575,26 @@ describe('sanitizeItem copies and the Faro session meta', () => {
     const session = { id: 'sess-123', attributes: { plan: 'pro' } };
     const meta = { session, user: { email: 'jane@corp.io' } };
     const payload = {
-      context: { password: 'hunter2SECRETzq', note: 'a@b.com' },
+      context: { password: MARKER, note: 'a@b.com' },
       list: ['a@b.com'],
     };
     const before = structuredClone({ meta, payload });
     const out = run(meta, payload);
-    assert.deepEqual({ meta, payload }, before);
-    assert.notEqual(out.meta['session'], session);
-    assert.equal(out.payload['context']['password'], '*');
+    assert.deepEqual<unknown>({ meta, payload }, before);
+    assert.notStrictEqual<unknown>(out.meta['session'], session);
+    assert.strictEqual<unknown>(out.payload['context']['password'], '*');
   });
 
   it('keeps the session id and attributes of the Faro meta', () => {
     const { meta } = run({ session: { id: 'sess-123', attributes: { plan: 'pro' } } }, {});
-    assert.deepEqual(meta['session'], { id: 'sess-123', attributes: { plan: 'pro' } });
+    assert.deepEqual<unknown>(meta['session'], { id: 'sess-123', attributes: { plan: 'pro' } });
   });
 
   it('masks a string, number or bigint directly under session', () => {
     const { payload } = run({}, { session: 'abc123SECRET' });
-    assert.equal(payload['session'], '*');
-    assert.equal(run({}, { Session: 48291234 }).payload['Session'], '*');
-    assert.equal(run({}, { session: 48291234n }).payload['session'], '*');
+    assert.strictEqual<unknown>(payload['session'], '*');
+    assert.strictEqual<unknown>(run({}, { Session: 48291234 }).payload['Session'], '*');
+    assert.strictEqual<unknown>(run({}, { session: 48291234n }).payload['session'], '*');
   });
 
   it('still masks the other session fields', () => {
@@ -589,36 +607,36 @@ describe('sanitizeItem copies and the Faro session meta', () => {
         sessionKey: 'abc123SECRET',
       },
     );
-    assert.deepEqual(Object.values(payload), ['*', '*', '*', '*']);
+    assert.deepEqual<unknown>(Object.values(payload), ['*', '*', '*', '*']);
   });
 
   it('walks a non-extensible object with a secret and colliding keys without touching it', () => {
     const data = Object.preventExtensions({
-      password: 'hunter2SECRETzq',
+      password: MARKER,
       'a@b.com': 1,
       'c@d.com': 2,
       keep: 'ok',
     });
     const before = structuredClone(data);
     const { payload } = run({}, { data });
-    assert.deepEqual(data, before);
-    assert.equal(payload['data']['password'], '*');
-    assert.equal(payload['data']['keep'], 'ok');
-    assert.equal(Object.keys(payload['data']).length, 4);
+    assert.deepEqual<unknown>(data, before);
+    assert.strictEqual<unknown>(payload['data']['password'], '*');
+    assert.strictEqual<unknown>(payload['data']['keep'], 'ok');
+    assert.strictEqual<unknown>(Object.keys(payload['data']).length, 4);
   });
 
   it('masks every leaf of an object that holds itself under a secret field', () => {
     const loop: Record<string, unknown> = {};
     loop['password'] = loop;
-    loop['note'] = 'hunter2SECRETzq';
+    loop['note'] = MARKER;
     const { payload } = run({}, { loop });
     assert.ok(!Object.keys(payload['loop']).includes('note'));
-    assert.ok(!Object.values<unknown>(payload['loop']).includes('hunter2SECRETzq'));
-    const reversed: Record<string, unknown> = { note: 'hunter2SECRETzq' };
+    assert.ok(!Object.values<unknown>(payload['loop']).includes(MARKER));
+    const reversed: Record<string, unknown> = { note: MARKER };
     reversed['password'] = reversed;
     const reversedOut = run({}, { reversed }).payload['reversed'];
     assert.ok(!Object.keys(reversedOut).includes('note'));
-    assert.ok(!Object.values<unknown>(reversedOut).includes('hunter2SECRETzq'));
+    assert.ok(!Object.values<unknown>(reversedOut).includes(MARKER));
   });
 
   it('keeps token counts and masks bare tokens', () => {
@@ -636,15 +654,15 @@ describe('sanitizeItem copies and the Faro session meta', () => {
         token: 42,
       },
     );
-    assert.deepEqual(payload['usage'], {
+    assert.deepEqual<unknown>(payload['usage'], {
       inputTokens: 12,
       max_tokens: 100,
       total_tokens: 7,
       OUTPUT_TOKENS: 3,
       'prompt-tokens': 5,
     });
-    assert.deepEqual(payload['tokens'], ['*']);
-    assert.equal(payload['token'], '*');
+    assert.deepEqual<unknown>(payload['tokens'], ['*']);
+    assert.strictEqual<unknown>(payload['token'], '*');
   });
 });
 
@@ -653,24 +671,24 @@ describe('keys under secret fields', () => {
 
   it('masks keys and leaves under a secret field', () => {
     const out = payloadOf({ token: { [marker]: { a: 1 } } });
-    assert.deepEqual(out, { token: { '*': { '*': '*' } } });
+    assert.deepEqual<unknown>(out, { token: { '*': { '*': '*' } } });
     assert.ok(!JSON.stringify(out).includes(marker));
   });
 
   it('keeps colliding masked keys apart', () => {
-    assert.deepEqual(payloadOf({ secret: { aaa: 'x', bbb: 'y' } }), {
+    assert.deepEqual<unknown>(payloadOf({ secret: { aaa: 'x', bbb: 'y' } }), {
       secret: { '*': '*', '*#2': '*' },
     });
   });
 
   it('keeps null and booleans under a secret subtree', () => {
-    assert.deepEqual(payloadOf({ password: { enabled: true, off: false, value: null } }), {
+    assert.deepEqual<unknown>(payloadOf({ password: { enabled: true, off: false, value: null } }), {
       password: { '*': true, '*#2': false, '*#3': null },
     });
   });
 
   it('leaves keys outside secret subtrees unchanged', () => {
-    assert.deepEqual(payloadOf({ settings: { theme: 'dark', nested: { size: 'big' } } }), {
+    assert.deepEqual<unknown>(payloadOf({ settings: { theme: 'dark', nested: { size: 'big' } } }), {
       settings: { theme: 'dark', nested: { size: 'big' } },
     });
   });
@@ -694,15 +712,15 @@ describe('keys under secret fields', () => {
     };
     collect(out);
     assert.ok(!strings.some((text) => text.includes(marker)));
-    assert.deepEqual(Object.keys(loop), keysBefore);
-    assert.equal(loop[marker], marker);
+    assert.deepEqual<unknown>(Object.keys(loop), keysBefore);
+    assert.strictEqual<unknown>(loop[marker], marker);
   });
 
   it('does not mutate the input', () => {
     const payload = { token: { [marker]: { a: 1 } }, keep: { x: 'y' } };
     const before = structuredClone(payload);
     payloadOf(payload);
-    assert.deepEqual(payload, before);
+    assert.deepEqual<unknown>(payload, before);
   });
 });
 
@@ -737,7 +755,7 @@ describe('credential hosts, cookies, bearer chains and code words', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input.slice(0, 48))} to ${JSON.stringify(output.slice(-24))}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual<unknown>(redactText(input), output);
     });
   }
 });
@@ -770,8 +788,8 @@ describe('secret reachability does not depend on key order', () => {
       const payload: Record<string, unknown> = {};
       for (const key of keys) payload[key] = ring;
       const out = walked(payload).payload;
-      assert.equal(containsMarker(out), false);
-      assert.deepEqual(Object.keys(out.reversed ?? {}), Object.keys(out.password ?? {}));
+      assert.strictEqual<unknown>(containsMarker(out), false);
+      assert.deepEqual<unknown>(Object.keys(out.reversed ?? {}), Object.keys(out.password ?? {}));
     });
   }
 
@@ -784,7 +802,7 @@ describe('secret reachability does not depend on key order', () => {
       loop.password = loop;
       const payload: Record<string, unknown> = {};
       for (const key of keys) payload[key] = loop;
-      assert.equal(containsMarker(walked(payload).payload), false);
+      assert.strictEqual<unknown>(containsMarker(walked(payload).payload), false);
     });
   }
 
@@ -797,36 +815,36 @@ describe('secret reachability does not depend on key order', () => {
       const payload: Record<string, unknown> = {};
       for (const key of keys) payload[key] = shared;
       const out = walked(payload).payload;
-      assert.deepEqual(out.plain, { '*': '*' });
-      assert.deepEqual(out.secret, { '*': '*' });
+      assert.deepEqual<unknown>(out.plain, { '*': '*' });
+      assert.deepEqual<unknown>(out.secret, { '*': '*' });
     });
   }
 
   it('masks everything under a session key outside meta', () => {
     const out = walked({ context: { session: { value: MARKER, cookie: MARKER } } }).payload;
-    assert.deepEqual(out.context?.session, { '*': '*', '*#2': '*' });
+    assert.deepEqual<unknown>(out.context?.session, { '*': '*', '*#2': '*' });
   });
 
   it('masks a session key nested in meta.session', () => {
     const out = walked({}, { session: { id: 's1', nested: { session: { value: MARKER } } } }).meta;
-    assert.equal(containsMarker(out), false);
+    assert.strictEqual<unknown>(containsMarker(out), false);
   });
 
   it('masks cookie fields', () => {
     const out = walked({ cookie: MARKER, headers: { Cookie: 'a=' + MARKER } }).payload;
-    assert.deepEqual(out, { cookie: '*', headers: { Cookie: '*' } });
+    assert.deepEqual<unknown>(out, { cookie: '*', headers: { Cookie: '*' } });
   });
 
   it('keeps meta.session and masks secrets inside it', () => {
     const session = { id: 'sess-1', attributes: { a: 'b' }, token: MARKER };
     const out = walked({}, { session }).meta;
-    assert.deepEqual(out.session, { id: 'sess-1', attributes: { a: 'b' }, token: '*' });
+    assert.deepEqual<unknown>(out.session, { id: 'sess-1', attributes: { a: 'b' }, token: '*' });
   });
 
   it('masks meta.session when a secret field also reaches it', () => {
     const session = { id: 'sess-1' };
     const out = walked({ token: session }, { session }).meta;
-    assert.deepEqual(out.session, { '*': '*' });
+    assert.deepEqual<unknown>(out.session, { '*': '*' });
   });
 });
 
@@ -837,7 +855,7 @@ describe('secret reachability across shared containers', () => {
       const hub: { b: unknown } = { b: node };
       node.password = hub;
       const payload = order === 'secret first' ? { token: hub, node } : { node, token: hub };
-      assert.equal(containsMarker(sanitized(payload)), false);
+      assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
     });
   }
 });
@@ -855,7 +873,7 @@ describe('field names: primary and query keys, narrowed state words', () => {
     'cosmos_primary_key',
   ]) {
     it(`masks the field ${name}`, () => {
-      assert.deepEqual(payloadOf({ [name]: 'SECRET99' }), { [name]: '*' });
+      assert.deepEqual<unknown>(payloadOf({ [name]: 'SECRET99' }), { [name]: '*' });
     });
   }
 
@@ -870,12 +888,12 @@ describe('field names: primary and query keys, narrowed state words', () => {
     'game_state',
   ]) {
     it(`keeps the field ${name}`, () => {
-      assert.deepEqual(payloadOf({ [name]: 'ok' }), { [name]: 'ok' });
+      assert.deepEqual<unknown>(payloadOf({ [name]: 'ok' }), { [name]: 'ok' });
     });
   }
 
   it('keeps a primaryKey nested under a plain parent', () => {
-    assert.deepEqual(payloadOf({ db: { primaryKey: 'ok', queryKey: 'ok' } }), {
+    assert.deepEqual<unknown>(payloadOf({ db: { primaryKey: 'ok', queryKey: 'ok' } }), {
       db: { primaryKey: 'ok', queryKey: 'ok' },
     });
   });
@@ -884,7 +902,7 @@ describe('field names: primary and query keys, narrowed state words', () => {
 describe('field names: group, object and lookup keys', () => {
   for (const name of ['wpaGroupKey', 'mlsGroupKey', 's3ObjectKey']) {
     it(`masks the field ${name}`, () => {
-      assert.deepEqual(payloadOf({ [name]: 'SECRET99' }), { [name]: '*' });
+      assert.deepEqual<unknown>(payloadOf({ [name]: 'SECRET99' }), { [name]: '*' });
     });
   }
 
@@ -901,7 +919,7 @@ describe('field names: group, object and lookup keys', () => {
     'cosmosPartitionKey',
   ]) {
     it(`keeps the field ${name}`, () => {
-      assert.deepEqual(payloadOf({ [name]: 'ok' }), { [name]: 'ok' });
+      assert.deepEqual<unknown>(payloadOf({ [name]: 'ok' }), { [name]: 'ok' });
     });
   }
 });
@@ -923,7 +941,7 @@ describe('auth prefixes, cookie headers and state words', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input.slice(0, 48))} to ${JSON.stringify(output.slice(-24))}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual<unknown>(redactText(input), output);
     });
   }
 
@@ -945,7 +963,7 @@ describe('each property is read once', () => {
         return { value: MARKER };
       },
     };
-    assert.equal(containsMarker(sanitized(payload)), false);
+    assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
   });
 
   it('masks an array returned by a getter under a secret key', () => {
@@ -953,7 +971,7 @@ describe('each property is read once', () => {
       enumerable: true,
       get: () => [{ v: MARKER }],
     });
-    assert.equal(containsMarker(sanitized(payload)), false);
+    assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
   });
 
   it('masks fresh objects returned by a proxy under a secret key', () => {
@@ -962,7 +980,7 @@ describe('each property is read once', () => {
       { password: inner },
       { get: (target, key) => (key === 'password' ? { ...inner } : Reflect.get(target, key)) },
     );
-    assert.equal(containsMarker(sanitized(payload)), false);
+    assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
   });
 
   it('masks a proxy whose prototype alternates between Object.prototype and null under a secret key', () => {
@@ -972,7 +990,7 @@ describe('each property is read once', () => {
       { getPrototypeOf: () => (calls++ % 2 === 0 ? Object.prototype : null) },
     );
     const payload = { password: secret };
-    assert.equal(containsMarker(sanitized(payload)), false);
+    assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
   });
 
   it('masks a proxy whose first prototype answer is not plain under a secret key', () => {
@@ -982,35 +1000,35 @@ describe('each property is read once', () => {
       { getPrototypeOf: () => (calls++ === 0 ? Array.prototype : Object.prototype) },
     );
     const payload = { password: secret };
-    assert.equal(containsMarker(sanitized(payload)), false);
+    assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
   });
 
   it('masks a container reached through child.password back to itself', () => {
     const root: { child: { password?: unknown }; note: string } = { child: {}, note: MARKER };
     root.child.password = root;
-    assert.equal(containsMarker(sanitized(root)), false);
+    assert.strictEqual<unknown>(containsMarker(sanitized(root)), false);
   });
 
   const meta = (): { session: { id: string } } => ({ session: { id: MARKER } });
 
   it('masks meta.session when the payload is the meta object', () => {
     const shared = meta();
-    assert.equal(containsMarker(sanitized(shared, shared)), false);
+    assert.strictEqual<unknown>(containsMarker(sanitized(shared, shared)), false);
   });
 
   it('masks meta.session when the payload holds the meta object in a field', () => {
     const shared = meta();
-    assert.equal(containsMarker(sanitized({ ctx: shared }, shared)), false);
+    assert.strictEqual<unknown>(containsMarker(sanitized({ ctx: shared }, shared)), false);
   });
 
   it('masks meta.session when the payload holds the meta object in an array', () => {
     const shared = meta();
-    assert.equal(containsMarker(sanitized([shared], shared)), false);
+    assert.strictEqual<unknown>(containsMarker(sanitized([shared], shared)), false);
   });
 
   it('keeps meta.session when the payload does not reach it', () => {
     const out = sanitized({}, { session: { id: 'sess-1' } }) as { meta: { session: unknown } };
-    assert.deepEqual(out.meta.session, { id: 'sess-1' });
+    assert.deepEqual<unknown>(out.meta.session, { id: 'sess-1' });
   });
 
   for (const [name, input] of [
@@ -1043,7 +1061,7 @@ describe('bearer tokens that start with a short chunk', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input.slice(0, 48))} to ${JSON.stringify(output.slice(-24))}`, () => {
-      assert.equal(redactText(input), output);
+      assert.strictEqual<unknown>(redactText(input), output);
     });
   }
 });
@@ -1061,15 +1079,15 @@ describe('meta.session exemption', () => {
   }
 
   it('keeps a plain object under meta.session', () => {
-    assert.deepEqual(metaOf({ id: 'sess-1' }).session, { id: 'sess-1' });
+    assert.deepEqual<unknown>(metaOf({ id: 'sess-1' }).session, { id: 'sess-1' });
   });
 
   it('masks a string under meta.session', () => {
-    assert.equal(metaOf(SECRET).session, '*');
+    assert.strictEqual<unknown>(metaOf(SECRET).session, '*');
   });
 
   it('masks a number under meta.session', () => {
-    assert.equal(metaOf(48291234).session, '*');
+    assert.strictEqual<unknown>(metaOf(48291234).session, '*');
   });
 
   it('masks an array under meta.session', () => {
@@ -1084,11 +1102,11 @@ describe('Date and Map values under plain and secret keys', () => {
       meta: {},
       payload: {
         when: new Date('2026-01-02T03:04:05.000Z'),
-        password: new Map([['a', 'hunter2SECRETzq']]),
+        password: new Map([['a', MARKER]]),
       },
     } as unknown as TransportItem);
     assert.ok(out);
-    assert.equal(
+    assert.strictEqual<unknown>(
       JSON.stringify((out as unknown as { payload: unknown }).payload),
       '{"when":"2026-01-02T03:04:05.000Z","password":"*"}',
     );
