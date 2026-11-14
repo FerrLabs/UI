@@ -18,6 +18,9 @@ import { isTrustedIconMarkup } from '../icon/icon-markup';
 import { RailToggleComponent } from '../rail-toggle/rail-toggle.component';
 import { activeNavItemId } from './active-nav-item';
 import { SHELL_CONTEXT, type ShellContext } from './shell-context';
+import { isPlainLeftClick, resolveCrumbs, type ShellCrumb } from './shell-crumbs';
+
+export type { ShellCrumb };
 
 export interface ShellNavItem {
   readonly id: string;
@@ -93,16 +96,28 @@ export interface ShellNavGroup {
               <ng-content select="[shell-breadcrumb-lead]" />
             </div>
             @if (breadcrumb().length) {
-              <div class="mono flr-shell__crumbs">
-                @for (crumb of breadcrumb(); track $index; let last = $last) {
-                  <span class="flr-shell__crumb" [class.flr-shell__crumb--last]="last">{{
-                    crumb
-                  }}</span>
-                  @if (!last) {
-                    <span class="flr-shell__crumb-sep">/</span>
+              <nav class="mono flr-shell__crumbs" aria-label="Breadcrumb">
+                @for (crumb of crumbs(); track $index) {
+                  @if (crumb.href) {
+                    <a
+                      class="flr-shell__crumb flr-shell__crumb--link"
+                      [href]="crumb.href"
+                      (click)="onCrumbClick($event, crumb.href)"
+                      >{{ crumb.label }}</a
+                    >
+                  } @else {
+                    <span
+                      class="flr-shell__crumb"
+                      [class.flr-shell__crumb--last]="crumb.last"
+                      [attr.aria-current]="crumb.last ? 'page' : null"
+                      >{{ crumb.label }}</span
+                    >
+                  }
+                  @if (!crumb.last) {
+                    <span class="flr-shell__crumb-sep" aria-hidden="true">/</span>
                   }
                 }
-              </div>
+              </nav>
             }
             <div class="flr-shell__slot flr-shell__slot--crumb">
               <ng-content select="[shell-breadcrumb-actions]" />
@@ -227,6 +242,19 @@ export interface ShellNavGroup {
     .flr-shell__crumb--last {
       color: var(--color-ink, #1e293b);
     }
+    .flr-shell__crumb--link {
+      color: inherit;
+      text-decoration: none;
+      border-radius: var(--radius-control, 4px);
+    }
+    .flr-shell__crumb--link:hover {
+      color: var(--color-ink, #1e293b);
+      text-decoration: underline;
+    }
+    .flr-shell__crumb--link:focus-visible {
+      outline: 2px solid var(--color-ink, #1e293b);
+      outline-offset: 2px;
+    }
     .flr-shell__crumb-sep {
       opacity: 0.5;
     }
@@ -296,10 +324,12 @@ export class ShellComponent implements ShellContext {
   readonly accent = input<string | null>(null);
   readonly sections = input<readonly ShellNavGroup[]>([]);
   readonly currentPath = input('/');
-  readonly breadcrumb = input<readonly string[]>([]);
+  readonly breadcrumb = input<readonly ShellCrumb[]>([]);
   readonly searchEnabled = input(false);
 
   readonly collapsed = model(false);
+
+  protected readonly crumbs = computed(() => resolveCrumbs(this.breadcrumb()));
 
   readonly navigate = output<string>();
   readonly search = output<void>();
@@ -316,6 +346,12 @@ export class ShellComponent implements ShellContext {
 
   protected onSelect(item: ShellNavItem): void {
     if (item.href) this.navigate.emit(item.href);
+  }
+
+  protected onCrumbClick(event: MouseEvent, href: string): void {
+    if (!isPlainLeftClick(event)) return;
+    event.preventDefault();
+    this.navigate.emit(href);
   }
 
   protected trustedIcon(markup: string): SafeHtml | null {
