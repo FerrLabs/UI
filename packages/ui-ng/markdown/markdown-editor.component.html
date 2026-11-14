@@ -1,0 +1,71 @@
+<div class="flr-md-editor__frame" [class.flr-md-editor__frame--disabled]="disabled()">
+  <div class="flr-md-editor__head">
+    <flr-tabs mode="panel" ariaLabel="Editor mode">
+      <flr-tab
+        label="Write"
+        [active]="!previewing()"
+        [panelId]="writeId"
+        (selected)="mode.set('write')"
+      />
+      <flr-tab
+        label="Preview"
+        [active]="previewing()"
+        [panelId]="previewId"
+        (selected)="mode.set('preview')"
+      />
+    </flr-tabs>
+    <div
+      class="flr-md-editor__toolbar"
+      role="toolbar"
+      aria-label="Formatting"
+      [attr.aria-controls]="writeId"
+      [hidden]="previewing()"
+    >
+      @for (action of actions; track action.id) {
+        <flr-button
+          variant="ghost"
+          size="sm"
+          [aria-label]="action.label"
+          [disabled]="disabled()"
+          (pressed)="run(action)"
+        >
+          <span class="flr-md-editor__glyph" [style]="action.style" aria-hidden="true">{{
+            action.glyph
+          }}</span>
+        </flr-button>
+      }
+    </div>
+  </div>
+
+  <div [id]="writeId" role="tabpanel" [hidden]="previewing()">
+    <textarea
+      #textarea
+      class="flr-md-editor__input"
+      [rows]="rows()"
+      [style.min-height]="minHeight()"
+      [value]="written()"
+      [disabled]="disabled()"
+      [attr.placeholder]="placeholder()"
+      [attr.aria-label]="ariaLabel()"
+      (input)="handleInput($event)"
+      (keydown)="handleKeydown($event)"
+      (blur)="handleBlur()"
+    ></textarea>
+  </div>
+
+  <div
+    [id]="previewId"
+    role="tabpanel"
+    class="flr-md-editor__preview"
+    [style.min-height]="minHeight()"
+    [hidden]="!previewing()"
+  >
+    @if (previewing()) {
+      @if (value().trim()) {
+        <flr-markdown [source]="value()" />
+      } @else {
+        <p class="flr-md-editor__empty">Nothing to preview</p>
+      }
+    }
+  </div>
+</div>

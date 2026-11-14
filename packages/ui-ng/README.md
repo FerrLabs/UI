@@ -90,7 +90,11 @@ pnpm add marked marked-highlight prismjs
 ```
 
 ```ts
-import { CodeComponent, MarkdownComponent } from '@ferrlabs/ui-ng/markdown';
+import {
+  CodeComponent,
+  MarkdownComponent,
+  MarkdownEditorComponent,
+} from '@ferrlabs/ui-ng/markdown';
 ```
 
 ```html
@@ -103,6 +107,12 @@ import { CodeComponent, MarkdownComponent } from '@ferrlabs/ui-ng/markdown';
   highlights fenced code, and passes the result through Angular's `[innerHTML]`
   sanitizer, so scripts and event handlers in the source are stripped. Links get
   `rel="noopener noreferrer"`.
+- `flr-markdown-editor`: `ControlValueAccessor` (`ngModel` / reactive forms) with a
+  markdown string value. Inputs `placeholder`, `rows` (default 8), `minHeight` and
+  `aria-label`; disabled comes from the form control. Write / Preview tabs, a
+  formatting toolbar (bold, italic, strikethrough, heading cycling H1 to H3, inline
+  code, code block, link, bullet, numbered and task lists, quote) and Ctrl/Cmd+B,
+  I, K shortcuts. Preview renders through `flr-markdown`.
 - Languages: javascript, typescript, json, bash, rust, python, yaml, toml, sql,
   diff, markdown, css, markup (html/xml), go, docker. Common aliases (`ts`, `sh`,
   `yml`, `rs`, `html`, ...) resolve.
