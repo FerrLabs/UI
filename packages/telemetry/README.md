@@ -72,7 +72,7 @@ Faro is not initialised (opt-out, localhost, SSR) and never throws.
 
 ## Behaviour
 
-- Nothing is sent on `localhost` (including `*.localhost`) or loopback addresses, or when the browser sends Do Not Track or
+- Nothing is sent on `localhost` (including `*.localhost`) or loopback addresses, or when the browser sends Do Not Track (`navigator.doNotTrack` or `window.doNotTrack` set to `1` or `yes`) or
   Global Privacy Control.
 - Faro runs with `captureConsole: false` and session tracking off.
 - Every string in an item (meta and payload) goes through `capabilityPaths`, then `redactText`.

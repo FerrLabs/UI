@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { isLocalHostname, isOptedOut } from './opt-out.js';
 
 describe('isLocalHostname', () => {
@@ -32,14 +32,41 @@ describe('isOptedOut', () => {
     expect(isOptedOut()).toBe(true);
   });
 
-  it('is true for Do Not Track', () => {
-    setNavigator({ doNotTrack: '1' });
+  it.each(['1', 'yes'])('is true for navigator.doNotTrack %j', (value) => {
+    setNavigator({ doNotTrack: value });
     expect(isOptedOut()).toBe(true);
   });
 
-  it('is false with neither signal', () => {
-    setNavigator({ globalPrivacyControl: false, doNotTrack: '0' });
+  describe('window.doNotTrack', () => {
+    const setWindow = (value: unknown) =>
+      Object.defineProperty(globalThis, 'window', {
+        value: { doNotTrack: value },
+        configurable: true,
+      });
+
+    afterEach(() => {
+      Reflect.deleteProperty(globalThis, 'window');
+    });
+
+    it.each(['1', 'yes'])('is true for %j', (value) => {
+      setNavigator({});
+      setWindow(value);
+      expect(isOptedOut()).toBe(true);
+    });
+
+    it.each(['0', undefined, 'unspecified'])('is false for %j', (value) => {
+      setNavigator({});
+      setWindow(value);
+      expect(isOptedOut()).toBe(false);
+    });
+  });
+
+  it.each(['0', undefined, 'unspecified'])('is false for navigator.doNotTrack %j', (value) => {
+    setNavigator({ globalPrivacyControl: false, doNotTrack: value });
     expect(isOptedOut()).toBe(false);
+  });
+
+  it('is false with no signal and no window', () => {
     setNavigator({});
     expect(isOptedOut()).toBe(false);
   });
