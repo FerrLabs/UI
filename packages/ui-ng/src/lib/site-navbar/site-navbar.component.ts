@@ -93,7 +93,6 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
               </a>
             }
             @if (locales.length > 1) {
-              <p class="nav__mobile-eyebrow mono">{{ languageLabel }}</p>
               <div class="nav__mobile-langs" translate="no">
                 @for (option of localeOptions(); track option.code) {
                   <a
@@ -275,14 +274,8 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
       gap: 16px;
       text-decoration: none;
     }
-    .nav__mobile-eyebrow {
-      margin: 32px 0 12px;
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--color-ink-3, #64748b);
-    }
     .nav__mobile-langs {
+      margin-top: 32px;
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
