@@ -207,6 +207,10 @@ describe('redactText properties', () => {
 });
 
 describe('redactText credential regressions', () => {
+  it('masks a padded Basic credential after key=Basic', () => {
+    expect(redactText('Authorization=Basic dTcyOnZiaUtHTDd3NWtFZjgzbQ==')).not.toMatch(/dTcy/);
+  });
+
   it('masks a padded Basic or Token credential after a sensitive key', () => {
     for (const input of [
       'Authorization: Basic dTcyOnZiaUtHTDd3NWtFZjgzbQ==',

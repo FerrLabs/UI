@@ -123,13 +123,26 @@ describe('redactItem', () => {
     expect(outPayload.child.parent).toBe(outPayload);
   });
 
-  it('drops the item when it cannot be scrubbed', () => {
-    const frozen = {
-      type: TransportItemType.LOG,
-      payload: Object.freeze({ message: 'https://a.com/x?token=abc' }),
-      meta: {},
-    };
-    expect(redactItem(frozen as unknown as TransportItem)).toBe(null);
+  it('drops the item when a property read throws', () => {
+    const payload = {};
+    Object.defineProperty(payload, 'message', {
+      enumerable: true,
+      get() {
+        throw new Error('nope');
+      },
+    });
+    expect(
+      redactItem({ type: TransportItemType.LOG, payload, meta: {} } as unknown as TransportItem),
+    ).toBe(null);
+  });
+
+  it('scrubs a frozen item without mutating it', () => {
+    const payload = Object.freeze({ message: 'https://a.com/x?token=abc' });
+    const frozen = Object.freeze({ type: TransportItemType.LOG, payload, meta: Object.freeze({}) });
+    const out = scrub(frozen as unknown as TransportItem);
+    expect((out.payload as { message: string }).message).toBe('https://a.com/x');
+    expect(payload.message).toBe('https://a.com/x?token=abc');
+    expect(out).not.toBe(frozen);
   });
 
   it('handles items without page meta', () => {
@@ -198,13 +211,55 @@ describe('redactItem', () => {
         token: { value: 'hunter2' },
       }),
     );
-    expect(out.payload).toEqual({ name: 'x', password: '*', token: '*' });
+    expect(out.payload).toEqual({ name: 'x', password: ['*'], token: { '*': '*' } });
   });
 
-  it('leaves non-string values of secret-like fields and Dates alone', () => {
+  it('masks numbers under secret-like fields except metric names, and keeps Dates', () => {
     const when = new Date(0);
-    const out = scrub(item(TransportItemType.EVENT, { name: 'x', token: 42, when }));
-    expect(out.payload).toEqual({ name: 'x', token: 42, when });
+    const out = scrub(item(TransportItemType.EVENT, { name: 'x', token: 42, tokenCount: 7, when }));
+    expect(out.payload).toEqual({ name: 'x', token: '*', tokenCount: 7, when });
+  });
+
+  it('keeps meta.session by default and removes it with dropSessionMeta', () => {
+    const session = { id: 'abc123', attributes: { a: 'b' } };
+    const source = { type: TransportItemType.LOG, payload: {}, meta: { session } };
+    const kept = redactItem(source as unknown as TransportItem);
+    expect(kept?.meta.session).toEqual({ id: 'abc123', attributes: { a: 'b' } });
+    const dropped = redactItem(source as unknown as TransportItem, [], { dropSessionMeta: true });
+    expect(dropped?.meta).toEqual({});
+    expect(source.meta.session).toBe(session);
+  });
+
+  it('removes a non-object meta.session with dropSessionMeta instead of masking it', () => {
+    const out = redactItem(
+      {
+        type: TransportItemType.LOG,
+        payload: {},
+        meta: { session: 'abc' },
+      } as unknown as TransportItem,
+      [],
+      { dropSessionMeta: true },
+    );
+    expect(out?.meta).toEqual({});
+  });
+
+  it.each(['session', 'Session', 'SESSION'])('drops meta.%s with dropSessionMeta', (name) => {
+    const out = redactItem(
+      {
+        type: TransportItemType.LOG,
+        payload: {},
+        meta: { [name]: { id: 'abc123' }, page: { url: 'https://h.example.com/p' } },
+      } as unknown as TransportItem,
+      [],
+      { dropSessionMeta: true },
+    );
+    expect(out?.meta).toEqual({ page: { url: 'https://h.example.com/p' } });
+  });
+
+  it('applies capability paths to object keys as well as values', () => {
+    const capabilityPaths: CapabilityPath[] = [[/(\/s\/)[^/?#\s]+/g, '$1:token']];
+    const out = scrub(item(TransportItemType.LOG, { '/s/abcdef123456': 'x' }), capabilityPaths);
+    expect(out.payload).toEqual({ '/s/:token': 'x' });
   });
 
   it('applies capability paths before redaction, to meta and payload', () => {
@@ -224,5 +279,68 @@ describe('redactItem', () => {
   it('does not touch strings with the default capability paths', () => {
     const out = scrub(item(TransportItemType.LOG, { message: 'GET /s/abcDEF123 failed' }));
     expect((out.payload as { message: string }).message).toBe('GET /s/abcDEF123 failed');
+  });
+});
+
+describe('redactItem measurements and session meta', () => {
+  const secret = ['hunter2', 'SECRET', 'zq'].join('');
+
+  it('keeps numeric measurement values and still masks secret strings elsewhere in the item', () => {
+    const source = {
+      type: TransportItemType.MEASUREMENT,
+      meta: {},
+      payload: {
+        type: 'login',
+        values: { authFlow: 1200, token: 3 },
+        context: { password: secret },
+      },
+    } as unknown as TransportItem;
+    const out = scrub(source).payload as {
+      values: Record<string, number>;
+      context: Record<string, string>;
+    };
+    expect(out.values).toEqual({ authFlow: 1200, token: 3 });
+    expect(out.context['password']).toBe('*');
+  });
+
+  it('still redacts strings inside measurement values', () => {
+    const source = {
+      type: TransportItemType.MEASUREMENT,
+      meta: {},
+      payload: { type: 'login', values: { authFlow: secret, ok: 1 } },
+    } as unknown as TransportItem;
+    const out = scrub(source).payload as { values: Record<string, unknown> };
+    expect(out.values['authFlow']).toBe('*');
+    expect(out.values['ok']).toBe(1);
+  });
+
+  it('masks numbers under secret names for non-measurement items', () => {
+    const source = {
+      type: TransportItemType.LOG,
+      meta: {},
+      payload: { values: { authFlow: 1200 } },
+    } as unknown as TransportItem;
+    const out = scrub(source).payload as { values: Record<string, unknown> };
+    expect(out.values['authFlow']).toBe('*');
+  });
+
+  it('keeps the item and a null meta when dropSessionMeta is set', () => {
+    const source = {
+      type: TransportItemType.LOG,
+      meta: null,
+      payload: {},
+    } as unknown as TransportItem;
+    const out = redactItem(source, [], { dropSessionMeta: true });
+    expect(out).not.toBeNull();
+    expect(out?.meta).toBeNull();
+  });
+
+  it('does not mutate the caller meta when dropping the session', () => {
+    const meta = { session: { id: 's1' }, page: { url: 'https://a.com/x' } };
+    const source = { type: TransportItemType.LOG, meta, payload: {} } as unknown as TransportItem;
+    const out = redactItem(source, [], { dropSessionMeta: true });
+    expect(out?.meta).toEqual({ page: { url: 'https://a.com/x' } });
+    expect(meta).toEqual({ session: { id: 's1' }, page: { url: 'https://a.com/x' } });
+    expect(out?.meta).not.toBe(meta);
   });
 });

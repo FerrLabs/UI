@@ -20,6 +20,7 @@ initTelemetry({
   appName: 'my-app',
   collectorUrl: 'https://rum.ferrlabs.com/collect',
   capabilityPaths: [[/(\/s\/)[^/?#\s]+/g, '$1:token']],
+  dropSessionMeta: false,
 });
 ```
 
@@ -37,9 +38,24 @@ export const appConfig: ApplicationConfig = {
   Global Privacy Control.
 - Faro runs with `captureConsole: false` and session tracking off.
 - Every string in an item (meta and payload) goes through `capabilityPaths`, then `redactText`.
-  String, array and object fields whose name looks like a secret (`password`, `apiKey`,
-  `authorization`, ...) are replaced by `*` whatever their value.
-- The walk fails closed: if an item cannot be scrubbed, it is dropped.
+  The item is never mutated: `redactItem` returns a scrubbed copy, built from a single read of
+  each property. Dates are kept, other non-plain objects are replaced by their redacted string
+  form, and shared or cyclic containers keep their shape.
+- Fields whose name looks like a secret (`password`, `apiKey`, `authorization`, `*_code`,
+  `*_state`, ...) are masked whatever their value: strings, numbers and non-plain values become
+  `*`, and objects and arrays are kept but every key and every non-container value inside is
+  masked. A number under a metric-looking name (`tokenCount`, `ttl`, `durationMs`, ...) is kept.
+  The secret check is order independent: a container reachable under a secret name from
+  anywhere in the item is treated as secret wherever it is also reachable.
+- Other object keys go through `redactText` too. Keys that collide after redaction are suffixed
+  `*#2`, `*#3`, ...
+- `meta.session` (the Faro session object at the root of `meta`) is kept as is when it is a plain
+  object, so session correlation keeps working. With `dropSessionMeta: true` it is removed from
+  the item instead.
+- `redactText` has no regex lookbehind (Safari before 16.4), bounds its input to 16 KB and its
+  output to 2 KB, and runs in under 250 ms on adversarial input.
+- The walk fails closed: if an item cannot be scrubbed (a getter throws, a value cannot be
+  stringified), it is dropped.
 - `environment` is derived from the hostname: `.dev.ferrlabs` is `dev`, `.ferrlabs` is `interne`,
   `.home` is `home`, anything else is `prod`.
 
@@ -49,6 +65,9 @@ export const appConfig: ApplicationConfig = {
 | ----------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `@ferrlabs/telemetry`         | `initTelemetry`, `isOptedOut`, `isLocalHostname`, `redactText`, `redactItem`, `environmentFromHostname` |
 | `@ferrlabs/telemetry/angular` | `provideTelemetryErrorHandler`, `TelemetryErrorHandler`                                                 |
+
+`redactItem(item, capabilityPaths?, { dropSessionMeta? })` returns the scrubbed copy, or `null`
+when the item must be dropped.
 
 `capabilityPaths` is a list of `[RegExp, replacement]` pairs for URLs that carry a capability in
 the path (share links, reset tokens) and so cannot be caught by key name.
