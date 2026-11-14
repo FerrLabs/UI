@@ -11,6 +11,16 @@ export interface TelemetryOptions {
   capabilityPaths?: readonly CapabilityPath[];
   dropSessionMeta?: boolean;
   environment?: string;
+  isConsentRefused?: () => boolean;
+}
+
+function consentRefused(isConsentRefused: (() => boolean) | undefined): boolean {
+  if (!isConsentRefused) return false;
+  try {
+    return isConsentRefused();
+  } catch {
+    return true;
+  }
 }
 
 export function initTelemetry({
@@ -19,10 +29,11 @@ export function initTelemetry({
   capabilityPaths = [],
   dropSessionMeta = false,
   environment,
+  isConsentRefused,
 }: TelemetryOptions): void {
   if (typeof window === 'undefined') return;
   const { hostname } = window.location;
-  if (isLocalHostname(hostname) || isOptedOut()) return;
+  if (isLocalHostname(hostname) || isOptedOut() || consentRefused(isConsentRefused)) return;
   try {
     initializeFaro({
       url: collectorUrl,

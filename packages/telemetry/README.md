@@ -36,6 +36,18 @@ initTelemetry({ appName: 'my-app', collectorUrl: 'https://rum.example.com/collec
 initTelemetry({ appName: 'my-app', environment: window.__ENV__?.RUM_ENV });
 ```
 
+`isConsentRefused` is evaluated at init next to Do Not Track, Global Privacy Control and the local
+hostname check. Faro is not initialised when it returns `true` or throws. After init, apps that
+track consent changes call `pauseTelemetry()` and `resumeTelemetry()`:
+
+```ts
+initTelemetry({ appName: 'my-app', isConsentRefused: () => readConsent() === 'refused' });
+window.addEventListener('consent-refused', pauseTelemetry);
+window.addEventListener('consent-accepted', resumeTelemetry);
+```
+
+Both are no-ops when Faro is not initialised and never throw.
+
 ```ts
 import { provideTelemetryErrorHandler } from '@ferrlabs/telemetry/angular';
 
@@ -87,10 +99,10 @@ Faro is not initialised (opt-out, localhost, SSR) and never throws.
 
 ## Exports
 
-| Entry                         | Exports                                                                                                                |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `@ferrlabs/telemetry`         | `initTelemetry`, `reportError`, `isOptedOut`, `isLocalHostname`, `redactText`, `redactItem`, `environmentFromHostname` |
-| `@ferrlabs/telemetry/angular` | `provideTelemetryErrorHandler`, `TelemetryErrorHandler`                                                                |
+| Entry                         | Exports                                                                                                                                                     |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@ferrlabs/telemetry`         | `initTelemetry`, `reportError`, `pauseTelemetry`, `resumeTelemetry`, `isOptedOut`, `isLocalHostname`, `redactText`, `redactItem`, `environmentFromHostname` |
+| `@ferrlabs/telemetry/angular` | `provideTelemetryErrorHandler`, `TelemetryErrorHandler`                                                                                                     |
 
 `redactItem(item, capabilityPaths?, { dropSessionMeta? })` returns the scrubbed copy, or `null`
 when the item must be dropped.
