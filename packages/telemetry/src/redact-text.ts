@@ -62,7 +62,7 @@ const SENSITIVE_COLON = new RegExp(
   'gi',
 );
 const SENSITIVE_QUERY_PARAM = new RegExp(
-  `([?#](?:[^\\s?#]{0,512}?[&;])?${QUOTE}${PARAM_KEYS}${QUOTE}\\s*=(?!=(?:[\\s=]|$))=*\\s*(?!\\s))(?:(?:${KEY_AHEAD}=*[ \\t]*(?![ \\t]))+(?:${VALUE_WORD})?|${VALUE_WORD})`,
+  `([?#](?:[^\\s?#]{0,${MAX_INPUT_LENGTH}}?[&;])?${QUOTE}${PARAM_KEYS}${QUOTE}\\s*=(?!=(?:[\\s=]|$))=*\\s*(?!\\s))(?:(?:${KEY_AHEAD}=*[ \\t]*(?![ \\t]))+(?:${VALUE_WORD})?|${VALUE_WORD})`,
   'gi',
 );
 const SENSITIVE_PARAM = new RegExp(

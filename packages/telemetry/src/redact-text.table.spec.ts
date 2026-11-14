@@ -907,6 +907,9 @@ describe('userinfo, yaml blocks, glued separators and query values', () => {
     ['8000 spaced pairs before an inline yaml block key', 'x '.repeat(8000) + 'password: |\n x'],
     ['8000 glued semicolons in a colon value', 'password: a' + ';a'.repeat(8000)],
     ['1700 glued semicolon keys', ';password'.repeat(1700)],
+    ['8000 ampersands in one query', '?' + 'a&'.repeat(8000)],
+    ['16000 query characters before a secret key', '?' + 'x'.repeat(16000) + '&token=abc failed'],
+    ['160 long query keys', '?' + ('&' + 'a'.repeat(100)).repeat(160)],
     ['3000 glued semicolons before a spaced key in a query', '?token=a' + ';key '.repeat(3000)],
     ['8000 glued semicolons in a bearer token', 'Bearer abcdefgh' + ';x'.repeat(8000)],
     [

@@ -275,5 +275,13 @@ export const exactCases: ReadonlyArray<readonly [string, string]> = [
   ['a=1&pwd==*', 'a=1&pwd==*'],
   ['pwd==*', 'pwd==*'],
   ['?x==', '?x=*'],
+  [
+    'GET https://h.com/a?' + 'x'.repeat(480) + '&token=abc failed now',
+    'GET https://h.com/a failed now',
+  ],
+  ['?' + 'x'.repeat(500) + '&token=abc failed now', '?' + 'x'.repeat(500) + '&token=* failed now'],
+  ['see /a?b=1&' + 'x'.repeat(480) + '&token=abc failed now', 'see /a failed now'],
+  ['?' + 'x'.repeat(600) + '&token=abc failed now', '* failed now'],
+  ['GET https://h.com/a?' + 'x'.repeat(4000) + ';token=abc failed now', 'GET * failed now'],
   ['password=x user=bob', 'password=* user=bob'],
 ];
