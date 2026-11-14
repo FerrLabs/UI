@@ -108,7 +108,9 @@ import {
   sanitizer, so scripts and event handlers in the source are stripped. Links get
   `rel="noopener noreferrer"`.
 - `flr-markdown-editor`: `ControlValueAccessor` (`ngModel` / reactive forms) with a
-  markdown string value. Inputs `placeholder`, `rows` (default 8), `minHeight` and
+  markdown string value. Inputs `placeholder`, `rows` (default 8), `minHeight`, `labels` (partial
+  `MarkdownEditorLabels` merged over the English defaults: toolbar buttons with their
+  shortcut hints, tab names, `editorMode`, `formatting`, `nothingToPreview`) and
   `aria-label`; disabled comes from the form control. Write / Preview tabs, a
   formatting toolbar (bold, italic, strikethrough, heading cycling H1 to H3, inline
   code, code block, link, bullet, numbered and task lists, quote) and Ctrl/Cmd+B,

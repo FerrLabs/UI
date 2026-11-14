@@ -29,10 +29,55 @@ import {
 
 type EditorMode = 'write' | 'preview';
 
+export interface MarkdownEditorLabels {
+  readonly editor: string;
+  readonly editorMode: string;
+  readonly formatting: string;
+  readonly write: string;
+  readonly preview: string;
+  readonly nothingToPreview: string;
+  readonly bold: string;
+  readonly italic: string;
+  readonly strike: string;
+  readonly heading: string;
+  readonly code: string;
+  readonly codeBlock: string;
+  readonly link: string;
+  readonly bullet: string;
+  readonly numbered: string;
+  readonly task: string;
+  readonly quote: string;
+}
+
+const DEFAULT_LABELS: MarkdownEditorLabels = {
+  editor: 'Markdown editor',
+  editorMode: 'Editor mode',
+  formatting: 'Formatting',
+  write: 'Write',
+  preview: 'Preview',
+  nothingToPreview: 'Nothing to preview',
+  bold: 'Bold (Ctrl/Cmd+B)',
+  italic: 'Italic (Ctrl/Cmd+I)',
+  strike: 'Strikethrough',
+  heading: 'Heading (cycles H1 to H3)',
+  code: 'Inline code',
+  codeBlock: 'Code block',
+  link: 'Link (Ctrl/Cmd+K)',
+  bullet: 'Bulleted list',
+  numbered: 'Numbered list',
+  task: 'Task list',
+  quote: 'Quote',
+};
+
+type ActionLabelKey = Exclude<
+  keyof MarkdownEditorLabels,
+  'editor' | 'editorMode' | 'formatting' | 'write' | 'preview' | 'nothingToPreview'
+>;
+
 interface ToolbarAction {
   readonly id: string;
   readonly glyph: string;
-  readonly label: string;
+  readonly label: ActionLabelKey;
   readonly style?: string;
   readonly apply: (state: EditState) => EditState;
 }
@@ -41,37 +86,37 @@ const ACTIONS: readonly ToolbarAction[] = [
   {
     id: 'bold',
     glyph: 'B',
-    label: 'Bold (Ctrl/Cmd+B)',
+    label: 'bold',
     style: 'font-weight: 700',
     apply: (s) => toggleWrap(s, '**'),
   },
   {
     id: 'italic',
     glyph: 'I',
-    label: 'Italic (Ctrl/Cmd+I)',
+    label: 'italic',
     style: 'font-style: italic',
     apply: (s) => toggleWrap(s, '*'),
   },
   {
     id: 'strike',
     glyph: 'S',
-    label: 'Strikethrough',
+    label: 'strike',
     style: 'text-decoration: line-through',
     apply: (s) => toggleWrap(s, '~~'),
   },
-  { id: 'heading', glyph: 'H', label: 'Heading (cycles H1 to H3)', apply: cycleHeading },
-  { id: 'code', glyph: '</>', label: 'Inline code', apply: (s) => toggleWrap(s, '`') },
-  { id: 'code-block', glyph: '{ }', label: 'Code block', apply: (s) => insertBlock(s, '```') },
-  { id: 'link', glyph: 'Link', label: 'Link (Ctrl/Cmd+K)', apply: (s) => insertLink(s) },
-  { id: 'bullet', glyph: '•', label: 'Bulleted list', apply: (s) => toggleLinePrefix(s, BULLET) },
+  { id: 'heading', glyph: 'H', label: 'heading', apply: cycleHeading },
+  { id: 'code', glyph: '</>', label: 'code', apply: (s) => toggleWrap(s, '`') },
+  { id: 'code-block', glyph: '{ }', label: 'codeBlock', apply: (s) => insertBlock(s, '```') },
+  { id: 'link', glyph: '[↗]', label: 'link', apply: (s) => insertLink(s) },
+  { id: 'bullet', glyph: '•', label: 'bullet', apply: (s) => toggleLinePrefix(s, BULLET) },
   {
     id: 'numbered',
-    glyph: '⒈',
-    label: 'Numbered list',
+    glyph: '1.',
+    label: 'numbered',
     apply: (s) => toggleLinePrefix(s, NUMBERED),
   },
-  { id: 'task', glyph: '[ ]', label: 'Task list', apply: (s) => toggleLinePrefix(s, TASK) },
-  { id: 'quote', glyph: '"', label: 'Quote', apply: (s) => toggleLinePrefix(s, QUOTE) },
+  { id: 'task', glyph: '[ ]', label: 'task', apply: (s) => toggleLinePrefix(s, TASK) },
+  { id: 'quote', glyph: '"', label: 'quote', apply: (s) => toggleLinePrefix(s, QUOTE) },
 ];
 
 const SHORTCUTS: Readonly<Record<string, string>> = { b: 'bold', i: 'italic', k: 'link' };
@@ -97,7 +142,13 @@ export class MarkdownEditorComponent implements ControlValueAccessor {
   readonly placeholder = input<string | null>(null);
   readonly rows = input(8);
   readonly minHeight = input<string | null>(null);
-  readonly ariaLabel = input<string | null>('Markdown editor', { alias: 'aria-label' });
+  readonly labels = input<Partial<MarkdownEditorLabels>>({});
+  readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
+  protected readonly resolvedLabels = computed<MarkdownEditorLabels>(() => ({
+    ...DEFAULT_LABELS,
+    ...this.labels(),
+  }));
 
   protected readonly actions = ACTIONS;
   protected readonly value = signal('');

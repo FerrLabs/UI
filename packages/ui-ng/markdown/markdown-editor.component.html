@@ -1,14 +1,14 @@
 <div class="flr-md-editor__frame" [class.flr-md-editor__frame--disabled]="disabled()">
   <div class="flr-md-editor__head">
-    <flr-tabs mode="panel" ariaLabel="Editor mode">
+    <flr-tabs mode="panel" [ariaLabel]="resolvedLabels().editorMode">
       <flr-tab
-        label="Write"
+        [label]="resolvedLabels().write"
         [active]="!previewing()"
         [panelId]="writeId"
         (selected)="mode.set('write')"
       />
       <flr-tab
-        label="Preview"
+        [label]="resolvedLabels().preview"
         [active]="previewing()"
         [panelId]="previewId"
         (selected)="mode.set('preview')"
@@ -17,7 +17,7 @@
     <div
       class="flr-md-editor__toolbar"
       role="group"
-      aria-label="Formatting"
+      [attr.aria-label]="resolvedLabels().formatting"
       [attr.aria-controls]="writeId"
       [hidden]="previewing()"
     >
@@ -25,19 +25,27 @@
         <flr-button
           variant="ghost"
           size="sm"
-          [aria-label]="action.label"
+          [aria-label]="resolvedLabels()[action.label]"
           [disabled]="disabled()"
           (pressed)="run(action)"
         >
-          <span class="flr-md-editor__glyph" [style]="action.style" aria-hidden="true">{{
-            action.glyph
-          }}</span>
+          <span
+            class="flr-md-editor__glyph"
+            aria-hidden="true"
+            [style]="action.style"
+            [attr.data-glyph]="action.glyph"
+          ></span>
         </flr-button>
       }
     </div>
   </div>
 
-  <div [id]="writeId" role="tabpanel" aria-label="Write" [hidden]="previewing()">
+  <div
+    [id]="writeId"
+    role="tabpanel"
+    [attr.aria-label]="resolvedLabels().write"
+    [hidden]="previewing()"
+  >
     <textarea
       #textarea
       class="flr-md-editor__input"
@@ -46,7 +54,7 @@
       [value]="written()"
       [disabled]="disabled()"
       [attr.placeholder]="placeholder()"
-      [attr.aria-label]="ariaLabel()"
+      [attr.aria-label]="ariaLabel() ?? resolvedLabels().editor"
       (input)="handleInput($event)"
       (keydown)="handleKeydown($event)"
       (blur)="handleBlur()"
@@ -56,7 +64,7 @@
   <div
     [id]="previewId"
     role="tabpanel"
-    aria-label="Preview"
+    [attr.aria-label]="resolvedLabels().preview"
     class="flr-md-editor__preview"
     [style.min-height]="minHeight()"
     [hidden]="!previewing()"
@@ -65,7 +73,7 @@
       @if (value().trim()) {
         <flr-markdown [source]="value()" />
       } @else {
-        <p class="flr-md-editor__empty">Nothing to preview</p>
+        <p class="flr-md-editor__empty">{{ resolvedLabels().nothingToPreview }}</p>
       }
     }
   </div>

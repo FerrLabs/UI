@@ -49,8 +49,13 @@
 }
 
 .flr-md-editor__glyph {
+  display: inline-block;
   min-width: 1.25em;
   text-align: center;
+}
+
+.flr-md-editor__glyph::before {
+  content: attr(data-glyph);
 }
 
 .flr-md-editor__input {

@@ -50,6 +50,35 @@ export const Disabled: Story = {
   }),
 };
 
+export const French: Story = {
+  render: (args) => ({
+    props: {
+      ...args,
+      draft: '# Notes de version',
+      labels: {
+        editor: 'Éditeur Markdown',
+        editorMode: "Mode de l'éditeur",
+        formatting: 'Mise en forme',
+        write: 'Écrire',
+        preview: 'Aperçu',
+        nothingToPreview: 'Rien à prévisualiser',
+        bold: 'Gras (Ctrl/Cmd+B)',
+        italic: 'Italique (Ctrl/Cmd+I)',
+        strike: 'Barré',
+        heading: 'Titre (H1 à H3)',
+        code: 'Code en ligne',
+        codeBlock: 'Bloc de code',
+        link: 'Lien (Ctrl/Cmd+K)',
+        bullet: 'Liste à puces',
+        numbered: 'Liste numérotée',
+        task: 'Liste de tâches',
+        quote: 'Citation',
+      },
+    },
+    template: `<flr-markdown-editor [(ngModel)]="draft" [labels]="labels" />`,
+  }),
+};
+
 export const TallMinimum: Story = {
   args: { minHeight: '320px' },
 };
