@@ -5,7 +5,7 @@ export default defineConfig({
     decorator: { legacy: true },
   },
   test: {
-    include: ['src/**/*.spec.ts'],
+    include: ['src/**/*.spec.ts', 'markdown/**/*.spec.ts'],
     environment: 'node',
     coverage: {
       provider: 'v8',
