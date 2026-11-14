@@ -50,6 +50,45 @@ describe('initTelemetry', () => {
     expect(initializeFaro).not.toHaveBeenCalled();
   });
 
+  it('does nothing when the consent hook reports a refusal', () => {
+    setEnvironment('app.example.com');
+    initTelemetry({ ...options, isConsentRefused: () => true });
+    expect(initializeFaro).not.toHaveBeenCalled();
+  });
+
+  it('fails closed when the consent hook throws', () => {
+    setEnvironment('app.example.com');
+    initTelemetry({
+      ...options,
+      isConsentRefused: () => {
+        throw new Error('storage blocked');
+      },
+    });
+    expect(initializeFaro).not.toHaveBeenCalled();
+  });
+
+  it('initialises when the consent hook does not refuse', () => {
+    setEnvironment('app.example.com');
+    initTelemetry({ ...options, isConsentRefused: () => false });
+    expect(initializeFaro).toHaveBeenCalledTimes(1);
+  });
+
+  it('uses the environment option over the hostname mapping', () => {
+    setEnvironment('app.dev.ferrlabs');
+    initTelemetry({ ...options, environment: 'staging' });
+    expect(vi.mocked(initializeFaro).mock.calls[0]?.[0]).toMatchObject({
+      app: { environment: 'staging' },
+    });
+  });
+
+  it.each([undefined, ''])('falls back to the hostname mapping when environment is %j', (value) => {
+    setEnvironment('app.dev.ferrlabs');
+    initTelemetry({ ...options, environment: value });
+    expect(vi.mocked(initializeFaro).mock.calls[0]?.[0]).toMatchObject({
+      app: { environment: 'dev' },
+    });
+  });
+
   it('initialises Faro without console capture and without session tracking', () => {
     setEnvironment('app.dev.ferrlabs');
     initTelemetry(options);

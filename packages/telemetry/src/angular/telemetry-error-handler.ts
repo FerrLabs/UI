@@ -1,45 +1,10 @@
 import { ErrorHandler, type Provider } from '@angular/core';
-import { faro } from '@grafana/faro-web-sdk';
-
-const FALLBACK_MESSAGE = 'Non-Error value';
-
-function messageOf(value: unknown): string {
-  if (typeof value === 'object' && value !== null && 'message' in value) {
-    const { message } = value;
-    if (typeof message === 'string') return message;
-  }
-  try {
-    return String(value);
-  } catch {
-    return FALLBACK_MESSAGE;
-  }
-}
-
-function stackOf(value: unknown): string | undefined {
-  if (typeof value === 'object' && value !== null && 'stack' in value) {
-    const { stack } = value;
-    if (typeof stack === 'string') return stack;
-  }
-  return undefined;
-}
-
-function toError(value: unknown): Error {
-  if (value instanceof Error) return value;
-  const error = new Error(messageOf(value));
-  const stack = stackOf(value);
-  if (stack) error.stack = stack;
-  return error;
-}
+import { reportError } from '../report-error.js';
 
 export class TelemetryErrorHandler extends ErrorHandler {
   override handleError(error: unknown): void {
-    try {
-      faro.api?.pushError(toError(error));
-    } catch {
-      return;
-    } finally {
-      super.handleError(error);
-    }
+    reportError(error);
+    super.handleError(error);
   }
 }
 

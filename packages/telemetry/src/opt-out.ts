@@ -8,9 +8,13 @@ export function isLocalHostname(hostname: string): boolean {
   return LOOPBACK_HOSTNAME.test(normalized);
 }
 
+const DO_NOT_TRACK_VALUES: ReadonlySet<unknown> = new Set(['1', 'yes']);
+
 export function isOptedOut(): boolean {
   const { globalPrivacyControl, doNotTrack } = navigator as Navigator & {
     globalPrivacyControl?: boolean;
   };
-  return globalPrivacyControl === true || doNotTrack === '1';
+  if (globalPrivacyControl === true || DO_NOT_TRACK_VALUES.has(doNotTrack)) return true;
+  if (typeof window === 'undefined') return false;
+  return DO_NOT_TRACK_VALUES.has((window as { doNotTrack?: unknown }).doNotTrack);
 }
