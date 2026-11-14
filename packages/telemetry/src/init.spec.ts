@@ -1,6 +1,6 @@
 import { getWebInstrumentations, initializeFaro, type Config } from '@grafana/faro-web-sdk';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { initTelemetry } from './init.js';
+import { DEFAULT_COLLECTOR_URL, initTelemetry } from './init.js';
 
 vi.mock('@grafana/faro-web-sdk', () => ({
   initializeFaro: vi.fn(),
@@ -59,6 +59,23 @@ describe('initTelemetry', () => {
       app: { name: 'my-app', environment: 'dev' },
       sessionTracking: { enabled: false },
       instrumentations: ['instrumentation'],
+    });
+  });
+
+  it('sends to the default collector when no collectorUrl is given', () => {
+    setEnvironment('app.example.com');
+    initTelemetry({ appName: 'my-app' });
+    expect(DEFAULT_COLLECTOR_URL).toBe('https://rum.ferrlabs.com/collect');
+    expect(vi.mocked(initializeFaro).mock.calls[0]?.[0]).toMatchObject({
+      url: 'https://rum.ferrlabs.com/collect',
+    });
+  });
+
+  it('sends to the given collectorUrl instead of the default', () => {
+    setEnvironment('app.example.com');
+    initTelemetry(options);
+    expect(vi.mocked(initializeFaro).mock.calls[0]?.[0]).toMatchObject({
+      url: 'https://rum.example.com/collect',
     });
   });
 

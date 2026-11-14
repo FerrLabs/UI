@@ -18,10 +18,16 @@ import { initTelemetry } from '@ferrlabs/telemetry';
 
 initTelemetry({
   appName: 'my-app',
-  collectorUrl: 'https://rum.ferrlabs.com/collect',
   capabilityPaths: [[/(\/s\/)[^/?#\s]+/g, '$1:token']],
   dropSessionMeta: false,
 });
+```
+
+`collectorUrl` is optional and defaults to `https://rum.ferrlabs.com/collect`. Pass it to send
+to another collector:
+
+```ts
+initTelemetry({ appName: 'my-app', collectorUrl: 'https://rum.example.com/collect' });
 ```
 
 ```ts
