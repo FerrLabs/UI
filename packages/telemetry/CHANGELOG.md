@@ -4,6 +4,12 @@ All notable changes to `telemetry` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.0] - 2026-11-14
+
+### Features
+
+- feat(telemetry): bring redaction and payload walk to v6.67 (#733)
+
 ## [0.1.1] - 2026-11-12
 
 ### Bug Fixes
