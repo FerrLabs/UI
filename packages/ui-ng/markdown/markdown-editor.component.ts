@@ -4,10 +4,12 @@ import {
   ElementRef,
   computed,
   forwardRef,
+  inject,
   input,
   signal,
   viewChild,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ButtonComponent, TabComponent, TabsComponent } from '@ferrlabs/ui-ng';
 import { MarkdownComponent } from './markdown.component';
@@ -108,6 +110,8 @@ export class MarkdownEditorComponent implements ControlValueAccessor {
 
   private readonly textarea = viewChild<ElementRef<HTMLTextAreaElement>>('textarea');
 
+  private readonly document = inject(DOCUMENT);
+
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
 
@@ -158,11 +162,11 @@ export class MarkdownEditorComponent implements ControlValueAccessor {
     const change = diffReplacement(element.value, next.value);
     element.focus();
     element.setSelectionRange(change.from, change.to);
-    if (!document.execCommand('insertText', false, change.text)) {
+    if (!this.document.execCommand('insertText', false, change.text)) {
       element.value = next.value;
+      this.commit(next.value);
     }
     element.setSelectionRange(next.start, next.end);
-    this.commit(element.value);
   }
 
   private commit(value: string): void {

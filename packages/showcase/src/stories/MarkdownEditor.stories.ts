@@ -56,6 +56,12 @@ export const TallMinimum: Story = {
 
 export const Narrow: Story = {
   decorators: [
-    (story) => ({ ...story(), template: `<div style="max-width:360px">${story().template}</div>` }),
+    (story) => {
+      const rendered = story();
+      return {
+        ...rendered,
+        template: `<div style="max-width:360px">${rendered.template}</div>`,
+      };
+    },
   ],
 };

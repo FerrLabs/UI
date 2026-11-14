@@ -7,23 +7,61 @@ export interface EditState {
 export interface LinePrefix {
   readonly make: (index: number) => string;
   readonly match: RegExp;
+  readonly replaces: RegExp;
 }
 
-export const BULLET: LinePrefix = { make: () => '- ', match: /^- (?!\[[ xX]\] )/ };
-export const NUMBERED: LinePrefix = { make: (i) => `${i + 1}. `, match: /^\d+\. / };
-export const TASK: LinePrefix = { make: () => '- [ ] ', match: /^- \[[ xX]\] / };
-export const QUOTE: LinePrefix = { make: () => '> ', match: /^> ?/ };
+const LIST_MARKER = /^(?:- \[[ xX]\] |- |\d+\. )/;
+const NO_MARKER = /^(?!)/;
 
-const ANY_LIST_PREFIX = /^(?:- \[[ xX]\] |- |\d+\. |> ?)/;
-const HEADING = /^(#{1,6})\s+/;
+export const BULLET: LinePrefix = { make: () => '- ', match: /^- /, replaces: LIST_MARKER };
+export const NUMBERED: LinePrefix = {
+  make: (i) => `${i + 1}. `,
+  match: /^\d+\. /,
+  replaces: LIST_MARKER,
+};
+export const TASK: LinePrefix = {
+  make: () => '- [ ] ',
+  match: /^- \[[ xX]\] /,
+  replaces: LIST_MARKER,
+};
+export const QUOTE: LinePrefix = { make: () => '> ', match: /^> ?/, replaces: NO_MARKER };
+
+const HEADING = /^(#{1,6}) /;
 const MAX_HEADING_LEVEL = 3;
+
+function runLength(text: string, char: string, from: number, step: 1 | -1): number {
+  let count = 0;
+  for (let i = from; i >= 0 && i < text.length && text[i] === char; i += step) count++;
+  return count;
+}
+
+function isRepeated(marker: string): boolean {
+  return marker.length > 0 && [...marker].every((c) => c === marker[0]);
+}
+
+function hasOddRuns(left: number, right: number, size: number): boolean {
+  return Math.floor(Math.min(left, right) / size) % 2 === 1;
+}
 
 function isWrapped(value: string, start: number, end: number, before: string, after: string) {
   if (start < before.length || end + after.length > value.length) return false;
   if (value.slice(start - before.length, start) !== before) return false;
   if (value.slice(end, end + after.length) !== after) return false;
-  if (before === after && before.length === 1) {
-    return !(value[start - 2] === before && value[end + 1] === after);
+  if (before === after && isRepeated(before)) {
+    const left = runLength(value, before[0], start - 1, -1);
+    const right = runLength(value, before[0], end, 1);
+    return hasOddRuns(left, right, before.length);
+  }
+  return true;
+}
+
+function isSelfWrapped(selected: string, before: string, after: string): boolean {
+  if (selected.length < before.length + after.length) return false;
+  if (!selected.startsWith(before) || !selected.endsWith(after)) return false;
+  if (before === after && isRepeated(before)) {
+    const left = runLength(selected, before[0], 0, 1);
+    const right = runLength(selected, before[0], selected.length - 1, -1);
+    return hasOddRuns(left, right, before.length);
   }
   return true;
 }
@@ -44,12 +82,7 @@ export function toggleWrap(
     };
   }
 
-  if (
-    selected.length >= before.length + after.length &&
-    selected.startsWith(before) &&
-    selected.endsWith(after) &&
-    !(before === after && before.length === 1 && selected.startsWith(before + before))
-  ) {
+  if (isSelfWrapped(selected, before, after)) {
     const inner = selected.slice(before.length, selected.length - after.length);
     return {
       value: value.slice(0, start) + inner + value.slice(end),
@@ -97,7 +130,7 @@ export function toggleLinePrefix(state: EditState, prefix: LinePrefix): EditStat
   const lines = range.lines.map((line) => {
     if (line.trim() === '' && range.lines.length > 1) return line;
     if (allPrefixed) return line.replace(prefix.match, '');
-    return prefix.make(index++) + line.replace(ANY_LIST_PREFIX, '');
+    return prefix.make(index++) + line.replace(prefix.replaces, '');
   });
   return replaceLines(state, range, lines);
 }
@@ -107,10 +140,13 @@ export function cycleHeading(state: EditState): EditState {
   const current = HEADING.exec(range.lines[0])?.[1].length ?? 0;
   const next = current === MAX_HEADING_LEVEL ? 0 : current > MAX_HEADING_LEVEL ? 1 : current + 1;
   const marker = next === 0 ? '' : `${'#'.repeat(next)} `;
+  const multiline = range.lines.length > 1;
   return replaceLines(
     state,
     range,
-    range.lines.map((line) => marker + line.replace(HEADING, '')),
+    range.lines.map((line) =>
+      multiline && line.trim() === '' ? line : marker + line.replace(HEADING, ''),
+    ),
   );
 }
 

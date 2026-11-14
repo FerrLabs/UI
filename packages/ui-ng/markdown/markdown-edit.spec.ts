@@ -64,6 +64,22 @@ describe('toggleWrap', () => {
     expect(toggleWrap(once, '`').value).toBe('`x');
   });
 
+  it('toggles italic twice inside bold without stacking markers', () => {
+    const once = toggleWrap(at('**hello**', 2, 7), '*');
+    expect(once.value).toBe('***hello***');
+    expect(toggleWrap(once, '*').value).toBe('**hello**');
+  });
+
+  it('toggles bold inside bold-italic', () => {
+    expect(toggleWrap(at('***hello***', 3, 8), '**').value).toBe('*hello*');
+  });
+
+  it('restores inline code surrounded by doubled backticks', () => {
+    const once = toggleWrap(at('a``x``a', 3, 4), '`');
+    expect(once.value).toBe('a```x```a');
+    expect(toggleWrap(once, '`').value).toBe('a``x``a');
+  });
+
   it('round-trips', () => {
     const wrapped = toggleWrap(at('word', 0, 4), '~~');
     expect(toggleWrap(wrapped, '~~').value).toBe('word');
@@ -102,9 +118,22 @@ describe('toggleLinePrefix', () => {
     expect(out.value).toBe('1. a');
   });
 
-  it('does not treat task items as bullets', () => {
-    const out = toggleLinePrefix(at('- [ ] a', 0), BULLET);
-    expect(out.value).toBe('- a');
+  it('restores bracket text after a bullet is added and removed', () => {
+    const once = toggleLinePrefix(at('[x] bb', 0), BULLET);
+    expect(once.value).toBe('- [x] bb');
+    expect(toggleLinePrefix(once, BULLET).value).toBe('[x] bb');
+  });
+
+  it('converts a bullet to a task and back to plain text', () => {
+    const task = toggleLinePrefix(at('- a', 0), TASK);
+    expect(task.value).toBe('- [ ] a');
+    expect(toggleLinePrefix(task, TASK).value).toBe('a');
+  });
+
+  it('keeps list markers when quoting', () => {
+    const out = toggleLinePrefix(at('- a\n- b', 0, 7), QUOTE);
+    expect(out.value).toBe('> - a\n> - b');
+    expect(toggleLinePrefix(out, QUOTE).value).toBe('- a\n- b');
   });
 
   it('toggles task items and removes checked ones', () => {
@@ -145,6 +174,20 @@ describe('cycleHeading', () => {
 
   it('normalises deeper headings to H1', () => {
     expect(cycleHeading(at('#### deep', 0)).value).toBe('# deep');
+  });
+
+  it('keeps leading whitespace through a full cycle', () => {
+    let state = at(' x', 0);
+    const seen: string[] = [];
+    for (let i = 0; i < 4; i++) {
+      state = cycleHeading(state);
+      seen.push(state.value);
+    }
+    expect(seen).toEqual(['#  x', '##  x', '###  x', ' x']);
+  });
+
+  it('leaves blank lines alone in a multi-line selection', () => {
+    expect(cycleHeading(at('a\n\nb', 0, 4)).value).toBe('# a\n\n# b');
   });
 
   it('heads an empty first line when the caret is at the start', () => {
