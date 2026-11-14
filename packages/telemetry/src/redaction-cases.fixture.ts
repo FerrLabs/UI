@@ -270,5 +270,10 @@ export const exactCases: ReadonlyArray<readonly [string, string]> = [
   ['token="abc"?pwd= hunter2secret', 'token=*?pwd= *'],
   ['password: Zq7x,K9m:P2wLr8', 'password: *'],
   ['password: abc;monkey = 3', 'password: *'],
+  ['?pwd==*', '?pwd==*'],
+  ['?pwd==abcRET1', '?pwd==*'],
+  ['a=1&pwd==*', 'a=1&pwd==*'],
+  ['pwd==*', 'pwd==*'],
+  ['?x==', '?x=*'],
   ['password=x user=bob', 'password=* user=bob'],
 ];

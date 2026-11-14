@@ -77,7 +77,7 @@ const BARE_HOST_BEFORE = /(?:^|[^\w:/])\/\/[\w.-]*$/;
 const CREDENTIAL_HOST = /(?:passw(?:or)?d|pwd|secret|token|api[_-]?key|session(?:_?id)?|cookie):$/i;
 const COOKIE_HEADER = /\b((?:set-)?cookie[ \t]*:[ \t]*)(?![ \t]|\*$)[^\r\n]+/gi;
 const QUERY_QUOTED = /([?#&;][^\s=&#?;"'<>]+=)(?:\\{0,4}"[^"]*"?|\\{0,4}'[^']*'?)/g;
-const PARAM_VALUE = /([?#&;][^\s=&#?;"'<>]+=)(?:\\{0,4}"[^"]*"?|\\{0,4}'[^']*'?|[^\s&#;"'<>]+)/g;
+const PARAM_VALUE = /([?#&;][^\s=&#?;"'<>]+=+)(?:\\{0,4}"[^"]*"?|\\{0,4}'[^']*'?|[^\s&#;"'<>]+)/g;
 
 function redactWord(word: string): string {
   if (!MARKERS.test(word)) return word;
