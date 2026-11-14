@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.51.0] - 2026-11-14
+
+### Features
+
+- feat(ui-ng): clickable shell breadcrumb crumbs (#743)
+
 ## [1.50.1] - 2026-11-12
 
 ### Bug Fixes
