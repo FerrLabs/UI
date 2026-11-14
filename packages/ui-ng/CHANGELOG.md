@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.52.0] - 2026-11-14
+
+### Features
+
+- feat(ui-ng): markdown editor (#747)
+
 ## [1.51.0] - 2026-11-14
 
 ### Features
