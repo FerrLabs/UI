@@ -80,6 +80,14 @@ describe('toggleWrap', () => {
     expect(toggleWrap(once, '`').value).toBe('a``x``a');
   });
 
+  it('inserts a placeholder between existing marker characters', () => {
+    const out = toggleWrap(at('****', 2), '*');
+    expect(out.value).toBe('***text***');
+    expect(selection(out)).toBe('text');
+    expect(toggleWrap(at('````', 2), '`').value).toBe('```text```');
+    expect(toggleWrap(at('a **** b', 4), '*').value).toBe('a ***text*** b');
+  });
+
   it('restores when the selection includes the markers', () => {
     const italic = toggleWrap(at('**a**', 1, 4), '*');
     expect(italic.value).toBe('***a***');
@@ -236,7 +244,7 @@ describe('cycleHeading', () => {
       state = cycleHeading(state);
       seen.push(state.value);
     }
-    expect(seen).toEqual(['## \n ', '### \n ', '\n ', '# \n#  ']);
+    expect(seen).toEqual(['## \n ', '### \n ', '\n ', '# \n ']);
   });
 
   it('leaves blank lines alone in a multi-line selection', () => {

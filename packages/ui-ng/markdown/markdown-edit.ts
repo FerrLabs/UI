@@ -102,8 +102,16 @@ export function toggleWrap(
   const { value, start, end } = state;
   const selected = value.slice(start, end);
 
-  if (selected && before === after && isRepeated(before)) {
-    return toggleRepeated(state, before);
+  if (before === after && isRepeated(before)) {
+    if (selected) return toggleRepeated(state, before);
+    return toggleRepeated(
+      {
+        value: splice(value, start, end, placeholder),
+        start,
+        end: start + placeholder.length,
+      },
+      before,
+    );
   }
 
   if (isWrapped(value, start, end, before, after)) {
@@ -180,9 +188,10 @@ export function cycleHeading(state: EditState): EditState {
   return replaceLines(
     state,
     range,
-    range.lines.map((line) =>
-      hasContent && line.trim() === '' ? line : marker + line.replace(HEADING, ''),
-    ),
+    range.lines.map((line, i) => {
+      const touched = hasContent ? line.trim() !== '' : i === 0;
+      return touched ? marker + line.replace(HEADING, '') : line;
+    }),
   );
 }
 

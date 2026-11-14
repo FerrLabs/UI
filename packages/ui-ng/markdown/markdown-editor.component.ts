@@ -41,14 +41,14 @@ const ACTIONS: readonly ToolbarAction[] = [
   {
     id: 'bold',
     glyph: 'B',
-    label: 'Bold (Ctrl+B)',
+    label: 'Bold (Ctrl/Cmd+B)',
     style: 'font-weight: 700',
     apply: (s) => toggleWrap(s, '**'),
   },
   {
     id: 'italic',
     glyph: 'I',
-    label: 'Italic (Ctrl+I)',
+    label: 'Italic (Ctrl/Cmd+I)',
     style: 'font-style: italic',
     apply: (s) => toggleWrap(s, '*'),
   },
@@ -62,7 +62,7 @@ const ACTIONS: readonly ToolbarAction[] = [
   { id: 'heading', glyph: 'H', label: 'Heading (cycles H1 to H3)', apply: cycleHeading },
   { id: 'code', glyph: '</>', label: 'Inline code', apply: (s) => toggleWrap(s, '`') },
   { id: 'code-block', glyph: '{ }', label: 'Code block', apply: (s) => insertBlock(s, '```') },
-  { id: 'link', glyph: 'Link', label: 'Link (Ctrl+K)', apply: (s) => insertLink(s) },
+  { id: 'link', glyph: 'Link', label: 'Link (Ctrl/Cmd+K)', apply: (s) => insertLink(s) },
   { id: 'bullet', glyph: '•', label: 'Bulleted list', apply: (s) => toggleLinePrefix(s, BULLET) },
   {
     id: 'numbered',
@@ -159,12 +159,12 @@ export class MarkdownEditorComponent implements ControlValueAccessor {
       start: element.selectionStart,
       end: element.selectionEnd,
     });
+    element.focus();
     if (next.value === element.value) {
       element.setSelectionRange(next.start, next.end);
       return;
     }
     const change = diffReplacement(element.value, next.value);
-    element.focus();
     element.setSelectionRange(change.from, change.to);
     if (!this.document.execCommand('insertText', false, change.text)) {
       element.value = next.value;
