@@ -1,6 +1,6 @@
 import { assert, describe, it } from 'vitest';
 import { redactText } from './redact-text.js';
-import { keptInputs, leakInputs } from './redaction-cases.fixture.js';
+import { exactCases, keptInputs, leakInputs } from './redaction-cases.fixture.js';
 
 const LEAK_MARKER = 'abc';
 
@@ -138,6 +138,13 @@ describe('redactText tables', () => {
   for (const input of keptInputs) {
     it(`keeps ${JSON.stringify(input.slice(0, 60))}`, () => {
       assert.strictEqual(redactText(input), input);
+    });
+  }
+
+  for (const [input, expected] of exactCases) {
+    it(`turns ${JSON.stringify(input.slice(0, 60))} into ${JSON.stringify(expected.slice(0, 60))}`, () => {
+      assert.strictEqual(redactText(input), expected);
+      assert.strictEqual(redactText(expected), expected);
     });
   }
 });

@@ -239,3 +239,12 @@ export const keptInputs: readonly string[] = [
   'bearer of bad news',
   '',
 ];
+
+export const exactCases: ReadonlyArray<readonly [string, string]> = [
+  [`invalid recipient '"jane doe"@corp.io'`, `invalid recipient '*'`],
+  ['{"to":"\\"jane doe\\"@corp.io"}', '{"to":"\\*"}'],
+  ['x/"jane doe"@corp.io', 'x/*'],
+  ['""jane doe"@corp.io', '"*'],
+  ['"""jane doe""@corp.io"', '""*"'],
+  ['{"password":"@home.Town!2024"}', '{"password":*}'],
+];
