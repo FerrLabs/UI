@@ -30,6 +30,12 @@ to another collector:
 initTelemetry({ appName: 'my-app', collectorUrl: 'https://rum.example.com/collect' });
 ```
 
+`environment` overrides the hostname-derived Faro environment. An empty string counts as unset:
+
+```ts
+initTelemetry({ appName: 'my-app', environment: window.__ENV__?.RUM_ENV });
+```
+
 ```ts
 import { provideTelemetryErrorHandler } from '@ferrlabs/telemetry/angular';
 

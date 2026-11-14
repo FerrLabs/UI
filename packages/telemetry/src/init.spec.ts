@@ -50,6 +50,22 @@ describe('initTelemetry', () => {
     expect(initializeFaro).not.toHaveBeenCalled();
   });
 
+  it('uses the environment option over the hostname mapping', () => {
+    setEnvironment('app.dev.ferrlabs');
+    initTelemetry({ ...options, environment: 'staging' });
+    expect(vi.mocked(initializeFaro).mock.calls[0]?.[0]).toMatchObject({
+      app: { environment: 'staging' },
+    });
+  });
+
+  it.each([undefined, ''])('falls back to the hostname mapping when environment is %j', (value) => {
+    setEnvironment('app.dev.ferrlabs');
+    initTelemetry({ ...options, environment: value });
+    expect(vi.mocked(initializeFaro).mock.calls[0]?.[0]).toMatchObject({
+      app: { environment: 'dev' },
+    });
+  });
+
   it('initialises Faro without console capture and without session tracking', () => {
     setEnvironment('app.dev.ferrlabs');
     initTelemetry(options);

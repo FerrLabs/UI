@@ -10,6 +10,7 @@ export interface TelemetryOptions {
   collectorUrl?: string;
   capabilityPaths?: readonly CapabilityPath[];
   dropSessionMeta?: boolean;
+  environment?: string;
 }
 
 export function initTelemetry({
@@ -17,6 +18,7 @@ export function initTelemetry({
   collectorUrl = DEFAULT_COLLECTOR_URL,
   capabilityPaths = [],
   dropSessionMeta = false,
+  environment,
 }: TelemetryOptions): void {
   if (typeof window === 'undefined') return;
   const { hostname } = window.location;
@@ -24,7 +26,7 @@ export function initTelemetry({
   try {
     initializeFaro({
       url: collectorUrl,
-      app: { name: appName, environment: environmentFromHostname(hostname) },
+      app: { name: appName, environment: environment || environmentFromHostname(hostname) },
       instrumentations: getWebInstrumentations({ captureConsole: false }),
       beforeSend: (item) => redactItem(item, capabilityPaths, { dropSessionMeta }),
       sessionTracking: { enabled: false },
