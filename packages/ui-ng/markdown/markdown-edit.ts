@@ -197,10 +197,12 @@ export function cycleHeading(state: EditState): EditState {
 
 export function insertBlock(
   { value, start, end }: EditState,
-  fence: string,
+  marker: string,
   placeholder = 'code',
 ): EditState {
   const selected = value.slice(start, end) || placeholder;
+  const longest = Math.max(0, ...(selected.match(/`+/g) ?? []).map((run) => run.length));
+  const fence = marker.length > longest ? marker : marker[0].repeat(longest + 1);
   const lead = start > 0 && value[start - 1] !== '\n' ? '\n' : '';
   const trail = end < value.length && value[end] !== '\n' ? '\n' : '';
   const open = `${lead}${fence}\n`;
@@ -213,7 +215,9 @@ export function insertBlock(
 }
 
 export function insertLink({ value, start, end }: EditState, url = 'https://'): EditState {
-  const label = (value.slice(start, end) || 'text').replaceAll(']', '\\]');
+  const label = (value.slice(start, end) || 'text')
+    .replace(/\n[^\S\n]*(?:\n[^\S\n]*)+/g, '\n')
+    .replace(/[\\[\]]/g, '\\$&');
   const link = `[${label}](${url})`;
   const urlStart = start + label.length + 3;
   return {

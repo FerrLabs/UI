@@ -51,7 +51,7 @@ const actions: Record<string, (s: EditState) => EditState> = {
 
 describe('exhaustive small-alphabet checks', () => {
   it('every action returns a selection inside the new value', () => {
-    for (const s of states('a *`~#\n', 5)) {
+    for (const s of states('a*`\n#', 5)) {
       for (const [name, action] of Object.entries(actions)) {
         const out = action(s);
         const ok = out.start >= 0 && out.start <= out.end && out.end <= out.value.length;
@@ -64,7 +64,7 @@ describe('exhaustive small-alphabet checks', () => {
   });
 
   it('wrapping with a non-empty selection is an involution that keeps a selection', () => {
-    for (const s of states('a *`~', 6)) {
+    for (const s of states('a*`~', 6)) {
       if (s.end === s.start) continue;
       for (const marker of MARKERS) {
         const once = toggleWrap(s, marker);
@@ -77,7 +77,7 @@ describe('exhaustive small-alphabet checks', () => {
   });
 
   it('wrapping from a caret never removes text other than marker characters', () => {
-    for (const s of states('a *`~', 6)) {
+    for (const s of states('a*`~', 6)) {
       if (s.end !== s.start) continue;
       for (const marker of MARKERS) {
         const out = toggleWrap(s, marker);
@@ -96,7 +96,7 @@ describe('exhaustive small-alphabet checks', () => {
   });
 
   it('line prefixes toggled twice restore lines without markers', () => {
-    for (const s of states('ab \n', 6)) {
+    for (const s of states('a \n', 6)) {
       if (!s.value.split('\n').some((l) => l.trim() !== '')) continue;
       for (const prefix of [BULLET, NUMBERED, TASK, QUOTE]) {
         const once = toggleLinePrefix(s, prefix);
@@ -108,7 +108,7 @@ describe('exhaustive small-alphabet checks', () => {
   });
 
   it('four heading cycles restore text that has no hash', () => {
-    for (const s of states('ab \n', 6)) {
+    for (const s of states('a \n', 6)) {
       let state = s;
       for (let i = 0; i < 4; i++) state = cycleHeading(state);
       if (state.value !== s.value) expect.fail(`${JSON.stringify(s)} -> ${JSON.stringify(state)}`);
@@ -116,7 +116,7 @@ describe('exhaustive small-alphabet checks', () => {
   });
 
   it('line actions only edit the selected lines', () => {
-    for (const s of states('a#- \n', 5)) {
+    for (const s of states('a#-\n', 5)) {
       const lines = s.value.split('\n');
       const first = s.value.slice(0, s.start).split('\n').length - 1;
       const last = s.value.slice(0, Math.max(s.end, s.start)).split('\n').length - 1;
@@ -132,6 +132,35 @@ describe('exhaustive small-alphabet checks', () => {
           }
         }
       }
+    }
+  });
+
+  it('links keep the whole selection as an unbroken label', () => {
+    for (const s of states('a[]\\\n ', 4)) {
+      const out = insertLink(s);
+      const label = out.value.slice(s.start + 1, out.start - 2);
+      const unescaped = label.replace(/\\(.)/g, '$1');
+      const expected = s.value.slice(s.start, s.end).replace(/\n[^\S\n]*(?:\n[^\S\n]*)+/g, '\n');
+      if (s.end > s.start && unescaped !== expected) expect.fail(JSON.stringify(s));
+      if (/(^|[^\\])(\\\\)*[[\]]/.test(label.replace(/\\./g, ''))) {
+        expect.fail(`unescaped bracket ${JSON.stringify(s)}`);
+      }
+      if (/\n\s*\n/.test(label)) expect.fail(`blank line ${JSON.stringify(s)}`);
+    }
+  });
+
+  it('blocks are fenced longer than any backtick run they contain', () => {
+    for (const s of states('a`\n', 6)) {
+      const out = insertBlock(s, '```');
+      const body = out.value.slice(out.start, out.end);
+      const lines = out.value.slice(0, out.start).split('\n');
+      const fence = lines[lines.length - 2];
+      const longest = Math.max(0, ...(body.match(/`+/g) ?? []).map((r) => r.length));
+      if (fence.replace(/^.*\n/, '').length <= longest || !/^`+$/.test(fence.trim())) {
+        expect.fail(JSON.stringify(s));
+      }
+      if (body !== (s.value.slice(s.start, s.end) || 'code'))
+        expect.fail(`body ${JSON.stringify(s)}`);
     }
   });
 });

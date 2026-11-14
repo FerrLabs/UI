@@ -273,6 +273,13 @@ describe('insertBlock', () => {
     expect(selection(out)).toBe('code');
   });
 
+  it('uses a longer outer fence than any fence inside the selection', () => {
+    const code = '```js\nx\n```';
+    const out = insertBlock(at(code, 0, code.length), '```');
+    expect(out.value).toBe('````\n```js\nx\n```\n````');
+    expect(selection(out)).toBe(code);
+  });
+
   it('breaks out of surrounding text onto its own lines', () => {
     const out = insertBlock(at('ab', 1), '```');
     expect(out.value).toBe('a\n```\ncode\n```\nb');
@@ -290,6 +297,17 @@ describe('insertLink', () => {
   it('escapes closing brackets in the label', () => {
     const out = insertLink(at('a]b', 0, 3));
     expect(out.value).toBe('[a\\]b](https://)');
+    expect(selection(out)).toBe('https://');
+  });
+
+  it('escapes opening brackets and backslashes in the label', () => {
+    expect(insertLink(at('a[b', 0, 3)).value).toBe('[a\\[b](https://)');
+    expect(insertLink(at('C:\\', 0, 3)).value).toBe('[C:\\\\](https://)');
+  });
+
+  it('keeps a multi-paragraph selection in one link', () => {
+    const out = insertLink(at('a\n\n \nb', 0, 6));
+    expect(out.value).toBe('[a\nb](https://)');
     expect(selection(out)).toBe('https://');
   });
 
