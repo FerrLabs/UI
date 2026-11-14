@@ -38,7 +38,6 @@ const meta: Meta<ComparisonTableComponent> = {
   args: {
     columns: COLUMNS,
     groups: GROUPS,
-    eyebrow: 'Comparison',
     heading: 'How FerrFlow compares',
     headingAccent: 'compares',
     lead: 'One binary, every ecosystem.',
@@ -48,7 +47,7 @@ const meta: Meta<ComparisonTableComponent> = {
     props: args,
     template: `
       <flr-comparison-table
-        [columns]="columns" [groups]="groups" [eyebrow]="eyebrow" [heading]="heading"
+        [columns]="columns" [groups]="groups" [heading]="heading"
         [headingAccent]="headingAccent" [lead]="lead" [caption]="caption" />`,
   }),
 };
@@ -59,5 +58,5 @@ type Story = StoryObj<ComparisonTableComponent>;
 export const Default: Story = {};
 
 export const Bare: Story = {
-  args: { eyebrow: '', heading: '', headingAccent: '', lead: '' },
+  args: { heading: '', headingAccent: '', lead: '' },
 };

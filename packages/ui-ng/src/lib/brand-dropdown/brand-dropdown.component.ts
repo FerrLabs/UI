@@ -71,9 +71,6 @@ interface BrandRow {
 
     @if (open()) {
       <div class="flr-bd__panel">
-        @if (!collapsed()) {
-          <div class="mono flr-bd__eyebrow">Switch app</div>
-        }
         @for (row of rows(); track row.app.id) {
           @if (row.showHeader) {
             <div class="mono flr-bd__section" [class.flr-bd__section--first]="row.first">
@@ -206,14 +203,6 @@ interface BrandRow {
         opacity: 1;
         transform: none;
       }
-    }
-    .flr-bd__eyebrow {
-      font-family: var(--font-mono, 'DM Mono', ui-monospace, monospace);
-      padding: 4px 12px 6px;
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--color-ink-3, #64748b);
     }
     .flr-bd__section {
       font-family: var(--font-mono, 'DM Mono', ui-monospace, monospace);

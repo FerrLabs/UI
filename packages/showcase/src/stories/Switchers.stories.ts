@@ -38,7 +38,7 @@ export const ProjectSwitcher: Story = {
     template: `
       <div style="padding:16px">
         <flr-project-switcher [items]="items" [current]="current" title="Switch project"
-                              createLabel="New project" viewAllLabel="View all" triggerEyebrow="Project" />
+                              createLabel="New project" viewAllLabel="View all" />
       </div>`,
   }),
 };
@@ -109,8 +109,7 @@ export const ProjectSwitcherIconMarkup: Story = {
     props: { items: ICON_PROJECTS, current: ICON_PROJECTS[0] },
     template: `
       <div style="padding:16px">
-        <flr-project-switcher [items]="items" [current]="current" title="Switch project"
-                              triggerEyebrow="Project" />
+        <flr-project-switcher [items]="items" [current]="current" title="Switch project" />
       </div>`,
   }),
 };

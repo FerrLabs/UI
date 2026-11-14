@@ -8,7 +8,6 @@ const meta: Meta<PageHeaderComponent> = {
   decorators: [moduleMetadata({ imports: [PageHeaderComponent, ButtonComponent, TagComponent] })],
   args: {
     title: 'vault-rotator',
-    eyebrow: 'Agent',
     sub: 'Rotates FerrVault secrets on a nightly schedule.',
     breadcrumbs: [
       { label: 'Agents', href: '/agents' },
@@ -22,7 +21,6 @@ const meta: Meta<PageHeaderComponent> = {
     template: `
       <flr-page-header
         [title]="title"
-        [eyebrow]="eyebrow"
         [count]="count"
         [sub]="sub"
         [breadcrumbs]="breadcrumbs"
@@ -43,7 +41,7 @@ type Story = StoryObj<PageHeaderComponent>;
 export const Full: Story = {};
 
 export const TitleOnly: Story = {
-  args: { eyebrow: null, sub: null, count: null, breadcrumbs: [] },
+  args: { sub: null, count: null, breadcrumbs: [] },
   render: (args) => ({
     props: args,
     template: `<flr-page-header [title]="title" [breadcrumbs]="breadcrumbs" />`,
@@ -51,7 +49,7 @@ export const TitleOnly: Story = {
 };
 
 export const WithCount: Story = {
-  args: { eyebrow: null, sub: null, breadcrumbs: [], title: 'Secrets', count: 128 },
+  args: { sub: null, breadcrumbs: [], title: 'Secrets', count: 128 },
   render: (args) => ({
     props: args,
     template: `<flr-page-header [title]="title" [count]="count" [breadcrumbs]="breadcrumbs" />`,
