@@ -67,7 +67,7 @@ const meta: Meta<ShellComponent> = {
     marketingHref: 'https://ferrfleet.com',
     sections: SECTIONS,
     currentPath: '/agents',
-    breadcrumb: ['Agents', 'vault-rotator'],
+    breadcrumb: [{ label: 'Agents', href: '/agents' }, 'vault-rotator'],
     searchEnabled: true,
     collapsed: false,
   },
