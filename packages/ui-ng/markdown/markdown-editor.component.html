@@ -16,7 +16,7 @@
     </flr-tabs>
     <div
       class="flr-md-editor__toolbar"
-      role="toolbar"
+      role="group"
       aria-label="Formatting"
       [attr.aria-controls]="writeId"
       [hidden]="previewing()"
@@ -37,7 +37,7 @@
     </div>
   </div>
 
-  <div [id]="writeId" role="tabpanel" [hidden]="previewing()">
+  <div [id]="writeId" role="tabpanel" aria-label="Write" [hidden]="previewing()">
     <textarea
       #textarea
       class="flr-md-editor__input"
@@ -56,6 +56,7 @@
   <div
     [id]="previewId"
     role="tabpanel"
+    aria-label="Preview"
     class="flr-md-editor__preview"
     [style.min-height]="minHeight()"
     [hidden]="!previewing()"

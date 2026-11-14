@@ -80,6 +80,22 @@ describe('toggleWrap', () => {
     expect(toggleWrap(once, '`').value).toBe('a``x``a');
   });
 
+  it('restores when the selection includes the markers', () => {
+    const italic = toggleWrap(at('**a**', 1, 4), '*');
+    expect(italic.value).toBe('***a***');
+    expect(toggleWrap(italic, '*').value).toBe('**a**');
+    const code = toggleWrap(at(' ``a`` ', 1, 4), '`');
+    expect(toggleWrap(code, '`').value).toBe(' ``a`` ');
+  });
+
+  it('restores a selection made only of marker characters', () => {
+    const once = toggleWrap(at('*****', 0, 5), '*');
+    expect(once.value).toBe('*******');
+    expect(toggleWrap(once, '*').value).toBe('*****');
+    const pair = toggleWrap(at('**', 0, 2), '*');
+    expect(toggleWrap(pair, '*').value).toBe('**');
+  });
+
   it('round-trips', () => {
     const wrapped = toggleWrap(at('word', 0, 4), '~~');
     expect(toggleWrap(wrapped, '~~').value).toBe('word');
@@ -250,6 +266,12 @@ describe('insertLink', () => {
   it('links the selection and selects the url', () => {
     const out = insertLink(at('see docs now', 4, 8));
     expect(out.value).toBe('see [docs](https://) now');
+    expect(selection(out)).toBe('https://');
+  });
+
+  it('escapes closing brackets in the label', () => {
+    const out = insertLink(at('a]b', 0, 3));
+    expect(out.value).toBe('[a\\]b](https://)');
     expect(selection(out)).toBe('https://');
   });
 

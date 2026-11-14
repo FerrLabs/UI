@@ -39,61 +39,93 @@ function isRepeated(marker: string): boolean {
   return marker.length > 0 && [...marker].every((c) => c === marker[0]);
 }
 
-function hasOddRuns(left: number, right: number, size: number): boolean {
-  return Math.floor(Math.min(left, right) / size) % 2 === 1;
+function splice(value: string, from: number, to: number, text: string): string {
+  return value.slice(0, from) + text + value.slice(to);
+}
+
+function toggleRun({ value, start, end }: EditState, char: string, size: number): EditState {
+  const runStart = start - runLength(value, char, start - 1, -1);
+  const runEnd = end + runLength(value, char, end, 1);
+  const length = runEnd - runStart;
+  const grow = Math.floor((length - 1) / (2 * size)) % 2 === 0;
+  const next = grow ? length + 2 * size : length - 2 * size;
+  return {
+    value: splice(value, runStart, runEnd, char.repeat(next)),
+    start: runStart,
+    end: runStart + next,
+  };
+}
+
+function toggleRepeated(state: EditState, marker: string): EditState {
+  const { value, start, end } = state;
+  const char = marker[0];
+  const size = marker.length;
+  const selected = value.slice(start, end);
+  const leading = runLength(selected, char, 0, 1);
+  if (leading === selected.length) return toggleRun(state, char, size);
+
+  const coreStart = start + leading;
+  const coreEnd = end - runLength(selected, char, selected.length - 1, -1);
+  const left = runLength(value, char, coreStart - 1, -1);
+  const right = runLength(value, char, coreEnd, 1);
+  const core = value.slice(coreStart, coreEnd);
+  const present = Math.floor(Math.min(left, right) / size) % 2 === 1;
+
+  if (present) {
+    return {
+      value: splice(value, coreStart - size, coreEnd + size, core),
+      start: coreStart - size,
+      end: coreEnd - size,
+    };
+  }
+  return {
+    value: splice(value, coreStart, coreEnd, marker + core + marker),
+    start: coreStart + size,
+    end: coreEnd + size,
+  };
 }
 
 function isWrapped(value: string, start: number, end: number, before: string, after: string) {
   if (start < before.length || end + after.length > value.length) return false;
-  if (value.slice(start - before.length, start) !== before) return false;
-  if (value.slice(end, end + after.length) !== after) return false;
-  if (before === after && isRepeated(before)) {
-    const left = runLength(value, before[0], start - 1, -1);
-    const right = runLength(value, before[0], end, 1);
-    return hasOddRuns(left, right, before.length);
-  }
-  return true;
-}
-
-function isSelfWrapped(selected: string, before: string, after: string): boolean {
-  if (selected.length < before.length + after.length) return false;
-  if (!selected.startsWith(before) || !selected.endsWith(after)) return false;
-  if (before === after && isRepeated(before)) {
-    const left = runLength(selected, before[0], 0, 1);
-    const right = runLength(selected, before[0], selected.length - 1, -1);
-    return hasOddRuns(left, right, before.length);
-  }
-  return true;
+  return (
+    value.slice(start - before.length, start) === before &&
+    value.slice(end, end + after.length) === after
+  );
 }
 
 export function toggleWrap(
-  { value, start, end }: EditState,
+  state: EditState,
   before: string,
   after: string = before,
   placeholder = 'text',
 ): EditState {
+  const { value, start, end } = state;
   const selected = value.slice(start, end);
+
+  if (selected && before === after && isRepeated(before)) {
+    return toggleRepeated(state, before);
+  }
 
   if (isWrapped(value, start, end, before, after)) {
     return {
-      value: value.slice(0, start - before.length) + selected + value.slice(end + after.length),
+      value: splice(value, start - before.length, end + after.length, selected),
       start: start - before.length,
       end: end - before.length,
     };
   }
 
-  if (isSelfWrapped(selected, before, after)) {
+  if (
+    selected.length >= before.length + after.length &&
+    selected.startsWith(before) &&
+    selected.endsWith(after)
+  ) {
     const inner = selected.slice(before.length, selected.length - after.length);
-    return {
-      value: value.slice(0, start) + inner + value.slice(end),
-      start,
-      end: start + inner.length,
-    };
+    return { value: splice(value, start, end, inner), start, end: start + inner.length };
   }
 
   const text = selected || placeholder;
   return {
-    value: value.slice(0, start) + before + text + after + value.slice(end),
+    value: splice(value, start, end, before + text + after),
     start: start + before.length,
     end: start + before.length + text.length,
   };
@@ -170,7 +202,7 @@ export function insertBlock(
 }
 
 export function insertLink({ value, start, end }: EditState, url = 'https://'): EditState {
-  const label = value.slice(start, end) || 'text';
+  const label = (value.slice(start, end) || 'text').replaceAll(']', '\\]');
   const link = `[${label}](${url})`;
   const urlStart = start + label.length + 3;
   return {

@@ -71,13 +71,12 @@ describe('toolbar action properties', () => {
 });
 
 describe('toggleWrap properties', () => {
-  const word = fc
-    .tuple(fc.constantFrom('a', 'b', 'x'), text('ab x', 4), fc.constantFrom('a', 'b', 'x'))
-    .map(([h, m, t]) => h + m + t);
-  const around = fc.tuple(
-    text('ab *`~ ', 4),
-    fc.constantFrom('', '*', '**', '`', '``'),
-    text('ab *`~ ', 4),
+  const markedText = text('a *`~', 7).chain((value) =>
+    fc.tuple(fc.nat(value.length), fc.nat(value.length)).map(([x, y]): EditState => ({
+      value,
+      start: Math.min(x, y),
+      end: Math.max(x, y),
+    })),
   );
 
   for (const [name, marker] of [
@@ -86,15 +85,15 @@ describe('toggleWrap properties', () => {
     ['strike', '~~'],
     ['code', '`'],
   ] as const) {
-    it(`${name} toggled twice restores the text`, () => {
+    it(`${name} toggled twice restores the text for any non-empty selection`, () => {
       fc.assert(
-        fc.property(word, around, (core, [left, existing, right]) => {
-          const value = left + existing + core + existing + right;
-          const start = left.length + existing.length;
-          const once = toggleWrap({ value, start, end: start + core.length }, marker);
-          expect(once.value.slice(once.start, once.end)).toBe(core);
-          expect(toggleWrap(once, marker).value).toBe(value);
+        fc.property(markedText, (state) => {
+          fc.pre(state.end > state.start);
+          const once = toggleWrap(state, marker);
+          expect(once.end).toBeGreaterThan(once.start);
+          expect(toggleWrap(once, marker).value).toBe(state.value);
         }),
+        { numRuns: 5000 },
       );
     });
   }
