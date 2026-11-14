@@ -10,14 +10,26 @@ describe('isLocalHostname', () => {
       '127.0.0.1',
       '127.1.2.3',
       '[::1]',
+      '[::1].',
       '::1',
+      '0.0.0.0',
+      '0.0.0.0.',
+      'APP.LOCALHOST',
     ]) {
       expect(isLocalHostname(host)).toBe(true);
     }
   });
 
   it('does not treat real hosts as local', () => {
-    for (const host of ['app.ferrfleet.com', 'localhost.example.com', '1127.0.0.1', '128.0.0.1']) {
+    for (const host of [
+      'app.ferrfleet.com',
+      'localhost.example.com',
+      '1127.0.0.1',
+      '128.0.0.1',
+      '10.0.0.0',
+      '0.0.0.01',
+      '::2',
+    ]) {
       expect(isLocalHostname(host)).toBe(false);
     }
   });

@@ -20,4 +20,21 @@ describe('environmentFromHostname', () => {
     expect(environmentFromHostname('ferrlabs.com')).toBe('prod');
     expect(environmentFromHostname('myhome')).toBe('prod');
   });
+
+  it('labels the bare dev.ferrlabs host as dev', () => {
+    expect(environmentFromHostname('dev.ferrlabs')).toBe('dev');
+  });
+
+  it('ignores case and one trailing dot', () => {
+    expect(environmentFromHostname('x.ferrlabs.')).toBe('interne');
+    expect(environmentFromHostname('X.Dev.FerrLabs.')).toBe('dev');
+    expect(environmentFromHostname('dev.ferrlabs.')).toBe('dev');
+    expect(environmentFromHostname('NAS.HOME.')).toBe('home');
+    expect(environmentFromHostname('App.Example.COM.')).toBe('prod');
+  });
+
+  it('keeps the bare ferrlabs and home names as prod', () => {
+    expect(environmentFromHostname('ferrlabs')).toBe('prod');
+    expect(environmentFromHostname('home')).toBe('prod');
+  });
 });
