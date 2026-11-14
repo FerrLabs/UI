@@ -12,6 +12,7 @@ export interface TelemetryOptions {
   dropSessionMeta?: boolean;
   environment?: string;
   isConsentRefused?: () => boolean;
+  enabled?: boolean;
 }
 
 function consentRefused(isConsentRefused: (() => boolean) | undefined): boolean {
@@ -30,7 +31,9 @@ export function initTelemetry({
   dropSessionMeta = false,
   environment,
   isConsentRefused,
+  enabled = true,
 }: TelemetryOptions): void {
+  if (!enabled) return;
   if (typeof window === 'undefined') return;
   const { hostname } = window.location;
   if (isLocalHostname(hostname) || isOptedOut() || consentRefused(isConsentRefused)) return;

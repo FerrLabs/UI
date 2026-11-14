@@ -36,6 +36,13 @@ initTelemetry({ appName: 'my-app', collectorUrl: 'https://rum.example.com/collec
 initTelemetry({ appName: 'my-app', environment: window.__ENV__?.RUM_ENV });
 ```
 
+`enabled` defaults to `true`. When `false`, `initTelemetry` returns immediately and Faro is not
+initialised, for apps that have no collector configured in some builds:
+
+```ts
+initTelemetry({ appName: 'my-app', enabled: COLLECTOR_URL.length > 0 });
+```
+
 `isConsentRefused` is evaluated at init next to Do Not Track, Global Privacy Control and the local
 hostname check. Faro is not initialised when it returns `true` or throws. After init, apps that
 track consent changes call `pauseTelemetry()` and `resumeTelemetry()`:

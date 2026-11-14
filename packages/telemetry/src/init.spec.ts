@@ -56,6 +56,24 @@ describe('initTelemetry', () => {
     expect(initializeFaro).not.toHaveBeenCalled();
   });
 
+  it('does nothing when enabled is false', () => {
+    setEnvironment('app.example.com');
+    initTelemetry({ ...options, enabled: false });
+    expect(initializeFaro).not.toHaveBeenCalled();
+  });
+
+  it('initialises when enabled is true', () => {
+    setEnvironment('app.example.com');
+    initTelemetry({ ...options, enabled: true });
+    expect(initializeFaro).toHaveBeenCalledTimes(1);
+  });
+
+  it('initialises when enabled is absent', () => {
+    setEnvironment('app.example.com');
+    initTelemetry(options);
+    expect(initializeFaro).toHaveBeenCalledTimes(1);
+  });
+
   it('fails closed when the consent hook throws', () => {
     setEnvironment('app.example.com');
     initTelemetry({
