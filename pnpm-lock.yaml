@@ -99,7 +99,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^22.0.0
-        version: 22.2.6(8cc5bf243c880fba599ae103c01fe8f4)
+        version: 22.2.6(7ed0ede092de1dc9199fe4d39e4a3502)
       '@angular/cli':
         specifier: ^22.0.0
         version: 22.2.6(@types/node@26.6.4)(chokidar@5.0.0)
@@ -126,7 +126,7 @@ importers:
         version: 10.6.7(storybook@10.6.7(@types/react@19.3.0)(prettier@3.9.10)(react@19.3.0))
       '@storybook/angular':
         specifier: ^10.0.0
-        version: 10.6.7(1df08a9972b7618d8be5e5b3002363d8)
+        version: 10.6.7(015f5aa1648aea5bf311b02fdb19e8c0)
       '@storybook/test-runner':
         specifier: ^0.26.0
         version: 0.26.0(@types/node@26.6.4)(debug@4.4.3(supports-color@10.2.2))(storybook@10.6.7(@types/react@19.3.0)(prettier@3.9.10)(react@19.3.0))(supports-color@10.2.2)
@@ -167,9 +167,12 @@ importers:
       '@angular/core':
         specifier: ^22.0.0
         version: 22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3)
+      '@types/node':
+        specifier: ^26.6.4
+        version: 26.6.4
       '@vitest/coverage-v8':
         specifier: ^5.1.0
-        version: 5.1.0(vitest@5.1.0)
+        version: 5.1.0(vite@8.3.8(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))(vitest@5.1.0)
       fast-check:
         specifier: ^4.10.2
         version: 4.10.2
@@ -218,7 +221,7 @@ importers:
         version: 1.26.6
       '@vitest/coverage-v8':
         specifier: ^5.1.0
-        version: 5.1.0(vitest@5.1.0)
+        version: 5.1.0(vite@8.3.8(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))(vitest@5.1.0)
       fast-check:
         specifier: ^4.10.2
         version: 4.10.2
@@ -7792,13 +7795,13 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular-devkit/build-angular@22.2.6(8cc5bf243c880fba599ae103c01fe8f4)':
+  '@angular-devkit/build-angular@22.2.6(7ed0ede092de1dc9199fe4d39e4a3502)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2202.6(chokidar@5.0.0)
       '@angular-devkit/build-webpack': 0.2202.6(chokidar@5.0.0)(webpack-dev-server@6.0.0(supports-color@10.2.2)(webpack@5.112.0(@swc/core@1.16.13)(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@6.1.0)(lightningcss@1.33.0)(postcss@8.5.28)))(webpack@5.112.0(@swc/core@1.16.13)(clean-css@5.3.3)(esbuild@0.28.2)(html-minifier-terser@6.1.0)(lightningcss@1.33.0)(postcss@8.5.28))
       '@angular-devkit/core': 22.2.6(chokidar@5.0.0)
-      '@angular/build': 22.2.6(@angular/compiler-cli@22.2.5(@angular/compiler@22.2.5)(typescript@6.0.3))(@angular/compiler@22.2.5)(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.5(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3)))(@types/node@26.6.4)(istanbul-lib-instrument@6.0.3(supports-color@10.2.2))(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(ng-packagr@22.2.6(@angular/compiler-cli@22.2.5(@angular/compiler@22.2.5)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.5)(tslib@2.9.1)(typescript@6.0.3))(postcss@8.5.28)(supports-color@10.2.2)(tailwindcss@4.3.5)(terser@5.51.2)(tslib@2.8.1)(typescript@6.0.3)(vitest@5.1.0)(yaml@2.9.1)
+      '@angular/build': 22.2.6(f4f353c6a4ceec2e657c81befefbb4a4)
       '@angular/compiler-cli': 22.2.5(@angular/compiler@22.2.5)(typescript@6.0.3)
       '@babel/core': 8.0.5
       '@babel/generator': 8.0.5
@@ -7865,6 +7868,7 @@ snapshots:
       - '@swc/html'
       - '@types/node'
       - '@vitejs/devtools'
+      - '@vitest/coverage-v8'
       - bufferutil
       - chokidar
       - clean-css
@@ -7887,6 +7891,7 @@ snapshots:
       - tsx
       - uglify-js
       - utf-8-validate
+      - vite
       - vitest
       - webpack-cli
       - yaml
@@ -8005,7 +8010,7 @@ snapshots:
       eslint: 10.14.0(jiti@2.7.0)(supports-color@10.2.2)
       typescript: 6.0.3
 
-  '@angular/build@22.2.6(@angular/compiler-cli@22.2.5(@angular/compiler@22.2.5)(typescript@6.0.3))(@angular/compiler@22.2.5)(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.5(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3)))(@types/node@26.6.4)(istanbul-lib-instrument@6.0.3(supports-color@10.2.2))(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(ng-packagr@22.2.6(@angular/compiler-cli@22.2.5(@angular/compiler@22.2.5)(typescript@6.0.3))(oxc-resolver@11.21.2)(supports-color@10.2.2)(tailwindcss@4.3.5)(tslib@2.9.1)(typescript@6.0.3))(postcss@8.5.28)(supports-color@10.2.2)(tailwindcss@4.3.5)(terser@5.51.2)(tslib@2.8.1)(typescript@6.0.3)(vitest@5.1.0)(yaml@2.9.1)':
+  '@angular/build@22.2.6(f4f353c6a4ceec2e657c81befefbb4a4)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2202.6(chokidar@5.0.0)
@@ -8052,6 +8057,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
       - '@vitejs/devtools'
+      - '@vitest/coverage-v8'
       - jiti
       - kerberos
       - stylus
@@ -8059,6 +8065,7 @@ snapshots:
       - supports-color
       - terser
       - tsx
+      - vite
       - yaml
 
   '@angular/cdk@22.2.7(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/forms@22.2.5(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.5(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2))(@angular/platform-browser@22.2.5(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2)':
@@ -10471,10 +10478,10 @@ snapshots:
       storybook: 10.6.7(@types/react@19.3.0)(prettier@3.9.10)(react@19.3.0)
       ts-dedent: 2.3.0
 
-  '@storybook/angular@10.6.7(1df08a9972b7618d8be5e5b3002363d8)':
+  '@storybook/angular@10.6.7(015f5aa1648aea5bf311b02fdb19e8c0)':
     dependencies:
       '@angular-devkit/architect': 0.2202.6(chokidar@5.0.0)
-      '@angular-devkit/build-angular': 22.2.6(8cc5bf243c880fba599ae103c01fe8f4)
+      '@angular-devkit/build-angular': 22.2.6(7ed0ede092de1dc9199fe4d39e4a3502)
       '@angular-devkit/core': 22.2.6(chokidar@5.0.0)
       '@angular/common': 22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
       '@angular/compiler': 22.2.5
@@ -11127,7 +11134,7 @@ snapshots:
     dependencies:
       vite: 8.3.5(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
 
-  '@vitest/coverage-v8@5.1.0(vitest@5.1.0)':
+  '@vitest/coverage-v8@5.1.0(vite@8.3.5(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))(vitest@5.1.0)':
     dependencies:
       '@bcoe/v8-coverage': 1.0.2
       '@vitest/istanbul-lib-coverage': 2.1.0
@@ -11138,6 +11145,23 @@ snapshots:
       std-env: 4.3.0
       tinyrainbow: 3.2.0
       vitest: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@26.6.4)(@vitest/coverage-v8@5.1.0)(vite@8.3.5(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))
+    transitivePeerDependencies:
+      - vite
+    optional: true
+
+  '@vitest/coverage-v8@5.1.0(vite@8.3.8(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))(vitest@5.1.0)':
+    dependencies:
+      '@bcoe/v8-coverage': 1.0.2
+      '@vitest/istanbul-lib-coverage': 2.1.0
+      '@vitest/istanbul-lib-report': 2.1.0
+      ast-v8-to-istanbul: 1.0.8
+      magicast: 0.5.5
+      obug: 3.0.0
+      std-env: 4.3.0
+      tinyrainbow: 3.2.0
+      vitest: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@26.6.4)(@vitest/coverage-v8@5.1.0)(vite@8.3.8(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))
+    transitivePeerDependencies:
+      - vite
 
   '@vitest/expect@3.2.4':
     dependencies:
@@ -11161,6 +11185,7 @@ snapshots:
       magic-string: 1.4.3
     optionalDependencies:
       vite: 8.3.5(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)
+    optional: true
 
   '@vitest/mocker@5.1.0(vite@8.3.8(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
@@ -15196,9 +15221,10 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.10.0
       '@types/node': 26.6.4
-      '@vitest/coverage-v8': 5.1.0(vitest@5.1.0)
+      '@vitest/coverage-v8': 5.1.0(vite@8.3.5(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))(vitest@5.1.0)
     transitivePeerDependencies:
       - msw
+    optional: true
 
   vitest@5.1.0(@opentelemetry/api@1.10.0)(@types/node@26.6.4)(@vitest/coverage-v8@5.1.0)(vite@8.3.8(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1)):
     dependencies:
@@ -15219,7 +15245,7 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.10.0
       '@types/node': 26.6.4
-      '@vitest/coverage-v8': 5.1.0(vitest@5.1.0)
+      '@vitest/coverage-v8': 5.1.0(vite@8.3.8(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))(vitest@5.1.0)
     transitivePeerDependencies:
       - msw
 
