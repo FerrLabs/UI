@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { AvatarComponent } from '../avatar/avatar.component';
+import { isTrustedIconMarkup } from '../icon/icon-markup';
 import { MenuComponent, MenuItemComponent, MenuSeparatorComponent } from '../menu/menu.component';
 import { SHELL_CONTEXT } from '../shell/shell-context';
 
@@ -76,7 +78,12 @@ export interface UserMenuItem {
             (selected)="select.emit(item)"
           >
             @if (item.icon) {
-              <span menu-item-icon>{{ item.icon }}</span>
+              @let icon = trustedIcon(item.icon);
+              @if (icon) {
+                <span menu-item-icon [innerHTML]="icon"></span>
+              } @else {
+                <span menu-item-icon>{{ item.icon }}</span>
+              }
             }
             {{ item.label }}
           </flr-menu-item>
@@ -189,8 +196,15 @@ export class UserMenuComponent {
 
   readonly select = output<UserMenuItem>();
 
+  private readonly sanitizer = inject(DomSanitizer);
   private readonly shell = inject(SHELL_CONTEXT, { optional: true });
   protected readonly inRail = this.shell !== null;
   protected readonly compact = computed(() => this.shell?.collapsed() ?? false);
   protected readonly nameShown = computed(() => (this.inRail ? !this.compact() : this.showName()));
+
+  protected trustedIcon(markup: string | undefined): SafeHtml | null {
+    return markup && isTrustedIconMarkup(markup)
+      ? this.sanitizer.bypassSecurityTrustHtml(markup)
+      : null;
+  }
 }
