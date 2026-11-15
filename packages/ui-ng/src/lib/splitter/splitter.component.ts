@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  booleanAttribute,
   Component,
   DestroyRef,
   ElementRef,
@@ -16,6 +17,8 @@ import {
 } from '@angular/core';
 import { SPLITTER_HOST, type SplitterHandleState, type SplitterHost } from './splitter-host';
 import {
+  coerceStackBelow,
+  coerceStep,
   defaultRatios,
   describeSize,
   intentDelta,
@@ -69,10 +72,12 @@ const COLLAPSED_RESTORE_THRESHOLD = 0.001;
 })
 export class SplitterComponent implements SplitterHost {
   readonly orientation = input<SplitterOrientation>('horizontal');
-  readonly stacked = input(false);
-  readonly stackBelow = input<number | null>(null);
+  readonly stacked = input(false, { transform: booleanAttribute });
+  readonly stackBelow = input<number | null, number | string | null | undefined>(null, {
+    transform: coerceStackBelow,
+  });
   readonly storageKey = input<string | null>(null);
-  readonly keyboardStep = input(10);
+  readonly keyboardStep = input(10, { transform: coerceStep });
   readonly resizeEnd = output<SplitterResizeEvent>();
 
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;

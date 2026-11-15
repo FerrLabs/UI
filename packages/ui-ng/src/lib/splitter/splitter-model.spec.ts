@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   coerceSize,
+  coerceStackBelow,
+  coerceStep,
   defaultRatios,
   describeSize,
   fitSizes,
@@ -11,6 +13,7 @@ import {
   ratiosAfterResize,
   resizePair,
   resolveBounds,
+  resolveSize,
   toPercent,
   toggleTarget,
   type PaneBounds,
@@ -317,5 +320,45 @@ describe('announcements', () => {
   it('describes collapsed and sized panes', () => {
     expect(describeSize('Sidebar', 25, false)).toBe('Sidebar 25 percent');
     expect(describeSize('Sidebar', 0, true)).toBe('Sidebar collapsed');
+  });
+});
+
+describe('non finite input never reaches the layout', () => {
+  const huge = '1'.repeat(400);
+
+  it.each([huge, `${huge}px`, `${huge}%`, `${huge}.5`])('coerceSize rejects %s', (value) => {
+    expect(coerceSize(value)).toBeUndefined();
+  });
+
+  it('keeps layouts finite when a percent resolves to infinity', () => {
+    expect(resolveSize('50%', Infinity)).toBe(0);
+    const ratios = defaultRatios(['50%', undefined], Infinity);
+    expect(ratios.every(Number.isFinite)).toBe(true);
+  });
+
+  it('keeps defaults finite when the coerced size was dropped', () => {
+    const ratios = defaultRatios([coerceSize(huge), undefined], 800);
+    expect(ratios).toEqual([0.5, 0.5]);
+    expect(layoutSizes(ratios, [false, false], [free, free], 800)).toEqual([400, 400]);
+  });
+});
+
+describe('static attribute coercion', () => {
+  it('parses stackBelow strings and maps empty values to null', () => {
+    expect(coerceStackBelow('520')).toBe(520);
+    expect(coerceStackBelow(520)).toBe(520);
+    expect(coerceStackBelow(null)).toBeNull();
+    expect(coerceStackBelow(undefined)).toBeNull();
+    expect(coerceStackBelow('')).toBeNull();
+    expect(coerceStackBelow('abc')).toBeNull();
+  });
+
+  it('parses keyboardStep strings and falls back to 10 on junk', () => {
+    expect(coerceStep('20')).toBe(20);
+    expect(coerceStep(5)).toBe(5);
+    expect(coerceStep('abc')).toBe(10);
+    expect(coerceStep(0)).toBe(10);
+    expect(coerceStep(-4)).toBe(10);
+    expect(coerceStep(null)).toBe(10);
   });
 });

@@ -1,3 +1,7 @@
+import { numberAttribute } from '@angular/core';
+
+const DEFAULT_STEP = 10;
+
 export type SplitterOrientation = 'horizontal' | 'vertical';
 
 export type SplitterSize = number | `${number}%`;
@@ -21,14 +25,27 @@ export function coerceSize(value: number | string | null | undefined): SplitterS
   if (typeof value === 'number') return Number.isFinite(value) && value >= 0 ? value : undefined;
   if (typeof value !== 'string') return undefined;
   const trimmed = value.trim();
+  const parsed = Number.parseFloat(trimmed);
+  if (!Number.isFinite(parsed)) return undefined;
   if (/^\d+(\.\d+)?%$/.test(trimmed)) return trimmed as SplitterSize;
-  if (/^\d+(\.\d+)?(px)?$/.test(trimmed)) return Number.parseFloat(trimmed);
+  if (/^\d+(\.\d+)?(px)?$/.test(trimmed)) return parsed;
   return undefined;
 }
 
+export function coerceStackBelow(value: number | string | null | undefined): number | null {
+  if (value === null || value === undefined || value === '') return null;
+  const parsed = numberAttribute(value, Number.NaN);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+export function coerceStep(value: number | string | null | undefined): number {
+  const parsed = numberAttribute(value, Number.NaN);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULT_STEP;
+}
+
 export function resolveSize(size: SplitterSize, total: number): number {
-  if (typeof size === 'number') return size;
-  return (Number.parseFloat(size) / 100) * total;
+  const resolved = typeof size === 'number' ? size : (Number.parseFloat(size) / 100) * total;
+  return Number.isFinite(resolved) ? resolved : 0;
 }
 
 export function resolveBounds(limits: PaneLimits, total: number): PaneBounds {

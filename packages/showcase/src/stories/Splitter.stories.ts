@@ -143,7 +143,7 @@ export const StackedOnNarrowWidth: Story = {
     template: `
       <div style="resize: horizontal; overflow: auto; width: 720px; max-width: 100%; border: 1px dashed var(--color-rule); padding: 8px;">
         <div style="height: 320px;">
-          <flr-splitter [stackBelow]="520">
+          <flr-splitter stackBelow="520" keyboardStep="20">
             <flr-splitter-pane label="Sidebar" defaultSize="30%" minSize="120">
               <div style="${pad}">Drag the corner of the dashed box under 520px: panes stack and the handle is removed.</div>
             </flr-splitter-pane>
@@ -152,6 +152,22 @@ export const StackedOnNarrowWidth: Story = {
             </flr-splitter-pane>
           </flr-splitter>
         </div>
+      </div>`,
+  }),
+};
+
+export const ForcedStacked: Story = {
+  render: () => ({
+    template: `
+      <div style="${frame}">
+        <flr-splitter stacked>
+          <flr-splitter-pane label="Sidebar">
+            <div style="${pad}">Stacked with the bare attribute: no handles.</div>
+          </flr-splitter-pane>
+          <flr-splitter-pane label="Content">
+            <div style="${pad}">Content</div>
+          </flr-splitter-pane>
+        </flr-splitter>
       </div>`,
   }),
 };
