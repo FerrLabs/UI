@@ -82,7 +82,7 @@ jump to min and max, Enter collapses or expands a collapsible neighbour, double-
 and expands collapsed panes. The handle is a focusable `role="separator"` with `aria-valuenow`,
 `aria-valuemin`, `aria-valuemax` (percent of the container) and `aria-controls` pointing at the pane
 before it, with a 24px hit area. `aria-orientation` is the separator's own: a horizontal splitter has
-vertical separators. The new size is announced through a polite live region. Right-to-left
+vertical separators. The new size is announced through the CDK `LiveAnnouncer` (polite). Right-to-left
 direction is read from CSS `direction`.
 
 ## Versioned docs (`@ferrlabs/ui-ng/docs`)

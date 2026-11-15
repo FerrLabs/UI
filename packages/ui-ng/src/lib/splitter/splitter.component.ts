@@ -1,3 +1,4 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import {
   ChangeDetectionStrategy,
   booleanAttribute,
@@ -15,6 +16,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { DragTracker } from './splitter-drag';
 import { SPLITTER_HOST, type SplitterHandleState, type SplitterHost } from './splitter-host';
 import {
   coerceStackBelow,
@@ -84,11 +86,11 @@ export class SplitterComponent implements SplitterHost {
   private readonly panes = contentChildren(SplitterPaneComponent);
   private readonly box = signal({ width: 0, height: 0 });
   private readonly userRatios = signal<readonly number[] | null>(null);
-  private drag: DragSession | null = null;
+  private readonly drag = new DragTracker<DragSession>();
 
   private readonly draggingState = signal(false);
   readonly dragging = this.draggingState.asReadonly();
-  protected readonly announcement = signal('');
+  private readonly liveAnnouncer = inject(LiveAnnouncer);
 
   private readonly total = computed(() =>
     this.orientation() === 'horizontal' ? this.box().width : this.box().height,
@@ -143,7 +145,7 @@ export class SplitterComponent implements SplitterHost {
       observer.observe(this.element);
       destroyRef.onDestroy(() => observer.disconnect());
     });
-    destroyRef.onDestroy(() => this.cancelFrame());
+    destroyRef.onDestroy(() => this.cancelFrame(this.drag.current));
 
     effect(() => {
       const count = this.panes().length;
@@ -172,10 +174,10 @@ export class SplitterComponent implements SplitterHost {
     const index = this.indexOf(pane);
     const total = this.total();
     const open = this.openBounds()[index];
-    const collapsible = this.panes()[index]?.collapsible() ?? false;
+    const collapsed = this.panes()[index]?.isCollapsed() ?? false;
     return {
       valueNow: toPercent(this.sizes()[index] ?? 0, total),
-      valueMin: collapsible || !open ? 0 : toPercent(open.min, total),
+      valueMin: collapsed || !open ? 0 : toPercent(open.min, total),
       valueMax: !open || open.max === Infinity ? 100 : toPercent(open.max, total),
     };
   }
@@ -187,7 +189,7 @@ export class SplitterComponent implements SplitterHost {
     handle.focus({ preventScroll: true });
     event.preventDefault();
     const position = this.axisPosition(event);
-    this.drag = {
+    this.drag.begin({
       index,
       pointerId: event.pointerId,
       startPosition: position,
@@ -196,26 +198,25 @@ export class SplitterComponent implements SplitterHost {
       rtl: this.readRtl(),
       position,
       frame: null,
-    };
+    });
     this.draggingState.set(true);
   }
 
   moveDrag(event: PointerEvent): void {
-    const drag = this.drag;
+    const drag = this.drag.current;
     if (!drag || event.pointerId !== drag.pointerId) return;
     drag.position = this.axisPosition(event);
-    drag.frame ??= requestAnimationFrame(() => this.applyDrag());
+    drag.frame ??= requestAnimationFrame(() => this.applyDrag(drag));
   }
 
   endDrag(event: PointerEvent): void {
-    const drag = this.drag;
-    if (!drag || event.pointerId !== drag.pointerId) return;
-    this.cancelFrame();
-    this.applyDrag();
+    const drag = this.drag.end(event.pointerId);
+    if (!drag) return;
+    this.cancelFrame(drag);
+    this.applyDrag(drag);
+    this.draggingState.set(false);
     const handle = event.currentTarget as HTMLElement;
     if (handle.hasPointerCapture(event.pointerId)) handle.releasePointerCapture(event.pointerId);
-    this.drag = null;
-    this.draggingState.set(false);
     this.finish(drag.index);
   }
 
@@ -261,16 +262,13 @@ export class SplitterComponent implements SplitterHost {
     this.userRatios.set(ratios.map((ratio, i) => (i === index ? this.defaults()[i] : ratio)));
   }
 
-  private applyDrag(): void {
-    const drag = this.drag;
-    if (!drag) return;
+  private applyDrag(drag: DragSession): void {
     drag.frame = null;
     const delta = pointerDelta(this.orientation(), drag.rtl, drag.startPosition, drag.position);
     this.commit(resizePair(drag.startSizes, drag.index, delta, drag.bounds));
   }
 
-  private cancelFrame(): void {
-    const drag = this.drag;
+  private cancelFrame(drag: DragSession | null): void {
     if (drag?.frame == null) return;
     cancelAnimationFrame(drag.frame);
     drag.frame = null;
@@ -300,13 +298,16 @@ export class SplitterComponent implements SplitterHost {
 
   private announce(index: number | null): void {
     if (index === null) {
-      this.announcement.set('Panes reset to default sizes');
+      this.liveAnnouncer.announce('Panes reset to default sizes', 'polite');
       return;
     }
     const pane = this.panes()[index];
     if (!pane) return;
     const percent = toPercent(this.sizes()[index] ?? 0, this.total());
-    this.announcement.set(describeSize(pane.displayLabel(), percent, pane.isCollapsed()));
+    this.liveAnnouncer.announce(
+      describeSize(pane.displayLabel(), percent, pane.isCollapsed()),
+      'polite',
+    );
   }
 
   private restore(key: string, count: number): void {
