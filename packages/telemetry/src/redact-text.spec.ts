@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { expect, it, describe } from 'vitest';
 import { redactText } from './redact-text.js';
 
@@ -349,27 +350,50 @@ describe('redactText', () => {
   });
 });
 
-describe('redactText on 16 KB inputs', () => {
-  const inputs = [
-    '?a= '.repeat(4096),
-    '?a='.repeat(5462),
-    'password: '.repeat(1639),
-    'Bearer '.repeat(2341),
-    'x'.repeat(16384),
-    'a.'.repeat(8192),
-    '/'.repeat(16384),
-    `token=${'a'.repeat(16000)}`,
-    `${'a@b.c '.repeat(2700)}`,
-    '{"password":"x",'.repeat(1024),
+describe('redactText scaling on 16 KB inputs', () => {
+  const SMALL = 2048;
+  const LARGE = 16384;
+  const RUNS = 7;
+  const MAX_GROWTH = 3 * (LARGE / SMALL);
+
+  const fill = (unit: string, size: number) =>
+    unit.repeat(Math.ceil(size / unit.length)).slice(0, size);
+
+  const shapes: Array<[string, (size: number) => string]> = [
+    ['?a= ', (size) => fill('?a= ', size)],
+    ['?a=', (size) => fill('?a=', size)],
+    ['password: ', (size) => fill('password: ', size)],
+    ['Bearer ', (size) => fill('Bearer ', size)],
+    ['x', (size) => fill('x', size)],
+    ['a.', (size) => fill('a.', size)],
+    ['/', (size) => fill('/', size)],
+    ['token=aaa', (size) => `token=${'a'.repeat(size - 6)}`],
+    ['a@b.c ', (size) => fill('a@b.c ', size)],
+    ['{"password":"x",', (size) => fill('{"password":"x",', size)],
   ];
 
-  for (const input of inputs) {
-    it(`stays under 50 ms for ${JSON.stringify(input.slice(0, 24))}... (${input.length} chars)`, () => {
+  const cpuMillis = () => {
+    const { user, system } = process.cpuUsage();
+    return (user + system) / 1000;
+  };
+
+  const fastestRun = (input: string) => {
+    redactText(input);
+    let fastest = Infinity;
+    for (let run = 0; run < RUNS; run++) {
+      const start = cpuMillis();
       redactText(input);
-      const start = performance.now();
-      const output = redactText(input);
-      expect(performance.now() - start).toBeLessThan(50);
-      expect(output.length).toBeLessThanOrEqual(2048);
+      fastest = Math.min(fastest, cpuMillis() - start);
+    }
+    return fastest;
+  };
+
+  for (const [name, build] of shapes) {
+    it(`grows near-linearly for ${JSON.stringify(name)} repeated`, () => {
+      const small = build(SMALL);
+      const large = build(LARGE);
+      expect(redactText(large).length).toBeLessThanOrEqual(2048);
+      expect(fastestRun(large) / fastestRun(small)).toBeLessThan(MAX_GROWTH);
     });
   }
 });
