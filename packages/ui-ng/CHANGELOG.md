@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.52.1] - 2026-11-15
+
+### Bug Fixes
+
+- fix(ng): render user menu icons as svg (#760)
+
 ## [1.52.0] - 2026-11-14
 
 ### Features
