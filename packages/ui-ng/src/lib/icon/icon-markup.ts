@@ -52,6 +52,7 @@ const ATTRIBUTES: ReadonlySet<string> = new Set([
 
 const TAG = /<\/?([a-zA-Z][a-zA-Z0-9-]*)((?:[\t\n\f\r ][^<>]*)?)\/?>/g;
 const ATTRIBUTE = /([a-zA-Z_:][-a-zA-Z0-9_:.]*)[\t\n\f\r ]*=[\t\n\f\r ]*"([^"<>]*)"/g;
+const BLANK = /^[\t\n\f\r ]*$/;
 const NON_HTML_WHITESPACE = /[^\S\t\n\f\r ]/;
 
 function attributesAreSafe(raw: string): boolean {
@@ -74,7 +75,9 @@ export function isTrustedIconMarkup(markup: string): boolean {
     const [tag, name, attributes] = match;
     if (value.slice(cursor, match.index).includes('<')) return false;
     if (!ELEMENTS.has(name)) return false;
-    if (!tag.startsWith('</') && !attributesAreSafe(attributes ?? '')) return false;
+    const closing = tag.startsWith('</');
+    if (closing && !BLANK.test(attributes ?? '')) return false;
+    if (!closing && !attributesAreSafe(attributes ?? '')) return false;
     cursor = match.index + tag.length;
   }
 

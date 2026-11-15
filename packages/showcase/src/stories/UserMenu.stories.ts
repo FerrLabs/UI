@@ -40,7 +40,7 @@ export const WithIcons: Story = {
       { id: 'account', label: 'Account settings', href: '/account', icon: icons.settings },
       { id: 'tokens', label: 'API tokens', href: '/tokens', icon: icons.tokens },
       { id: 'shortcuts', label: 'Keyboard shortcuts', icon: '⌘' },
-      { id: 'signout', label: 'Sign out', danger: true, icon: icons.help },
+      { id: 'signout', label: 'Sign out', danger: true },
     ],
   },
 };
