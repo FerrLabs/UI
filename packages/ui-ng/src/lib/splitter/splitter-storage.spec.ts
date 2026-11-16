@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { defaultStorage, parseStored, readStored, writeStored } from './splitter-storage';
+import {
+  defaultStorage,
+  needsRestore,
+  parseStored,
+  readStored,
+  writeStored,
+} from './splitter-storage';
 
 class MemoryStorage implements Pick<Storage, 'getItem' | 'setItem'> {
   readonly items = new Map<string, string>();
@@ -83,5 +89,13 @@ describe('splitter storage', () => {
       if (original) Object.defineProperty(globalThis, 'localStorage', original);
       else Reflect.deleteProperty(globalThis, 'localStorage');
     }
+  });
+});
+
+describe('needsRestore', () => {
+  it('restores the first time and when the key changes, not when only the pane count changed', () => {
+    expect(needsRestore(null, 'editor')).toBe(true);
+    expect(needsRestore('editor', 'editor')).toBe(false);
+    expect(needsRestore('editor', 'other')).toBe(true);
   });
 });

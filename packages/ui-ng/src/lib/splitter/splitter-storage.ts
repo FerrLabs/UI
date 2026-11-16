@@ -53,3 +53,7 @@ export function writeStored(storage: Storage | null, key: string, value: StoredS
     return;
   }
 }
+
+export function needsRestore(restoredKey: string | null, key: string): boolean {
+  return restoredKey !== key;
+}

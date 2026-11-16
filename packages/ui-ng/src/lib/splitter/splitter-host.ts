@@ -1,5 +1,5 @@
 import { InjectionToken, type Signal } from '@angular/core';
-import type { SplitterOrientation } from './splitter-model';
+import type { HandleLabeller, PaneLabeller, SplitterOrientation } from './splitter-model';
 
 export interface SplitterHandleState {
   readonly valueNow: number;
@@ -11,6 +11,8 @@ export interface SplitterHost {
   readonly orientation: Signal<SplitterOrientation>;
   readonly isStacked: Signal<boolean>;
   readonly dragging: Signal<boolean>;
+  readonly paneLabel: Signal<PaneLabeller>;
+  readonly resizeLabel: Signal<HandleLabeller>;
   indexOf(pane: unknown): number;
   isLast(pane: unknown): boolean;
   flexFor(pane: unknown): string;

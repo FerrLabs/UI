@@ -22,6 +22,9 @@ import {
   coerceStackBelow,
   coerceStep,
   defaultRatios,
+  DEFAULT_RESET_ANNOUNCEMENT,
+  describeHandle,
+  describePane,
   describeSize,
   intentDelta,
   isRtl,
@@ -34,11 +37,14 @@ import {
   toPercent,
   toRatios,
   toggleTarget,
+  type HandleLabeller,
   type PaneBounds,
+  type PaneLabeller,
+  type SizeAnnouncer,
   type SplitterOrientation,
 } from './splitter-model';
 import { SplitterPaneComponent } from './splitter-pane.component';
-import { defaultStorage, readStored, writeStored } from './splitter-storage';
+import { defaultStorage, needsRestore, readStored, writeStored } from './splitter-storage';
 
 export interface SplitterResizeEvent {
   readonly sizes: readonly number[];
@@ -80,6 +86,10 @@ export class SplitterComponent implements SplitterHost {
   });
   readonly storageKey = input<string | null>(null);
   readonly keyboardStep = input(10, { transform: coerceStep });
+  readonly resetAnnouncement = input(DEFAULT_RESET_ANNOUNCEMENT);
+  readonly sizeAnnouncement = input<SizeAnnouncer>(describeSize);
+  readonly paneLabel = input<PaneLabeller>(describePane);
+  readonly resizeLabel = input<HandleLabeller>(describeHandle);
   readonly resizeEnd = output<SplitterResizeEvent>();
 
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
@@ -87,6 +97,7 @@ export class SplitterComponent implements SplitterHost {
   private readonly box = signal({ width: 0, height: 0 });
   private readonly userRatios = signal<readonly number[] | null>(null);
   private readonly drag = new DragTracker<DragSession>();
+  private restoredKey: string | null = null;
 
   private readonly draggingState = signal(false);
   readonly dragging = this.draggingState.asReadonly();
@@ -150,8 +161,14 @@ export class SplitterComponent implements SplitterHost {
     effect(() => {
       const count = this.panes().length;
       const key = this.storageKey();
-      if (count === 0 || key === null) return;
+      if (count === 0 || key === null || !needsRestore(this.restoredKey, key)) return;
       untracked(() => this.restore(key, count));
+    });
+
+    effect(() => {
+      this.isStacked();
+      this.panes();
+      untracked(() => this.abortDrag());
     });
   }
 
@@ -268,6 +285,13 @@ export class SplitterComponent implements SplitterHost {
     this.commit(resizePair(drag.startSizes, drag.index, delta, drag.bounds));
   }
 
+  private abortDrag(): void {
+    const drag = this.drag.abort();
+    if (!drag) return;
+    this.cancelFrame(drag);
+    this.draggingState.set(false);
+  }
+
   private cancelFrame(drag: DragSession | null): void {
     if (drag?.frame == null) return;
     cancelAnimationFrame(drag.frame);
@@ -298,14 +322,14 @@ export class SplitterComponent implements SplitterHost {
 
   private announce(index: number | null): void {
     if (index === null) {
-      this.liveAnnouncer.announce('Panes reset to default sizes', 'polite');
+      this.liveAnnouncer.announce(this.resetAnnouncement(), 'polite');
       return;
     }
     const pane = this.panes()[index];
     if (!pane) return;
     const percent = toPercent(this.sizes()[index] ?? 0, this.total());
     this.liveAnnouncer.announce(
-      describeSize(pane.displayLabel(), percent, pane.isCollapsed()),
+      this.sizeAnnouncement()(pane.displayLabel(), percent, pane.isCollapsed()),
       'polite',
     );
   }
@@ -313,6 +337,7 @@ export class SplitterComponent implements SplitterHost {
   private restore(key: string, count: number): void {
     const stored = readStored(defaultStorage(), key, count);
     if (!stored) return;
+    this.restoredKey = key;
     this.userRatios.set(stored.ratios);
     this.panes().forEach((pane, i) => {
       if (pane.collapsible()) pane.collapsed.set(stored.collapsed[i]);

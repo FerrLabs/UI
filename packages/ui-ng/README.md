@@ -69,8 +69,14 @@ horizontal splitter stacks and drops its handles), `storageKey` (persist sizes a
 10). Output: `resizeEnd` with `{ sizes, ratios, collapsed }`, emitted when a drag ends and after each
 keyboard resize, collapse or reset.
 
+Screen reader text is overridable, English by default: `resetAnnouncement` (string, said after a
+reset), `sizeAnnouncement` (`(label, percent, collapsed) => string`), `paneLabel`
+(`(position) => string`, the fallback for panes without a `label`, 1-based) and `resizeLabel`
+(`(paneLabel) => string`, the handle's `aria-label`).
+
 `flr-splitter-pane` inputs: `defaultSize`, `minSize`, `maxSize` (px number or `'30%'`), `collapsible`,
-`label` (used in the handle label and the announcements), and `[(collapsed)]`. Panes without a
+`label` (used in the handle label and the announcements), `handleLabel` (replaces the handle's
+`aria-label` for this pane), and `[(collapsed)]`. Panes without a
 `defaultSize` share the remaining space.
 
 The splitter fills its parent (`width` and `height` 100%), so give the parent a definite size, in
@@ -83,7 +89,9 @@ and expands collapsed panes. The handle is a focusable `role="separator"` with `
 `aria-valuemin`, `aria-valuemax` (percent of the container) and `aria-controls` pointing at the pane
 before it, with a 24px hit area. `aria-orientation` is the separator's own: a horizontal splitter has
 vertical separators. The new size is announced through the CDK `LiveAnnouncer` (polite). Right-to-left
-direction is read from CSS `direction`.
+direction is read from CSS `direction`. Stored sizes are restored once per `storageKey`, so adding
+or removing a pane later keeps the live layout. A drag is cancelled if its handle goes away
+(for example when the splitter crosses `stackBelow`).
 
 ## Versioned docs (`@ferrlabs/ui-ng/docs`)
 

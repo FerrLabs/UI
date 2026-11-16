@@ -195,6 +195,31 @@ export function toPercent(size: number, total: number): number {
   return total > 0 ? Math.round((size / total) * 100) : 0;
 }
 
-export function describeSize(label: string, percent: number, collapsed: boolean): string {
-  return collapsed ? `${label} collapsed` : `${label} ${percent} percent`;
+export type SizeAnnouncer = (label: string, percent: number, collapsed: boolean) => string;
+export type PaneLabeller = (position: number) => string;
+export type HandleLabeller = (paneLabel: string) => string;
+
+export const DEFAULT_RESET_ANNOUNCEMENT = 'Panes reset to default sizes';
+
+export const describeSize: SizeAnnouncer = (label, percent, collapsed) =>
+  collapsed ? `${label} collapsed` : `${label} ${percent} percent`;
+
+export const describePane: PaneLabeller = (position) => `Pane ${position}`;
+
+export const describeHandle: HandleLabeller = (paneLabel) => `Resize ${paneLabel}`;
+
+export function resolvePaneLabel(
+  label: string | undefined,
+  index: number,
+  labeller: PaneLabeller,
+): string {
+  return label ?? labeller(index + 1);
+}
+
+export function resolveHandleLabel(
+  override: string | null,
+  paneLabel: string,
+  labeller: HandleLabeller,
+): string {
+  return override ?? labeller(paneLabel);
 }

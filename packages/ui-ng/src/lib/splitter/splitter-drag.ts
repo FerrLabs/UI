@@ -9,6 +9,12 @@ export class DragTracker<T extends { readonly pointerId: number }> {
     this.session = session;
   }
 
+  abort(): T | null {
+    const session = this.session;
+    this.session = null;
+    return session;
+  }
+
   end(pointerId: number): T | null {
     const session = this.session;
     if (!session || session.pointerId !== pointerId) return null;

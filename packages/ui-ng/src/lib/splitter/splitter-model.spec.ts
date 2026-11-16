@@ -4,7 +4,11 @@ import {
   coerceStackBelow,
   coerceStep,
   defaultRatios,
+  describeHandle,
+  describePane,
   describeSize,
+  resolveHandleLabel,
+  resolvePaneLabel,
   fitSizes,
   intentDelta,
   keyIntent,
@@ -320,6 +324,22 @@ describe('announcements', () => {
   it('describes collapsed and sized panes', () => {
     expect(describeSize('Sidebar', 25, false)).toBe('Sidebar 25 percent');
     expect(describeSize('Sidebar', 0, true)).toBe('Sidebar collapsed');
+  });
+});
+
+describe('overridable accessible text', () => {
+  it('falls back to the numbered pane label and honours a custom labeller', () => {
+    expect(resolvePaneLabel(undefined, 1, describePane)).toBe('Pane 2');
+    expect(resolvePaneLabel(undefined, 1, (n) => `Panneau ${n}`)).toBe('Panneau 2');
+    expect(resolvePaneLabel('Sidebar', 1, (n) => `Panneau ${n}`)).toBe('Sidebar');
+  });
+
+  it('prefers an explicit handle label over the labeller', () => {
+    expect(resolveHandleLabel(null, 'Sidebar', describeHandle)).toBe('Resize Sidebar');
+    expect(resolveHandleLabel(null, 'Sidebar', (l) => `Redimensionner ${l}`)).toBe(
+      'Redimensionner Sidebar',
+    );
+    expect(resolveHandleLabel('Poignee', 'Sidebar', describeHandle)).toBe('Poignee');
   });
 });
 

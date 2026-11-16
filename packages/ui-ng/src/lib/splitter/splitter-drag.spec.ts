@@ -19,6 +19,16 @@ describe('DragTracker', () => {
     expect(tracker.current).toBe(session);
   });
 
+  it('abort clears the session whatever the pointer, and only once', () => {
+    const tracker = new DragTracker<{ pointerId: number }>();
+    const session = { pointerId: 3 };
+    tracker.begin(session);
+    expect(tracker.abort()).toBe(session);
+    expect(tracker.current).toBeNull();
+    expect(tracker.end(3)).toBeNull();
+    expect(tracker.abort()).toBeNull();
+  });
+
   it('has nothing to end before a drag starts', () => {
     expect(new DragTracker<{ pointerId: number }>().end(1)).toBeNull();
   });

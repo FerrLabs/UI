@@ -8,7 +8,12 @@ import {
   model,
 } from '@angular/core';
 import { SPLITTER_HOST } from './splitter-host';
-import { coerceSize, type SplitterSize } from './splitter-model';
+import {
+  coerceSize,
+  resolveHandleLabel,
+  resolvePaneLabel,
+  type SplitterSize,
+} from './splitter-model';
 
 let nextPaneId = 0;
 
@@ -42,11 +47,14 @@ export class SplitterPaneComponent {
   readonly collapsible = input(false, { transform: booleanAttribute });
   readonly collapsed = model(false);
   readonly label = input<string | undefined>(undefined);
+  readonly handleLabel = input<string | null>(null);
 
   protected readonly paneId = `flr-splitter-pane-${nextPaneId++}`;
 
   readonly isCollapsed = computed(() => this.collapsible() && this.collapsed());
-  readonly displayLabel = computed(() => this.label() ?? `Pane ${this.index() + 1}`);
+  readonly displayLabel = computed(() =>
+    resolvePaneLabel(this.label(), this.index(), this.host.paneLabel()),
+  );
 
   protected readonly index = computed(() => this.host.indexOf(this));
   protected readonly flex = computed(() => this.host.flexFor(this));
@@ -55,5 +63,7 @@ export class SplitterPaneComponent {
   protected readonly handleOrientation = computed(() =>
     this.host.orientation() === 'horizontal' ? 'vertical' : 'horizontal',
   );
-  protected readonly handleLabel = computed(() => `Resize ${this.displayLabel()}`);
+  protected readonly handleAriaLabel = computed(() =>
+    resolveHandleLabel(this.handleLabel(), this.displayLabel(), this.host.resizeLabel()),
+  );
 }
