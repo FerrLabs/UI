@@ -367,6 +367,9 @@ describe('redactText scaling on 16 KB inputs', () => {
     ['a@b.c ', (size) => fill('a@b.c ', size)],
     ['{"password":"x",', (size) => fill('{"password":"x",', size)],
     ['data:image/png;base64,AAA', (size) => `data:image/png;base64,${'A'.repeat(size - 22)}`],
+    ['//a:', (size) => fill('//a:', size)],
+    ['https://u:p@', (size) => fill('https://u:p@', size)],
+    ['//a: before @=', (size) => `${fill('//a:', size - 2)}@=`],
   ];
 
   for (const [name, build] of shapes) {

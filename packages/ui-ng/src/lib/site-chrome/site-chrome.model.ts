@@ -152,7 +152,7 @@ export interface SiteFooterConfig {
   readonly backHref: string;
   readonly columns: readonly SiteFooterColumn[];
   readonly bottomLeft: string;
-  readonly bottomRight: string;
+  readonly bottomRight?: string;
 }
 
 export interface SiteChromeLabels {

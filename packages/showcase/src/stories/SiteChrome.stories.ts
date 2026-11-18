@@ -7,6 +7,7 @@ import {
 } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
+import { expect, within } from 'storybook/test';
 
 const CHROME: SiteChromeConfig = {
   origin: 'https://ferrflow.com',
@@ -76,7 +77,30 @@ export const NavbarAllLocales: Story = {
   render: () => ({ template: `<flr-site-navbar />` }),
 };
 
-export const Footer: Story = { render: () => ({ template: `<flr-site-footer />` }) };
+export const Footer: Story = {
+  render: () => ({ template: `<flr-site-footer />` }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('© 2026 FerrLabs')).toBeInTheDocument();
+    await expect(canvas.getByText('MIT OR Apache-2.0')).toBeInTheDocument();
+  },
+};
+
+export const FooterWithoutBottomRight: Story = {
+  decorators: [
+    applicationConfig({
+      providers: [
+        provideSiteChrome({ ...CHROME, footer: { ...CHROME.footer, bottomRight: undefined } }),
+      ],
+    }),
+  ],
+  render: () => ({ template: `<flr-site-footer />` }),
+  play: async ({ canvasElement }) => {
+    const texts = canvasElement.querySelectorAll('.footer__bottom-text');
+    await expect(texts).toHaveLength(1);
+    await expect(texts[0]).toHaveTextContent('© 2026 FerrLabs');
+  },
+};
 
 // A site that ships one language. The switcher is not rendered at all, because
 // the locale it would offer was never built and the link goes to a 404.

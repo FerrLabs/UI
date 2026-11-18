@@ -63,6 +63,15 @@ describe('redactText query and host handling', () => {
     assert.ok(!out.includes('a@b.c'), out);
   });
 
+  it('masks the whole word when a slashed password runs past 512 characters', () => {
+    const password = `pa/${'Zq7'.repeat(200)}#1`;
+    assert.strictEqual(redactText(`postgres://app:${password}@db.internal:5432/app`), '*');
+    assert.strictEqual(
+      redactText(`postgres://app:pa/${'Zq7'.repeat(100)}#1@db.internal:5432/app`),
+      'postgres://db.internal:5432/app',
+    );
+  });
+
   it('drops URL userinfo and keeps the host', () => {
     const out = redactText('connect https://user:pw@host.example.com/db failed');
     assert.ok(!out.includes('pw'), out);
