@@ -26,7 +26,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
       align-items: center;
       justify-content: center;
       gap: 8px;
-      height: 40px;
+      height: var(--control-height, 40px);
       padding: 0 16px;
       font-family: var(
         --font-mono,

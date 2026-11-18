@@ -11,7 +11,7 @@ const target = new URL('../.storybook/files/', import.meta.url);
 
 await mkdir(target, { recursive: true });
 
-for (const family of ['@fontsource/fraunces', '@fontsource/dm-mono']) {
+for (const family of ['@fontsource/fraunces', '@fontsource/dm-mono', '@fontsource/inter']) {
   const root = dirname(require.resolve(`${family}/package.json`));
   await cp(join(root, 'files'), target, { recursive: true });
 }

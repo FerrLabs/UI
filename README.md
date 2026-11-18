@@ -114,7 +114,7 @@ Licensed under either of
 
 at your option. Both `@ferrlabs/ui-ng` and `@ferrlabs/ui-foundation` are published on npmjs.com and install without a token.
 
-The Fraunces and DM Mono fonts that `@ferrlabs/ui-foundation` loads come from the `@fontsource/fraunces` and `@fontsource/dm-mono` packages. They are licensed separately under the SIL Open Font License 1.1, which ships inside those packages, and are not covered by the license above.
+The Fraunces, DM Mono and Inter fonts that `@ferrlabs/ui-foundation` loads come from the `@fontsource/fraunces`, `@fontsource/dm-mono` and `@fontsource/inter` packages. They are licensed separately under the SIL Open Font License 1.1, which ships inside those packages, and are not covered by the license above.
 
 ### Contribution
 
