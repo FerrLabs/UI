@@ -180,6 +180,10 @@ function segmentsFor(value: string, diagnostics: readonly TextareaDiagnostic[]):
       word-break: normal;
       scrollbar-gutter: stable;
     }
+    .flr-at__editor::placeholder {
+      color: var(--color-ink-3, #5d6b80);
+      opacity: 1;
+    }
     .flr-at__mirror {
       position: absolute;
       inset: 0;

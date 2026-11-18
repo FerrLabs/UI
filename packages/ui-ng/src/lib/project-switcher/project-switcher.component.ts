@@ -361,6 +361,10 @@ export interface ProjectSwitcherPlaceholder {
       outline: none;
       box-sizing: border-box;
     }
+    .flr-ps__search::placeholder {
+      color: var(--color-ink-3, #5d6b80);
+      opacity: 1;
+    }
     .flr-ps__list {
       overflow-y: auto;
       max-height: 260px;

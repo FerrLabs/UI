@@ -136,6 +136,10 @@ let nextId = 0;
       color: inherit;
       background: transparent;
     }
+    .flr-ts__search::placeholder {
+      color: var(--color-ink-3, #5d6b80);
+      opacity: 1;
+    }
     .flr-ts__search:focus {
       outline: none;
       border-bottom-color: var(--flr-accent, #f59e0b);

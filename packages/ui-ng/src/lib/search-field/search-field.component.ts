@@ -139,6 +139,10 @@ const SIZE: Record<SearchFieldSize, SearchDim> = {
         border-color 140ms,
         box-shadow 140ms;
     }
+    .flr-search__input::placeholder {
+      color: var(--color-ink-3, #5d6b80);
+      opacity: 1;
+    }
     .flr-search__clear {
       position: absolute;
       display: inline-flex;
