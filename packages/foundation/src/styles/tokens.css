@@ -97,6 +97,7 @@
   --radius-card: 8px; /* Cards, menus, popovers, rail items */
   --radius-modal: 12px; /* Modals, switcher panels, large surfaces */
   --radius-full: 999px; /* Switch, avatar, badges, status dots */
+  --control-height: 40px;
 }
 
 /* Dark mode tokens — opt-in via `<html data-theme="dark">`. The marketing
@@ -142,4 +143,22 @@ html[data-theme='dark'] {
   --color-code-property: #f9a8d4;
   --color-code-inserted: #86efac;
   --color-code-deleted: #fca5a5;
+}
+
+html[data-style='precision'] {
+  --radius-control: 2px;
+  --radius-card: 4px;
+  --radius-modal: 6px;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Inter', system-ui, sans-serif;
+  --control-height: 28px;
+}
+
+html[data-style='soft'] {
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-modal: 16px;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Inter', system-ui, sans-serif;
+  --control-height: 36px;
 }

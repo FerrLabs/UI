@@ -50,6 +50,9 @@ importers:
       '@fontsource/fraunces':
         specifier: ^5.0.0
         version: 5.3.0
+      '@fontsource/inter':
+        specifier: ^5.3.0
+        version: 5.3.0
       tailwindcss:
         specifier: ^4.0.0
         version: 4.3.5
@@ -113,6 +116,9 @@ importers:
         specifier: ^5.3.0
         version: 5.3.0
       '@fontsource/fraunces':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@fontsource/inter':
         specifier: ^5.3.0
         version: 5.3.0
       '@storybook/addon-a11y':
@@ -1428,6 +1434,9 @@ packages:
 
   '@fontsource/fraunces@5.3.0':
     resolution: {integrity: sha512-LEHTOBiZufQzAvnAe2rZ8ZknbDS28Q9kzwb0L+gZJEmjLGr8hhZ/5NuHXwDuHBWhVXYoiGGXmrb0H6Ko/RrHTg==}
+
+  '@fontsource/inter@5.3.0':
+    resolution: {integrity: sha512-RofMylZmjlJEfELXeNHFWBRcSs75rGU/6bV2S2jfnvv/3rPXPGe0LgUJTklcHZ9lM4OZmAVFhcJPnACfb91A3g==}
 
   '@grafana/faro-core@2.14.0':
     resolution: {integrity: sha512-U1dydD2pQa3sgnaoGQsmsDoecef2S90Y6kVYyhdXjaSg8+bzJWwW5mGtO+7V15PjZSKA4tdXGKRHa1RGGJPY8Q==}
@@ -9156,6 +9165,8 @@ snapshots:
   '@fontsource/dm-mono@5.3.0': {}
 
   '@fontsource/fraunces@5.3.0': {}
+
+  '@fontsource/inter@5.3.0': {}
 
   '@grafana/faro-core@2.14.0':
     dependencies:

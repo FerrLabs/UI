@@ -19,10 +19,11 @@ pnpm -r --workspace-concurrency=1 build
 
 ## Toolbar
 
-Two globals drive the preview: a product accent (FerrLabs / FerrFlow / FerrVault /
-FerrTrack / FerrGrowth / FerrFleet / FerrLens) and a light/dark toggle. Both are
-applied as `data-accent` / `data-theme` on `<html>`, the same hooks the real apps
-use, so a story renders exactly as it would in-product.
+Three globals drive the preview: a product accent (FerrLabs / FerrFlow / FerrVault /
+FerrTrack / FerrGrowth / FerrFleet / FerrLens), a light/dark toggle and a style
+preset (Editorial / Precision / Soft). They are applied as `data-accent`,
+`data-theme` and `data-style` on `<html>`, the same hooks the real apps use, so a
+story renders exactly as it would in-product. Editorial removes `data-style`.
 
 ## Styles
 

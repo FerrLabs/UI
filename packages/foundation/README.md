@@ -13,6 +13,26 @@ package instead of three. Tracked under UI#105.
 | `@ferrlabs/ui-foundation/styles/global.css` | Base stylesheet — fonts + Tailwind import + brand tokens   | Every app's `global.css` |
 | `@ferrlabs/ui-foundation/styles/tokens.css` | Brand color + typography tokens (consumed via `@theme`)    | apps/sites               |
 
+## Style presets
+
+`data-style` on `<html>` selects a preset of token overrides, the same way
+`data-theme="dark"` selects the dark palette. The two combine freely. No attribute
+is the default editorial look.
+
+| `data-style` | Radii (control / card / modal) | Font     | `--control-height` |
+| ------------ | ------------------------------ | -------- | ------------------ |
+| (none)       | 4px / 8px / 12px               | Fraunces | 40px               |
+| `precision`  | 2px / 4px / 6px                | Inter    | 28px               |
+| `soft`       | 8px / 12px / 16px              | Inter    | 36px               |
+
+`--control-height` is the `md` height of buttons, inputs, selects, search fields,
+multi-selects and submit buttons. `sm` and `lg` are 8px below and above it. Buttons
+are padding-sized, so they shift by half the difference to 40px on each side.
+
+```html
+<html data-style="precision" data-theme="dark"></html>
+```
+
 ## Usage
 
 ### React app
@@ -62,4 +82,4 @@ should target `@ferrlabs/ui-foundation` directly.
 
 Licensed under either of [Apache-2.0](LICENSE-APACHE) or [MIT](LICENSE-MIT), at your option.
 
-The Fraunces and DM Mono fonts are not covered by this license. They are pulled in through the `@fontsource/fraunces` and `@fontsource/dm-mono` dependencies and stay under the SIL Open Font License 1.1, whose text ships in each of those packages.
+The Fraunces, DM Mono and Inter fonts are not covered by this license. They are pulled in through the `@fontsource/fraunces`, `@fontsource/dm-mono` and `@fontsource/inter` dependencies and stay under the SIL Open Font License 1.1, whose text ships in each of those packages.

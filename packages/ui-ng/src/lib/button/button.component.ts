@@ -11,10 +11,28 @@ interface SizeDim {
   readonly radius: string;
 }
 
+const paddingBlock = (base: number): string =>
+  `max(0px, calc(${base}px + (var(--control-height, 40px) - 40px) / 2))`;
+
 const SIZE: Record<ButtonSize, SizeDim> = {
-  sm: { padding: '5px 10px', fontSize: '11px', gap: '6px', radius: 'var(--radius-control, 4px)' },
-  md: { padding: '8px 14px', fontSize: '12px', gap: '8px', radius: 'var(--radius-control, 4px)' },
-  lg: { padding: '12px 20px', fontSize: '14px', gap: '10px', radius: 'var(--radius-control, 4px)' },
+  sm: {
+    padding: `${paddingBlock(5)} 10px`,
+    fontSize: '11px',
+    gap: '6px',
+    radius: 'var(--radius-control, 4px)',
+  },
+  md: {
+    padding: `${paddingBlock(8)} 14px`,
+    fontSize: '12px',
+    gap: '8px',
+    radius: 'var(--radius-control, 4px)',
+  },
+  lg: {
+    padding: `${paddingBlock(12)} 20px`,
+    fontSize: '14px',
+    gap: '10px',
+    radius: 'var(--radius-control, 4px)',
+  },
 };
 
 const DANGER = 'var(--color-danger, #dc2626)';

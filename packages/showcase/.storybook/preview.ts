@@ -29,13 +29,28 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    style: {
+      description: 'Style preset',
+      toolbar: {
+        icon: 'component',
+        items: [
+          { value: 'editorial', title: 'Editorial' },
+          { value: 'precision', title: 'Precision' },
+          { value: 'soft', title: 'Soft' },
+        ],
+        dynamicTitle: true,
+      },
+    },
   },
-  initialGlobals: { accent: 'slate', theme: 'light' },
+  initialGlobals: { accent: 'slate', theme: 'light', style: 'editorial' },
   decorators: [
     (story, context) => {
       const root = document.documentElement;
       root.dataset['accent'] = String(context.globals['accent'] ?? 'slate');
       root.dataset['theme'] = String(context.globals['theme'] ?? 'light');
+      const style = String(context.globals['style'] ?? 'editorial');
+      if (style === 'editorial') delete root.dataset['style'];
+      else root.dataset['style'] = style;
       return story();
     },
   ],

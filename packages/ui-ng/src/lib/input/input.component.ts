@@ -11,9 +11,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export type InputSize = 'sm' | 'md' | 'lg';
 
 const SIZE: Record<InputSize, { height: string; fontSize: string; padding: string }> = {
-  sm: { height: '32px', fontSize: '12px', padding: '0 10px' },
-  md: { height: '40px', fontSize: '14px', padding: '0 12px' },
-  lg: { height: '48px', fontSize: '16px', padding: '0 14px' },
+  sm: { height: 'calc(var(--control-height, 40px) - 8px)', fontSize: '12px', padding: '0 10px' },
+  md: { height: 'var(--control-height, 40px)', fontSize: '14px', padding: '0 12px' },
+  lg: { height: 'calc(var(--control-height, 40px) + 8px)', fontSize: '16px', padding: '0 14px' },
 };
 
 const ERROR = 'var(--color-danger, #dc2626)';

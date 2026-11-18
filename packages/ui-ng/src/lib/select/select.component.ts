@@ -11,7 +11,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export type SelectSize = 'sm' | 'md' | 'lg';
 
 interface SelectDim {
-  readonly height: number;
+  readonly height: string;
   readonly fontSize: number;
   readonly paddingLeft: number;
   readonly paddingRight: number;
@@ -21,7 +21,7 @@ interface SelectDim {
 
 const SIZE: Record<SelectSize, SelectDim> = {
   sm: {
-    height: 32,
+    height: 'calc(var(--control-height, 40px) - 8px)',
     fontSize: 12,
     paddingLeft: 10,
     paddingRight: 28,
@@ -29,7 +29,7 @@ const SIZE: Record<SelectSize, SelectDim> = {
     chevronOffset: 8,
   },
   md: {
-    height: 40,
+    height: 'var(--control-height, 40px)',
     fontSize: 14,
     paddingLeft: 12,
     paddingRight: 32,
@@ -37,7 +37,7 @@ const SIZE: Record<SelectSize, SelectDim> = {
     chevronOffset: 10,
   },
   lg: {
-    height: 48,
+    height: 'calc(var(--control-height, 40px) + 8px)',
     fontSize: 16,
     paddingLeft: 14,
     paddingRight: 36,
@@ -116,7 +116,7 @@ export class SelectComponent implements ControlValueAccessor {
       ? 'color-mix(in oklab, var(--color-danger, #dc2626) 25%, transparent)'
       : 'color-mix(in oklab, var(--color-accent, var(--color-ink, #1e293b)) 30%, transparent)';
     return {
-      height: `${dim.height}px`,
+      height: dim.height,
       'padding-left': `${dim.paddingLeft}px`,
       'padding-right': `${dim.paddingRight}px`,
       'font-size': `${dim.fontSize}px`,

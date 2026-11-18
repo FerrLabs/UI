@@ -12,7 +12,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export type SearchFieldSize = 'sm' | 'md' | 'lg';
 
 interface SearchDim {
-  readonly height: number;
+  readonly height: string;
   readonly padX: number;
   readonly fontSize: number;
   readonly iconSize: number;
@@ -20,9 +20,27 @@ interface SearchDim {
 }
 
 const SIZE: Record<SearchFieldSize, SearchDim> = {
-  sm: { height: 32, padX: 28, fontSize: 12, iconSize: 14, iconInset: 8 },
-  md: { height: 40, padX: 36, fontSize: 14, iconSize: 16, iconInset: 12 },
-  lg: { height: 48, padX: 44, fontSize: 16, iconSize: 20, iconInset: 14 },
+  sm: {
+    height: 'calc(var(--control-height, 40px) - 8px)',
+    padX: 28,
+    fontSize: 12,
+    iconSize: 14,
+    iconInset: 8,
+  },
+  md: {
+    height: 'var(--control-height, 40px)',
+    padX: 36,
+    fontSize: 14,
+    iconSize: 16,
+    iconInset: 12,
+  },
+  lg: {
+    height: 'calc(var(--control-height, 40px) + 8px)',
+    padX: 44,
+    fontSize: 16,
+    iconSize: 20,
+    iconInset: 14,
+  },
 };
 
 @Component({
@@ -165,7 +183,7 @@ export class SearchFieldComponent implements ControlValueAccessor {
       ? '0 0 0 4px color-mix(in oklab, var(--color-danger, #dc2626) 14%, transparent)'
       : '0 0 0 4px color-mix(in oklab, var(--color-accent, var(--color-fg, #1e293b)) 14%, transparent)';
     return {
-      height: `${dim.height}px`,
+      height: dim.height,
       'padding-left': `${dim.padX}px`,
       'padding-right': `${dim.padX}px`,
       'font-size': `${dim.fontSize}px`,
