@@ -53,7 +53,9 @@ import {
 
         <div class="footer__bottom">
           <span class="mono footer__bottom-text">{{ footer.bottomLeft }}</span>
-          <span class="mono footer__bottom-text">{{ footer.bottomRight }}</span>
+          @if (footer.bottomRight) {
+            <span class="mono footer__bottom-text">{{ footer.bottomRight }}</span>
+          }
         </div>
       </div>
     </footer>
