@@ -1,5 +1,7 @@
 import type { Preview } from '@storybook/angular';
 
+Object.assign(globalThis, { ngServerMode: false });
+
 const ACCENTS = [
   { value: 'slate', title: 'FerrLabs' },
   { value: 'orange', title: 'FerrFlow' },
