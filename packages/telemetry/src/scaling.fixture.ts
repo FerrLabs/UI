@@ -1,4 +1,5 @@
 /// <reference types="node" />
+import { assert } from 'vitest';
 import { redactText } from './redact-text.js';
 
 const SHRINK = 8;
@@ -7,6 +8,7 @@ const MAX_RUNS = 12;
 const RUN_BUDGET_MILLIS = 40;
 const MIN_SAMPLE_MILLIS = 2;
 const MAX_SLOWDOWN = 3;
+const MAX_COST_MILLIS = 2000;
 
 export type InputBuilder = (count: number) => string;
 
@@ -21,7 +23,7 @@ function sample(input: string, calls: number): number {
   return cpuMillis() - start;
 }
 
-export function cpuCost(input: string): number {
+function cpuCost(input: string): number {
   let calls = 1;
   let elapsed = sample(input, calls);
   while (elapsed < MIN_SAMPLE_MILLIS) {
@@ -41,11 +43,12 @@ export function cpuCost(input: string): number {
 export function assertNearLinear(build: InputBuilder, count: number, shrink = SHRINK): void {
   const large = build(count);
   const small = build(Math.ceil(count / shrink));
-  const growth = cpuCost(large) / cpuCost(small);
-  const limit = MAX_SLOWDOWN * (large.length / small.length);
-  if (growth >= limit) {
-    throw new Error(
-      `cost grew ${growth.toFixed(1)} times for an input ${(large.length / small.length).toFixed(1)} times longer, limit ${limit.toFixed(1)}`,
-    );
-  }
+  const cost = cpuCost(large);
+  const lengthRatio = large.length / small.length;
+  assert.isBelow(cost, MAX_COST_MILLIS, 'CPU milliseconds for the large input');
+  assert.isBelow(
+    cost / cpuCost(small),
+    MAX_SLOWDOWN * lengthRatio,
+    `cost growth for an input ${lengthRatio.toFixed(1)} times longer`,
+  );
 }
