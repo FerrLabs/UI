@@ -22,8 +22,8 @@ is the default editorial look.
 | `data-style` | Radii (control / card / modal) | Font     | `--control-height` |
 | ------------ | ------------------------------ | -------- | ------------------ |
 | (none)       | 4px / 8px / 12px               | Fraunces | 40px               |
-| `precision`  | 2px / 4px / 6px                | Inter    | 28px               |
-| `soft`       | 8px / 12px / 16px              | Inter    | 36px               |
+| `precision`  | 2px / 4px / 6px                | Geist    | 28px               |
+| `soft`       | 8px / 12px / 16px              | Geist    | 36px               |
 
 `--control-height` is the `md` height of buttons, inputs, selects, search fields,
 multi-selects and submit buttons. `sm` and `lg` are 8px below and above it. Buttons
@@ -82,4 +82,4 @@ should target `@ferrlabs/ui-foundation` directly.
 
 Licensed under either of [Apache-2.0](LICENSE-APACHE) or [MIT](LICENSE-MIT), at your option.
 
-The Fraunces, DM Mono and Inter fonts are not covered by this license. They are pulled in through the `@fontsource/fraunces`, `@fontsource/dm-mono` and `@fontsource/inter` dependencies and stay under the SIL Open Font License 1.1, whose text ships in each of those packages.
+The Fraunces, DM Mono and Geist fonts are not covered by this license. They are pulled in through the `@fontsource/fraunces`, `@fontsource/dm-mono` and `@fontsource/geist-sans` dependencies and stay under the SIL Open Font License 1.1, whose text ships in each of those packages.

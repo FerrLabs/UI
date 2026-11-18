@@ -5,7 +5,7 @@
   "dependencies": {
     "@fontsource/dm-mono": "^5.0.0",
     "@fontsource/fraunces": "^5.0.0",
-    "@fontsource/inter": "^5.3.0"
+    "@fontsource/geist-sans": "^5.3.0"
   },
   "description": "Framework-agnostic FerrLabs design foundation: SVG icons, base CSS + fonts, Tailwind preset tokens. Consumed by @ferrlabs/ui-ng and by the Astro sites directly.",
   "devDependencies": {
