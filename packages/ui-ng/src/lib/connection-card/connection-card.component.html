@@ -1,0 +1,74 @@
+<section class="flr-cc" [attr.aria-labelledby]="titleId" [attr.aria-busy]="loading() || null">
+  <header class="flr-cc__head">
+    <h3 class="flr-cc__title" [id]="titleId">{{ title() }}</h3>
+    @if (description(); as text) {
+      <p class="flr-cc__desc">{{ text }}</p>
+    }
+  </header>
+
+  <div class="flr-cc__body">
+    @switch (phase()) {
+      @case ('loading') {
+        <flr-loading-state [label]="loadingLabel()" />
+      }
+      @case ('failed') {
+        <flr-error-state
+          [message]="error() ?? ''"
+          [retryLabel]="retryLabel()"
+          (retry)="retry.emit()"
+        />
+      }
+      @default {
+        <div class="flr-cc__status flr-cc__status--{{ tone() }}">
+          <svg class="flr-cc__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            @switch (tone()) {
+              @case ('ok') {
+                <circle cx="12" cy="12" r="10" />
+                <path d="m9 12 2 2 4-4" />
+              }
+              @case ('alert') {
+                <path
+                  d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+                />
+                <path d="M12 9v4" />
+                <path d="M12 17h.01" />
+              }
+              @default {
+                <circle cx="12" cy="12" r="10" stroke-dasharray="3 3" />
+              }
+            }
+          </svg>
+          <p class="flr-cc__headline" [attr.role]="role()">{{ headline() }}</p>
+        </div>
+
+        @if (progress(); as text) {
+          <p class="flr-cc__progress" role="status">{{ text }}</p>
+        }
+
+        @if (items().length > 0) {
+          <dl class="flr-cc__meta">
+            @for (item of items(); track item.label) {
+              <div>
+                <dt>{{ item.label }}</dt>
+                <dd [class.flr-cc__mono]="item.mono">{{ item.value }}</dd>
+              </div>
+            }
+          </dl>
+        }
+
+        @if (phase() === 'confirming') {
+          <div class="flr-cc__confirm">
+            <ng-content select="[connection-confirm]" />
+          </div>
+        } @else {
+          <div class="flr-cc__actions">
+            <div class="flr-cc__primary"><ng-content select="[connection-action]" /></div>
+            <div class="flr-cc__danger"><ng-content select="[connection-danger]" /></div>
+          </div>
+        }
+
+        <div class="flr-cc__extra"><ng-content /></div>
+      }
+    }
+  </div>
+</section>

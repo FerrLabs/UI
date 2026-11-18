@@ -24,6 +24,9 @@ export type { SpinnerSize, SpinnerColor } from './lib/spinner/spinner.component'
 export { SkeletonComponent } from './lib/skeleton/skeleton.component';
 export type { SkeletonShape } from './lib/skeleton/skeleton.component';
 
+export { ConnectionCardComponent } from './lib/connection-card/connection-card.component';
+export type { ConnectionMeta, ConnectionTone } from './lib/connection-card/connection-card.model';
+
 export { BannerComponent } from './lib/banner/banner.component';
 export type { BannerVariant } from './lib/banner/banner.component';
 
