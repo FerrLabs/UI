@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.56.1] - 2026-11-18
+
+### Bug Fixes
+
+- fix(ui-ng): raise placeholder contrast to AA in the remaining text fields (#795)
+
 ## [1.56.0] - 2026-11-18
 
 ### Features
