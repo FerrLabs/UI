@@ -88,8 +88,7 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
           <div class="nav__container nav__mobile-list">
             @for (link of links; track link.href; let i = $index) {
               <a [href]="link.href" class="nav__mobile-link" (click)="mobileOpen.set(false)">
-                <span class="mono">{{ pad(i + 1) }}</span
-                >{{ link.label }}
+                <span class="mono">{{ pad(i + 1) }}</span>{{ link.label }}
               </a>
             }
             @if (locales.length > 1) {
