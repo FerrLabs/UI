@@ -1,6 +1,9 @@
 import { assert, describe, it } from 'vitest';
 import { redactText } from './redact-text.js';
 import { exactCases, keptInputs, leakInputs } from './redaction-cases.fixture.js';
+import { assertNearLinear, type InputBuilder } from './scaling.fixture.js';
+
+type Scaled = readonly [name: string, count: number, build: InputBuilder];
 
 const LEAK_MARKER = 'abc';
 
@@ -58,6 +61,15 @@ describe('redactText query and host handling', () => {
     const out = redactText('open https://app.example.com/x#next=a@b.c now');
     assert.ok(out.includes('https://app.example.com/x'), out);
     assert.ok(!out.includes('a@b.c'), out);
+  });
+
+  it('masks the whole word when a slashed password runs past 512 characters', () => {
+    const password = `pa/${'Zq7'.repeat(200)}#1`;
+    assert.strictEqual(redactText(`postgres://app:${password}@db.internal:5432/app`), '*');
+    assert.strictEqual(
+      redactText(`postgres://app:pa/${'Zq7'.repeat(100)}#1@db.internal:5432/app`),
+      'postgres://db.internal:5432/app',
+    );
   });
 
   it('drops URL userinfo and keeps the host', () => {
@@ -175,24 +187,22 @@ describe('redactText bounds', () => {
     }
   });
 
-  it('handles 16 KB of adversarial input in under 250 ms', () => {
-    const inputs = [
-      '?a= '.repeat(4096),
-      'a@'.repeat(8192),
-      'token='.repeat(2730),
-      'Basic '.repeat(2730),
-      'k=' + 'v'.repeat(16000),
-      'https://u:p@'.repeat(1365),
-      'password: '.repeat(1638),
-      'bearer '.repeat(2340),
-    ];
-    for (const input of inputs) {
-      const started = performance.now();
-      redactText(input);
-      const elapsed = performance.now() - started;
-      assert.ok(elapsed < 250, `${input.slice(0, 20)} took ${elapsed.toFixed(0)} ms`);
-    }
-  });
+  const adversarial: readonly Scaled[] = [
+    ['empty query values', 4096, (count) => '?a= '.repeat(count)],
+    ['at signs', 8192, (count) => 'a@'.repeat(count)],
+    ['token keys', 2730, (count) => 'token='.repeat(count)],
+    ['basic schemes', 2730, (count) => 'Basic '.repeat(count)],
+    ['one long value', 16000, (count) => 'k=' + 'v'.repeat(count)],
+    ['userinfo', 1365, (count) => 'https://u:p@'.repeat(count)],
+    ['password keys', 1638, (count) => 'password: '.repeat(count)],
+    ['bearer schemes', 2340, (count) => 'bearer '.repeat(count)],
+  ];
+
+  for (const [name, count, build] of adversarial) {
+    it(`scales near-linearly on 16 KB of ${name}`, () => {
+      assertNearLinear(build, count);
+    });
+  }
 });
 
 describe('redactText bracketed keys, multi-chunk quotes and whitespace runs', () => {
@@ -215,21 +225,23 @@ describe('redactText bracketed keys, multi-chunk quotes and whitespace runs', ()
     assert.strictEqual(redactText(once), once);
   });
 
-  const runs: ReadonlyArray<readonly [string, string]> = [
-    ['spaces after a token word', 'token: a' + ' '.repeat(16000) + 'x'],
-    ['spaces after a bare colon', 'token:' + ' '.repeat(16000)],
-    ['spaces inside a password value', 'password=ab' + ' '.repeat(16000) + 'x'],
-    ['spaces after an auth scheme', 'Authorization: Token' + ' '.repeat(16000) + 'x'],
-    ['alternating tabs and spaces', 'token: a' + '\t \t'.repeat(5400) + 'x'],
-    ['a newline then spaces', 'token:\n' + ' '.repeat(16000) + 'x'],
+  const runs: readonly Scaled[] = [
+    ['spaces after a token word', 16000, (count) => 'token: a' + ' '.repeat(count) + 'x'],
+    ['spaces after a bare colon', 16000, (count) => 'token:' + ' '.repeat(count)],
+    ['spaces inside a password value', 16000, (count) => 'password=ab' + ' '.repeat(count) + 'x'],
+    [
+      'spaces after an auth scheme',
+      16000,
+      (count) => 'Authorization: Token' + ' '.repeat(count) + 'x',
+    ],
+    ['alternating tabs and spaces', 5400, (count) => 'token: a' + '\t \t'.repeat(count) + 'x'],
+    ['a newline then spaces', 16000, (count) => 'token:\n' + ' '.repeat(count) + 'x'],
   ];
 
-  for (const [label, input] of runs) {
-    it(`stays under 250 ms on 16 KB of ${label}`, () => {
-      assert.ok(input.length >= 16000);
-      const started = performance.now();
-      redactText(input);
-      assert.ok(performance.now() - started < 250);
+  for (const [label, count, build] of runs) {
+    it(`scales near-linearly on 16 KB of ${label}`, () => {
+      assert.ok(build(count).length >= 16000);
+      assertNearLinear(build, count);
     });
   }
 });
@@ -399,17 +411,25 @@ describe('redactText doubled equals and long or punctuated prefixes', () => {
     assert.strictEqual(redactText(input), input);
   });
 
-  it('stays under 250 ms on 16 KB behind a long prefix and a run of equals', () => {
-    for (const input of [
-      'a'.repeat(16000) + '_monkey=3',
-      'a'.repeat(16000) + '_password=hunter2abc',
-      'password' + '='.repeat(16000) + 'x',
-    ]) {
-      const started = performance.now();
-      redactText(input);
-      assert.ok(performance.now() - started < 250);
-    }
+  const prefixed: readonly Scaled[] = [
+    [
+      'a long prefix before a secret key',
+      16000,
+      (count) => 'a'.repeat(count) + '_password=hunter2abc',
+    ],
+    ['a run of equals', 16000, (count) => 'password' + '='.repeat(count) + 'x'],
+  ];
+
+  it('scales near-linearly past the longest skip on a long prefix before a benign key', () => {
+    const stepAboveLongestSkip = 4;
+    assertNearLinear((count) => 'a'.repeat(count) + '_monkey=3', 16000, stepAboveLongestSkip);
   });
+
+  for (const [name, count, build] of prefixed) {
+    it(`scales near-linearly on 16 KB of ${name}`, () => {
+      assertNearLinear(build, count);
+    });
+  }
 });
 
 describe('redactText chained values, slashed passwords and non-ASCII spaces', () => {
@@ -453,14 +473,11 @@ describe('redactText chained values, slashed passwords and non-ASCII spaces', ()
     });
   }
 
-  it('stays under 250 ms on unbalanced brackets', () => {
-    for (const input of ['x['.repeat(8000), 'a]'.repeat(8000)]) {
-      const started = performance.now();
-      redactText(input);
-      const elapsed = performance.now() - started;
-      assert.ok(elapsed < 250, `${input.slice(0, 6)} took ${elapsed.toFixed(0)} ms`);
-    }
-  });
+  for (const unit of ['x[', 'a]']) {
+    it(`scales near-linearly on unbalanced ${unit} brackets`, () => {
+      assertNearLinear((count) => unit.repeat(count), 8000);
+    });
+  }
 });
 
 describe('redactText primary and query keys, narrowed state words', () => {
@@ -500,11 +517,8 @@ describe('redactText primary and query keys, narrowed state words', () => {
   });
 
   for (const unit of ['x_request_state=', 'cosmosPrimaryKey=', 'x_client_state=', 'x_keycode=']) {
-    it(`stays under 250 ms on 16 KB of ${unit}`, () => {
-      const input = unit.repeat(Math.ceil(16384 / unit.length));
-      const started = performance.now();
-      redactText(input);
-      assert.ok(performance.now() - started < 250);
+    it(`scales near-linearly on 16 KB of ${unit}`, () => {
+      assertNearLinear((count) => unit.repeat(count), Math.ceil(16384 / unit.length));
     });
   }
 });
@@ -542,15 +556,11 @@ describe('secret words deep inside long keys', () => {
     });
   });
 
-  const adversarial: ReadonlyArray<string> = ['[a'.repeat(8000) + ':', 'a-'.repeat(8000) + ':'];
-
-  adversarial.forEach((input, index) => {
-    it(`stays under 250 ms on 16 KB of adversarial keys ${index}`, () => {
-      const started = performance.now();
-      redactText(input);
-      assert.ok(performance.now() - started < 250);
+  for (const unit of ['[a', 'a-']) {
+    it(`scales near-linearly on 16 KB of ${unit} before a colon`, () => {
+      assertNearLinear((count) => unit.repeat(count) + ':', 8000);
     });
-  });
+  }
 });
 
 describe('a secret value stops before a following query key', () => {
@@ -574,17 +584,14 @@ describe('a secret value stops before a following query key', () => {
     );
   });
 
-  it('stays under 250 ms on 16 KB of long words', () => {
-    const started = performance.now();
-    redactText(('a'.repeat(100) + ' ').repeat(160));
-    assert.ok(performance.now() - started < 250);
+  it('scales near-linearly on 16 KB of long words', () => {
+    assertNearLinear((count) => ('a'.repeat(100) + ' ').repeat(count), 160);
   });
 
-  it('stays under 250 ms and masks the value on repeated long-word keys', () => {
-    const started = performance.now();
-    const out = redactText(('a'.repeat(100) + 'Password=x ').repeat(140));
-    assert.ok(performance.now() - started < 250);
-    assert.ok(!out.includes('=x'));
+  it('scales near-linearly and masks the value on repeated long-word keys', () => {
+    const build: InputBuilder = (count) => ('a'.repeat(100) + 'Password=x ').repeat(count);
+    assertNearLinear(build, 140);
+    assert.ok(!redactText(build(140)).includes('=x'));
   });
 });
 
@@ -621,10 +628,8 @@ describe('nested bracket keys', () => {
     });
   }
 
-  it('stays under 250 ms on repeated closing brackets', () => {
-    const start = performance.now();
-    redactText('a]'.repeat(8000) + '=');
-    assert.ok(performance.now() - start < 250);
+  it('scales near-linearly on repeated closing brackets', () => {
+    assertNearLinear((count) => 'a]'.repeat(count) + '=', 8000);
   });
 });
 
@@ -641,10 +646,8 @@ describe('backslashes inside bearer tokens', () => {
     });
   }
 
-  it('stays under 250 ms on a run of backslashes', () => {
-    const start = performance.now();
-    redactText('Bearer ' + '\\'.repeat(16000));
-    assert.ok(performance.now() - start < 250);
+  it('scales near-linearly on a run of backslashes', () => {
+    assertNearLinear((count) => 'Bearer ' + '\\'.repeat(count), 16000);
   });
 });
 
@@ -663,14 +666,18 @@ describe('quoted values before a query key and keys behind long prefixes', () =>
     });
   }
 
-  for (const [name, input] of [
-    ['long words around a password key', ('a'.repeat(2100) + ' ').repeat(7) + 'password: x'],
-    ['words at the longest skip length', ('a'.repeat(2047) + ' ').repeat(8)],
-  ] as const) {
-    it(`redacts ${name} within 250 ms`, () => {
-      const start = performance.now();
-      redactText(input);
-      assert.ok(performance.now() - start < 250);
+  const longWords: readonly Scaled[] = [
+    [
+      'long words around a password key',
+      7,
+      (count) => ('a'.repeat(2100) + ' ').repeat(count) + 'password: x',
+    ],
+    ['words at the longest skip length', 8, (count) => ('a'.repeat(2047) + ' ').repeat(count)],
+  ];
+
+  for (const [name, count, build] of longWords) {
+    it(`scales near-linearly on ${name}`, () => {
+      assertNearLinear(build, count);
     });
   }
 });
@@ -718,19 +725,17 @@ describe('glued commas and semicolons inside secret values', () => {
     });
   }
 
-  const timed: ReadonlyArray<readonly [string, string]> = [
-    ['a run of glued commas', 'password: ' + 'a,'.repeat(8000)],
-    ['a run of glued semicolons', 'Basic dXNlcjpw' + ';a'.repeat(8000)],
-    ['long dotted words', ('a'.repeat(70) + '.').repeat(230)],
-    ['repeated key prefixes', ('x_'.repeat(40) + 'token=').repeat(150)],
-    ['a dotted run', 'a.'.repeat(8192)],
+  const timed: readonly Scaled[] = [
+    ['a run of glued commas', 8000, (count) => 'password: ' + 'a,'.repeat(count)],
+    ['a run of glued semicolons', 8000, (count) => 'Basic dXNlcjpw' + ';a'.repeat(count)],
+    ['long dotted words', 230, (count) => ('a'.repeat(70) + '.').repeat(count)],
+    ['repeated key prefixes', 150, (count) => ('x_'.repeat(40) + 'token=').repeat(count)],
+    ['a dotted run', 8192, (count) => 'a.'.repeat(count)],
   ];
 
-  for (const [name, input] of timed) {
-    it(`stays under 250 ms on ${name}`, () => {
-      const start = performance.now();
-      redactText(input);
-      assert.ok(performance.now() - start < 250);
+  for (const [name, count, build] of timed) {
+    it(`scales near-linearly on ${name}`, () => {
+      assertNearLinear(build, count);
     });
   }
 });
@@ -754,16 +759,18 @@ describe('equals values spanning spaces', () => {
     });
   }
 
-  const timed: ReadonlyArray<readonly [string, string]> = [
-    ['a long run of spaced words after an equals sign', 'password=' + 'a '.repeat(8000)],
-    ['repeated spaced assignments', 'token=a b '.repeat(1600)],
+  const timed: readonly Scaled[] = [
+    [
+      'a long run of spaced words after an equals sign',
+      8000,
+      (count) => 'password=' + 'a '.repeat(count),
+    ],
+    ['repeated spaced assignments', 1600, (count) => 'token=a b '.repeat(count)],
   ];
 
-  for (const [name, input] of timed) {
-    it(`stays under 250 ms on ${name}`, () => {
-      const start = performance.now();
-      redactText(input);
-      assert.ok(performance.now() - start < 250);
+  for (const [name, count, build] of timed) {
+    it(`scales near-linearly on ${name}`, () => {
+      assertNearLinear(build, count);
     });
   }
 });
@@ -895,34 +902,53 @@ describe('userinfo, yaml blocks, glued separators and query values', () => {
     });
   }
 
-  const timed: ReadonlyArray<readonly [string, string]> = [
-    ['a yaml block of 4000 blank-separated lines', 'password: |\n' + '  x\n\n'.repeat(4000)],
-    ['4000 digit-led path segments before an at sign', '//' + 'a:1/'.repeat(4000) + '@'],
-    ['16000 spaces before a yaml block key', ' '.repeat(16000) + 'password: |\n  x'],
-    ['8000 question marks before an ampersand', '?'.repeat(8000) + '&'],
-    ['5000 query fragments of question mark, letter, ampersand', '?a&'.repeat(5000)],
-    ['8000 dotted segments before an equals sign', 'a.'.repeat(8000) + '='],
-    ['8000 dashed segments before an equals sign', 'a-'.repeat(8000) + '='],
-    ['8000 dashed segments before a colon', 'a-'.repeat(8000) + ':'],
-    ['8000 spaced pairs before an inline yaml block key', 'x '.repeat(8000) + 'password: |\n x'],
-    ['8000 glued semicolons in a colon value', 'password: a' + ';a'.repeat(8000)],
-    ['1700 glued semicolon keys', ';password'.repeat(1700)],
-    ['8000 ampersands in one query', '?' + 'a&'.repeat(8000)],
-    ['16000 query characters before a secret key', '?' + 'x'.repeat(16000) + '&token=abc failed'],
-    ['160 long query keys', '?' + ('&' + 'a'.repeat(100)).repeat(160)],
-    ['3000 glued semicolons before a spaced key in a query', '?token=a' + ';key '.repeat(3000)],
-    ['8000 glued semicolons in a bearer token', 'Bearer abcdefgh' + ';x'.repeat(8000)],
+  const timed: readonly Scaled[] = [
     [
-      '4000 glued semicolons before a spaced equals in a basic credential',
-      'Basic dXNlcjpw' + ';a ='.repeat(4000),
+      'a yaml block of blank-separated lines',
+      4000,
+      (count) => 'password: |\n' + '  x\n\n'.repeat(count),
+    ],
+    [
+      'digit-led path segments before an at sign',
+      4000,
+      (count) => '//' + 'a:1/'.repeat(count) + '@',
+    ],
+    ['spaces before a yaml block key', 16000, (count) => ' '.repeat(count) + 'password: |\n  x'],
+    ['question marks before an ampersand', 8000, (count) => '?'.repeat(count) + '&'],
+    ['query fragments of question mark, letter, ampersand', 5000, (count) => '?a&'.repeat(count)],
+    ['dotted segments before an equals sign', 8000, (count) => 'a.'.repeat(count) + '='],
+    ['dashed segments before an equals sign', 8000, (count) => 'a-'.repeat(count) + '='],
+    ['dashed segments before a colon', 8000, (count) => 'a-'.repeat(count) + ':'],
+    [
+      'spaced pairs before an inline yaml block key',
+      8000,
+      (count) => 'x '.repeat(count) + 'password: |\n x',
+    ],
+    ['glued semicolons in a colon value', 8000, (count) => 'password: a' + ';a'.repeat(count)],
+    ['glued semicolon keys', 1700, (count) => ';password'.repeat(count)],
+    ['ampersands in one query', 8000, (count) => '?' + 'a&'.repeat(count)],
+    [
+      'query characters before a secret key',
+      16000,
+      (count) => '?' + 'x'.repeat(count) + '&token=abc failed',
+    ],
+    ['long query keys', 160, (count) => '?' + ('&' + 'a'.repeat(100)).repeat(count)],
+    [
+      'glued semicolons before a spaced key in a query',
+      3000,
+      (count) => '?token=a' + ';key '.repeat(count),
+    ],
+    ['glued semicolons in a bearer token', 8000, (count) => 'Bearer abcdefgh' + ';x'.repeat(count)],
+    [
+      'glued semicolons before a spaced equals in a basic credential',
+      4000,
+      (count) => 'Basic dXNlcjpw' + ';a ='.repeat(count),
     ],
   ];
 
-  for (const [name, input] of timed) {
-    it(`stays under 250 ms on ${name}`, () => {
-      const start = performance.now();
-      redactText(input);
-      assert.ok(performance.now() - start < 250);
+  for (const [name, count, build] of timed) {
+    it(`scales near-linearly on ${name}`, () => {
+      assertNearLinear(build, count);
     });
   }
 });

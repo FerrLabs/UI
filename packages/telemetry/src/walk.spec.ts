@@ -1,6 +1,7 @@
 import { isSecretName, redactText } from './redact-text.js';
 import { assert, describe, it } from 'vitest';
 import type { TransportItem } from '@grafana/faro-web-sdk';
+import { assertNearLinear } from './scaling.fixture.js';
 import { redactDeep, sanitizeItem } from './walk.js';
 
 const MARKER = ['hunter2', 'SECRET', 'zq'].join('');
@@ -496,12 +497,8 @@ describe('redactText code and state keys', () => {
     });
   }
 
-  it('stays under 250 ms on 16 KB of prefixed code keys', () => {
-    const input = 'x_code:'.repeat(2400);
-    assert.ok(input.length >= 16000);
-    const started = performance.now();
-    redactText(input);
-    assert.ok(performance.now() - started < 250);
+  it('scales near-linearly on 16 KB of prefixed code keys', () => {
+    assertNearLinear((count) => 'x_code:'.repeat(count), 2400);
   });
 });
 
@@ -1031,14 +1028,12 @@ describe('each property is read once', () => {
     assert.deepEqual<unknown>(out.meta.session, { id: 'sess-1' });
   });
 
-  for (const [name, input] of [
-    ['words separated by spaces', ('a'.repeat(512) + ' ').repeat(31)],
-    ['words separated by dashes', ('a'.repeat(511) + '-').repeat(32)],
+  for (const [name, count, unit] of [
+    ['words separated by spaces', 31, 'a'.repeat(512) + ' '],
+    ['words separated by dashes', 32, 'a'.repeat(511) + '-'],
   ] as const) {
-    it(`redacts ${name} within 250 ms`, () => {
-      const start = performance.now();
-      redactText(input);
-      assert.ok(performance.now() - start < 250);
+    it(`scales near-linearly on ${name}`, () => {
+      assertNearLinear((size) => unit.repeat(size), count);
     });
   }
 });

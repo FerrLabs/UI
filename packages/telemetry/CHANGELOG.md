@@ -4,6 +4,12 @@ All notable changes to `telemetry` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.6.1] - 2026-11-18
+
+### Bug Fixes
+
+- fix(telemetry): bound the userinfo password scan in redactText (#798)
+
 ## [0.6.0] - 2026-11-18
 
 ### Features
