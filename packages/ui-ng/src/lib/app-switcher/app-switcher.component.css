@@ -22,8 +22,11 @@
   text-align: left;
   font-family: inherit;
   transition:
-    background 130ms ease,
-    border-color 130ms ease;
+    padding 220ms ease,
+    gap 220ms ease,
+    border-width 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
 }
 
 .flr-as__trigger:hover {
@@ -42,20 +45,30 @@
 }
 
 .flr-as--collapsed .flr-as__trigger {
-  justify-content: center;
+  gap: 0;
   padding: 0;
-  border: none;
+  border-width: 0;
+  border-color: transparent;
   background: transparent;
 }
 
-.flr-as--collapsed .flr-as__mark {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1;
+.flr-as--collapsed .flr-as__trigger .flr-as__mark {
+  width: var(--flr-as-compact-size, 48px);
+  height: var(--flr-as-compact-size, 48px);
   border-radius: var(--radius-modal, 12px);
-  transition:
-    background 130ms ease,
-    box-shadow 130ms ease;
+}
+
+.flr-as--collapsed .flr-as__trigger .flr-as__text {
+  opacity: 0;
+}
+
+.flr-as--collapsed .flr-as__chevron {
+  width: 0;
+  opacity: 0;
+}
+
+.flr-as--collapsed .flr-as__trigger flr-logo-mark {
+  transform: none;
 }
 
 .flr-as--collapsed .flr-as__trigger:hover .flr-as__mark {
@@ -77,6 +90,21 @@
   background: color-mix(in srgb, var(--flr-as-accent, #ffffff) 16%, #101012);
 }
 
+.flr-as__trigger .flr-as__mark {
+  transition:
+    width 220ms ease,
+    height 220ms ease,
+    border-radius 220ms ease,
+    background 130ms ease,
+    box-shadow 130ms ease;
+}
+
+.flr-as__trigger flr-logo-mark {
+  display: flex;
+  transform: scale(0.8077);
+  transition: transform 220ms ease;
+}
+
 .flr-as__item .flr-as__mark {
   width: 30px;
   height: 30px;
@@ -86,6 +114,12 @@
 .flr-as__text {
   flex: 1;
   min-width: 0;
+}
+
+.flr-as__trigger .flr-as__text {
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity 140ms ease;
 }
 
 .flr-as__name {
@@ -135,7 +169,12 @@
 }
 
 .flr-as__chevron {
+  width: 14px;
+  overflow: hidden;
   color: rgba(255, 255, 255, 0.5);
+  transition:
+    width 220ms ease,
+    opacity 140ms ease;
 }
 
 .flr-as__trigger[aria-expanded='true'] .flr-as__chevron {
@@ -158,11 +197,40 @@
   border: 1px solid var(--color-app-rail-rule, rgba(255, 255, 255, 0.12));
   background: var(--color-app-rail-tip, #1a1b20);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+  animation: flr-as-in 140ms ease-out;
 }
 
 .flr-as--collapsed .flr-as__panel {
+  --flr-as-shift-x: -4px;
+  --flr-as-shift-y: 0px;
   left: calc(100% + 10px);
   top: 0;
+}
+
+.flr-as__panel--leaving {
+  animation: flr-as-out 100ms ease-in forwards;
+}
+
+@keyframes flr-as-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--flr-as-shift-x, 0px), var(--flr-as-shift-y, -4px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes flr-as-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--flr-as-shift-x, 0px), var(--flr-as-shift-y, -4px));
+  }
 }
 
 .flr-as__panel-head {
@@ -281,10 +349,18 @@
 
 @media (prefers-reduced-motion: reduce) {
   .flr-as__trigger,
-  .flr-as--collapsed .flr-as__mark,
+  .flr-as__trigger .flr-as__mark,
+  .flr-as__trigger .flr-as__text,
+  .flr-as__trigger flr-logo-mark,
+  .flr-as__chevron,
   .flr-as__item,
   .flr-as__customize,
   .flr-as__footer ::ng-deep a {
     transition: none;
+  }
+
+  .flr-as__panel,
+  .flr-as__panel--leaving {
+    animation: none;
   }
 }

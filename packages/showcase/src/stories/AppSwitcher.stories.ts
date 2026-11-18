@@ -65,7 +65,7 @@ export const Collapsed: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="width:76px; padding:14px 8px; min-height:360px; background:var(--color-app-rail, #101012)">
+      <div style="width:64px; padding:14px 8px; min-height:360px; background:var(--color-app-rail, #101012)">
         <flr-app-switcher [items]="items" [current]="current" [collapsed]="collapsed" />
       </div>`,
   }),
