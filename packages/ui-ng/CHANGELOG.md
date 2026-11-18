@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.53.1] - 2026-11-18
+
+### Bug Fixes
+
+- fix(ui-ng): outline the selected flr-segmented option (#781)
+
 ## [1.53.0] - 2026-11-18
 
 ### Features
