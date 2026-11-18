@@ -12,6 +12,7 @@ export interface TelemetryOptions {
   dropSessionMeta?: boolean;
   environment?: string;
   isConsentRefused?: () => boolean;
+  release?: string;
   enabled?: boolean;
 }
 
@@ -31,6 +32,7 @@ export function initTelemetry({
   dropSessionMeta = false,
   environment,
   isConsentRefused,
+  release,
   enabled = true,
 }: TelemetryOptions): void {
   if (!enabled) return;
@@ -40,7 +42,11 @@ export function initTelemetry({
   try {
     initializeFaro({
       url: collectorUrl,
-      app: { name: appName, environment: environment || environmentFromHostname(hostname) },
+      app: {
+        name: appName,
+        environment: environment || environmentFromHostname(hostname),
+        ...(release ? { release, version: release } : {}),
+      },
       instrumentations: getWebInstrumentations({ captureConsole: false }),
       beforeSend: (item) => redactItem(item, capabilityPaths, { dropSessionMeta }),
       sessionTracking: { enabled: false },

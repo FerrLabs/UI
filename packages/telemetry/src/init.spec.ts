@@ -107,6 +107,29 @@ describe('initTelemetry', () => {
     });
   });
 
+  it('sets app.release and app.version from the release option', () => {
+    setEnvironment('app.dev.ferrlabs');
+    initTelemetry({ ...options, release: 'my-app-1.2.3' });
+    expect(vi.mocked(initializeFaro).mock.calls[0]?.[0]?.app).toEqual({
+      name: 'my-app',
+      environment: 'dev',
+      release: 'my-app-1.2.3',
+      version: 'my-app-1.2.3',
+    });
+  });
+
+  it.each([undefined, ''])(
+    'leaves app.release and app.version unset when release is %j',
+    (value) => {
+      setEnvironment('app.dev.ferrlabs');
+      initTelemetry({ ...options, release: value });
+      expect(vi.mocked(initializeFaro).mock.calls[0]?.[0]?.app).toEqual({
+        name: 'my-app',
+        environment: 'dev',
+      });
+    },
+  );
+
   it('initialises Faro without console capture and without session tracking', () => {
     setEnvironment('app.dev.ferrlabs');
     initTelemetry(options);
