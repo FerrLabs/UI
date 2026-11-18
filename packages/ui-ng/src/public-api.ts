@@ -262,3 +262,8 @@ export type {
   AccessScope,
   AccessSelection,
 } from './lib/access-picker/access-picker.model';
+
+export { SplitterComponent } from './lib/splitter/splitter.component';
+export type { SplitterResizeEvent } from './lib/splitter/splitter.component';
+export { SplitterPaneComponent } from './lib/splitter/splitter-pane.component';
+export type { SplitterOrientation, SplitterSize } from './lib/splitter/splitter-model';

@@ -41,6 +41,58 @@ import { ButtonComponent } from '@ferrlabs/ui-ng';
 export class Demo {}
 ```
 
+## Splitter
+
+Resizable panes with a draggable, keyboard accessible handle between each pair.
+
+```ts
+import { SplitterComponent, SplitterPaneComponent } from '@ferrlabs/ui-ng';
+
+@Component({
+  imports: [SplitterComponent, SplitterPaneComponent],
+  template: `
+    <flr-splitter storageKey="editor" [stackBelow]="640" (resizeEnd)="onResize($event)">
+      <flr-splitter-pane label="Sidebar" defaultSize="30%" minSize="160" maxSize="50%" collapsible>
+        ...
+      </flr-splitter-pane>
+      <flr-splitter-pane label="Content" minSize="240">...</flr-splitter-pane>
+    </flr-splitter>
+  `,
+})
+export class Demo {}
+```
+
+`flr-splitter` inputs: `orientation` (`'horizontal'` panes side by side, the default, or `'vertical'`
+panes stacked), `stacked` (force the stacked layout), `stackBelow` (width in px under which a
+horizontal splitter stacks and drops its handles), `storageKey` (persist sizes and collapsed state in
+`localStorage` under `flr-splitter:<key>`), `keyboardStep` (px per arrow press, Shift is 5x, default
+10). Output: `resizeEnd` with `{ sizes, ratios, collapsed }`, emitted when a drag ends and after each
+keyboard resize, collapse or reset.
+
+Screen reader text is overridable, English by default: `resetAnnouncement` (string, said after a
+reset), `sizeAnnouncement` (`(label, percent, collapsed) => string`), `paneLabel`
+(`(position) => string`, the fallback for panes without a `label`, 1-based) and `resizeLabel`
+(`(paneLabel) => string`, the handle's `aria-label`).
+
+`flr-splitter-pane` inputs: `defaultSize`, `minSize`, `maxSize` (px number or `'30%'`), `collapsible`,
+`label` (used in the handle label and the announcements), `handleLabel` (replaces the handle's
+`aria-label` for this pane), and `[(collapsed)]`. Panes without a
+`defaultSize` share the remaining space.
+
+The splitter fills its parent (`width` and `height` 100%), so give the parent a definite size, in
+particular for `orientation="vertical"`. Sizes are kept as ratios of the container, so they follow
+window resizes; min and max still apply. A px `defaultSize` stays in px until the first resize.
+
+Interaction: drag with mouse, touch or pen; arrow keys resize (Shift for bigger steps), Home and End
+jump to min and max, Enter collapses or expands a collapsible neighbour, double-click resets sizes
+and expands collapsed panes. The handle is a focusable `role="separator"` with `aria-valuenow`,
+`aria-valuemin`, `aria-valuemax` (percent of the container) and `aria-controls` pointing at the pane
+before it, with a 24px hit area. `aria-orientation` is the separator's own: a horizontal splitter has
+vertical separators. The new size is announced through the CDK `LiveAnnouncer` (polite). Right-to-left
+direction is read from CSS `direction`. Stored sizes are restored once per `storageKey`, so adding
+or removing a pane later keeps the live layout. A drag is cancelled if its handle goes away
+(for example when the splitter crosses `stackBelow`).
+
 ## Versioned docs (`@ferrlabs/ui-ng/docs`)
 
 Brand-agnostic versioned-documentation layout, shared across product sites.

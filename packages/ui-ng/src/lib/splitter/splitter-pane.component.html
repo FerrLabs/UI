@@ -1,0 +1,26 @@
+<div class="flr-pane__content"><ng-content /></div>
+@if (showHandle()) {
+  @let state = handleState();
+  <div
+    class="flr-pane__handle"
+    [class.flr-pane__handle--row]="host.orientation() === 'vertical'"
+    role="separator"
+    tabindex="0"
+    [attr.aria-orientation]="handleOrientation()"
+    [attr.aria-controls]="paneId"
+    [attr.aria-label]="handleAriaLabel()"
+    [attr.aria-valuenow]="state.valueNow"
+    [attr.aria-valuemin]="state.valueMin"
+    [attr.aria-valuemax]="state.valueMax"
+    (pointerdown)="host.startDrag(index(), $event)"
+    (pointermove)="host.moveDrag($event)"
+    (pointerup)="host.endDrag($event)"
+    (pointercancel)="host.endDrag($event)"
+    (lostpointercapture)="host.endDrag($event)"
+    (keydown)="host.handleKeydown(index(), $event)"
+    (dblclick)="host.reset()"
+  >
+    <span class="flr-pane__line" aria-hidden="true"></span>
+    <span class="flr-pane__grip" aria-hidden="true"></span>
+  </div>
+}

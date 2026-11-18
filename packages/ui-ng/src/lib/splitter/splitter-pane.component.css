@@ -1,0 +1,124 @@
+:host {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+}
+
+.flr-pane__content {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+:host(.flr-pane--inert) .flr-pane__content {
+  pointer-events: none;
+  user-select: none;
+}
+
+:host(.flr-pane--collapsed) .flr-pane__content {
+  visibility: hidden;
+}
+
+.flr-pane__handle {
+  position: absolute;
+  z-index: 1;
+  inset-block: 0;
+  inset-inline-end: -12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  min-width: 24px;
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+  outline: none;
+}
+
+.flr-pane__handle--row {
+  inset-block: auto -12px;
+  inset-inline: 0;
+  width: auto;
+  min-width: 0;
+  height: 24px;
+  min-height: 24px;
+  flex-direction: column;
+  cursor: row-resize;
+}
+
+.flr-pane__line {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(50% - 0.5px);
+  width: 1px;
+  background: var(--color-rule-strong, rgba(30, 41, 59, 0.28));
+  pointer-events: none;
+  transition:
+    background-color 120ms ease,
+    width 120ms ease,
+    inset-inline-start 120ms ease;
+}
+
+.flr-pane__handle--row .flr-pane__line {
+  inset-block: calc(50% - 0.5px) auto;
+  inset-inline: 0;
+  width: auto;
+  height: 1px;
+  transition:
+    background-color 120ms ease,
+    height 120ms ease,
+    inset-block-start 120ms ease;
+}
+
+.flr-pane__grip {
+  position: relative;
+  width: 4px;
+  height: 28px;
+  border-radius: var(--radius-full, 999px);
+  background: var(--color-ink-3, #5d6b80);
+  pointer-events: none;
+  transition: background-color 120ms ease;
+}
+
+.flr-pane__handle--row .flr-pane__grip {
+  width: 28px;
+  height: 4px;
+}
+
+.flr-pane__handle:hover .flr-pane__line,
+.flr-pane__handle:active .flr-pane__line,
+.flr-pane__handle:focus-visible .flr-pane__line {
+  inset-inline-start: calc(50% - 1.5px);
+  width: 3px;
+  background: var(--color-accent, currentColor);
+}
+
+.flr-pane__handle--row:hover .flr-pane__line,
+.flr-pane__handle--row:active .flr-pane__line,
+.flr-pane__handle--row:focus-visible .flr-pane__line {
+  inset-block-start: calc(50% - 1.5px);
+  inset-inline-start: 0;
+  width: auto;
+  height: 3px;
+}
+
+.flr-pane__handle:hover .flr-pane__grip,
+.flr-pane__handle:active .flr-pane__grip,
+.flr-pane__handle:focus-visible .flr-pane__grip {
+  background: var(--color-accent, currentColor);
+}
+
+.flr-pane__handle:focus-visible {
+  outline: 2px solid var(--color-accent, currentColor);
+  outline-offset: -2px;
+  border-radius: var(--radius-control, 4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flr-pane__line,
+  .flr-pane__grip {
+    transition: none;
+  }
+}
