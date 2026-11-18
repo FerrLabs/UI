@@ -308,7 +308,14 @@ export const CollapsedRailKeepsTheOrgReadable: Story = {
     if (!org || !app) throw new Error('rail switchers not found');
     await expect(org.getAttribute('aria-label')).toBe('FerrLabs');
     await expect(org.textContent?.trim()).toBe('F');
-    await expect(app.textContent).not.toContain('Switch app');
+    const caption = app.querySelector<HTMLElement>('.flr-as__caption');
+    if (!caption) throw new Error('app switcher caption not found');
+    await waitFor(() => {
+      expect(caption.getBoundingClientRect().width).toBe(0);
+      expect(getComputedStyle(caption.closest('.flr-as__text') as HTMLElement).opacity).toBe('0');
+    });
+    await expect(caption.closest('.flr-as__text')?.getAttribute('aria-hidden')).toBe('true');
+    await expect(app.getAttribute('aria-label')).toBe('Switch app, FerrFleet');
   },
 };
 

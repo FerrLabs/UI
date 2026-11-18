@@ -11,31 +11,23 @@
   >
     @if (currentItem(); as item) {
       <span class="flr-as__mark" aria-hidden="true">
-        <flr-logo-mark
-          [product]="glyph(item)"
-          [accent]="markColor(item)"
-          [size]="compact() ? 26 : 21"
-        />
+        <flr-logo-mark [product]="glyph(item)" [accent]="markColor(item)" [size]="26" />
       </span>
-      @if (!compact()) {
-        <span class="flr-as__text">
-          <span class="flr-as__name">{{ item.label }}</span>
-          <span class="mono flr-as__caption">{{ caption() }}</span>
-        </span>
-      }
-    }
-    @if (!compact()) {
-      <span class="flr-as__chevron" aria-hidden="true">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <polyline points="4.5 6.5 8 3 11.5 6.5" />
-          <polyline points="4.5 9.5 8 13 11.5 9.5" />
-        </svg>
+      <span class="flr-as__text" [attr.aria-hidden]="compact() || null">
+        <span class="flr-as__name">{{ item.label }}</span>
+        <span class="mono flr-as__caption">{{ caption() }}</span>
       </span>
     }
+    <span class="flr-as__chevron" aria-hidden="true">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <polyline points="4.5 6.5 8 3 11.5 6.5" />
+        <polyline points="4.5 9.5 8 13 11.5 9.5" />
+      </svg>
+    </span>
   </button>
 
   @if (open()) {
-    <div class="flr-as__panel" [id]="panelId">
+    <div class="flr-as__panel" animate.leave="flr-as__panel--leaving" [id]="panelId">
       <div class="flr-as__panel-head">
         <p class="mono flr-as__panel-title">{{ listLabel() }}</p>
         <button

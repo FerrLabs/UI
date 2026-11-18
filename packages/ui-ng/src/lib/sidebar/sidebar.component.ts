@@ -54,6 +54,7 @@ import { markColorOnDark } from '../app-rail/mark-color';
     }
     .flr-sb__switcher {
       padding: 12px 12px 4px;
+      transition: padding 220ms ease;
     }
     .flr-sb--collapsed .flr-sb__switcher {
       padding: 12px 8px 4px;
@@ -76,6 +77,11 @@ import { markColorOnDark } from '../app-rail/mark-color';
     @media (max-width: 880px) {
       .flr-sb {
         display: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .flr-sb__switcher {
+        transition: none;
       }
     }
   `,
