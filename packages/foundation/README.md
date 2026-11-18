@@ -7,11 +7,16 @@ package instead of three. Tracked under UI#105.
 
 ## What's in here
 
-| Subpath                                     | What                                                       | Used by                  |
-| ------------------------------------------- | ---------------------------------------------------------- | ------------------------ |
-| `@ferrlabs/ui-foundation/icons`             | SVG icon set as raw strings (Lucide-inspired stroke icons) | React + Astro            |
-| `@ferrlabs/ui-foundation/styles/global.css` | Base stylesheet — fonts + Tailwind import + brand tokens   | Every app's `global.css` |
-| `@ferrlabs/ui-foundation/styles/tokens.css` | Brand color + typography tokens (consumed via `@theme`)    | apps/sites               |
+| Subpath                                     | What                                                              | Used by                  |
+| ------------------------------------------- | ----------------------------------------------------------------- | ------------------------ |
+| `@ferrlabs/ui-foundation/icons`             | SVG icon set as raw strings (Lucide-inspired stroke icons)        | React + Astro            |
+| `@ferrlabs/ui-foundation/styles/global.css` | Base stylesheet — fonts + Tailwind import + brand tokens          | Every app's `global.css` |
+| `@ferrlabs/ui-foundation/styles/tokens.css` | Brand color + typography tokens (consumed via `@theme`)           | apps/sites               |
+| `@ferrlabs/ui-foundation/styles/icons.css`  | Icon hover animations (`fi-*` classes), pulled in by `tokens.css` | apps/sites               |
+
+## Icon animations
+
+Icons carry optional `fi-*` classes. They are static until an ancestor gets the `fi-play` class, which `@ferrlabs/ui-ng` adds on pointer enter or keyboard focus and removes once every animation inside it has finished, so a run is never cut short or restarted. It is wired on sidebar, menu and project switcher items through `flrIconPlay`. Every animation starts and ends at the icon's resting state. `prefers-reduced-motion: reduce` disables them.
 
 ## Style presets
 

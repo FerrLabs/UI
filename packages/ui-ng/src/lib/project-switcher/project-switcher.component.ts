@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { SiteCardComponent } from '../site-card/site-card.component';
+import { IconPlayDirective } from '../icon/icon-play.directive';
 import { isTrustedIconMarkup } from '../icon/icon-markup';
 import { SHELL_CONTEXT } from '../shell/shell-context';
 
@@ -33,7 +34,7 @@ export interface ProjectSwitcherPlaceholder {
 @Component({
   selector: 'flr-project-switcher',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SiteCardComponent],
+  imports: [SiteCardComponent, IconPlayDirective],
   host: {
     '(document:mousedown)': 'onDocumentDown($event)',
     '(document:keydown.escape)': 'close()',
@@ -45,6 +46,7 @@ export interface ProjectSwitcherPlaceholder {
       <button
         type="button"
         class="flr-ps__brand"
+        flrIconPlay
         [attr.aria-expanded]="open()"
         [attr.aria-label]="compact() ? displayedLabel() : null"
         (click)="toggle()"
@@ -112,6 +114,7 @@ export interface ProjectSwitcherPlaceholder {
               <button
                 type="button"
                 class="flr-ps__item"
+                flrIconPlay
                 [class.flr-ps__item--hl]="idx === highlight()"
                 [attr.aria-current]="item.id === current()?.id ? 'true' : null"
                 (mouseenter)="highlight.set(idx)"

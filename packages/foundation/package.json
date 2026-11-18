@@ -22,6 +22,7 @@
     },
     "./package.json": "./package.json",
     "./styles/global.css": "./src/styles/global.css",
+    "./styles/icons.css": "./src/styles/icons.css",
     "./styles/tokens.css": "./src/styles/tokens.css",
     "./svg/*.svg": "./src/svg/*.svg"
   },
