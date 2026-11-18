@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.52.5] - 2026-11-18
+
+### Bug Fixes
+
+- fix(ui-ng): handle Home and End in flr-segmented (#782)
+
 ## [1.52.4] - 2026-11-18
 
 ### Bug Fixes
