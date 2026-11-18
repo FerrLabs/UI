@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.52.2] - 2026-11-18
+
+### Bug Fixes
+
+- fix(ui-ng): animate app switcher collapse in step with the sidebar (#769)
+
 ## [1.52.1] - 2026-11-15
 
 ### Bug Fixes
