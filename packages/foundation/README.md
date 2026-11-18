@@ -16,7 +16,7 @@ package instead of three. Tracked under UI#105.
 
 ## Icon animations
 
-Icons carry optional `fi-*` classes. They are static until an ancestor gets the `fi-play` class, which `playIconAnimation(element)` adds on pointer enter or keyboard focus and removes once every animation inside it has finished, so a run is never cut short or restarted. `@ferrlabs/ui-ng` wires it on sidebar, menu and project switcher items. Every animation starts and ends at the icon's resting state. `prefers-reduced-motion: reduce` disables them.
+Icons carry optional `fi-*` classes. They are static until an ancestor gets the `fi-play` class, which `@ferrlabs/ui-ng` adds on pointer enter or keyboard focus and removes once every animation inside it has finished, so a run is never cut short or restarted. It is wired on sidebar, menu and project switcher items through `flrIconPlay`. Every animation starts and ends at the icon's resting state. `prefers-reduced-motion: reduce` disables them.
 
 ## Style presets
 

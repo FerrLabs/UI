@@ -1,5 +1,5 @@
 import { Directive, ElementRef, inject } from '@angular/core';
-import { playIconAnimation } from '@ferrlabs/ui-foundation';
+import { playIconAnimation } from './play-icon-animation';
 
 @Directive({
   selector: '[flrIconPlay]',

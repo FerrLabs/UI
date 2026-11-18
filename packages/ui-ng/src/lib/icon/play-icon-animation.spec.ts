@@ -1,4 +1,4 @@
-import { playIconAnimation } from '@ferrlabs/ui-foundation';
+import { playIconAnimation } from './play-icon-animation';
 import { describe, expect, it } from 'vitest';
 
 interface Deferred {
