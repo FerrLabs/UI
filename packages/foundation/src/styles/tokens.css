@@ -149,8 +149,8 @@ html[data-style='precision'] {
   --radius-control: 2px;
   --radius-card: 4px;
   --radius-modal: 6px;
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-display: 'Inter', system-ui, sans-serif;
+  --font-sans: 'Geist Sans', system-ui, sans-serif;
+  --font-display: 'Geist Sans', system-ui, sans-serif;
   --control-height: 28px;
 }
 
@@ -158,7 +158,7 @@ html[data-style='soft'] {
   --radius-control: 8px;
   --radius-card: 12px;
   --radius-modal: 16px;
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-display: 'Inter', system-ui, sans-serif;
+  --font-sans: 'Geist Sans', system-ui, sans-serif;
+  --font-display: 'Geist Sans', system-ui, sans-serif;
   --control-height: 36px;
 }
