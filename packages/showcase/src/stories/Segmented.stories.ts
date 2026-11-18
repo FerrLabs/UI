@@ -2,6 +2,7 @@ import { SegmentedComponent, type SegmentedOption } from '@ferrlabs/ui-ng';
 import { icons } from '@ferrlabs/ui-foundation/icons';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 const views: readonly SegmentedOption[] = [
   { value: 'grid', label: 'Grid', icon: icons.products },
@@ -11,6 +12,13 @@ const views: readonly SegmentedOption[] = [
 const scopes: readonly SegmentedOption[] = [
   { value: 'all', label: 'All' },
   { value: 'attention', label: 'Needs attention' },
+];
+
+const ranges: readonly SegmentedOption[] = [
+  { value: 'day', label: 'Day' },
+  { value: 'week', label: 'Week' },
+  { value: 'month', label: 'Month' },
+  { value: 'year', label: 'Year' },
 ];
 
 const meta: Meta<SegmentedComponent> = {
@@ -34,4 +42,30 @@ export const IconOnly: Story = {
     props: { views, view: 'grid' },
     template: `<flr-segmented aria-label="View" [options]="views" [iconOnly]="true" [(value)]="view" />`,
   }),
+};
+
+export const Keyboard: Story = {
+  render: () => ({
+    props: { ranges, range: 'week' },
+    template: `
+      <flr-segmented aria-label="Range" [options]="ranges" [value]="range" (valueChange)="range = $event" />
+      <p data-testid="range" style="margin:12px 0 0">{{ range }}</p>`,
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const radio = (name: string) => canvas.getByRole('radio', { name });
+    const expectSelected = async (name: string, value: string) => {
+      await waitFor(() => expect(canvas.getByTestId('range')).toHaveTextContent(value));
+      expect(radio(name)).toHaveAttribute('aria-checked', 'true');
+      expect(radio(name)).toHaveFocus();
+    };
+
+    radio('Week').focus();
+    await userEvent.keyboard('{End}');
+    await expectSelected('Year', 'year');
+    await userEvent.keyboard('{Home}');
+    await expectSelected('Day', 'day');
+    await userEvent.keyboard('{ArrowLeft}');
+    await expectSelected('Year', 'year');
+  },
 };

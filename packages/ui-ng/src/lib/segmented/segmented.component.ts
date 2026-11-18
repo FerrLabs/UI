@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { isTrustedIconMarkup } from '../icon/icon-markup';
+import { keyTargetIndex } from './segmented-keys';
 
 export interface SegmentedOption {
   readonly value: string;
@@ -66,10 +67,9 @@ export class SegmentedComponent {
 
   protected handleKeydown(event: KeyboardEvent, index: number): void {
     const options = this.options();
-    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
-    if (step === undefined) return;
+    const next = keyTargetIndex(event.key, index, options.length);
+    if (next === null) return;
     event.preventDefault();
-    const next = (index + step + options.length) % options.length;
     this.value.set(options[next].value);
     this.buttons()[next]?.nativeElement.focus();
   }
