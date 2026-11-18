@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { expect, it, describe } from 'vitest';
 import { redactText } from './redact-text.js';
-import { assertNearLinear, type InputBuilder } from './scaling.fixture.js';
+import { assertNearLinear, cpuCost, type InputBuilder } from './scaling.fixture.js';
 
 describe('redactText', () => {
   const secretCases = [
@@ -368,6 +368,10 @@ describe('redactText scaling on 16 KB inputs', () => {
     ['{"password":"x",', (size) => fill('{"password":"x",', size)],
     ['data:image/png;base64,AAA', (size) => `data:image/png;base64,${'A'.repeat(size - 22)}`],
   ];
+
+  it('costs under 2 s of CPU on the heaviest known 16 KB input', () => {
+    expect(cpuCost('x['.repeat(8000))).toBeLessThan(2000);
+  });
 
   for (const [name, build] of shapes) {
     it(`grows near-linearly for ${JSON.stringify(name)} repeated`, () => {

@@ -403,7 +403,6 @@ describe('redactText doubled equals and long or punctuated prefixes', () => {
   });
 
   const prefixed: readonly Scaled[] = [
-    ['a long prefix before a benign key', 16000, (count) => 'a'.repeat(count) + '_monkey=3'],
     [
       'a long prefix before a secret key',
       16000,
@@ -411,6 +410,11 @@ describe('redactText doubled equals and long or punctuated prefixes', () => {
     ],
     ['a run of equals', 16000, (count) => 'password' + '='.repeat(count) + 'x'],
   ];
+
+  it('scales near-linearly past the longest skip on a long prefix before a benign key', () => {
+    const stepAboveLongestSkip = 4;
+    assertNearLinear((count) => 'a'.repeat(count) + '_monkey=3', 16000, stepAboveLongestSkip);
+  });
 
   for (const [name, count, build] of prefixed) {
     it(`scales near-linearly on 16 KB of ${name}`, () => {

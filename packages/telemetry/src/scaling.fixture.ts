@@ -1,6 +1,7 @@
+/// <reference types="node" />
 import { redactText } from './redact-text.js';
 
-const SHRINK = 4;
+const SHRINK = 8;
 const MIN_RUNS = 3;
 const MAX_RUNS = 12;
 const RUN_BUDGET_MILLIS = 40;
@@ -20,7 +21,7 @@ function sample(input: string, calls: number): number {
   return cpuMillis() - start;
 }
 
-function cpuCost(input: string): number {
+export function cpuCost(input: string): number {
   let calls = 1;
   let elapsed = sample(input, calls);
   while (elapsed < MIN_SAMPLE_MILLIS) {
@@ -37,9 +38,9 @@ function cpuCost(input: string): number {
   return fastest / calls;
 }
 
-export function assertNearLinear(build: InputBuilder, count: number): void {
+export function assertNearLinear(build: InputBuilder, count: number, shrink = SHRINK): void {
   const large = build(count);
-  const small = build(Math.ceil(count / SHRINK));
+  const small = build(Math.ceil(count / shrink));
   const growth = cpuCost(large) / cpuCost(small);
   const limit = MAX_SLOWDOWN * (large.length / small.length);
   if (growth >= limit) {
