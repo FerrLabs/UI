@@ -58,18 +58,16 @@ export interface ProjectSwitcherPlaceholder {
               {{ displayedIcon() }}
             }
           </span>
-        } @else if (compact()) {
+        } @else {
           <span class="flr-ps__monogram" aria-hidden="true">{{ monogram() }}</span>
         }
-        @if (!compact()) {
-          <span class="flr-ps__brand-text">
-            <span class="flr-ps__brand-label">{{ displayedLabel() }}</span>
-            @if (displayedMeta()) {
-              <span class="flr-ps__brand-meta">{{ displayedMeta() }}</span>
-            }
-          </span>
-          <span class="flr-ps__brand-chev" aria-hidden="true">▾</span>
-        }
+        <span class="flr-ps__brand-text" [attr.aria-hidden]="compact() || null">
+          <span class="flr-ps__brand-label">{{ displayedLabel() }}</span>
+          @if (displayedMeta()) {
+            <span class="flr-ps__brand-meta">{{ displayedMeta() }}</span>
+          }
+        </span>
+        <span class="flr-ps__brand-chev" aria-hidden="true">▾</span>
       </button>
     } @else {
       <flr-site-card [label]="displayedLabel()" (select)="toggle()">
@@ -191,7 +189,10 @@ export interface ProjectSwitcherPlaceholder {
       text-align: left;
       cursor: pointer;
       overflow: hidden;
-      transition: background 140ms ease;
+      transition:
+        padding 220ms ease,
+        gap 220ms ease,
+        background 140ms ease;
     }
     .flr-ps__brand:hover {
       background: var(--color-app-nav-hover, rgba(30, 41, 59, 0.03));
@@ -202,6 +203,10 @@ export interface ProjectSwitcherPlaceholder {
       display: flex;
       flex-direction: column;
       gap: 2px;
+      overflow: hidden;
+      transition:
+        flex-grow 220ms ease,
+        opacity 140ms ease;
     }
     .flr-ps__brand-label {
       font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
@@ -223,7 +228,12 @@ export interface ProjectSwitcherPlaceholder {
     }
     .flr-ps__brand-chev {
       flex-shrink: 0;
+      max-width: 1em;
+      overflow: hidden;
       font-size: 12px;
+      transition:
+        max-width 220ms ease,
+        opacity 140ms ease;
       opacity: 0.7;
       color: var(--color-ink-3, #64748b);
     }
@@ -234,17 +244,25 @@ export interface ProjectSwitcherPlaceholder {
       border-radius: 0 0 var(--radius-card, 8px) var(--radius-card, 8px);
     }
     :host(.flr-ps--compact) .flr-ps__brand {
-      justify-content: center;
+      gap: 0;
       padding: 8px;
+    }
+    :host(.flr-ps--compact) .flr-ps__brand-text {
+      flex-grow: 0;
+      opacity: 0;
+    }
+    :host(.flr-ps--compact) .flr-ps__brand-chev {
+      max-width: 0;
+      opacity: 0;
     }
     :host(.flr-ps--compact) .flr-ps__brand:hover {
       background: transparent;
     }
     :host(.flr-ps--compact) .flr-ps__monogram {
-      width: 100%;
-      height: 100%;
+      width: var(--flr-ps-compact-size, 48px);
+      margin-right: 0;
       border-radius: var(--radius-modal, 12px);
-      transition: background 140ms ease;
+      opacity: 1;
     }
     :host(.flr-ps--compact) .flr-ps__brand:hover .flr-ps__monogram {
       background: var(--color-app-nav-active, rgba(30, 41, 59, 0.06));
@@ -260,8 +278,11 @@ export interface ProjectSwitcherPlaceholder {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 34px;
-      height: 34px;
+      width: 0;
+      height: 100%;
+      margin-right: -10px;
+      overflow: hidden;
+      opacity: 0;
       flex: none;
       border-radius: var(--radius-card, 8px);
       background: var(--color-app-bg-2, #f1f5f9);
@@ -269,12 +290,21 @@ export interface ProjectSwitcherPlaceholder {
       font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
       font-weight: 700;
       font-size: 15px;
+      transition:
+        width 220ms ease,
+        margin-right 220ms ease,
+        opacity 140ms ease,
+        border-radius 220ms ease,
+        background 140ms ease;
     }
     .flr-ps__trigger-icon,
     .flr-ps__item-icon {
       display: inline-flex;
       align-items: center;
       flex-shrink: 0;
+    }
+    .flr-ps__brand .flr-ps__trigger-icon {
+      margin-inline: auto;
     }
     .flr-ps__trigger-icon ::ng-deep svg:not([width]),
     .flr-ps__item-icon ::ng-deep svg:not([width]) {
@@ -417,7 +447,9 @@ export interface ProjectSwitcherPlaceholder {
     }
     @media (prefers-reduced-motion: reduce) {
       .flr-ps__brand,
-      :host(.flr-ps--compact) .flr-ps__monogram,
+      .flr-ps__brand-text,
+      .flr-ps__brand-chev,
+      .flr-ps__monogram,
       .flr-ps__item,
       .flr-ps__footer-btn {
         transition: none;

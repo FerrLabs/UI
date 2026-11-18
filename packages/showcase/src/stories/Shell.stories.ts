@@ -307,7 +307,15 @@ export const CollapsedRailKeepsTheOrgReadable: Story = {
     const app = canvasElement.querySelector<HTMLButtonElement>('flr-app-switcher button');
     if (!org || !app) throw new Error('rail switchers not found');
     await expect(org.getAttribute('aria-label')).toBe('FerrLabs');
-    await expect(org.textContent?.trim()).toBe('F');
+    const label = org.querySelector<HTMLElement>('.flr-ps__brand-text');
+    const monogram = org.querySelector<HTMLElement>('.flr-ps__monogram');
+    if (!label || !monogram) throw new Error('org label or monogram not found');
+    await waitFor(() => {
+      expect(label.getBoundingClientRect().width).toBe(0);
+      expect(getComputedStyle(label).opacity).toBe('0');
+    });
+    await expect(label.getAttribute('aria-hidden')).toBe('true');
+    await expect(monogram.textContent?.trim()).toBe('F');
     const caption = app.querySelector<HTMLElement>('.flr-as__caption');
     if (!caption) throw new Error('app switcher caption not found');
     await waitFor(() => {
