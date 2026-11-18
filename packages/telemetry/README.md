@@ -105,7 +105,8 @@ Faro is not initialised (opt-out, localhost, SSR) and never throws.
   object, so session correlation keeps working. With `dropSessionMeta: true` it is removed from
   the item instead.
 - `redactText` has no regex lookbehind (Safari before 16.4), bounds its input to 16 KB and its
-  output to 2 KB, and runs in under 250 ms on adversarial input.
+  output to 2 KB, and its specs check that its cost grows near-linearly with the input length on
+  adversarial shapes. The worst known 16 KB input costs about 0.2 s of CPU on a desktop machine.
 - The walk fails closed: if an item cannot be scrubbed (a getter throws, a value cannot be
   stringified), it is dropped.
 - `environment` is derived from the hostname: `.dev.ferrlabs` is `dev`, `.ferrlabs` is `interne`,

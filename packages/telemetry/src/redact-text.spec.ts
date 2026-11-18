@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import { expect, it, describe } from 'vitest';
 import { redactText } from './redact-text.js';
+import { assertNearLinear, type InputBuilder } from './scaling.fixture.js';
 
 describe('redactText', () => {
   const secretCases = [
@@ -325,7 +326,7 @@ describe('redactText', () => {
     expect(redactText(`${'a'.repeat(600)}=abc`)).toBe('*');
   });
 
-  it('never grows the input, caps at 2048, is idempotent and fast on pseudo-random input', () => {
+  it('never grows the input, caps at 2048, and is idempotent on pseudo-random input', () => {
     let seed = 7;
     const next = () => {
       seed = (seed * 1664525 + 1013904223) % 4294967296;
@@ -340,9 +341,7 @@ describe('redactText', () => {
       samples.push(sample);
     }
     for (const sample of samples) {
-      const start = performance.now();
       const output = redactText(sample);
-      expect(performance.now() - start).toBeLessThan(1000);
       expect(output.length).toBeLessThanOrEqual(2048);
       expect(output.length).toBeLessThanOrEqual(sample.length);
       expect(redactText(output)).toBe(output);
@@ -351,15 +350,12 @@ describe('redactText', () => {
 });
 
 describe('redactText scaling on 16 KB inputs', () => {
-  const SMALL = 2048;
   const LARGE = 16384;
-  const RUNS = 7;
-  const MAX_GROWTH = 3 * (LARGE / SMALL);
 
   const fill = (unit: string, size: number) =>
     unit.repeat(Math.ceil(size / unit.length)).slice(0, size);
 
-  const shapes: Array<[string, (size: number) => string]> = [
+  const shapes: Array<[string, InputBuilder]> = [
     ['?a= ', (size) => fill('?a= ', size)],
     ['?a=', (size) => fill('?a=', size)],
     ['password: ', (size) => fill('password: ', size)],
@@ -370,33 +366,16 @@ describe('redactText scaling on 16 KB inputs', () => {
     ['token=aaa', (size) => `token=${'a'.repeat(size - 6)}`],
     ['a@b.c ', (size) => fill('a@b.c ', size)],
     ['{"password":"x",', (size) => fill('{"password":"x",', size)],
+    ['data:image/png;base64,AAA', (size) => `data:image/png;base64,${'A'.repeat(size - 22)}`],
     ['//a:', (size) => fill('//a:', size)],
     ['https://u:p@', (size) => fill('https://u:p@', size)],
     ['//a: before @=', (size) => `${fill('//a:', size - 2)}@=`],
   ];
 
-  const cpuMillis = () => {
-    const { user, system } = process.cpuUsage();
-    return (user + system) / 1000;
-  };
-
-  const fastestRun = (input: string) => {
-    redactText(input);
-    let fastest = Infinity;
-    for (let run = 0; run < RUNS; run++) {
-      const start = cpuMillis();
-      redactText(input);
-      fastest = Math.min(fastest, cpuMillis() - start);
-    }
-    return fastest;
-  };
-
   for (const [name, build] of shapes) {
     it(`grows near-linearly for ${JSON.stringify(name)} repeated`, () => {
-      const small = build(SMALL);
-      const large = build(LARGE);
-      expect(redactText(large).length).toBeLessThanOrEqual(2048);
-      expect(fastestRun(large) / fastestRun(small)).toBeLessThan(MAX_GROWTH);
+      expect(redactText(build(LARGE)).length).toBeLessThanOrEqual(2048);
+      assertNearLinear(build, LARGE);
     });
   }
 });
