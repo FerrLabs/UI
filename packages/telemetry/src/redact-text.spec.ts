@@ -370,6 +370,9 @@ describe('redactText scaling on 16 KB inputs', () => {
     ['token=aaa', (size) => `token=${'a'.repeat(size - 6)}`],
     ['a@b.c ', (size) => fill('a@b.c ', size)],
     ['{"password":"x",', (size) => fill('{"password":"x",', size)],
+    ['//a:', (size) => fill('//a:', size)],
+    ['https://u:p@', (size) => fill('https://u:p@', size)],
+    ['//a: before @=', (size) => `${fill('//a:', size - 2)}@=`],
   ];
 
   const cpuMillis = () => {
