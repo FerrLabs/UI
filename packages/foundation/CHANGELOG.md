@@ -4,6 +4,12 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.9.0] - 2026-11-18
+
+### Features
+
+- feat(foundation): add precision and soft style presets (#788)
+
 ## [5.8.0] - 2026-11-10
 
 ### Features
