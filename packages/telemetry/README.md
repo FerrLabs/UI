@@ -36,6 +36,13 @@ initTelemetry({ appName: 'my-app', collectorUrl: 'https://rum.example.com/collec
 initTelemetry({ appName: 'my-app', environment: window.__ENV__?.RUM_ENV });
 ```
 
+`release` sets `app.release` and `app.version` in the Faro config, so source maps can be matched to
+the deployed build. Use the `<appName>-<version>` format. An empty string counts as unset:
+
+```ts
+initTelemetry({ appName: 'my-app', release: `my-app-${APP_VERSION}` });
+```
+
 `enabled` defaults to `true`. When `false`, `initTelemetry` returns immediately and Faro is not
 initialised, for apps that have no collector configured in some builds:
 
