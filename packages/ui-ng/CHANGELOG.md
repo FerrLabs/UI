@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.55.0] - 2026-11-18
+
+### Features
+
+- feat(site-footer): make bottomRight optional (#791)
+
 ## [1.54.0] - 2026-11-18
 
 ### Features
