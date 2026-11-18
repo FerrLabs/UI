@@ -66,7 +66,10 @@ let modalCounter = 0;
       backdrop-filter: blur(2px);
     }
     .flr-modal__panel {
+      display: flex;
+      flex-direction: column;
       width: calc(100vw - 2rem);
+      max-height: calc(100dvh - 2rem);
       background: var(--color-card, #fff);
       border-radius: var(--radius-modal, 12px);
       box-shadow: 0 20px 48px rgba(15, 23, 42, 0.18);
@@ -86,6 +89,7 @@ let modalCounter = 0;
       }
     }
     .flr-modal__head {
+      flex: none;
       padding: 24px 24px 12px;
     }
     .flr-modal__title {
@@ -103,6 +107,8 @@ let modalCounter = 0;
       color: var(--color-ink-3, #64748b);
     }
     .flr-modal__body {
+      min-height: 0;
+      overflow-y: auto;
       padding: 12px 24px;
       font-size: 14px;
       line-height: 1.5;
@@ -112,6 +118,7 @@ let modalCounter = 0;
       display: none;
     }
     .flr-modal__footer {
+      flex: none;
       padding: 16px 24px;
       background: var(--color-paper-2, #f1f5f9);
       border-top: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));

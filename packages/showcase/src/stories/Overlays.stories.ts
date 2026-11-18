@@ -1,6 +1,7 @@
 import { ButtonComponent, DrawerComponent, ModalComponent } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
+import { expect, waitFor, within } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Overlays/Modal & Drawer',
@@ -45,6 +46,45 @@ export const ModalSizes: Story = {
         </flr-modal>
       </div>`,
   }),
+};
+
+export const ModalTallContent: Story = {
+  render: () => ({
+    props: { open: true, rows: Array.from({ length: 40 }, (_, i) => i + 1) },
+    template: `
+      <div style="padding:24px">
+        <flr-button (pressed)="open = true">Open modal</flr-button>
+        <flr-modal
+          [open]="open"
+          title="New API token"
+          description="The body scrolls while the header and the footer stay in view."
+          (closed)="open = false"
+        >
+          <ul style="margin:0; padding:0; list-style:none; display:grid; gap:12px">
+            @for (row of rows; track row) {
+              <li><flr-button variant="ghost">Scope {{ row }}</flr-button></li>
+            }
+          </ul>
+          <div modal-footer style="display:flex; gap:8px; justify-content:flex-end">
+            <flr-button variant="ghost" (pressed)="open = false">Cancel</flr-button>
+            <flr-button (pressed)="open = false">Create token</flr-button>
+          </div>
+        </flr-modal>
+      </div>`,
+  }),
+  play: async ({ canvasElement }) => {
+    const page = within(canvasElement.ownerDocument.body);
+    const dialog = await page.findByRole('dialog');
+    const body = dialog.querySelector<HTMLElement>('.flr-modal__body')!;
+    const submit = page.getByRole('button', { name: 'Create token' });
+    await waitFor(() => expect(body.scrollHeight).toBeGreaterThan(body.clientHeight));
+    expect(dialog.getBoundingClientRect().top).toBeGreaterThanOrEqual(0);
+    expect(submit.getBoundingClientRect().bottom).toBeLessThanOrEqual(window.innerHeight);
+    body.scrollTop = body.scrollHeight;
+    expect(
+      page.getByRole('button', { name: 'Scope 40' }).getBoundingClientRect().bottom,
+    ).toBeLessThanOrEqual(submit.getBoundingClientRect().top);
+  },
 };
 
 export const Drawer: Story = {
