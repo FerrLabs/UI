@@ -62,6 +62,10 @@ const ERROR = 'var(--color-danger, #dc2626)';
         border-color 140ms,
         box-shadow 140ms;
     }
+    .flr-input::placeholder {
+      color: var(--color-ink-3, #5d6b80);
+      opacity: 1;
+    }
   `,
 })
 export class InputComponent implements ControlValueAccessor {
