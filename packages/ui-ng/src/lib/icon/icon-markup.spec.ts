@@ -1,3 +1,4 @@
+import { icons } from '@ferrlabs/ui-foundation';
 import { describe, expect, it } from 'vitest';
 import { isTrustedIconMarkup } from './icon-markup';
 
@@ -10,6 +11,7 @@ describe('isTrustedIconMarkup', () => {
     ['surrounding html whitespace', `\n ${REGISTRY_ICON}\t`],
     ['end tag with trailing whitespace', '<svg><g></g\n></svg>'],
     ['self closing children', '<svg><path d="M0 0"/><rect x="1" y="1"/></svg>'],
+    ['stroke draw path length', '<svg><path pathLength="1" class="fi-draw" d="M0 0"/></svg>'],
   ])('accepts %s', (_name, markup) => {
     expect(isTrustedIconMarkup(markup)).toBe(true);
   });
@@ -24,7 +26,15 @@ describe('isTrustedIconMarkup', () => {
     ['event handler attribute', '<svg onload="alert(1)"><path d="M0 0"/></svg>'],
     ['trailing html', '<svg><path d="M0 0"/></svg><b>x</b>'],
     ['leading text', 'x <svg></svg>'],
+    ['lowercase pathlength', '<svg><path pathlength="1" d="M0 0"/></svg>'],
+    ['unlisted camel case attribute', '<svg><path pathLengthX="1" d="M0 0"/></svg>'],
   ])('rejects %s', (_name, markup) => {
     expect(isTrustedIconMarkup(markup)).toBe(false);
+  });
+});
+
+describe('foundation icons', () => {
+  it.each(Object.entries(icons))('%s is trusted markup', (_name, markup) => {
+    expect(isTrustedIconMarkup(markup)).toBe(true);
   });
 });

@@ -8,6 +8,8 @@
  * value here, update DESIGN.md in the same PR.
  */
 
+@import './icons.css';
+
 @theme {
   /* Typography
    * --------------------------------------------------------------------

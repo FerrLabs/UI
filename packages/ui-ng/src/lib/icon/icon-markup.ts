@@ -26,6 +26,7 @@ const ATTRIBUTES: ReadonlySet<string> = new Set([
   'focusable',
   'height',
   'opacity',
+  'pathLength',
   'points',
   'r',
   'role',

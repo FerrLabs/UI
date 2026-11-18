@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, model, output } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { IconPlayDirective } from '../icon/icon-play.directive';
 import { markColorOnDark } from '../app-rail/mark-color';
 
 @Component({
@@ -156,6 +157,7 @@ export class SidebarSectionComponent {
     @if (href() && !disabled()) {
       <a
         class="flr-sb-item"
+        flrIconPlay
         [class.flr-sb-item--active]="active()"
         [class.flr-sb-item--danger]="danger()"
         [class.flr-sb-item--collapsed]="collapsed()"
@@ -171,6 +173,7 @@ export class SidebarSectionComponent {
       <button
         type="button"
         class="flr-sb-item"
+        flrIconPlay
         [class.flr-sb-item--active]="active()"
         [class.flr-sb-item--danger]="danger()"
         [class.flr-sb-item--collapsed]="collapsed()"
@@ -192,7 +195,7 @@ export class SidebarSectionComponent {
       }
     </ng-template>
   `,
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, IconPlayDirective],
   host: {
     '[style.--flr-sb-accent-on-dark]': 'accentOnDark()',
   },

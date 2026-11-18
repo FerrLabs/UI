@@ -41,10 +41,10 @@ interface PaginationItem {
 }
 
 const ICON: Record<'first' | 'prev' | 'next' | 'last', string> = {
-  first: 'M11.5 3.5 7 8l4.5 4.5M7 3.5 2.5 8 7 12.5',
-  prev: 'M10 3.5 5.5 8 10 12.5',
-  next: 'M6 3.5 10.5 8 6 12.5',
-  last: 'M4.5 3.5 9 8l-4.5 4.5M9 3.5 13.5 8 9 12.5',
+  first: 'm11 17-5-5 5-5M18 17l-5-5 5-5',
+  prev: 'm15 18-6-6 6-6',
+  next: 'm9 18 6-6-6-6',
+  last: 'm6 17 5-5-5-5M13 17l5-5-5-5',
 };
 
 function range(from: number, to: number): number[] {

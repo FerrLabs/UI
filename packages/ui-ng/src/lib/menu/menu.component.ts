@@ -15,6 +15,7 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { IconPlayDirective } from '../icon/icon-play.directive';
 import { FocusKeyManager, type FocusableOption } from '@angular/cdk/a11y';
 import { type ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
 
@@ -179,11 +180,12 @@ export class MenuComponent {
 @Component({
   selector: 'flr-menu-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, IconPlayDirective],
   template: `
     @if (href() && !disabled()) {
       <a
         class="flr-menu-item"
+        flrIconPlay
         [class.flr-menu-item--danger]="destructive()"
         [href]="href()"
         role="menuitem"
@@ -195,6 +197,7 @@ export class MenuComponent {
       <button
         type="button"
         class="flr-menu-item"
+        flrIconPlay
         [class.flr-menu-item--danger]="destructive()"
         role="menuitem"
         #control

@@ -8,6 +8,14 @@
 const stroke = (paths: string) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
 
+const SHIELD = `<path d="M12 21.5c4.8-1.9 8-5.4 8-10v-6l-8-3-8 3v6c0 4.6 3.2 8.1 8 10z"/>`;
+const RING = `<circle cx="12" cy="12" r="8.5"/>`;
+const PEOPLE = `<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path class="fi-nx" d="M16 4.6a3.5 3.5 0 0 1 0 6.8"/><path class="fi-nx" d="M18.5 14.5a6.5 6.5 0 0 1 3 5.5"/>`;
+const ENVELOPE = `<rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path pathLength="1" class="fi-draw" d="m3 7.5 9 6 9-6"/>`;
+const FILE = `<path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M13.5 3v5.5H19"/>`;
+const LENS = `<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/>`;
+const ALERT = `<path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path class="fi-blink" d="M12 9v4"/><path class="fi-blink" d="M12 17h.01"/>`;
+
 export const icons = {
   ferrlabsLogo: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="4" fill="currentColor"/><circle cx="16" cy="16" r="8" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.7"/><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1" fill="none" opacity="0.4"/></svg>`,
 
@@ -18,233 +26,227 @@ export const icons = {
 
   // Layout & overview
   overview: stroke(
-    `<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>`,
+    `<rect x="3" y="3" width="7" height="10" rx="1.5"/><rect class="fi-pop" x="14" y="3" width="7" height="6" rx="1.5"/><rect x="14" y="13" width="7" height="8" rx="1.5"/><rect x="3" y="17" width="7" height="4" rx="1.5"/>`,
   ),
   products: stroke(
-    `<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>`,
+    `<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect class="fi-pop" x="13.5" y="13.5" width="7" height="7" rx="1.5"/>`,
   ),
   list: stroke(
-    `<line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>`,
+    `<path d="M4.5 6h.01" stroke-width="2.5"/><path d="M4.5 12h.01" stroke-width="2.5"/><path d="M4.5 18h.01" stroke-width="2.5"/><path class="fi-nx" d="M9 6h11"/><path class="fi-nx fi-d2" d="M9 12h11"/><path class="fi-nx fi-d3" d="M9 18h11"/>`,
   ),
-  usage: stroke(`<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>`),
-  home: stroke(`<path d="M3 9 12 2l9 7v11a2 2 0 0 1-2 2h-4v-7H10v7H6a2 2 0 0 1-2-2z"/>`),
+  usage: stroke(`<path pathLength="1" class="fi-draw" d="M2.5 12H6l3-8 6 16 3-8h3.5"/>`),
+  home: stroke(
+    `<path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path pathLength="1" class="fi-draw" d="M10 20.5v-6h4v6"/>`,
+  ),
 
   // Org / people
-  members: stroke(
-    `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
-  ),
+  members: stroke(PEOPLE),
   teams: stroke(
-    `<path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="9" cy="7" r="4"/><circle cx="17" cy="7" r="3"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/>`,
+    `<circle cx="8" cy="9" r="3"/><circle class="fi-nx" cx="16" cy="9" r="3"/><path d="M2.5 19a5.5 5.5 0 0 1 11 0"/><path class="fi-nx" d="M15 14.2a5.5 5.5 0 0 1 6.5 4.8"/>`,
   ),
-  roles: stroke(`<path d="M9 12l2 2 4-4"/><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`),
-  profile: stroke(
-    `<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>`,
-  ),
+  roles: stroke(`${SHIELD}<path pathLength="1" class="fi-draw" d="m8.5 11.5 2.5 2.5 4.5-4.5"/>`),
+  profile: stroke(`<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>`),
 
   // Audit / activity
   auditLog: stroke(
-    `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/>`,
+    `<g class="fi-rewind"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1L3.5 8.5"/><path d="M3.5 3.5v5h5"/></g><path d="M12 7.5V12l3 2"/>`,
   ),
 
   // Billing / commerce
   billing: stroke(
-    `<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>`,
+    `<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19"/><path pathLength="1" class="fi-draw" d="M6.5 15h4"/>`,
   ),
   tax: stroke(
-    `<line x1="12" y1="3" x2="12" y2="21"/><path d="M5 7l7-4 7 4"/><path d="M5 7l-2 6h4z"/><path d="M19 7l2 6h-4z"/><path d="M3 13a2 2 0 0 0 4 0"/><path d="M17 13a2 2 0 0 0 4 0"/>`,
+    `<path d="M19 5 5 19"/><circle class="fi-pop" cx="7" cy="7" r="2.5"/><circle class="fi-pop fi-d2" cx="17" cy="17" r="2.5"/>`,
   ),
 
   // Security
   sso: stroke(
-    `<circle cx="12" cy="11" r="9"/><path d="M3.6 9h16.8"/><path d="M3.6 14h16.8"/><path d="M12 2a13 13 0 0 1 0 18M12 2a13 13 0 0 0 0 18"/>`,
+    `<path d="M14 3.5h4.5a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H14"/><g class="fi-nx"><path d="M3.5 12h11"/><path d="m10.5 8 4 4-4 4"/></g>`,
   ),
   tokens: stroke(
-    `<circle cx="7.5" cy="15.5" r="4.5"/><line x1="10.5" y1="12.5" x2="20" y2="3"/><line x1="16" y1="7" x2="20" y2="11"/><line x1="13" y1="10" x2="17" y2="14"/>`,
+    `<g class="fi-tilt"><circle cx="8" cy="15.5" r="4.5"/><path d="m11.2 12.3 8.3-8.3"/><path d="m16 7.5 3 3"/></g>`,
   ),
   sessions: stroke(
-    `<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>`,
+    `<rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8.5 20.5h7"/><path d="M12 17v3.5"/>`,
   ),
-  shield: stroke(`<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`),
+  shield: stroke(SHIELD),
 
   // Vault
   secrets: stroke(
-    `<circle cx="7.5" cy="15.5" r="4.5"/><line x1="10.5" y1="12.5" x2="20" y2="3"/><line x1="16" y1="7" x2="20" y2="11"/>`,
+    `<rect x="2.5" y="6.5" width="19" height="11" rx="2.5"/><path class="fi-blink" d="M7.5 12h.01" stroke-width="2.5"/><path class="fi-blink fi-d2" d="M12 12h.01" stroke-width="2.5"/><path class="fi-blink fi-d3" d="M16.5 12h.01" stroke-width="2.5"/>`,
   ),
   environments: stroke(
-    `<rect x="2" y="3" width="20" height="6" rx="1"/><rect x="2" y="13" width="20" height="6" rx="1"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="16" x2="6.01" y2="16"/>`,
+    `<path d="m12 3.5 8.5 4.5-8.5 4.5L3.5 8z"/><path class="fi-nd" d="m3.5 12.5 8.5 4.5 8.5-4.5"/><path class="fi-nd fi-d2" d="m3.5 17 8.5 4.5 8.5-4.5"/>`,
   ),
   rotations: stroke(
-    `<polyline points="21 12 21 6 15 6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 6"/><polyline points="3 12 3 18 9 18"/><path d="M21 12a9 9 0 0 1-15 6.7L3 18"/>`,
+    `<g class="fi-spin"><path d="M20.5 12a8.5 8.5 0 0 0-14.7-5.8L3.5 8.5"/><path d="M3.5 3.5v5h5"/><path d="M3.5 12a8.5 8.5 0 0 0 14.7 5.8l2.3-2.3"/><path d="M20.5 20.5v-5h-5"/></g>`,
   ),
   kms: stroke(
-    `<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>`,
+    `<rect x="4" y="10.5" width="16" height="11" rx="2.5"/><path d="M8 10.5v-3a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/>`,
   ),
 
   // Connect / DevOps
-  cli: stroke(`<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>`),
-  k8s: stroke(`<polygon points="12 2 22 7 22 17 12 22 2 17 2 7"/><circle cx="12" cy="12" r="3"/>`),
+  cli: stroke(
+    `<rect x="2.5" y="4" width="19" height="16" rx="2.5"/><path class="fi-nx" d="m7 9.5 3 2.5-3 2.5"/><path class="fi-blink" d="M13 15h4"/>`,
+  ),
+  k8s: stroke(
+    `<g class="fi-turn"><path d="M12 2.5 20.5 7.25v9.5L12 21.5l-8.5-4.75v-9.5z"/><circle cx="12" cy="12" r="3"/></g>`,
+  ),
   ci: stroke(
-    `<line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>`,
+    `<circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="8" r="2.5"/><path d="M6 8.5v7"/><path pathLength="1" class="fi-draw" d="M18 10.5a6 6 0 0 1-6 6H8.5"/>`,
+  ),
+  runners: stroke(
+    `<rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path class="fi-blink" d="M7 7.5h.01" stroke-width="2.5"/><path class="fi-blink fi-d2" d="M7 16.5h.01" stroke-width="2.5"/>`,
   ),
 
   // Track / issues
-  issues: stroke(`<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>`),
+  issues: stroke(`${RING}<circle class="fi-pop" cx="12" cy="12" r="2.5"/>`),
   cycles: stroke(
-    `<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>`,
+    `<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17"/><path class="fi-ny" d="M8 3v4"/><path class="fi-ny" d="M16 3v4"/>`,
   ),
   roadmap: stroke(
-    `<polygon points="1 6 7 3 17 6 23 3 23 18 17 21 7 18 1 21"/><line x1="7" y1="3" x2="7" y2="18"/><line x1="17" y1="6" x2="17" y2="21"/>`,
+    `<circle cx="6" cy="18.5" r="2.5"/><circle cx="18" cy="4.5" r="2.5"/><path pathLength="1" class="fi-draw" d="M8.5 18.5H14a3.5 3.5 0 0 0 0-7h-4a3.5 3.5 0 0 1 0-7h5.5"/>`,
   ),
   triage: stroke(
-    `<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>`,
+    `<path class="fi-squeeze" d="M4 6h16"/><path class="fi-squeeze fi-d2" d="M7 12h10"/><path class="fi-squeeze fi-d3" d="M10 18h4"/>`,
   ),
   templates: stroke(
-    `<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>`,
+    `<rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 9.5h17"/><path pathLength="1" class="fi-draw" d="M9.5 9.5v11"/>`,
   ),
   prefs: stroke(
-    `<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>`,
+    `<path d="M4 7h9"/><path d="M17 7h3"/><circle class="fi-nx" cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle class="fi-nxb" cx="9" cy="17" r="2"/>`,
   ),
   settings: stroke(
-    `<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>`,
+    `<g class="fi-turn"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></g>`,
   ),
-  search: stroke(`<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>`),
+  search: stroke(`<g class="fi-pop">${LENS}</g>`),
   help: stroke(
-    `<circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>`,
+    `${RING}<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path class="fi-blink" d="M12 17h.01"/>`,
   ),
 
   // Admin / staff
   dashboard: stroke(
-    `<line x1="3" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="21" y2="12"/><line x1="12" y1="3" x2="12" y2="6"/><circle cx="12" cy="12" r="9"/><line x1="12" y1="12" x2="16" y2="8"/>`,
+    `<path d="M4.2 17a9 9 0 1 1 15.6 0"/><path class="fi-needle" d="m12 12.5 3.5-4"/>`,
   ),
   organizations: stroke(
-    `<rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="9" width="8" height="12" rx="1"/><line x1="6" y1="7" x2="8" y2="7"/><line x1="6" y1="11" x2="8" y2="11"/><line x1="6" y1="15" x2="8" y2="15"/><line x1="16" y1="13" x2="18" y2="13"/><line x1="16" y1="17" x2="18" y2="17"/>`,
+    `<rect x="4" y="3.5" width="10" height="17" rx="1.5"/><path d="M14 10h4.5a1.5 1.5 0 0 1 1.5 1.5v9h-6"/><path d="M8 8h2"/><path d="M8 12h2"/><path d="M8 16h2"/>`,
   ),
-  users: stroke(
-    `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
-  ),
+  users: stroke(PEOPLE),
   installs: stroke(
-    `<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>`,
+    `<g class="fi-nd"><path d="M12 3.5v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/></g><path d="M4 16.5v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>`,
   ),
   changelog: stroke(
-    `<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>`,
+    `<circle cx="6.5" cy="6" r="2.5"/><circle cx="6.5" cy="18" r="2.5"/><path d="M6.5 8.5v7"/><path pathLength="1" class="fi-draw" d="M12.5 6H20"/><path pathLength="1" class="fi-draw fi-d2" d="M12.5 18H18"/>`,
   ),
 
+  workflows: stroke(
+    `<rect x="3" y="3" width="6" height="6" rx="1.5"/><rect class="fi-pop fi-d3" x="15" y="15" width="6" height="6" rx="1.5"/><path pathLength="1" class="fi-draw" d="M9 6h5a4 4 0 0 1 4 4v5"/>`,
+  ),
   // Fleet / agents
   fleet: stroke(
-    `<circle cx="12" cy="12" r="3"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><line x1="7" y1="7" x2="10" y2="10"/><line x1="17" y1="7" x2="14" y2="10"/><line x1="7" y1="17" x2="10" y2="14"/><line x1="17" y1="17" x2="14" y2="14"/>`,
+    `<circle cx="12" cy="5.5" r="2.5"/><circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/><path pathLength="1" class="fi-draw" d="M10.8 7.7 6.7 15.3"/><path pathLength="1" class="fi-draw" d="m13.2 7.7 4.1 7.6"/><path pathLength="1" class="fi-draw" d="M8 17.5h8"/>`,
   ),
   agents: stroke(
-    `<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/><circle cx="9" cy="8" r="0.6" fill="currentColor"/><circle cx="15" cy="8" r="0.6" fill="currentColor"/>`,
+    `<rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4"/><path class="fi-wink" d="M9 13v2"/><path class="fi-wink" d="M15 13v2"/>`,
   ),
   queue: stroke(
-    `<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="14" y2="18"/>`,
+    `<rect x="4" y="4" width="16" height="6" rx="1.5"/><path class="fi-ny" d="M4 14.5h16"/><path class="fi-ny fi-d2" d="M4 19.5h16"/>`,
   ),
-  runs: stroke(`<polygon points="6 4 20 12 6 20 6 4"/>`),
+  runs: stroke(`${RING}<path class="fi-nx" d="M10 8.5v7l5.5-3.5z"/>`),
   catalog: stroke(
-    `<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>`,
+    `<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>`,
   ),
   tools: stroke(
-    `<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>`,
+    `<path class="fi-tilt" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>`,
   ),
   datasets: stroke(
-    `<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/>`,
+    `<ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/><path pathLength="1" class="fi-draw" d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>`,
   ),
   spend: stroke(
-    `<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>`,
+    `${RING}<g class="fi-pop"><path d="M14.5 10a2 2 0 0 0-2-2h-1a2 2 0 0 0 0 4h1a2 2 0 0 1 0 4h-1a2 2 0 0 1-2-2"/><path d="M12 6v2"/><path d="M12 16v2"/></g>`,
   ),
-  incidents: stroke(
-    `<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>`,
-  ),
+  incidents: stroke(ALERT),
 
   // Vault extras
   vault: stroke(
-    `<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="3" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="21" y2="12"/>`,
+    `<rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><g class="fi-rewind"><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5v2"/></g>`,
   ),
   access: stroke(
-    `<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/>`,
+    `<rect x="4" y="10.5" width="16" height="11" rx="2.5"/><path class="fi-ny" d="M8 10.5v-3a4 4 0 0 1 7.7-1.5"/>`,
   ),
 
   // Track / inbox
   inbox: stroke(
-    `<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>`,
+    `<path d="M21.5 12H16l-2 3h-4l-2-3H2.5"/><path d="M5.5 5.1 2.5 12v6a2 2 0 0 0 2 2h15a2 2 0 0 0 2-2v-6l-3-6.9A2 2 0 0 0 16.7 4H7.3a2 2 0 0 0-1.8 1.1z"/>`,
   ),
-  myIssues: stroke(
-    `<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="6"/>`,
+  myIssues: stroke(`${RING}<circle cx="12" cy="10" r="2.5"/><path d="M7.5 17.5a5 5 0 0 1 9 0"/>`),
+  subscribed: stroke(
+    `<path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle class="fi-pop" cx="12" cy="12" r="2.5"/>`,
   ),
-  subscribed: stroke(`<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>`),
   bell: stroke(
-    `<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>`,
+    `<g class="fi-ring"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></g>`,
   ),
-  docs: stroke(
-    `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>`,
-  ),
+  docs: stroke(FILE),
 
   // Growth / sites
   pages: stroke(
-    `<rect x="4" y="3" width="16" height="18" rx="2"/><line x1="4" y1="8" x2="20" y2="8"/><line x1="8" y1="3" x2="8" y2="8"/>`,
+    `<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18"/><path class="fi-blink" d="M6.5 6.5h.01" stroke-width="2.5"/>`,
   ),
   forms: stroke(
-    `<rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/><line x1="7" y1="17" x2="11" y2="17"/>`,
+    `<rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path pathLength="1" class="fi-draw" d="M7.5 9.5h9"/><path pathLength="1" class="fi-draw fi-d2" d="M7.5 14h5"/>`,
   ),
   abTest: stroke(
-    `<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><path d="M7 9l-2 3 2 3"/><path d="M17 9l2 3-2 3"/>`,
+    `<path d="M3 12h5.5l4-5H21"/><path d="m8.5 12 4 5H21"/><path class="fi-nx" d="m18 4 3 3-3 3"/><path class="fi-nx fi-d2" d="m18 14 3 3-3 3"/>`,
   ),
   analytics: stroke(
-    `<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="3" y1="20" x2="21" y2="20"/>`,
+    `<path d="M3.5 20.5h17"/><path class="fi-grow" d="M7 16.5v-4"/><path class="fi-grow fi-d2" d="M12 16.5V6"/><path class="fi-grow fi-d3" d="M17 16.5v-7"/>`,
   ),
   blog: stroke(
-    `<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>`,
+    `<g class="fi-tilt"><path d="M4 20h4L19.5 8.5a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></g>`,
   ),
-  seo: stroke(
-    `<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><polyline points="8 11 10.5 13.5 14 9.5"/>`,
-  ),
-  funnels: stroke(`<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>`),
+  seo: stroke(`${LENS}<path pathLength="1" class="fi-draw" d="m8.5 11.2 1.8 1.8 3.2-3.5"/>`),
+  funnels: stroke(`<path d="M3.5 4.5h17l-6.5 8v6l-4 2v-8z"/>`),
   quotes: stroke(
-    `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/><line x1="9" y1="9" x2="11" y2="9"/>`,
+    `${FILE}<path pathLength="1" class="fi-draw" d="M9 13h6"/><path pathLength="1" class="fi-draw fi-d2" d="M9 17h4"/>`,
   ),
-  emails: stroke(
-    `<rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 6 12 13 2 6"/>`,
-  ),
+  emails: stroke(ENVELOPE),
   domains: stroke(
-    `<circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3a13 13 0 0 1 0 18M12 3a13 13 0 0 0 0 18"/>`,
+    `${RING}<path d="M3.5 12h17"/><path d="M12 3.5c2.3 2.4 3.5 5.2 3.5 8.5s-1.2 6.1-3.5 8.5c-2.3-2.4-3.5-5.2-3.5-8.5s1.2-6.1 3.5-8.5z"/>`,
   ),
   integrations: stroke(
-    `<path d="M9 11V7a3 3 0 0 1 6 0v4"/><rect x="5" y="11" width="14" height="10" rx="2"/><line x1="9" y1="15" x2="9" y2="17"/><line x1="15" y1="15" x2="15" y2="17"/>`,
+    `<g class="fi-ny"><path d="M9 8V2.5"/><path d="M15 8V2.5"/><path d="M6 8h12v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4z"/></g><path d="M12 17v4.5"/>`,
   ),
 
   // FerrGames admin
   players: stroke(
-    `<circle cx="12" cy="8" r="4"/><path d="M5 21v-1a7 7 0 0 1 14 0v1"/><circle cx="9" cy="7" r="0.6" fill="currentColor"/><circle cx="15" cy="7" r="0.6" fill="currentColor"/>`,
+    `<g class="fi-tilt"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7 12.5h3"/><path d="M8.5 11v3"/><path d="M15.5 12.5h.01" stroke-width="2.5"/></g>`,
   ),
   rooms: stroke(
-    `<rect x="4" y="3" width="16" height="18" rx="1"/><circle cx="15" cy="12" r="1" fill="currentColor"/><line x1="4" y1="21" x2="20" y2="21"/>`,
+    `<path d="M6 20.5V5a1.5 1.5 0 0 1 1.5-1.5h9A1.5 1.5 0 0 1 18 5v15.5"/><path d="M3.5 20.5h17"/><path class="fi-blink" d="M14.5 12h.01" stroke-width="2.5"/>`,
   ),
-  shop: stroke(
-    `<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>`,
-  ),
+  shop: stroke(`<path d="M5.5 8h13l1 12.5h-15z"/><path class="fi-ny" d="M9 8V7a3 3 0 0 1 6 0v1"/>`),
   geo: stroke(
-    `<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>`,
+    `<g class="fi-ny"><path d="M19.5 10c0 5-7.5 11.5-7.5 11.5S4.5 15 4.5 10a7.5 7.5 0 0 1 15 0z"/><circle cx="12" cy="10" r="2.5"/></g>`,
   ),
   dictionaries: stroke(
-    `<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="16" y2="7"/><line x1="9" y1="11" x2="14" y2="11"/>`,
+    `<path d="M5 19.5V5a2 2 0 0 1 2-2h12v14H7a2 2 0 0 0 0 4h12"/><path pathLength="1" class="fi-draw" d="M9.5 7.5h5"/>`,
   ),
 
   // Generic toolkit
-  zap: stroke(`<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>`),
+  zap: stroke(`<path class="fi-flash" d="M13 2.5 4.5 13.5H11l-1 8 9.5-11H13z"/>`),
   sparkles: stroke(
-    `<path d="m12 3-1.9 5.8a2 2 0 0 1-1.288 1.288L3 12l5.812 1.9a2 2 0 0 1 1.288 1.288L12 21l1.9-5.812a2 2 0 0 1 1.288-1.288L21 12l-5.812-1.9a2 2 0 0 1-1.288-1.288z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>`,
+    `<path d="M10 4.5 11.8 9.7 17 11.5l-5.2 1.8L10 18.5l-1.8-5.2L3 11.5l5.2-1.8z"/><g class="fi-pop"><path d="M18.5 3v4"/><path d="M16.5 5h4"/></g>`,
   ),
-  bookmark: stroke(`<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>`),
-  circleSlash: stroke(
-    `<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>`,
-  ),
-  mail: stroke(
-    `<rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 7 12 13 2 7"/>`,
-  ),
+  bookmark: stroke(`<path d="M6 4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21l-6-4-6 4z"/>`),
+  circleSlash: stroke(`${RING}<path d="m6 6 12 12"/>`),
+  mail: stroke(ENVELOPE),
   dns: stroke(
-    `<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>`,
+    `<rect x="9" y="3" width="6" height="5" rx="1.5"/><rect x="3" y="16" width="6" height="5" rx="1.5"/><rect x="15" y="16" width="6" height="5" rx="1.5"/><path d="M12 8v4"/><path pathLength="1" class="fi-draw" d="M6 16v-2.5a1.5 1.5 0 0 1 1.5-1.5h9a1.5 1.5 0 0 1 1.5 1.5V16"/>`,
   ),
-  arrowRight: stroke(`<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>`),
+  arrowRight: stroke(
+    `<g class="fi-nx"><path d="M4.5 12h15"/><path d="m13 5.5 6.5 6.5-6.5 6.5"/></g>`,
+  ),
 } as const;
 
 export type IconName = keyof typeof icons;
