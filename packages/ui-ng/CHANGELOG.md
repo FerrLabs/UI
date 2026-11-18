@@ -4,6 +4,16 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.53.0] - 2026-11-18
+
+### Features
+
+- feat(ui-ng): resizable splitter component (#762)
+
+### Bug Fixes
+
+- fix(ui-ng): raise flr-input placeholder contrast to AA (#783)
+
 ## [1.52.5] - 2026-11-18
 
 ### Bug Fixes
