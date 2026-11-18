@@ -91,6 +91,10 @@
   body {
     font-feature-settings: 'ss01', 'ss02';
   }
+  html[data-style='precision'] body,
+  html[data-style='soft'] body {
+    font-feature-settings: normal;
+  }
   ::selection {
     background: var(--color-ink);
     color: var(--color-paper);
