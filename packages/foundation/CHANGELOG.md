@@ -4,6 +4,12 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.10.0] - 2026-11-18
+
+### Features
+
+- feat(foundation): replace Inter with Geist in the precision and soft styles (#801)
+
 ## [5.9.0] - 2026-11-18
 
 ### Features
