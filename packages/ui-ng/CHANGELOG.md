@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.57.1] - 2026-11-19
+
+### Bug Fixes
+
+- fix(ui-ng): size buttons from --control-height like the other controls (#802)
+
 ## [1.57.0] - 2026-11-18
 
 ### Features

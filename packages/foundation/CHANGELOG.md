@@ -4,6 +4,12 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.11.1] - 2026-11-19
+
+### Bug Fixes
+
+- fix(ui-ng): size buttons from --control-height like the other controls (#802)
+
 ## [5.11.0] - 2026-11-18
 
 ### Features
