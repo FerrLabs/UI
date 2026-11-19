@@ -5,30 +5,31 @@ export type ButtonVariant = 'primary' | 'ghost' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface SizeDim {
+  readonly minHeight: string;
   readonly padding: string;
   readonly fontSize: string;
   readonly gap: string;
   readonly radius: string;
 }
 
-const paddingBlock = (base: number): string =>
-  `max(0px, calc(${base}px + (var(--control-height, 40px) - 40px) / 2))`;
-
 const SIZE: Record<ButtonSize, SizeDim> = {
   sm: {
-    padding: `${paddingBlock(5)} 10px`,
+    minHeight: 'calc(var(--control-height, 40px) - 8px)',
+    padding: '0 12px',
     fontSize: '11px',
     gap: '6px',
     radius: 'var(--radius-control, 4px)',
   },
   md: {
-    padding: `${paddingBlock(8)} 14px`,
+    minHeight: 'var(--control-height, 40px)',
+    padding: '0 16px',
     fontSize: '12px',
     gap: '8px',
     radius: 'var(--radius-control, 4px)',
   },
   lg: {
-    padding: `${paddingBlock(12)} 20px`,
+    minHeight: 'calc(var(--control-height, 40px) + 8px)',
+    padding: '0 20px',
     fontSize: '14px',
     gap: '10px',
     radius: 'var(--radius-control, 4px)',
@@ -87,6 +88,7 @@ const DANGER = 'var(--color-danger, #dc2626)';
       display: contents;
     }
     .flr-btn {
+      box-sizing: border-box;
       font-family: var(
         --font-mono,
         'DM Mono',
@@ -169,6 +171,7 @@ export class ButtonComponent {
     return {
       display: this.fullWidth() ? 'flex' : 'inline-flex',
       width: this.fullWidth() ? '100%' : null,
+      'min-height': d.minHeight,
       padding: d.padding,
       'border-radius': d.radius,
       'font-size': d.fontSize,

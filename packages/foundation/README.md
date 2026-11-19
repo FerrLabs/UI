@@ -31,8 +31,7 @@ is the default editorial look.
 | `soft`       | 8px / 12px / 16px              | Geist    | 36px               |
 
 `--control-height` is the `md` height of buttons, inputs, selects, search fields,
-multi-selects and submit buttons. `sm` and `lg` are 8px below and above it. Buttons
-are padding-sized, so they shift by half the difference to 40px on each side.
+multi-selects and submit buttons. `sm` and `lg` are 8px below and above it.
 
 ```html
 <html data-style="precision" data-theme="dark"></html>
