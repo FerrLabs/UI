@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.61.0] - 2026-11-20
+
+### Features
+
+- feat(foundation): raise precision preset to 36px controls and 4px control radius (#815)
+
 ## [1.60.1] - 2026-11-20
 
 ### Bug Fixes

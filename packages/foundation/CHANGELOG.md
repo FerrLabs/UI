@@ -4,6 +4,12 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.12.0] - 2026-11-20
+
+### Features
+
+- feat(foundation): raise precision preset to 36px controls and 4px control radius (#815)
+
 ## [5.11.2] - 2026-11-20
 
 ### Bug Fixes
