@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.58.1] - 2026-11-20
+
+### Bug Fixes
+
+- fix(ui-ng): theme flr-tree-select panel in dark mode (#810)
+
 ## [1.58.0] - 2026-11-20
 
 ### Features
