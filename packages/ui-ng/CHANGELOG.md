@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.60.1] - 2026-11-20
+
+### Bug Fixes
+
+- fix(ui-ng): raise tabs and site chrome to 44px targets, AA text on accent buttons (#814)
+
 ## [1.60.0] - 2026-11-20
 
 ### Features
