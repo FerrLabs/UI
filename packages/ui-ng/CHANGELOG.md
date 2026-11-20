@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.60.0] - 2026-11-20
+
+### Features
+
+- feat(ui-ng): add an animated copy icon (#813)
+
 ## [1.59.0] - 2026-11-20
 
 ### Features
