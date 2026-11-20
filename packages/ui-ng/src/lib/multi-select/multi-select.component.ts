@@ -12,10 +12,10 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { type ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { inheritedTokens } from './panel-tokens';
+import { inheritedTokens, PANEL_POSITIONS } from './panel-tokens';
 
 export interface MultiSelectOption {
   readonly id: string;
@@ -26,13 +26,6 @@ export interface MultiSelectOption {
 export type MultiSelectMode = 'list' | 'dropdown';
 
 let nextId = 0;
-
-const PANEL_POSITIONS: ConnectedPosition[] = [
-  { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6 },
-  { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -6 },
-  { originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 6 },
-  { originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6 },
-];
 
 @Component({
   selector: 'flr-multi-select',
