@@ -27,7 +27,7 @@ is the default editorial look.
 | `data-style` | Radii (control / card / modal) | Font     | `--control-height` |
 | ------------ | ------------------------------ | -------- | ------------------ |
 | (none)       | 4px / 8px / 12px               | Fraunces | 40px               |
-| `precision`  | 2px / 4px / 6px                | Geist    | 28px               |
+| `precision`  | 4px / 4px / 6px                | Geist    | 36px               |
 | `soft`       | 8px / 12px / 16px              | Geist    | 36px               |
 
 `--control-height` is the `md` height of buttons, inputs, selects, search fields,

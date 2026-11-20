@@ -148,12 +148,12 @@ html[data-theme='dark'] {
 }
 
 html[data-style='precision'] {
-  --radius-control: 2px;
+  --radius-control: 4px;
   --radius-card: 4px;
   --radius-modal: 6px;
   --font-sans: 'Geist Sans', system-ui, sans-serif;
   --font-display: 'Geist Sans', system-ui, sans-serif;
-  --control-height: 28px;
+  --control-height: 36px;
 }
 
 html[data-style='soft'] {
