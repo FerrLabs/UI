@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.59.0] - 2026-11-20
+
+### Features
+
+- feat(ui-ng): let flr-field label a composite control (#811)
+
 ## [1.58.1] - 2026-11-20
 
 ### Bug Fixes
