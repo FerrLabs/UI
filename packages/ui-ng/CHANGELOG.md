@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.58.0] - 2026-11-20
+
+### Features
+
+- feat(ui-ng): add flr-combobox single searchable select (#808)
+
 ## [1.57.1] - 2026-11-19
 
 ### Bug Fixes
