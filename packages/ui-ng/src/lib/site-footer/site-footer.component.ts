@@ -103,8 +103,10 @@ import {
       max-width: 380px;
     }
     .footer__back {
-      display: inline-block;
-      margin-top: 24px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      margin-top: 10px;
       font-size: 12px;
       letter-spacing: 0.06em;
       color: var(--paper-ink-2, var(--color-ink-2, #475569));
@@ -124,7 +126,7 @@ import {
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--paper-ink-3, var(--color-ink-3, #64748b));
-      margin-bottom: 16px;
+      margin-bottom: 4px;
     }
     .footer__col-list {
       list-style: none;
@@ -132,9 +134,11 @@ import {
       margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 12px;
     }
     .footer__link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
       font-size: 14px;
       color: var(--paper-ink-2, var(--color-ink-2, #475569));
       text-decoration: none;
