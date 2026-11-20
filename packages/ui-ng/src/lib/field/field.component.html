@@ -1,0 +1,30 @@
+<div class="flr-field">
+  <div class="flr-field__head">
+    @if (group()) {
+      <span class="flr-field__label mono" [id]="labelId">
+        <ng-container *ngTemplateOutlet="labelContent" />
+      </span>
+    } @else {
+      <label class="flr-field__label mono" [attr.for]="labelFor()">
+        <ng-container *ngTemplateOutlet="labelContent" />
+      </label>
+    }
+    <div class="flr-field__trailing"><ng-content select="[field-trailing]" /></div>
+  </div>
+  <ng-content />
+  @if (error(); as e) {
+    <p class="flr-field__error" [id]="errorId">{{ e }}</p>
+  } @else if (hint(); as h) {
+    <p class="flr-field__hint" [id]="hintId">{{ h }}</p>
+  }
+</div>
+
+<ng-template #labelContent>
+  {{ label() }}
+  @if (required()) {
+    <span class="flr-field__required" aria-hidden="true">*</span>
+  }
+  @if (optional() && !required()) {
+    <span class="flr-field__optional">({{ optionalLabel() }})</span>
+  }
+</ng-template>
