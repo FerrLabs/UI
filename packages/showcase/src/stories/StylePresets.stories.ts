@@ -32,7 +32,7 @@ export default meta;
 type Story = StoryObj;
 
 const PRESETS = [
-  { name: 'precision', control: '2px', card: '4px', heightOffset: -12 },
+  { name: 'precision', control: '4px', card: '4px', heightOffset: -4 },
   { name: 'soft', control: '8px', card: '12px', heightOffset: -4 },
 ] as const;
 
