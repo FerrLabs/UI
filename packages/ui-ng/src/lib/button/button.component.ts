@@ -23,7 +23,7 @@ const SIZE: Record<ButtonSize, SizeDim> = {
   md: {
     minHeight: 'var(--control-height, 40px)',
     padding: '0 16px',
-    fontSize: '12px',
+    fontSize: '13px',
     gap: '8px',
     radius: 'var(--radius-control, 4px)',
   },
