@@ -6,6 +6,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  box-sizing: border-box;
+  min-height: 44px;
   padding: 8px 12px;
   border: none;
   border-bottom: 2px solid transparent;
