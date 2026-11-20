@@ -75,6 +75,8 @@ import { icons } from '@ferrlabs/ui-foundation/icons';
 
 `.btn-primary` and `.btn-ghost` use `--radius-control`.
 
+Both are at least 44px tall. `.btn-primary` fills with `--accent` and derives its text colour from it: white on dark accents, black on light ones, so every product accent clears 4.5:1 (slate 14.6, orange 6.9, emerald 8.3, indigo 4.7, violet 5.0, amber 9.8, teal 8.4). Browsers without relative colour syntax keep white text.
+
 ## Migration from old packages
 
 The old packages (`@ferrlabs/ui-icons`, `@ferrlabs/styles`,
