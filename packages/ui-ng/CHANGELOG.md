@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.61.2] - 2026-11-24
+
+### Bug Fixes
+
+- fix(toast): announce each toast once (#827)
+
 ## [1.61.1] - 2026-11-22
 
 ### Bug Fixes
