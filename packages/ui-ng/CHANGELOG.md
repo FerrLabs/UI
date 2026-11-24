@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.62.0] - 2026-11-24
+
+### Features
+
+- feat(tabs): scroll the active tab into view and fade overflowing edges (#828)
+
 ## [1.61.2] - 2026-11-24
 
 ### Bug Fixes
