@@ -14,7 +14,7 @@ const ICON: Record<ToastVariant, string> = {
   template: `
     <div class="flr-toasts">
       @for (toast of toasts(); track toast.id) {
-        <div class="flr-toast" [class]="'flr-toast--' + toast.variant" role="status">
+        <div class="flr-toast" [class]="'flr-toast--' + toast.variant">
           <span class="flr-toast__icon mono" aria-hidden="true">{{ icon(toast.variant) }}</span>
           <div class="flr-toast__body">
             @if (toast.title; as title) {
