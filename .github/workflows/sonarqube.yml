@@ -46,7 +46,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    uses: FerrLabs/.github/.github/workflows/reusable-sonarqube-scan.yml@532e765d8b055d300bc2beeff3c981ed2938759f # main
+    uses: FerrLabs/.github/.github/workflows/reusable-sonarqube-scan.yml@0a075f35954063ac01310b4e01543fd7009916e4 # main
     with:
       project-key: UI
       exclusions: '**/node_modules/**,**/dist/**,**/build/**,**/target/**,**/coverage/**,**/.next/**,**/out/**,**/vendor/**,**/*.min.js,**/*.min.css,**/*.spec.ts'
