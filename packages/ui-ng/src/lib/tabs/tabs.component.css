@@ -10,4 +10,33 @@
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 24px;
+  --fade-start: 0px;
+  --fade-end: 0px;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--fade-start),
+    #000 calc(100% - var(--fade-end)),
+    transparent
+  );
+}
+
+.flr-tabs:dir(rtl) {
+  mask-image: linear-gradient(
+    to left,
+    transparent,
+    #000 var(--fade-start),
+    #000 calc(100% - var(--fade-end)),
+    transparent
+  );
+}
+
+.flr-tabs--fade-start {
+  --fade-start: 24px;
+}
+
+.flr-tabs--fade-end {
+  --fade-end: 24px;
 }
