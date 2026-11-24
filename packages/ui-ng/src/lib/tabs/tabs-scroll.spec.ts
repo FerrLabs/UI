@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { centeredScrollLeft, fadeEdges, scrollBehavior } from './tabs-scroll';
+import {
+  centeredScrollLeft,
+  fadeEdges,
+  focusScrollLeft,
+  scrollBehavior,
+  shouldReveal,
+} from './tabs-scroll';
 
 describe('fadeEdges', () => {
   it('fades only the end at the start of an overflowing strip', () => {
@@ -62,5 +68,53 @@ describe('scrollBehavior', () => {
   it('is always instant under reduced motion', () => {
     expect(scrollBehavior(true, true)).toBe('auto');
     expect(scrollBehavior(true, false)).toBe('auto');
+  });
+});
+
+describe('shouldReveal', () => {
+  const fitted = { clientWidth: 300, scrollWidth: 600 };
+
+  it('reveals the first time the strip is measured', () => {
+    expect(shouldReveal(null, fitted, false)).toBe(true);
+  });
+
+  it('does not reveal when the geometry is unchanged', () => {
+    expect(shouldReveal(fitted, { ...fitted }, false)).toBe(false);
+  });
+
+  it('reveals when the strip width or the content width changed', () => {
+    expect(shouldReveal(fitted, { clientWidth: 320, scrollWidth: 600 }, false)).toBe(true);
+    expect(shouldReveal(fitted, { clientWidth: 300, scrollWidth: 640 }, false)).toBe(true);
+  });
+
+  it('never reveals after the user scrolled the strip', () => {
+    expect(shouldReveal(null, fitted, true)).toBe(false);
+    expect(shouldReveal(fitted, { clientWidth: 320, scrollWidth: 640 }, true)).toBe(false);
+  });
+});
+
+describe('focusScrollLeft', () => {
+  const strip = { left: 10, width: 300 };
+
+  it('needs no scroll for a tab inside the fade insets', () => {
+    expect(focusScrollLeft(50, { left: 100, width: 80 }, strip)).toBeNull();
+    expect(focusScrollLeft(50, { left: 34, width: 80 }, strip)).toBeNull();
+    expect(focusScrollLeft(50, { left: 206, width: 80 }, strip)).toBeNull();
+  });
+
+  it('scrolls a tab hanging past the end in with the end inset', () => {
+    expect(focusScrollLeft(0, { left: 250, width: 80 }, strip)).toBe(44);
+  });
+
+  it('scrolls a tab hanging past the start in with the start inset', () => {
+    expect(focusScrollLeft(100, { left: 20, width: 80 }, strip)).toBe(86);
+  });
+
+  it('keeps a tab under the fade out of the fade', () => {
+    expect(focusScrollLeft(0, { left: 300, width: 40 }, strip)).toBe(54);
+  });
+
+  it('prefers the start edge for a tab wider than the visible area', () => {
+    expect(focusScrollLeft(100, { left: 0, width: 400 }, strip)).toBe(66);
   });
 });

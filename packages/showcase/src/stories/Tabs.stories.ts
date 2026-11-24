@@ -146,8 +146,8 @@ export const Overflowing: Story = {
 };
 
 /**
- * Nav mode in a narrow container: the active tab is scrolled to the centre of the
- * strip on load and on change, and the edges fade where more tabs are hidden.
+ * Nav mode in a narrow container: the active tab is scrolled into view on load and on change, and the
+ * edges fade where more tabs are hidden.
  */
 export const OverflowingNavActive: Story = {
   render: () => ({

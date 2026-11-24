@@ -28,3 +28,29 @@ export function centeredScrollLeft(scrollLeft: number, tab: Box, strip: Box): nu
 export function scrollBehavior(prefersReducedMotion: boolean, animate: boolean): ScrollBehavior {
   return animate && !prefersReducedMotion ? 'smooth' : 'auto';
 }
+
+export interface StripGeometry {
+  readonly clientWidth: number;
+  readonly scrollWidth: number;
+}
+
+export const FADE_WIDTH_PX = 24;
+
+export function shouldReveal(
+  previous: StripGeometry | null,
+  next: StripGeometry,
+  userScrolled: boolean,
+): boolean {
+  if (userScrolled) return false;
+  if (previous === null) return true;
+  return previous.clientWidth !== next.clientWidth || previous.scrollWidth !== next.scrollWidth;
+}
+
+export function focusScrollLeft(scrollLeft: number, tab: Box, strip: Box): number | null {
+  const visibleStart = strip.left + FADE_WIDTH_PX;
+  const visibleEnd = strip.left + strip.width - FADE_WIDTH_PX;
+  if (tab.left < visibleStart) return scrollLeft + tab.left - visibleStart;
+  const tabEnd = tab.left + tab.width;
+  if (tabEnd > visibleEnd) return scrollLeft + tabEnd - visibleEnd;
+  return null;
+}

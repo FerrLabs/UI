@@ -1,11 +1,16 @@
 <div
   #strip
   class="flr-tabs"
+  [class.flr-tabs--nav]="mode() === 'nav'"
   [class.flr-tabs--fade-start]="fadeStart()"
   [class.flr-tabs--fade-end]="fadeEnd()"
   [attr.role]="role()"
   [attr.aria-label]="ariaLabel()"
   (scroll)="updateFade()"
+  (wheel)="markUserScrolled()"
+  (touchstart)="markUserScrolled()"
+  (pointerdown)="markUserScrolled()"
+  (focusin)="keepFocusVisible($event)"
 >
   <ng-content />
 </div>
