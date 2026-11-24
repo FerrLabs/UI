@@ -42,6 +42,10 @@ export class TabComponent implements TabsStripItem {
     this.control()?.nativeElement.focus();
   }
 
+  element(): HTMLElement | null {
+    return this.control()?.nativeElement ?? null;
+  }
+
   protected onClick(event: MouseEvent): void {
     if (this.disabled()) {
       event.preventDefault();

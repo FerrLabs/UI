@@ -144,3 +144,24 @@ export const Overflowing: Story = {
       </div>`,
   }),
 };
+
+/**
+ * Nav mode in a narrow container: the active tab is scrolled into view on load and on change, and the
+ * edges fade where more tabs are hidden.
+ */
+export const OverflowingNavActive: Story = {
+  render: () => ({
+    props: { current: 'settings' },
+    template: `
+      <div style="max-width:375px;border:1px dashed var(--color-rule);padding:12px 0">
+        <flr-tabs ariaLabel="Site sections">
+          <flr-tab label="Overview" href="/site" [active]="current === 'overview'" (selected)="current = 'overview'" />
+          <flr-tab label="Pages" href="/site/pages" [active]="current === 'pages'" (selected)="current = 'pages'" />
+          <flr-tab label="Forms" href="/site/forms" [active]="current === 'forms'" (selected)="current = 'forms'" />
+          <flr-tab label="Members" href="/site/members" [active]="current === 'members'" (selected)="current = 'members'" />
+          <flr-tab label="Health" href="/site/health" [active]="current === 'health'" (selected)="current = 'health'" />
+          <flr-tab label="Settings" href="/site/settings" [active]="current === 'settings'" (selected)="current = 'settings'" />
+        </flr-tabs>
+      </div>`,
+  }),
+};

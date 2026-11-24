@@ -18,6 +18,7 @@
   font-weight: 500;
   line-height: 1.4;
   white-space: nowrap;
+  scroll-snap-align: start;
   text-decoration: none;
   cursor: pointer;
   transition:
