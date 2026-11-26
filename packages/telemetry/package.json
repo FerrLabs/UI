@@ -40,7 +40,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@grafana/faro-web-sdk": "~2.14.0"
+    "@grafana/faro-web-sdk": "~2.15.0"
   },
   "peerDependencies": {
     "@angular/core": "^22.0.0"
