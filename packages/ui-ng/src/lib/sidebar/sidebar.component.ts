@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, input, model, output } from '@angular/core';
+import {
+  afterRenderEffect,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  type ElementRef,
+  input,
+  model,
+  output,
+  viewChild,
+} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconPlayDirective } from '../icon/icon-play.directive';
 import { markColorOnDark } from '../app-rail/mark-color';
@@ -6,8 +16,18 @@ import { markColorOnDark } from '../app-rail/mark-color';
 @Component({
   selector: 'flr-sidebar',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:keydown.escape)': 'onEscape()',
+  },
   template: `
-    <aside class="flr-sb" [class.flr-sb--collapsed]="collapsed()" [style.width]="widthPx()">
+    <aside
+      #panel
+      class="flr-sb"
+      [class.flr-sb--collapsed]="collapsed()"
+      [class.flr-sb--drawer-open]="drawerOpen()"
+      [style.width]="widthPx()"
+      [attr.tabindex]="drawerOpen() ? -1 : null"
+    >
       <div class="flr-sb__switcher"><ng-content select="[sidebar-switcher]" /></div>
       <div class="flr-sb__brand"><ng-content select="[sidebar-brand]" /></div>
       <div class="flr-sb__project"><ng-content select="[sidebar-project]" /></div>
@@ -16,6 +36,13 @@ import { markColorOnDark } from '../app-rail/mark-color';
         <div class="flr-sb__extra"><ng-content select="[sidebar-footer]" /></div>
       </div>
     </aside>
+    <button
+      type="button"
+      class="flr-sb__backdrop"
+      [class.flr-sb__backdrop--open]="drawerOpen()"
+      [attr.aria-label]="drawerCloseLabel()"
+      (click)="drawerOpen.set(false)"
+    ></button>
   `,
   styles: `
     :host {
@@ -75,12 +102,62 @@ import { markColorOnDark } from '../app-rail/mark-color';
     .flr-sb__footer:not(:has(.flr-sb__extra > :not(:empty))) {
       display: none;
     }
+    .flr-sb__backdrop {
+      display: none;
+    }
     @media (max-width: 880px) {
       .flr-sb {
-        display: none;
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 40;
+        height: 100dvh;
+        max-width: calc(100vw - 56px);
+        overscroll-behavior: contain;
+        visibility: hidden;
+        translate: -100% 0;
+        transition:
+          translate 220ms ease,
+          visibility 0s 220ms;
+      }
+      .flr-sb--drawer-open {
+        visibility: visible;
+        translate: 0 0;
+        transition:
+          translate 220ms ease,
+          visibility 0s;
+      }
+      .flr-sb:focus {
+        outline: none;
+      }
+      .flr-sb__backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 39;
+        padding: 0;
+        border: none;
+        background: var(--flr-sidebar-backdrop, rgba(15, 23, 42, 0.5));
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 220ms ease,
+          visibility 0s 220ms;
+      }
+      .flr-sb__backdrop--open {
+        opacity: 1;
+        visibility: visible;
+        transition:
+          opacity 220ms ease,
+          visibility 0s;
+      }
+      .flr-sb__backdrop:focus-visible {
+        outline: 2px solid #ffffff;
+        outline-offset: -4px;
       }
     }
     @media (prefers-reduced-motion: reduce) {
+      .flr-sb,
+      .flr-sb__backdrop,
       .flr-sb__switcher {
         transition: none;
       }
@@ -89,13 +166,29 @@ import { markColorOnDark } from '../app-rail/mark-color';
 })
 export class SidebarComponent {
   readonly collapsed = model(false);
+  readonly drawerOpen = model(false);
   readonly navLabel = input('Sections');
+  readonly drawerCloseLabel = input('Close navigation');
   readonly width = input(256);
   readonly collapsedWidth = input(64);
+
+  private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');
+
+  constructor() {
+    afterRenderEffect(() => {
+      if (this.drawerOpen()) this.panel().nativeElement.focus();
+    });
+  }
 
   protected readonly widthPx = computed(() =>
     this.collapsed() ? `${this.collapsedWidth()}px` : `${this.width()}px`,
   );
+
+  protected onEscape(): void {
+    if (!this.drawerOpen()) return;
+    if (this.panel().nativeElement.querySelector('[aria-expanded="true"]')) return;
+    this.drawerOpen.set(false);
+  }
 }
 
 @Component({

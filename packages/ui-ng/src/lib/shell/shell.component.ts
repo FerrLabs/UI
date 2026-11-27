@@ -1,12 +1,19 @@
+import { DOCUMENT } from '@angular/common';
 import {
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
+  effect,
+  type ElementRef,
   forwardRef,
   inject,
   input,
   model,
   output,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {
@@ -37,32 +44,47 @@ export interface ShellNavGroup {
   readonly items: readonly ShellNavItem[];
 }
 
+const NARROW_VIEWPORT = '(max-width: 880px)';
+
 @Component({
   selector: 'flr-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SidebarComponent, SidebarSectionComponent, SidebarItemComponent, RailToggleComponent],
-  providers: [{ provide: SHELL_CONTEXT, useExisting: forwardRef(() => ShellComponent) }],
+  providers: [
+    {
+      provide: SHELL_CONTEXT,
+      useFactory: (): ShellContext => ({
+        collapsed: inject(forwardRef(() => ShellComponent)).railCollapsed,
+      }),
+    },
+  ],
   host: {
     '(window:keydown)': 'onKeydown($event)',
   },
   template: `
     <div class="flr-shell">
-      <div class="flr-shell__rail"><ng-content select="[shell-rail]" /></div>
+      <div class="flr-shell__rail" [attr.inert]="navOpen() ? '' : null">
+        <ng-content select="[shell-rail]" />
+      </div>
       <div class="flr-shell__surface">
-        <flr-sidebar [(collapsed)]="collapsed">
+        <flr-sidebar
+          [collapsed]="railCollapsed()"
+          [(drawerOpen)]="navOpen"
+          [drawerCloseLabel]="navCloseLabel()"
+        >
           <div sidebar-switcher class="flr-shell__switcher">
             <ng-content select="[shell-switcher]" />
           </div>
           <div sidebar-brand class="flr-shell__brand"><ng-content select="[shell-brand]" /></div>
           <div sidebar-project><ng-content select="[shell-project]" /></div>
           @for (group of sections(); track group.title ?? $index) {
-            <flr-sidebar-section [title]="group.title ?? null" [collapsed]="collapsed()">
+            <flr-sidebar-section [title]="group.title ?? null" [collapsed]="railCollapsed()">
               @for (item of group.items; track item.id) {
                 <flr-sidebar-item
                   [label]="item.label"
                   [href]="item.href ?? null"
                   [active]="isActive(item)"
-                  [collapsed]="collapsed()"
+                  [collapsed]="railCollapsed()"
                   [accent]="accent()"
                   [badge]="item.badge ?? null"
                   [danger]="item.danger ?? false"
@@ -89,8 +111,30 @@ export interface ShellNavGroup {
           <div sidebar-footer class="flr-shell__user"><ng-content select="[shell-user]" /></div>
         </flr-sidebar>
 
-        <div class="flr-shell__body">
+        <div class="flr-shell__body" [attr.inert]="navOpen() ? '' : null">
           <header class="flr-shell__topbar">
+            <button
+              #navToggle
+              type="button"
+              class="flr-shell__nav-toggle"
+              aria-haspopup="true"
+              [attr.aria-expanded]="navOpen()"
+              [attr.aria-label]="navOpenLabel()"
+              (click)="navOpen.set(true)"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <line x1="4" y1="7" x2="20" y2="7" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="17" x2="20" y2="17" />
+              </svg>
+            </button>
             <flr-rail-toggle class="flr-shell__rail-toggle" [(collapsed)]="collapsed" />
             <div class="flr-shell__slot flr-shell__slot--crumb-lead">
               <ng-content select="[shell-breadcrumb-lead]" />
@@ -229,9 +273,44 @@ export interface ShellNavGroup {
     .flr-shell__rail-toggle {
       margin-left: -8px;
     }
+    .flr-shell__nav-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      margin-left: -12px;
+      padding: 0;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
+      background: transparent;
+      color: var(--color-ink-2, #475569);
+      cursor: pointer;
+    }
+    .flr-shell__nav-toggle:hover {
+      background: var(--color-app-nav-hover, rgba(30, 41, 59, 0.06));
+      color: var(--color-ink, #1e293b);
+    }
+    .flr-shell__nav-toggle:focus-visible {
+      outline: 2px solid var(--color-accent, var(--color-ink, #1e293b));
+      outline-offset: 2px;
+    }
+    .flr-shell__nav-toggle svg {
+      width: 20px;
+      height: 20px;
+    }
     @media (max-width: 880px) {
+      .flr-shell__topbar {
+        padding: 0 16px;
+        gap: 12px;
+      }
       .flr-shell__rail-toggle {
         display: none;
+      }
+      .flr-shell__nav-toggle {
+        display: inline-flex;
       }
     }
     .flr-shell__crumbs {
@@ -331,8 +410,17 @@ export class ShellComponent implements ShellContext {
   readonly currentPath = input('/');
   readonly breadcrumb = input<readonly ShellCrumb[]>([]);
   readonly searchEnabled = input(false);
+  readonly navOpenLabel = input('Open navigation');
+  readonly navCloseLabel = input('Close navigation');
 
   readonly collapsed = model(false);
+
+  private readonly narrow = signal(false);
+  readonly railCollapsed = computed(() => this.collapsed() && !this.narrow());
+  protected readonly navOpen = signal(false);
+  private readonly navToggle = viewChild.required<ElementRef<HTMLButtonElement>>('navToggle');
+  private readonly document = inject(DOCUMENT);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly crumbs = computed(() => resolveCrumbs(this.breadcrumb()));
 
@@ -345,11 +433,45 @@ export class ShellComponent implements ShellContext {
     activeNavItemId(this.sections(), this.currentPath()),
   );
 
+  constructor() {
+    this.watchViewport();
+    effect(() => {
+      this.currentPath();
+      this.narrow();
+      this.navOpen.set(false);
+    });
+    effect((onCleanup) => {
+      if (!this.navOpen()) return;
+      const root = this.document.documentElement;
+      const previous = root.style.overflow;
+      root.style.overflow = 'hidden';
+      onCleanup(() => {
+        root.style.overflow = previous;
+      });
+    });
+    let wasOpen = false;
+    afterRenderEffect(() => {
+      const open = this.navOpen();
+      if (wasOpen && !open) this.navToggle().nativeElement.focus();
+      wasOpen = open;
+    });
+  }
+
+  private watchViewport(): void {
+    const query = this.document.defaultView?.matchMedia?.(NARROW_VIEWPORT);
+    if (!query) return;
+    const sync = () => this.narrow.set(query.matches);
+    sync();
+    query.addEventListener('change', sync);
+    this.destroyRef.onDestroy(() => query.removeEventListener('change', sync));
+  }
+
   protected isActive(item: ShellNavItem): boolean {
     return item.href !== undefined && item.id === this.activeItemId();
   }
 
   protected onSelect(item: ShellNavItem): void {
+    this.navOpen.set(false);
     if (item.href) this.navigate.emit(item.href);
   }
 

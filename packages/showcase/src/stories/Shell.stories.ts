@@ -14,7 +14,7 @@ import {
 import { icons } from '@ferrlabs/ui-foundation/icons';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
-import { expect, waitFor, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 const ORGS: readonly ProjectSwitcherItem[] = [
   { id: 'ferrlabs', label: 'FerrLabs', meta: 'ferrlabs' },
@@ -364,5 +364,119 @@ export const CollapsedRailOrgSwitcherOpensBesideTheRail: Story = {
       expect(box.left).toBeGreaterThanOrEqual(rail.getBoundingClientRect().right);
       expect(box.width).toBeGreaterThanOrEqual(240);
     });
+  },
+};
+
+function drawerParts(canvasElement: HTMLElement) {
+  const toggle = within(canvasElement).getByRole('button', { name: 'Open navigation' });
+  const panel = canvasElement.querySelector<HTMLElement>('.flr-sb');
+  const body = canvasElement.querySelector<HTMLElement>('.flr-shell__body');
+  if (!panel || !body) throw new Error('sidebar or shell body not found');
+  return { toggle, panel, body };
+}
+
+async function openDrawer(canvasElement: HTMLElement) {
+  const parts = drawerParts(canvasElement);
+  await userEvent.click(parts.toggle);
+  await waitFor(() => expect(parts.panel.getBoundingClientRect().left).toBe(0));
+  return parts;
+}
+
+async function expectDrawerClosed({ toggle, panel, body }: ReturnType<typeof drawerParts>) {
+  await waitFor(() => expect(getComputedStyle(panel).visibility).toBe('hidden'));
+  await expect(body.hasAttribute('inert')).toBe(false);
+  await expect(document.activeElement).toBe(toggle);
+  await expect(toggle.getAttribute('aria-expanded')).toBe('false');
+}
+
+export const NarrowViewport: Story = {
+  ...Merged,
+  globals: { viewport: { value: 'phone', isRotated: false } },
+  play: async ({ canvasElement }) => {
+    const { toggle, panel } = drawerParts(canvasElement);
+    await expect(toggle).toBeVisible();
+    await expect(getComputedStyle(panel).visibility).toBe('hidden');
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+  },
+};
+
+export const NarrowViewportDrawerOpen: Story = {
+  ...NarrowViewport,
+  play: async ({ canvasElement }) => {
+    const { toggle, panel, body } = await openDrawer(canvasElement);
+    await expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    await expect(panel.contains(document.activeElement)).toBe(true);
+    await expect(body.hasAttribute('inert')).toBe(true);
+    await expect(document.documentElement.style.overflow).toBe('hidden');
+    await expect(
+      within(canvasElement).getByRole('button', { name: 'Close navigation' }),
+    ).toBeVisible();
+  },
+};
+
+export const SmallPhoneDrawerReachesEveryControl: Story = {
+  ...NarrowViewport,
+  args: { collapsed: true },
+  globals: { viewport: { value: 'phoneSmall', isRotated: false } },
+  play: async ({ canvasElement }) => {
+    const { panel } = await openDrawer(canvasElement);
+    const drawer = within(panel);
+    const controls = [
+      ...drawer.getAllByRole('link'),
+      drawer.getByRole('button', { name: /FerrLabs/ }),
+      drawer.getByRole('button', { name: /Ada Doe/ }),
+    ];
+    await expect(drawer.getAllByRole('link').length).toBeGreaterThanOrEqual(6);
+    for (const control of controls) {
+      const box = control.getBoundingClientRect();
+      await expect(box.width).toBeGreaterThan(0);
+      await expect(box.left).toBeGreaterThanOrEqual(0);
+      await expect(box.right).toBeLessThanOrEqual(window.innerWidth);
+    }
+    await expect(drawer.getByText('ada@ferrlabs.com')).toBeVisible();
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+  },
+};
+
+export const NarrowViewportEscapeClosesTheDrawer: Story = {
+  ...NarrowViewport,
+  play: async ({ canvasElement }) => {
+    const parts = await openDrawer(canvasElement);
+    await userEvent.keyboard('{Escape}');
+    await expectDrawerClosed(parts);
+  },
+};
+
+export const NarrowViewportBackdropClosesTheDrawer: Story = {
+  ...NarrowViewport,
+  play: async ({ canvasElement }) => {
+    const parts = await openDrawer(canvasElement);
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Close navigation' }));
+    await expectDrawerClosed(parts);
+  },
+};
+
+export const NarrowViewportNavigationClosesTheDrawer: Story = {
+  ...NarrowViewport,
+  play: async ({ canvasElement }) => {
+    const parts = await openDrawer(canvasElement);
+    await userEvent.click(within(parts.panel).getByRole('link', { name: /Runs/ }));
+    await expectDrawerClosed(parts);
+  },
+};
+
+export const NarrowViewportEscapeClosesTheOpenSwitcherFirst: Story = {
+  ...NarrowViewport,
+  play: async ({ canvasElement }) => {
+    const { panel } = await openDrawer(canvasElement);
+    const parts = drawerParts(canvasElement);
+    const orgSwitcher = within(panel).getByRole('button', { name: /FerrLabs/ });
+    await userEvent.click(orgSwitcher);
+    await waitFor(() => expect(orgSwitcher.getAttribute('aria-expanded')).toBe('true'));
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(orgSwitcher.getAttribute('aria-expanded')).toBe('false'));
+    await expect(getComputedStyle(panel).visibility).toBe('visible');
+    await userEvent.keyboard('{Escape}');
+    await expectDrawerClosed(parts);
   },
 };
