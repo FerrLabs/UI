@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.64.2] - 2026-11-27
+
+### Bug Fixes
+
+- fix(ui-ng): resolve Sonar code smells in splitter, access picker and markdown edit (#848)
+
 ## [1.64.1] - 2026-11-27
 
 ### Bug Fixes
