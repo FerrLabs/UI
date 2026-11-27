@@ -24,6 +24,8 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Build foundation
+        run: pnpm --filter @ferrlabs/ui-foundation build
       - name: Unit tests with coverage
         run: pnpm --filter @ferrlabs/ui-ng --filter @ferrlabs/telemetry test:coverage
       - name: Rebase lcov paths to the repo root
