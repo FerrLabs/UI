@@ -133,7 +133,7 @@ describe('redactItem', () => {
     });
     expect(
       redactItem({ type: TransportItemType.LOG, payload, meta: {} } as unknown as TransportItem),
-    ).toBe(null);
+    ).toBeNull();
   });
 
   it('scrubs a frozen item without mutating it', () => {
@@ -177,7 +177,7 @@ describe('redactItem', () => {
       payload: { unprintable },
       meta: {},
     } as unknown as TransportItem);
-    expect(out).toBe(null);
+    expect(out).toBeNull();
   });
   it('masks string fields named like secrets whatever their value', () => {
     const out = scrub(

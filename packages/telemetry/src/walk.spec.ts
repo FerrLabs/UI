@@ -1,5 +1,5 @@
 import { isSecretName, redactText } from './redact-text.js';
-import { assert, describe, it } from 'vitest';
+import { assert, describe, expect, it } from 'vitest';
 import type { TransportItem } from '@grafana/faro-web-sdk';
 import { assertNearLinear } from './scaling.fixture.js';
 import { redactDeep, sanitizeItem } from './walk.js';
@@ -28,48 +28,47 @@ function containsMarker(value: unknown, seen = new WeakSet<object>()): boolean {
 
 describe('redactDeep', () => {
   it('masks a string field named like a secret', () => {
-    assert.deepEqual<unknown>(redactDeep({ token: 'abc123def' }), { token: '*' });
-    assert.deepEqual<unknown>(redactDeep({ password: 'hunter2' }), { password: '*' });
-    assert.deepEqual<unknown>(redactDeep({ apiKey: 'x' }), { apiKey: '*' });
-    assert.deepEqual<unknown>(redactDeep({ 'x-auth-token': 'x' }), { 'x-auth-token': '*' });
+    expect(redactDeep({ token: 'abc123def' })).toStrictEqual({ token: '*' });
+    expect(redactDeep({ password: 'hunter2' })).toStrictEqual({ password: '*' });
+    expect(redactDeep({ apiKey: 'x' })).toStrictEqual({ apiKey: '*' });
+    expect(redactDeep({ 'x-auth-token': 'x' })).toStrictEqual({ 'x-auth-token': '*' });
   });
 
   it('masks a nested field named like a secret', () => {
-    assert.deepEqual<unknown>(redactDeep({ a: { apiKey: 'x' } }), { a: { apiKey: '*' } });
-    assert.deepEqual<unknown>(redactDeep({ list: [{ session_id: 'x' }] }), {
+    expect(redactDeep({ a: { apiKey: 'x' } })).toStrictEqual({ a: { apiKey: '*' } });
+    expect(redactDeep({ list: [{ session_id: 'x' }] })).toStrictEqual({
       list: [{ session_id: '*' }],
     });
   });
 
   it('keeps a field that is not named like a secret', () => {
-    assert.deepEqual<unknown>(redactDeep({ name: 'ok' }), { name: 'ok' });
+    expect(redactDeep({ name: 'ok' })).toStrictEqual({ name: 'ok' });
   });
 
   it('masks every leaf under a sensitive key including numbers', () => {
-    assert.deepEqual<unknown>(redactDeep({ token: { value: 'x', note: 'password=abc12345' } }), {
+    expect(redactDeep({ token: { value: 'x', note: 'password=abc12345' } })).toStrictEqual({
       token: { '*': '*', '*#2': '*' },
     });
-    assert.deepEqual<unknown>(redactDeep({ key: 42 }), { key: '*' });
+    expect(redactDeep({ key: 42 })).toStrictEqual({ key: '*' });
   });
 
   it('masks numbers, bigints and array elements under a sensitive key', () => {
-    assert.deepEqual<unknown>(redactDeep({ password: 123456 }), { password: '*' });
-    assert.deepEqual<unknown>(redactDeep({ session_id: 987654321 }), { session_id: '*' });
-    assert.deepEqual<unknown>(redactDeep({ sessionId: 123456789n }), { sessionId: '*' });
-    assert.deepEqual<unknown>(redactDeep({ token: ['abc123def', 5, 7n, ['nested']] }), {
+    expect(redactDeep({ password: 123456 })).toStrictEqual({ password: '*' });
+    expect(redactDeep({ session_id: 987654321 })).toStrictEqual({ session_id: '*' });
+    expect(redactDeep({ sessionId: 123456789n })).toStrictEqual({ sessionId: '*' });
+    expect(redactDeep({ token: ['abc123def', 5, 7n, ['nested']] })).toStrictEqual({
       token: ['*', '*', '*', ['*']],
     });
-    assert.deepEqual<unknown>(
+    expect(
       redactDeep({ apiKey: ['k1', { note: 'x', url: 'https://a.test/x?code=abc' }] }),
-      {
-        apiKey: ['*', { '*': '*', '*#2': '*' }],
-      },
-    );
-    assert.deepEqual<unknown>(redactDeep({ list: ['plain'] }), { list: ['plain'] });
+    ).toStrictEqual({
+      apiKey: ['*', { '*': '*', '*#2': '*' }],
+    });
+    expect(redactDeep({ list: ['plain'] })).toStrictEqual({ list: ['plain'] });
   });
 
   it('masks field names with dots, dollars and spaces and keeps benign names', () => {
-    assert.deepEqual<unknown>(
+    expect(
       redactDeep({
         'user.password': 'hunter2',
         $password: 'h',
@@ -77,15 +76,14 @@ describe('redactDeep', () => {
         client$token: 'c',
         'auth.token': 't',
       }),
-      {
-        'user.password': '*',
-        $password: '*',
-        'api key': '*',
-        client$token: '*',
-        'auth.token': '*',
-      },
-    );
-    assert.deepEqual<unknown>(redactDeep({ cacheKey: 'home', authMethod: 'sso', author: 'jane' }), {
+    ).toStrictEqual({
+      'user.password': '*',
+      $password: '*',
+      'api key': '*',
+      client$token: '*',
+      'auth.token': '*',
+    });
+    expect(redactDeep({ cacheKey: 'home', authMethod: 'sso', author: 'jane' })).toStrictEqual({
       cacheKey: 'home',
       authMethod: 'sso',
       author: 'jane',
@@ -93,27 +91,25 @@ describe('redactDeep', () => {
   });
 
   it('matches benign field exclusions on the key suffix only', () => {
-    assert.deepEqual<unknown>(
+    expect(
       redactDeep({ homeCacheKey: 'a', x: { idempotencyKey: 'b' }, user: { authType: 'sso' } }),
-      {
-        homeCacheKey: 'a',
-        x: { idempotencyKey: 'b' },
-        user: { authType: 'sso' },
-      },
-    );
-    assert.deepEqual<unknown>(
+    ).toStrictEqual({
+      homeCacheKey: 'a',
+      x: { idempotencyKey: 'b' },
+      user: { authType: 'sso' },
+    });
+    expect(
       redactDeep({ daemonKey: 'a', commonKey: 'b', codeSig: 'c', escrowKey: 'd' }),
-      {
-        daemonKey: '*',
-        commonKey: '*',
-        codeSig: '*',
-        escrowKey: '*',
-      },
-    );
+    ).toStrictEqual({
+      daemonKey: '*',
+      commonKey: '*',
+      codeSig: '*',
+      escrowKey: '*',
+    });
   });
 
   it('masks plural and prefixed code and state field names', () => {
-    assert.deepEqual<unknown>(
+    expect(
       redactDeep({
         storageKey: 'abc',
         tokens: ['x'],
@@ -122,15 +118,14 @@ describe('redactDeep', () => {
         mfaCode: 'm',
         session_state: 's',
       }),
-      {
-        storageKey: '*',
-        tokens: ['*'],
-        apiKeys: '*',
-        otp_code: '*',
-        mfaCode: '*',
-        session_state: '*',
-      },
-    );
+    ).toStrictEqual({
+      storageKey: '*',
+      tokens: ['*'],
+      apiKeys: '*',
+      otp_code: '*',
+      mfaCode: '*',
+      session_state: '*',
+    });
   });
 
   it('keeps bare and benign code and state field names', () => {
@@ -142,25 +137,22 @@ describe('redactDeep', () => {
       readyState: 'e',
       homeCacheKeys: 'f',
     };
-    assert.deepEqual<unknown>(redactDeep(input), input);
+    expect(redactDeep(input)).toStrictEqual(input);
   });
 
   it('keeps every key that redacts to the same string', () => {
-    assert.deepEqual<unknown>(redactDeep({ 'a@b.com': 1, 'c@d.com': 2 }), { '*': 1, '*#2': 2 });
+    expect(redactDeep({ 'a@b.com': 1, 'c@d.com': 2 })).toStrictEqual({ '*': 1, '*#2': 2 });
   });
 
   it('scrubs keys and string values with the given redactor', () => {
-    assert.deepEqual<unknown>(
-      redactDeep({ url: 'x' }, (value) => value.toUpperCase()),
-      { URL: 'X' },
-    );
+    expect(redactDeep({ url: 'x' }, (value) => value.toUpperCase())).toStrictEqual({ URL: 'X' });
   });
 
   it('survives cycles', () => {
     const node: Record<string, unknown> = { name: 'a' };
     node['self'] = node;
     const copy = redactDeep(node) as Record<string, unknown>;
-    assert.strictEqual<unknown>(copy['self'], copy);
+    expect(copy['self']).toBe(copy);
   });
 });
 
@@ -174,8 +166,8 @@ describe('sanitizeItem', () => {
       meta: { page: { url: string } };
       payload: { value: string };
     };
-    assert.ok(!out.meta.page.url.includes('abc'));
-    assert.ok(!out.payload.value.includes('abc'));
+    expect(out.meta.page.url).not.toContain('abc');
+    expect(out.payload.value).not.toContain('abc');
   });
 
   it('drops the item when the walk throws', () => {
@@ -185,57 +177,57 @@ describe('sanitizeItem', () => {
       },
       payload: {},
     };
-    assert.strictEqual<unknown>(sanitizeItem(hostile as never), null);
+    expect(sanitizeItem(hostile as never)).toBeNull();
   });
 });
 
 describe('aliased containers and metric fields', () => {
   const run = (meta: object, payload: object) => {
     const out = sanitizeItem({ type: 'log', meta, payload } as never);
-    assert.ok(out);
+    expect(out).toBeTruthy();
     return out as unknown as { meta: Record<string, unknown>; payload: Record<string, unknown> };
   };
 
   it('masks a container reached under a secret field after a benign field', () => {
     const shared = ['hunter2'];
     const { payload } = run({}, { list: shared, password: shared });
-    assert.deepEqual<unknown>(payload['password'], ['*']);
+    expect(payload['password']).toStrictEqual(['*']);
   });
 
   it('masks a container reached under a secret field before a benign field', () => {
     const shared = ['hunter2'];
     const { payload } = run({}, { password: shared, list: shared });
-    assert.deepEqual<unknown>(payload['password'], ['*']);
+    expect(payload['password']).toStrictEqual(['*']);
   });
 
   it('masks a container shared between meta and payload', () => {
     const shared = ['hunter2'];
     const { payload } = run({ list: shared }, { password: shared });
-    assert.deepEqual<unknown>(payload['password'], ['*']);
+    expect(payload['password']).toStrictEqual(['*']);
   });
 
   it('masks a container shared between meta and payload with the secret field in meta', () => {
     const shared = ['hunter2'];
     const { meta } = run({ token: shared }, { list: shared });
-    assert.deepEqual<unknown>(meta['token'], ['*']);
+    expect(meta['token']).toStrictEqual(['*']);
   });
 
   it('terminates on a self-referencing object under a secret field', () => {
     const loop: Record<string, unknown> = { note: 'x', password: 'hunter2' };
     loop['self'] = loop;
     const { payload } = run({}, { token: loop });
-    assert.deepEqual<unknown>(
-      Object.values(payload['token'] as Record<string, unknown>).slice(0, 2),
-      ['*', '*'],
-    );
-    assert.ok(!Object.keys(payload['token'] as object).includes('password'));
+    expect(Object.values(payload['token'] as Record<string, unknown>).slice(0, 2)).toStrictEqual([
+      '*',
+      '*',
+    ]);
+    expect(Object.keys(payload['token'] as object)).not.toContain('password');
   });
 
   it('terminates on a self-referencing array under a secret field', () => {
     const loop: unknown[] = ['hunter2'];
     loop.push(loop);
     const { payload } = run({}, { token: loop });
-    assert.deepEqual<unknown>((payload['token'] as unknown[])[0], '*');
+    expect((payload['token'] as unknown[])[0]).toStrictEqual('*');
   });
 
   it('keeps numbers and bigints under measurement-named secret fields', () => {
@@ -247,12 +239,12 @@ describe('aliased containers and metric fields', () => {
       authSessionAgeSecs: 5n,
     };
     const { payload } = run({}, { ...fields });
-    assert.deepEqual<unknown>(payload, fields);
+    expect(payload).toStrictEqual(fields);
   });
 
   it('masks numbers under other secret fields', () => {
     const { payload } = run({}, { password: 4829, pin_key: 1234, sessionId: 77n, authCode: 5 });
-    assert.deepEqual<unknown>(payload, {
+    expect(payload).toStrictEqual({
       password: '*',
       pin_key: '*',
       sessionId: '*',
@@ -262,25 +254,25 @@ describe('aliased containers and metric fields', () => {
 
   it('masks strings under measurement-named secret fields', () => {
     const { payload } = run({}, { authentication_duration: 'abc123', authLatencyMs: '8' });
-    assert.deepEqual<unknown>(payload, { authentication_duration: '*', authLatencyMs: '*' });
+    expect(payload).toStrictEqual({ authentication_duration: '*', authLatencyMs: '*' });
   });
 });
 
 describe('walk keys, non-plain values and metric names', () => {
   const run = (meta: object, payload: object) => {
     const out = sanitizeItem({ type: 'log', meta, payload } as never);
-    assert.ok(out);
+    expect(out).toBeTruthy();
     return out as unknown as { meta: Record<string, unknown>; payload: Record<string, unknown> };
   };
 
   it('masks numbers in an array reached under a metric-named secret field, in either order', () => {
     const pins = [4829];
-    assert.deepEqual<unknown>(payloadOf({ authCount: pins, password: pins }), {
+    expect(payloadOf({ authCount: pins, password: pins })).toStrictEqual({
       authCount: ['*'],
       password: ['*'],
     });
     const reversed = [4829];
-    assert.deepEqual<unknown>(payloadOf({ password: reversed, authCount: reversed }), {
+    expect(payloadOf({ password: reversed, authCount: reversed })).toStrictEqual({
       password: ['*'],
       authCount: ['*'],
     });
@@ -289,23 +281,27 @@ describe('walk keys, non-plain values and metric names', () => {
   it('masks an array shared between meta and payload under a secret name on either side', () => {
     const pins = [4829];
     const first = run({ authCount: pins }, { password: pins });
-    assert.deepEqual<unknown>(first.meta['authCount'], ['*']);
-    assert.deepEqual<unknown>(first.payload['password'], ['*']);
+    expect(first.meta['authCount']).toStrictEqual(['*']);
+    expect(first.payload['password']).toStrictEqual(['*']);
     const others = [4829];
     const second = run({ password: others }, { authCount: others });
-    assert.deepEqual<unknown>(second.meta['password'], ['*']);
-    assert.deepEqual<unknown>(second.payload['authCount'], ['*']);
+    expect(second.meta['password']).toStrictEqual(['*']);
+    expect(second.payload['authCount']).toStrictEqual(['*']);
   });
 
   it('keeps a number stored directly under a metric-named secret field', () => {
-    assert.deepEqual<unknown>(
+    expect(
       payloadOf({ authCount: 3, authLatencyMs: 8, authentication_duration: 120, tokenTtl: 3600 }),
-      { authCount: 3, authLatencyMs: 8, authentication_duration: 120, tokenTtl: 3600 },
-    );
+    ).toStrictEqual({
+      authCount: 3,
+      authLatencyMs: 8,
+      authentication_duration: 120,
+      tokenTtl: 3600,
+    });
   });
 
   it('masks a number under a name that only ends in a metric suffix by accident', () => {
-    assert.deepEqual<unknown>(payloadOf({ authSms: 482913 }), { authSms: '*' });
+    expect(payloadOf({ authSms: 482913 })).toStrictEqual({ authSms: '*' });
   });
 
   it('masks values under secret names written with brackets, colons and slashes', () => {
@@ -316,7 +312,7 @@ describe('walk keys, non-plain values and metric names', () => {
       'a/b/secret': 'hunter2',
       name: 'ok',
     });
-    assert.deepEqual<unknown>(out, {
+    expect(out).toStrictEqual({
       'user[password]': '*',
       'db:password': '*',
       'credentials[0].token': '*',
@@ -342,27 +338,26 @@ describe('walk keys, non-plain values and metric names', () => {
   for (const [label, make] of nonPlain) {
     it(`masks ${label} under a secret name`, () => {
       const out = payloadOf({ password: make(), authCount: make(), token: [make()] });
-      assert.deepEqual<unknown>(out, { password: '*', authCount: '*', token: ['*'] });
+      expect(out).toStrictEqual({ password: '*', authCount: '*', token: ['*'] });
     });
   }
 
   it('keeps null, undefined and booleans under a secret name', () => {
-    assert.deepEqual<unknown>(
+    expect(
       payloadOf({ password: null, token: undefined, secret: true, apiKey: false }),
-      {
-        password: null,
-        token: undefined,
-        secret: true,
-        apiKey: false,
-      },
-    );
+    ).toStrictEqual({
+      password: null,
+      token: undefined,
+      secret: true,
+      apiKey: false,
+    });
   });
 
   it('redacts object keys that carry a secret', () => {
     const out = payloadOf({
       context: { 'https://h.com/cb?token=ZqSECRET9': 'clicked', 'ZqSECRET9@example.com': 1 },
     });
-    assert.ok(!JSON.stringify(out).includes('ZqSECRET9'));
+    expect(JSON.stringify(out)).not.toContain('ZqSECRET9');
   });
 
   it('keeps both values when two keys collide after redaction', () => {
@@ -370,20 +365,20 @@ describe('walk keys, non-plain values and metric names', () => {
       context: { 'a?token=ZqSECRETa': 'first', 'a?token=ZqSECRETb': 'second' },
     });
     const context = out['context'] as Record<string, unknown>;
-    assert.deepEqual<unknown>(Object.values(context), ['first', 'second']);
-    assert.ok(!JSON.stringify(out).includes('ZqSECRET'));
+    expect(Object.values(context)).toStrictEqual(['first', 'second']);
+    expect(JSON.stringify(out)).not.toContain('ZqSECRET');
   });
 
   it('keeps ordinary keys untouched', () => {
-    assert.deepEqual<unknown>(payloadOf({ context: { userId: 'u1', 'x-request-id': 'r1' } }), {
+    expect(payloadOf({ context: { userId: 'u1', 'x-request-id': 'r1' } })).toStrictEqual({
       context: { userId: 'u1', 'x-request-id': 'r1' },
     });
   });
 
   it('keeps hotkey and error codes and masks apikey in text', () => {
-    assert.deepEqual<unknown>(redactText('hotkey: Ctrl'), 'hotkey: Ctrl');
-    assert.deepEqual<unknown>(redactText('errorCode=E42'), 'errorCode=E42');
-    assert.ok(!redactText('apikey=S3cret').includes('S3cret'));
+    expect(redactText('hotkey: Ctrl')).toStrictEqual('hotkey: Ctrl');
+    expect(redactText('errorCode=E42')).toStrictEqual('errorCode=E42');
+    expect(redactText('apikey=S3cret')).not.toContain('S3cret');
   });
 
   it('has no regex lookbehind in any shipped module source', () => {
@@ -393,9 +388,9 @@ describe('walk keys, non-plain values and metric names', () => {
       eager: true,
     });
     const shipped = Object.entries(sources).filter(([file]) => !/\.(spec|fixture)\.ts$/.test(file));
-    assert.ok(shipped.some(([file]) => file === './redact-text.ts'));
+    expect(shipped.some(([file]) => file === './redact-text.ts')).toBe(true);
     for (const [file, source] of shipped) {
-      assert.ok(!source.includes('(?<'), file);
+      expect(source, file).not.toContain('(?<');
     }
   });
 });
@@ -416,24 +411,23 @@ describe('secret subtrees, metric names and key normalization', () => {
   for (const [payload, marker] of subtreeLeaks) {
     it(`masks every leaf of ${JSON.stringify(payload)}`, () => {
       const out = JSON.stringify(redactDeep(structuredClone(payload)));
-      assert.ok(!out.includes(marker), out);
+      expect(out, out).not.toContain(marker);
     });
   }
 
   it('keeps shape, booleans and null under a secret field and leaves other fields alone', () => {
-    assert.deepEqual<unknown>(
+    expect(
       redactDeep({ password: { enabled: true, value: null, deep: { ok: false, v: 'x' } } }),
-      {
-        password: { '*': true, '*#2': null, '*#3': { '*': false, '*#2': '*' } },
-      },
-    );
-    assert.deepEqual<unknown>(redactDeep({ settings: { theme: 'dark' } }), {
+    ).toStrictEqual({
+      password: { '*': true, '*#2': null, '*#3': { '*': false, '*#2': '*' } },
+    });
+    expect(redactDeep({ settings: { theme: 'dark' } })).toStrictEqual({
       settings: { theme: 'dark' },
     });
   });
 
   it('keeps numbers under metric names in any case and masks other secret numbers', () => {
-    assert.deepEqual<unknown>(
+    expect(
       redactDeep({
         AUTH_COUNT: 3,
         auth_count: 3,
@@ -441,31 +435,30 @@ describe('secret subtrees, metric names and key normalization', () => {
         SESSION_DURATION_MS: 7,
         TOKEN_TTL: 9,
       }),
-      {
-        AUTH_COUNT: 3,
-        auth_count: 3,
-        authCount: 3,
-        SESSION_DURATION_MS: 7,
-        TOKEN_TTL: 9,
-      },
-    );
-    assert.deepEqual<unknown>(redactDeep({ AUTH_TOKEN: 3 }), { AUTH_TOKEN: '*' });
+    ).toStrictEqual({
+      AUTH_COUNT: 3,
+      auth_count: 3,
+      authCount: 3,
+      SESSION_DURATION_MS: 7,
+      TOKEN_TTL: 9,
+    });
+    expect(redactDeep({ AUTH_TOKEN: 3 })).toStrictEqual({ AUTH_TOKEN: '*' });
   });
 
   it('keeps colliding redacted keys under a secret field', () => {
-    assert.deepEqual<unknown>(redactDeep({ password: { 'a@b.com': 'x', 'c@d.com': 'y' } }), {
+    expect(redactDeep({ password: { 'a@b.com': 'x', 'c@d.com': 'y' } })).toStrictEqual({
       password: { '*': '*', '*#2': '*' },
     });
   });
 
   it('does not treat separator-joined benign key names as secret', () => {
     for (const key of ['i18n:key', 'cache:key', 'cache/key'])
-      assert.strictEqual<unknown>(isSecretName(key), false, key);
+      expect(isSecretName(key), key).toBe(false);
   });
 
   it('treats bracketed, slashed, colon-joined and dotted secret names as secret', () => {
     for (const key of ['user[password]', 'headers/authorization', 'a:b:token', 'x.password'])
-      assert.strictEqual<unknown>(isSecretName(key), true, key);
+      expect(isSecretName(key), key).toBe(true);
   });
 });
 describe('redactText code and state keys', () => {
@@ -487,24 +480,24 @@ describe('redactText code and state keys', () => {
 
   for (const [input, expected] of masked) {
     it(`masks ${JSON.stringify(input)}`, () => {
-      assert.strictEqual<unknown>(redactText(input), expected);
+      expect(redactText(input)).toBe(expected);
     });
   }
 
   for (const input of kept) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.strictEqual<unknown>(redactText(input), input);
+      expect(redactText(input)).toBe(input);
     });
   }
 
   it('scales near-linearly on 16 KB of prefixed code keys', () => {
-    assertNearLinear((count) => 'x_code:'.repeat(count), 2400);
+    expect(() => assertNearLinear((count) => 'x_code:'.repeat(count), 2400)).not.toThrow();
   });
 });
 
 describe('spaced field names', () => {
   it('masks benign-looking prefixes before a secret word', () => {
-    assert.deepEqual<unknown>(
+    expect(
       redactDeep({
         'Monkey api_key': 'v0',
         'hotkey password': 'v1',
@@ -512,19 +505,18 @@ describe('spaced field names', () => {
         'donkey key': 'v3',
         'Hotkey pwd': 'v4',
       }),
-      {
-        'Monkey api_key': '*',
-        'hotkey password': '*',
-        'turkey session_id': '*',
-        'donkey key': '*',
-        'Hotkey pwd': '*',
-      },
-    );
+    ).toStrictEqual({
+      'Monkey api_key': '*',
+      'hotkey password': '*',
+      'turkey session_id': '*',
+      'donkey key': '*',
+      'Hotkey pwd': '*',
+    });
   });
 
   it('keeps spaced names that are not secret', () => {
     const payload = { 'cache key': 'ok', monkey: 'ok', hotkey: 'ok' };
-    assert.deepEqual<unknown>(redactDeep(payload), {
+    expect(redactDeep(payload)).toStrictEqual({
       'cache key': 'ok',
       monkey: 'ok',
       hotkey: 'ok',
@@ -535,7 +527,7 @@ describe('spaced field names', () => {
 describe('field names with punctuation and long prefixes', () => {
   const valueOf = (name: string): unknown => {
     const out = sanitizeItem({ type: 'log', meta: {}, payload: { [name]: 'ZqVal1' } } as never);
-    assert.ok(out);
+    expect(out).toBeTruthy();
     return Object.values((out as unknown as { payload: Record<string, unknown> }).payload)[0];
   };
 
@@ -548,13 +540,13 @@ describe('field names with punctuation and long prefixes', () => {
     'a'.repeat(80) + '_password',
   ]) {
     it(`masks ${JSON.stringify(name.length > 40 ? `${name.slice(0, 4)}...${name.slice(-9)}` : name)}`, () => {
-      assert.strictEqual<unknown>(valueOf(name), '*');
+      expect(valueOf(name)).toBe('*');
     });
   }
 
   for (const name of ['cache key', 'i18n:key', 'homeCacheKey', 'a'.repeat(80) + '_monkey']) {
     it(`keeps ${JSON.stringify(name.length > 40 ? `${name.slice(0, 4)}...${name.slice(-7)}` : name)}`, () => {
-      assert.strictEqual<unknown>(valueOf(name), 'ZqVal1');
+      expect(valueOf(name)).toBe('ZqVal1');
     });
   }
 });
@@ -564,7 +556,7 @@ describe('sanitizeItem copies and the Faro session meta', () => {
   type Sanitized = { meta: Tree; payload: Tree };
   const run = (meta: object, payload: object): Sanitized => {
     const out = sanitizeItem({ type: 'log', meta, payload } as never);
-    assert.ok(out);
+    expect(out).toBeTruthy();
     return out as unknown as Sanitized;
   };
 
@@ -577,21 +569,21 @@ describe('sanitizeItem copies and the Faro session meta', () => {
     };
     const before = structuredClone({ meta, payload });
     const out = run(meta, payload);
-    assert.deepEqual<unknown>({ meta, payload }, before);
-    assert.notStrictEqual<unknown>(out.meta['session'], session);
-    assert.strictEqual<unknown>(out.payload['context']['password'], '*');
+    expect({ meta, payload }).toStrictEqual(before);
+    expect(out.meta['session']).not.toBe(session);
+    expect(out.payload['context']['password']).toBe('*');
   });
 
   it('keeps the session id and attributes of the Faro meta', () => {
     const { meta } = run({ session: { id: 'sess-123', attributes: { plan: 'pro' } } }, {});
-    assert.deepEqual<unknown>(meta['session'], { id: 'sess-123', attributes: { plan: 'pro' } });
+    expect(meta['session']).toStrictEqual({ id: 'sess-123', attributes: { plan: 'pro' } });
   });
 
   it('masks a string, number or bigint directly under session', () => {
     const { payload } = run({}, { session: 'abc123SECRET' });
-    assert.strictEqual<unknown>(payload['session'], '*');
-    assert.strictEqual<unknown>(run({}, { Session: 48291234 }).payload['Session'], '*');
-    assert.strictEqual<unknown>(run({}, { session: 48291234n }).payload['session'], '*');
+    expect(payload['session']).toBe('*');
+    expect(run({}, { Session: 48291234 }).payload['Session']).toBe('*');
+    expect(run({}, { session: 48291234n }).payload['session']).toBe('*');
   });
 
   it('still masks the other session fields', () => {
@@ -604,7 +596,7 @@ describe('sanitizeItem copies and the Faro session meta', () => {
         sessionKey: 'abc123SECRET',
       },
     );
-    assert.deepEqual<unknown>(Object.values(payload), ['*', '*', '*', '*']);
+    expect(Object.values(payload)).toStrictEqual(['*', '*', '*', '*']);
   });
 
   it('walks a non-extensible object with a secret and colliding keys without touching it', () => {
@@ -616,10 +608,10 @@ describe('sanitizeItem copies and the Faro session meta', () => {
     });
     const before = structuredClone(data);
     const { payload } = run({}, { data });
-    assert.deepEqual<unknown>(data, before);
-    assert.strictEqual<unknown>(payload['data']['password'], '*');
-    assert.strictEqual<unknown>(payload['data']['keep'], 'ok');
-    assert.strictEqual<unknown>(Object.keys(payload['data']).length, 4);
+    expect(data).toStrictEqual(before);
+    expect(payload['data']['password']).toBe('*');
+    expect(payload['data']['keep']).toBe('ok');
+    expect(Object.keys(payload['data']).length).toBe(4);
   });
 
   it('masks every leaf of an object that holds itself under a secret field', () => {
@@ -627,13 +619,13 @@ describe('sanitizeItem copies and the Faro session meta', () => {
     loop['password'] = loop;
     loop['note'] = MARKER;
     const { payload } = run({}, { loop });
-    assert.ok(!Object.keys(payload['loop']).includes('note'));
-    assert.ok(!Object.values<unknown>(payload['loop']).includes(MARKER));
+    expect(Object.keys(payload['loop'])).not.toContain('note');
+    expect(Object.values<unknown>(payload['loop'])).not.toContain(MARKER);
     const reversed: Record<string, unknown> = { note: MARKER };
     reversed['password'] = reversed;
     const reversedOut = run({}, { reversed }).payload['reversed'];
-    assert.ok(!Object.keys(reversedOut).includes('note'));
-    assert.ok(!Object.values<unknown>(reversedOut).includes(MARKER));
+    expect(Object.keys(reversedOut)).not.toContain('note');
+    expect(Object.values<unknown>(reversedOut)).not.toContain(MARKER);
   });
 
   it('keeps token counts and masks bare tokens', () => {
@@ -651,15 +643,15 @@ describe('sanitizeItem copies and the Faro session meta', () => {
         token: 42,
       },
     );
-    assert.deepEqual<unknown>(payload['usage'], {
+    expect(payload['usage']).toStrictEqual({
       inputTokens: 12,
       max_tokens: 100,
       total_tokens: 7,
       OUTPUT_TOKENS: 3,
       'prompt-tokens': 5,
     });
-    assert.deepEqual<unknown>(payload['tokens'], ['*']);
-    assert.strictEqual<unknown>(payload['token'], '*');
+    expect(payload['tokens']).toStrictEqual(['*']);
+    expect(payload['token']).toBe('*');
   });
 });
 
@@ -668,24 +660,24 @@ describe('keys under secret fields', () => {
 
   it('masks keys and leaves under a secret field', () => {
     const out = payloadOf({ token: { [marker]: { a: 1 } } });
-    assert.deepEqual<unknown>(out, { token: { '*': { '*': '*' } } });
-    assert.ok(!JSON.stringify(out).includes(marker));
+    expect(out).toStrictEqual({ token: { '*': { '*': '*' } } });
+    expect(JSON.stringify(out)).not.toContain(marker);
   });
 
   it('keeps colliding masked keys apart', () => {
-    assert.deepEqual<unknown>(payloadOf({ secret: { aaa: 'x', bbb: 'y' } }), {
+    expect(payloadOf({ secret: { aaa: 'x', bbb: 'y' } })).toStrictEqual({
       secret: { '*': '*', '*#2': '*' },
     });
   });
 
   it('keeps null and booleans under a secret subtree', () => {
-    assert.deepEqual<unknown>(payloadOf({ password: { enabled: true, off: false, value: null } }), {
+    expect(payloadOf({ password: { enabled: true, off: false, value: null } })).toStrictEqual({
       password: { '*': true, '*#2': false, '*#3': null },
     });
   });
 
   it('leaves keys outside secret subtrees unchanged', () => {
-    assert.deepEqual<unknown>(payloadOf({ settings: { theme: 'dark', nested: { size: 'big' } } }), {
+    expect(payloadOf({ settings: { theme: 'dark', nested: { size: 'big' } } })).toStrictEqual({
       settings: { theme: 'dark', nested: { size: 'big' } },
     });
   });
@@ -708,16 +700,16 @@ describe('keys under secret fields', () => {
       }
     };
     collect(out);
-    assert.ok(!strings.some((text) => text.includes(marker)));
-    assert.deepEqual<unknown>(Object.keys(loop), keysBefore);
-    assert.strictEqual<unknown>(loop[marker], marker);
+    expect(strings.some((text) => text.includes(marker))).toBe(false);
+    expect(Object.keys(loop)).toStrictEqual(keysBefore);
+    expect(loop[marker]).toBe(marker);
   });
 
   it('does not mutate the input', () => {
     const payload = { token: { [marker]: { a: 1 } }, keep: { x: 'y' } };
     const before = structuredClone(payload);
     payloadOf(payload);
-    assert.deepEqual<unknown>(payload, before);
+    expect(payload).toStrictEqual(before);
   });
 });
 
@@ -752,7 +744,7 @@ describe('credential hosts, cookies, bearer chains and code words', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input.slice(0, 48))} to ${JSON.stringify(output.slice(-24))}`, () => {
-      assert.strictEqual<unknown>(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 });
@@ -771,7 +763,7 @@ describe('secret reachability does not depend on key order', () => {
 
   function walked(payload: object, meta: object = {}): Walked {
     const out = sanitizeItem({ type: 'log', meta, payload } as unknown as TransportItem);
-    assert.ok(out);
+    expect(out).toBeTruthy();
     return out as unknown as Walked;
   }
 
@@ -785,8 +777,8 @@ describe('secret reachability does not depend on key order', () => {
       const payload: Record<string, unknown> = {};
       for (const key of keys) payload[key] = ring;
       const out = walked(payload).payload;
-      assert.strictEqual<unknown>(containsMarker(out), false);
-      assert.deepEqual<unknown>(Object.keys(out.reversed ?? {}), Object.keys(out.password ?? {}));
+      expect(containsMarker(out)).toBe(false);
+      expect(Object.keys(out.reversed ?? {})).toStrictEqual(Object.keys(out.password ?? {}));
     });
   }
 
@@ -799,7 +791,7 @@ describe('secret reachability does not depend on key order', () => {
       loop.password = loop;
       const payload: Record<string, unknown> = {};
       for (const key of keys) payload[key] = loop;
-      assert.strictEqual<unknown>(containsMarker(walked(payload).payload), false);
+      expect(containsMarker(walked(payload).payload)).toBe(false);
     });
   }
 
@@ -812,36 +804,36 @@ describe('secret reachability does not depend on key order', () => {
       const payload: Record<string, unknown> = {};
       for (const key of keys) payload[key] = shared;
       const out = walked(payload).payload;
-      assert.deepEqual<unknown>(out.plain, { '*': '*' });
-      assert.deepEqual<unknown>(out.secret, { '*': '*' });
+      expect(out.plain).toStrictEqual({ '*': '*' });
+      expect(out.secret).toStrictEqual({ '*': '*' });
     });
   }
 
   it('masks everything under a session key outside meta', () => {
     const out = walked({ context: { session: { value: MARKER, cookie: MARKER } } }).payload;
-    assert.deepEqual<unknown>(out.context?.session, { '*': '*', '*#2': '*' });
+    expect(out.context?.session).toStrictEqual({ '*': '*', '*#2': '*' });
   });
 
   it('masks a session key nested in meta.session', () => {
     const out = walked({}, { session: { id: 's1', nested: { session: { value: MARKER } } } }).meta;
-    assert.strictEqual<unknown>(containsMarker(out), false);
+    expect(containsMarker(out)).toBe(false);
   });
 
   it('masks cookie fields', () => {
     const out = walked({ cookie: MARKER, headers: { Cookie: 'a=' + MARKER } }).payload;
-    assert.deepEqual<unknown>(out, { cookie: '*', headers: { Cookie: '*' } });
+    expect(out).toStrictEqual({ cookie: '*', headers: { Cookie: '*' } });
   });
 
   it('keeps meta.session and masks secrets inside it', () => {
     const session = { id: 'sess-1', attributes: { a: 'b' }, token: MARKER };
     const out = walked({}, { session }).meta;
-    assert.deepEqual<unknown>(out.session, { id: 'sess-1', attributes: { a: 'b' }, token: '*' });
+    expect(out.session).toStrictEqual({ id: 'sess-1', attributes: { a: 'b' }, token: '*' });
   });
 
   it('masks meta.session when a secret field also reaches it', () => {
     const session = { id: 'sess-1' };
     const out = walked({ token: session }, { session }).meta;
-    assert.deepEqual<unknown>(out.session, { '*': '*' });
+    expect(out.session).toStrictEqual({ '*': '*' });
   });
 });
 
@@ -852,7 +844,7 @@ describe('secret reachability across shared containers', () => {
       const hub: { b: unknown } = { b: node };
       node.password = hub;
       const payload = order === 'secret first' ? { token: hub, node } : { node, token: hub };
-      assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
+      expect(containsMarker(sanitized(payload))).toBe(false);
     });
   }
 });
@@ -870,7 +862,7 @@ describe('field names: primary and query keys, narrowed state words', () => {
     'cosmos_primary_key',
   ]) {
     it(`masks the field ${name}`, () => {
-      assert.deepEqual<unknown>(payloadOf({ [name]: 'SECRET99' }), { [name]: '*' });
+      expect(payloadOf({ [name]: 'SECRET99' })).toStrictEqual({ [name]: '*' });
     });
   }
 
@@ -885,12 +877,12 @@ describe('field names: primary and query keys, narrowed state words', () => {
     'game_state',
   ]) {
     it(`keeps the field ${name}`, () => {
-      assert.deepEqual<unknown>(payloadOf({ [name]: 'ok' }), { [name]: 'ok' });
+      expect(payloadOf({ [name]: 'ok' })).toStrictEqual({ [name]: 'ok' });
     });
   }
 
   it('keeps a primaryKey nested under a plain parent', () => {
-    assert.deepEqual<unknown>(payloadOf({ db: { primaryKey: 'ok', queryKey: 'ok' } }), {
+    expect(payloadOf({ db: { primaryKey: 'ok', queryKey: 'ok' } })).toStrictEqual({
       db: { primaryKey: 'ok', queryKey: 'ok' },
     });
   });
@@ -899,7 +891,7 @@ describe('field names: primary and query keys, narrowed state words', () => {
 describe('field names: group, object and lookup keys', () => {
   for (const name of ['wpaGroupKey', 'mlsGroupKey', 's3ObjectKey']) {
     it(`masks the field ${name}`, () => {
-      assert.deepEqual<unknown>(payloadOf({ [name]: 'SECRET99' }), { [name]: '*' });
+      expect(payloadOf({ [name]: 'SECRET99' })).toStrictEqual({ [name]: '*' });
     });
   }
 
@@ -916,7 +908,7 @@ describe('field names: group, object and lookup keys', () => {
     'cosmosPartitionKey',
   ]) {
     it(`keeps the field ${name}`, () => {
-      assert.deepEqual<unknown>(payloadOf({ [name]: 'ok' }), { [name]: 'ok' });
+      expect(payloadOf({ [name]: 'ok' })).toStrictEqual({ [name]: 'ok' });
     });
   }
 });
@@ -938,7 +930,7 @@ describe('auth prefixes, cookie headers and state words', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input.slice(0, 48))} to ${JSON.stringify(output.slice(-24))}`, () => {
-      assert.strictEqual<unknown>(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 
@@ -948,8 +940,8 @@ describe('auth prefixes, cookie headers and state words', () => {
       meta: {},
       payload: { auth_hotkey: 'Zq9SECRET' },
     } as unknown as TransportItem);
-    assert.ok(out);
-    assert.ok(!JSON.stringify(out).includes('Zq9SECRET'));
+    expect(out).toBeTruthy();
+    expect(JSON.stringify(out)).not.toContain('Zq9SECRET');
   });
 });
 
@@ -960,7 +952,7 @@ describe('each property is read once', () => {
         return { value: MARKER };
       },
     };
-    assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
+    expect(containsMarker(sanitized(payload))).toBe(false);
   });
 
   it('masks an array returned by a getter under a secret key', () => {
@@ -968,7 +960,7 @@ describe('each property is read once', () => {
       enumerable: true,
       get: () => [{ v: MARKER }],
     });
-    assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
+    expect(containsMarker(sanitized(payload))).toBe(false);
   });
 
   it('masks fresh objects returned by a proxy under a secret key', () => {
@@ -977,7 +969,7 @@ describe('each property is read once', () => {
       { password: inner },
       { get: (target, key) => (key === 'password' ? { ...inner } : Reflect.get(target, key)) },
     );
-    assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
+    expect(containsMarker(sanitized(payload))).toBe(false);
   });
 
   it('masks a proxy whose prototype alternates between Object.prototype and null under a secret key', () => {
@@ -987,7 +979,7 @@ describe('each property is read once', () => {
       { getPrototypeOf: () => (calls++ % 2 === 0 ? Object.prototype : null) },
     );
     const payload = { password: secret };
-    assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
+    expect(containsMarker(sanitized(payload))).toBe(false);
   });
 
   it('masks a proxy whose first prototype answer is not plain under a secret key', () => {
@@ -997,35 +989,35 @@ describe('each property is read once', () => {
       { getPrototypeOf: () => (calls++ === 0 ? Array.prototype : Object.prototype) },
     );
     const payload = { password: secret };
-    assert.strictEqual<unknown>(containsMarker(sanitized(payload)), false);
+    expect(containsMarker(sanitized(payload))).toBe(false);
   });
 
   it('masks a container reached through child.password back to itself', () => {
     const root: { child: { password?: unknown }; note: string } = { child: {}, note: MARKER };
     root.child.password = root;
-    assert.strictEqual<unknown>(containsMarker(sanitized(root)), false);
+    expect(containsMarker(sanitized(root))).toBe(false);
   });
 
   const meta = (): { session: { id: string } } => ({ session: { id: MARKER } });
 
   it('masks meta.session when the payload is the meta object', () => {
     const shared = meta();
-    assert.strictEqual<unknown>(containsMarker(sanitized(shared, shared)), false);
+    expect(containsMarker(sanitized(shared, shared))).toBe(false);
   });
 
   it('masks meta.session when the payload holds the meta object in a field', () => {
     const shared = meta();
-    assert.strictEqual<unknown>(containsMarker(sanitized({ ctx: shared }, shared)), false);
+    expect(containsMarker(sanitized({ ctx: shared }, shared))).toBe(false);
   });
 
   it('masks meta.session when the payload holds the meta object in an array', () => {
     const shared = meta();
-    assert.strictEqual<unknown>(containsMarker(sanitized([shared], shared)), false);
+    expect(containsMarker(sanitized([shared], shared))).toBe(false);
   });
 
   it('keeps meta.session when the payload does not reach it', () => {
     const out = sanitized({}, { session: { id: 'sess-1' } }) as { meta: { session: unknown } };
-    assert.deepEqual<unknown>(out.meta.session, { id: 'sess-1' });
+    expect(out.meta.session).toStrictEqual({ id: 'sess-1' });
   });
 
   for (const [name, count, unit] of [
@@ -1033,7 +1025,7 @@ describe('each property is read once', () => {
     ['words separated by dashes', 32, 'a'.repeat(511) + '-'],
   ] as const) {
     it(`scales near-linearly on ${name}`, () => {
-      assertNearLinear((size) => unit.repeat(size), count);
+      expect(() => assertNearLinear((size) => unit.repeat(size), count)).not.toThrow();
     });
   }
 });
@@ -1056,7 +1048,7 @@ describe('bearer tokens that start with a short chunk', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input.slice(0, 48))} to ${JSON.stringify(output.slice(-24))}`, () => {
-      assert.strictEqual<unknown>(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 });
@@ -1074,19 +1066,19 @@ describe('meta.session exemption', () => {
   }
 
   it('keeps a plain object under meta.session', () => {
-    assert.deepEqual<unknown>(metaOf({ id: 'sess-1' }).session, { id: 'sess-1' });
+    expect(metaOf({ id: 'sess-1' }).session).toStrictEqual({ id: 'sess-1' });
   });
 
   it('masks a string under meta.session', () => {
-    assert.strictEqual<unknown>(metaOf(SECRET).session, '*');
+    expect(metaOf(SECRET).session).toBe('*');
   });
 
   it('masks a number under meta.session', () => {
-    assert.strictEqual<unknown>(metaOf(48291234).session, '*');
+    expect(metaOf(48291234).session).toBe('*');
   });
 
   it('masks an array under meta.session', () => {
-    assert.ok(!JSON.stringify(metaOf([SECRET])).includes(SECRET));
+    expect(JSON.stringify(metaOf([SECRET]))).not.toContain(SECRET);
   });
 });
 
@@ -1100,9 +1092,8 @@ describe('Date and Map values under plain and secret keys', () => {
         password: new Map([['a', MARKER]]),
       },
     } as unknown as TransportItem);
-    assert.ok(out);
-    assert.strictEqual<unknown>(
-      JSON.stringify((out as unknown as { payload: unknown }).payload),
+    expect(out).toBeTruthy();
+    expect(JSON.stringify((out as unknown as { payload: unknown }).payload)).toBe(
       '{"when":"2026-01-02T03:04:05.000Z","password":"*"}',
     );
   });
@@ -1123,8 +1114,8 @@ describe('sanitizeItem key cache', () => {
       return redactText(value);
     };
     const cached = sanitizeItem(item, { redactString: counting });
-    assert.strictEqual(keyCalls.length, 1);
-    assert.deepEqual<unknown>(cached, sanitizeItem(item));
+    expect(keyCalls.length).toBe(1);
+    expect(cached).toStrictEqual(sanitizeItem(item));
   });
 
   it('starts a fresh cache for every item', () => {
@@ -1135,7 +1126,7 @@ describe('sanitizeItem key cache', () => {
     };
     sanitizeItem(item, { redactString: counting });
     sanitizeItem(item, { redactString: counting });
-    assert.strictEqual(calls, 2);
+    expect(calls).toBe(2);
   });
 });
 
@@ -1147,15 +1138,15 @@ describe('Date handling in redactDeep', () => {
   it('copies a real Date instead of returning the same reference', () => {
     const original = new Date('2026-01-02T03:04:05.000Z');
     const out = redactDeep({ when: original }) as { when: Date };
-    assert.instanceOf(out.when, Date);
-    assert.notStrictEqual(out.when, original);
-    assert.strictEqual(out.when.getTime(), original.getTime());
+    expect(out.when).toBeInstanceOf(Date);
+    expect(out.when).not.toBe(original);
+    expect(out.when.getTime()).toBe(original.getTime());
   });
 
   it('keeps an invalid Date as an invalid Date', () => {
     const out = redactDeep({ when: new Date(Number.NaN) }) as { when: Date };
-    assert.instanceOf(out.when, Date);
-    assert.isTrue(Number.isNaN(out.when.getTime()));
+    expect(out.when).toBeInstanceOf(Date);
+    expect(Number.isNaN(out.when.getTime())).toBe(true);
   });
 
   it('copies a Date nested in an array and in an object', () => {
@@ -1165,22 +1156,22 @@ describe('Date handling in redactDeep', () => {
       list: Date[];
       nested: { at: Date };
     };
-    assert.notStrictEqual(out.list[0], first);
-    assert.strictEqual(out.list[0]?.getTime(), 1000);
-    assert.notStrictEqual(out.nested.at, second);
-    assert.strictEqual(out.nested.at.getTime(), 2000);
+    expect(out.list[0]).not.toBe(first);
+    expect(out.list[0]?.getTime()).toBe(1000);
+    expect(out.nested.at).not.toBe(second);
+    expect(out.nested.at.getTime()).toBe(2000);
   });
 
   it('drops the item for an object that only inherits from Date.prototype', () => {
     const lookalike = Object.setPrototypeOf({ toJSON: () => MARKER, note: MARKER }, Date.prototype);
-    assert.isNull(dropped({ when: lookalike }));
+    expect(dropped({ when: lookalike })).toBeNull();
   });
 
   it('drops the item for Object.create(Date.prototype) carrying a secret field', () => {
     const lookalike = Object.create(Date.prototype, {
       secret: { value: MARKER, enumerable: true },
     }) as object;
-    assert.isNull(dropped({ when: lookalike }));
+    expect(dropped({ when: lookalike })).toBeNull();
   });
 
   it('turns a stringifiable lookalike into a string instead of passing it through', () => {
@@ -1188,7 +1179,7 @@ describe('Date handling in redactDeep', () => {
       { toString: () => 'plain text', toJSON: () => MARKER },
       Date.prototype,
     );
-    assert.deepEqual<unknown>(payloadOf({ when: lookalike }), { when: 'plain text' });
+    expect(payloadOf({ when: lookalike })).toStrictEqual({ when: 'plain text' });
   });
 
   it('does not let a Date subclass override toJSON to emit a secret', () => {
@@ -1198,20 +1189,20 @@ describe('Date handling in redactDeep', () => {
       }
     }
     const out = redactDeep({ when: new Leaky(0) }) as { when: unknown };
-    assert.isFalse(JSON.stringify(out).includes(MARKER));
-    assert.instanceOf(out.when, Date);
-    assert.strictEqual((out.when as Date).getTime(), 0);
+    expect(JSON.stringify(out).includes(MARKER)).toBe(false);
+    expect(out.when).toBeInstanceOf(Date);
+    expect((out.when as Date).getTime()).toBe(0);
   });
 
   it('stringifies a Proxy whose getPrototypeOf returns Date.prototype', () => {
     const proxy = new Proxy({ toJSON: () => MARKER }, { getPrototypeOf: () => Date.prototype });
     const out = payloadOf({ when: proxy });
-    assert.strictEqual(typeof out['when'], 'string');
-    assert.isFalse(JSON.stringify(out).includes(MARKER));
+    expect(typeof out['when']).toBe('string');
+    expect(JSON.stringify(out).includes(MARKER)).toBe(false);
   });
 
   it('masks a Date under a secret key', () => {
     const out = redactDeep({ token: new Date(0) });
-    assert.deepEqual<unknown>(out, { token: '*' });
+    expect(out).toStrictEqual({ token: '*' });
   });
 });

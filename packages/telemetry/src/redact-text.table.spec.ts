@@ -1,4 +1,4 @@
-import { assert, describe, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { redactText } from './redact-text.js';
 import { exactCases, keptInputs, leakInputs } from './redaction-cases.fixture.js';
 import { assertNearLinear, type InputBuilder } from './scaling.fixture.js';
@@ -9,92 +9,76 @@ const LEAK_MARKER = 'abc';
 
 describe('redactText query and host handling', () => {
   it('keeps the host and cuts the query when the query contains an @', () => {
-    assert.strictEqual(
-      redactText('https://app.example.com/x?next=a@b.c'),
-      'https://app.example.com/x',
-    );
+    expect(redactText('https://app.example.com/x?next=a@b.c')).toBe('https://app.example.com/x');
   });
 
   it('keeps the host when the query follows the host directly', () => {
-    assert.strictEqual(redactText('https://app.example.com?next=a@b.c'), 'https://app.example.com');
-    assert.strictEqual(
-      redactText('https://app.example.com:8443?next=a@b.c'),
+    expect(redactText('https://app.example.com?next=a@b.c')).toBe('https://app.example.com');
+    expect(redactText('https://app.example.com:8443?next=a@b.c')).toBe(
       'https://app.example.com:8443',
     );
   });
 
   it('keeps the port of a host whose name looks sensitive', () => {
-    assert.strictEqual(
-      redactText('failed GET https://authserver:11020#f while (x)'),
+    expect(redactText('failed GET https://authserver:11020#f while (x)')).toBe(
       'failed GET https://authserver:11020 while (x)',
     );
-    assert.strictEqual(
-      redactText('GET http://authelia:9091 -> 502'),
-      'GET http://authelia:9091 -> 502',
-    );
+    expect(redactText('GET http://authelia:9091 -> 502')).toBe('GET http://authelia:9091 -> 502');
   });
 
   it('parses userinfo like a URL parser', () => {
-    assert.strictEqual(redactText('https://u:123?x@h.com/a'), 'https://u:123');
-    assert.strictEqual(redactText('http://db:5432?redirect=x@y'), 'http://db:5432');
-    assert.strictEqual(redactText('http://api-gw:3000#a@b'), 'http://api-gw:3000');
-    assert.strictEqual(
-      redactText('http://authelia:9091: 504 Gateway Timeout'),
+    expect(redactText('https://u:123?x@h.com/a')).toBe('https://u:123');
+    expect(redactText('http://db:5432?redirect=x@y')).toBe('http://db:5432');
+    expect(redactText('http://api-gw:3000#a@b')).toBe('http://api-gw:3000');
+    expect(redactText('http://authelia:9091: 504 Gateway Timeout')).toBe(
       'http://authelia:9091: 504 Gateway Timeout',
     );
-    assert.strictEqual(redactText('email=a@b.com'), '*');
-    assert.strictEqual(redactText('code == 200'), 'code == 200');
-    assert.strictEqual(redactText('{"a":{"password":"x"}}'), '{"a":{"password":*}}');
-    assert.strictEqual(redactText('http://u:+[)v~5-pc[g1A|@[::1]:39503/x'), 'http://[::1]:39503/x');
+    expect(redactText('email=a@b.com')).toBe('*');
+    expect(redactText('code == 200')).toBe('code == 200');
+    expect(redactText('{"a":{"password":"x"}}')).toBe('{"a":{"password":*}}');
+    expect(redactText('http://u:+[)v~5-pc[g1A|@[::1]:39503/x')).toBe('http://[::1]:39503/x');
   });
 
   it('keeps the port of a host with a sensitive name when a quote follows', () => {
-    assert.strictEqual(redactText('https://authserver:11020"'), 'https://authserver:11020"');
+    expect(redactText('https://authserver:11020"')).toBe('https://authserver:11020"');
   });
 
   it('keeps a port only right after a colon', () => {
-    assert.ok(!redactText('x //pwd: 1234abc').includes('1234'));
-    assert.ok(!redactText('x //secret:\n12345abc').includes('12345'));
+    expect(redactText('x //pwd: 1234abc')).not.toContain('1234');
+    expect(redactText('x //secret:\n12345abc')).not.toContain('12345');
   });
 
   it('keeps the host when the fragment contains an @', () => {
     const out = redactText('open https://app.example.com/x#next=a@b.c now');
-    assert.ok(out.includes('https://app.example.com/x'), out);
-    assert.ok(!out.includes('a@b.c'), out);
+    expect(out, out).toContain('https://app.example.com/x');
+    expect(out, out).not.toContain('a@b.c');
   });
 
   it('masks the whole word when a slashed password runs past 512 characters', () => {
     const password = `pa/${'Zq7'.repeat(200)}#1`;
-    assert.strictEqual(redactText(`postgres://app:${password}@db.internal:5432/app`), '*');
-    assert.strictEqual(
-      redactText(`postgres://app:pa/${'Zq7'.repeat(100)}#1@db.internal:5432/app`),
+    expect(redactText(`postgres://app:${password}@db.internal:5432/app`)).toBe('*');
+    expect(redactText(`postgres://app:pa/${'Zq7'.repeat(100)}#1@db.internal:5432/app`)).toBe(
       'postgres://db.internal:5432/app',
     );
   });
 
   it('drops URL userinfo and keeps the host', () => {
     const out = redactText('connect https://user:pw@host.example.com/db failed');
-    assert.ok(!out.includes('pw'), out);
-    assert.ok(!out.includes('user'), out);
-    assert.ok(out.includes('https://host.example.com/db'), out);
+    expect(out, out).not.toContain('pw');
+    expect(out, out).not.toContain('user');
+    expect(out, out).toContain('https://host.example.com/db');
   });
 
   it('keeps host:port while masking a numeric password', () => {
-    assert.strictEqual(
-      redactText('connect host.example.com:8443'),
-      'connect host.example.com:8443',
-    );
-    assert.strictEqual(
-      redactText('https://host.example.com:8443/x'),
-      'https://host.example.com:8443/x',
-    );
+    expect(redactText('connect host.example.com:8443')).toBe('connect host.example.com:8443');
+    expect(redactText('https://host.example.com:8443/x')).toBe('https://host.example.com:8443/x');
     const masked = redactText('login password: 8443');
-    assert.ok(!masked.includes('8443'), masked);
+    expect(masked, masked).not.toContain('8443');
   });
 
   it('does not treat a numeric secret after a URL as a port', () => {
     const out = redactText('https://host.example.com/x password: 48291');
-    assert.ok(!out.includes('48291'), out);
+    expect(out, out).not.toContain('48291');
   });
 
   it('masks quoted query values', () => {
@@ -104,7 +88,7 @@ describe('redactText query and host handling', () => {
       'GET https://h.example.com/a?x="secret value abc" failed',
     ]) {
       const out = redactText(input);
-      assert.ok(!out.includes(LEAK_MARKER), `${input} -> ${out}`);
+      expect(out, `${input} -> ${out}`).not.toContain(LEAK_MARKER);
     }
   });
 });
@@ -112,8 +96,8 @@ describe('redactText query and host handling', () => {
 describe('redactText credentials', () => {
   it('masks Basic credentials', () => {
     const out = redactText('Authorization Basic YQ==');
-    assert.ok(!out.includes('YQ=='), out);
-    assert.ok(!redactText('Basic YQ==').includes('YQ=='));
+    expect(out, out).not.toContain('YQ==');
+    expect(redactText('Basic YQ==')).not.toContain('YQ==');
   });
 
   it('masks Basic credentials that follow a key', () => {
@@ -123,19 +107,19 @@ describe('redactText credentials', () => {
       'token: Basic abc12345',
     ]) {
       const out = redactText(input);
-      assert.ok(!out.includes('abc'), `${input} -> ${out}`);
+      expect(out, `${input} -> ${out}`).not.toContain('abc');
     }
   });
 
   it('masks a Bearer token and a JWT', () => {
-    assert.ok(!redactText('Authorization: Bearer abcOR5iMadOdPDXCB3').includes('abc'));
-    assert.ok(!redactText('jwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4abc.sigabc').includes('abc'));
+    expect(redactText('Authorization: Bearer abcOR5iMadOdPDXCB3')).not.toContain('abc');
+    expect(redactText('jwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4abc.sigabc')).not.toContain('abc');
   });
 
   it('masks every sensitive pair when several share a line', () => {
     const out = redactText('token=abc12345,password="hunter22abc" key=abcdefgh');
-    assert.ok(!out.includes('abc'), out);
-    assert.ok(!out.includes('hunter22'), out);
+    expect(out, out).not.toContain('abc');
+    expect(out, out).not.toContain('hunter22');
   });
 });
 
@@ -143,20 +127,20 @@ describe('redactText tables', () => {
   for (const input of leakInputs) {
     it(`masks ${JSON.stringify(input.slice(0, 60))}`, () => {
       const out = redactText(input);
-      assert.ok(!out.includes(LEAK_MARKER), `${JSON.stringify(input)} -> ${JSON.stringify(out)}`);
+      expect(out, `${JSON.stringify(input)} -> ${JSON.stringify(out)}`).not.toContain(LEAK_MARKER);
     });
   }
 
   for (const input of keptInputs) {
     it(`keeps ${JSON.stringify(input.slice(0, 60))}`, () => {
-      assert.strictEqual(redactText(input), input);
+      expect(redactText(input)).toBe(input);
     });
   }
 
   for (const [input, expected] of exactCases) {
     it(`turns ${JSON.stringify(input.slice(0, 60))} into ${JSON.stringify(expected.slice(0, 60))}`, () => {
-      assert.strictEqual(redactText(input), expected);
-      assert.strictEqual(redactText(expected), expected);
+      expect(redactText(input)).toBe(expected);
+      expect(redactText(expected)).toBe(expected);
     });
   }
 });
@@ -169,21 +153,21 @@ describe('redactText bounds', () => {
       '?a='.repeat(21000),
       'token=abc '.repeat(5000),
     ]) {
-      assert.ok(redactText(input).length <= 2048);
+      expect(redactText(input).length).toBeLessThanOrEqual(2048);
     }
   });
 
   it('masks a secret that sits across the input cut', () => {
     for (let n = 2000; n < 2060; n++) {
       const out = redactText(`${'x'.repeat(n)} token=SECRETSECRETSECRET`);
-      assert.ok(!/CRET/.test(out), `n=${n}`);
+      expect(out, `n=${n}`).not.toMatch(/CRET/);
     }
   });
 
   it('is idempotent', () => {
     for (const input of leakInputs) {
       const once = redactText(input);
-      assert.strictEqual(redactText(once), once, input);
+      expect(redactText(once), input).toBe(once);
     }
   });
 
@@ -200,7 +184,7 @@ describe('redactText bounds', () => {
 
   for (const [name, count, build] of adversarial) {
     it(`scales near-linearly on 16 KB of ${name}`, () => {
-      assertNearLinear(build, count);
+      expect(() => assertNearLinear(build, count)).not.toThrow();
     });
   }
 });
@@ -216,13 +200,13 @@ describe('redactText bracketed keys, multi-chunk quotes and whitespace runs', ()
 
   for (const [input, marker] of leaks) {
     it(`masks ${JSON.stringify(input)}`, () => {
-      assert.ok(!redactText(input).includes(marker));
+      expect(redactText(input)).not.toContain(marker);
     });
   }
 
   it('is idempotent on auth=""\'\'""\'\'{', () => {
     const once = redactText('auth=""\'\'""\'\'{');
-    assert.strictEqual(redactText(once), once);
+    expect(redactText(once)).toBe(once);
   });
 
   const runs: readonly Scaled[] = [
@@ -240,8 +224,8 @@ describe('redactText bracketed keys, multi-chunk quotes and whitespace runs', ()
 
   for (const [label, count, build] of runs) {
     it(`scales near-linearly on 16 KB of ${label}`, () => {
-      assert.ok(build(count).length >= 16000);
-      assertNearLinear(build, count);
+      expect(build(count).length).toBeGreaterThanOrEqual(16000);
+      expect(() => assertNearLinear(build, count)).not.toThrow();
     });
   }
 });
@@ -264,12 +248,12 @@ describe('redactText', () => {
 
   for (const [input, marker] of leaks) {
     it(`masks ${JSON.stringify(input)}`, () => {
-      assert.ok(!redactText(input).includes(marker), redactText(input));
+      expect(redactText(input), redactText(input)).not.toContain(marker);
     });
   }
 
   it('keeps the host-less userinfo lookalike text around the masked value', () => {
-    assert.strictEqual(redactText('see //password:aJ@+QvZ7 end'), 'see //password:*');
+    expect(redactText('see //password:aJ@+QvZ7 end')).toBe('see //password:*');
   });
 
   for (const input of [
@@ -282,7 +266,7 @@ describe('redactText', () => {
     'readyState=complete',
   ]) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.strictEqual(redactText(input), input);
+      expect(redactText(input)).toBe(input);
     });
   }
 
@@ -311,7 +295,7 @@ describe('redactText', () => {
   ];
   for (const word of benignKeyWords) {
     it(`keeps ${word}=3`, () => {
-      assert.strictEqual(redactText(`${word}=3`), `${word}=3`);
+      expect(redactText(`${word}=3`)).toBe(`${word}=3`);
     });
   }
 });
@@ -326,7 +310,7 @@ describe('redactText', () => {
 
   for (const [input, marker] of leaks) {
     it(`masks ${JSON.stringify(input)}`, () => {
-      assert.ok(!redactText(input).includes(marker), redactText(input));
+      expect(redactText(input), redactText(input)).not.toContain(marker);
     });
   }
 
@@ -337,15 +321,12 @@ describe('redactText', () => {
     '//auth:8080/x',
   ]) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.strictEqual(redactText(input), input);
+      expect(redactText(input)).toBe(input);
     });
   }
 
   it('does not treat a bracketed host as userinfo', () => {
-    assert.strictEqual(
-      redactText('https://[::1]:8080/users/jane@corp.io'),
-      'https://[::1]:8080/users/*',
-    );
+    expect(redactText('https://[::1]:8080/users/jane@corp.io')).toBe('https://[::1]:8080/users/*');
   });
 });
 
@@ -353,12 +334,13 @@ describe('redactText bare //host:port', () => {
   it('masks a port that is not followed by a path', () => {
     for (const input of ['//password:12345', 'see //password:12345', '//password:8080']) {
       const out = redactText(input);
-      assert.ok(!out.includes('12345') && !out.includes('8080'), out);
+      expect(out, out).not.toContain('12345');
+      expect(out, out).not.toContain('8080');
     }
   });
 
   it('keeps a port followed by a path', () => {
-    assert.strictEqual(redactText('//auth:8080/x'), '//auth:8080/x');
+    expect(redactText('//auth:8080/x')).toBe('//auth:8080/x');
   });
 });
 
@@ -373,8 +355,8 @@ describe('redactText doubled equals and long or punctuated prefixes', () => {
 
   for (const [input, expected] of exact) {
     it(`turns ${JSON.stringify(input)} into ${JSON.stringify(expected)}`, () => {
-      assert.strictEqual(redactText(input), expected);
-      assert.strictEqual(redactText(expected), expected);
+      expect(redactText(input)).toBe(expected);
+      expect(redactText(expected)).toBe(expected);
     });
   }
 
@@ -389,7 +371,7 @@ describe('redactText doubled equals and long or punctuated prefixes', () => {
     'dial_code=33',
   ]) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.strictEqual(redactText(input), input);
+      expect(redactText(input)).toBe(input);
     });
   }
 
@@ -402,13 +384,13 @@ describe('redactText doubled equals and long or punctuated prefixes', () => {
     ['a'.repeat(300) + '_otp_code: 834201', '834201'],
   ] as const) {
     it(`masks ${JSON.stringify(input.length > 60 ? `${input.slice(0, 12)}...${input.slice(-24)}` : input)}`, () => {
-      assert.ok(!redactText(input).includes(marker), redactText(input));
+      expect(redactText(input), redactText(input)).not.toContain(marker);
     });
   }
 
   it('keeps a long benign prefix before a non-secret key', () => {
     const input = 'a'.repeat(300) + '_monkey=3';
-    assert.strictEqual(redactText(input), input);
+    expect(redactText(input)).toBe(input);
   });
 
   const prefixed: readonly Scaled[] = [
@@ -422,12 +404,14 @@ describe('redactText doubled equals and long or punctuated prefixes', () => {
 
   it('scales near-linearly past the longest skip on a long prefix before a benign key', () => {
     const stepAboveLongestSkip = 4;
-    assertNearLinear((count) => 'a'.repeat(count) + '_monkey=3', 16000, stepAboveLongestSkip);
+    expect(() =>
+      assertNearLinear((count) => 'a'.repeat(count) + '_monkey=3', 16000, stepAboveLongestSkip),
+    ).not.toThrow();
   });
 
   for (const [name, count, build] of prefixed) {
     it(`scales near-linearly on 16 KB of ${name}`, () => {
-      assertNearLinear(build, count);
+      expect(() => assertNearLinear(build, count)).not.toThrow();
     });
   }
 });
@@ -451,7 +435,7 @@ describe('redactText chained values, slashed passwords and non-ASCII spaces', ()
 
   for (const [input, expected] of exact) {
     it(`turns ${JSON.stringify(input)} into ${JSON.stringify(expected)}`, () => {
-      assert.strictEqual(redactText(input), expected);
+      expect(redactText(input)).toBe(expected);
     });
   }
 
@@ -461,21 +445,21 @@ describe('redactText chained values, slashed passwords and non-ASCII spaces', ()
     "auth=&\"\"''''\"\"'",
   ]) {
     it(`is idempotent on ${JSON.stringify(input)}`, () => {
-      assert.strictEqual(redactText(redactText(input)), redactText(input));
+      expect(redactText(redactText(input))).toBe(redactText(input));
     });
   }
 
   for (let code = 0x2000; code <= 0x200a; code++) {
     const space = String.fromCharCode(code);
     it(`masks a value split by U+${code.toString(16).toUpperCase()}`, () => {
-      assert.strictEqual(redactText(`password: correct${space}horse`), 'password: *');
-      assert.strictEqual(redactText(`password=correct${space}horse`), 'password=*');
+      expect(redactText(`password: correct${space}horse`)).toBe('password: *');
+      expect(redactText(`password=correct${space}horse`)).toBe('password=*');
     });
   }
 
   for (const unit of ['x[', 'a]']) {
     it(`scales near-linearly on unbalanced ${unit} brackets`, () => {
-      assertNearLinear((count) => unit.repeat(count), 8000);
+      expect(() => assertNearLinear((count) => unit.repeat(count), 8000)).not.toThrow();
     });
   }
 });
@@ -502,23 +486,25 @@ describe('redactText primary and query keys, narrowed state words', () => {
 
   for (const [input, expected] of masked) {
     it(`masks ${JSON.stringify(input)} as ${JSON.stringify(expected)}`, () => {
-      assert.strictEqual(redactText(input), expected);
+      expect(redactText(input)).toBe(expected);
     });
   }
 
   for (const input of kept) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.strictEqual(redactText(input), input);
+      expect(redactText(input)).toBe(input);
     });
   }
 
   it('drops the password of a host-relative userinfo with a query', () => {
-    assert.ok(!redactText('//host:abc/path?email=a@b.com').includes('abc'));
+    expect(redactText('//host:abc/path?email=a@b.com')).not.toContain('abc');
   });
 
   for (const unit of ['x_request_state=', 'cosmosPrimaryKey=', 'x_client_state=', 'x_keycode=']) {
     it(`scales near-linearly on 16 KB of ${unit}`, () => {
-      assertNearLinear((count) => unit.repeat(count), Math.ceil(16384 / unit.length));
+      expect(() =>
+        assertNearLinear((count) => unit.repeat(count), Math.ceil(16384 / unit.length)),
+      ).not.toThrow();
     });
   }
 });
@@ -536,7 +522,7 @@ describe('bearer tail stops before a following secret key', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)}`, () => {
-      assert.strictEqual(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 });
@@ -552,13 +538,13 @@ describe('secret words deep inside long keys', () => {
 
   rows.forEach(([input, output], index) => {
     it(`redacts row ${index}`, () => {
-      assert.strictEqual(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   });
 
   for (const unit of ['[a', 'a-']) {
     it(`scales near-linearly on 16 KB of ${unit} before a colon`, () => {
-      assertNearLinear((count) => unit.repeat(count) + ':', 8000);
+      expect(() => assertNearLinear((count) => unit.repeat(count) + ':', 8000)).not.toThrow();
     });
   }
 });
@@ -574,24 +560,26 @@ describe('a secret value stops before a following query key', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)}`, () => {
-      assert.strictEqual(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 
   it('does not leak a secret behind a fragment key in a url', () => {
-    assert.ok(
-      !redactText('https://x.com/cb?token=abc#pwd= hunter2secret').includes('hunter2secret'),
+    expect(redactText('https://x.com/cb?token=abc#pwd= hunter2secret')).not.toContain(
+      'hunter2secret',
     );
   });
 
   it('scales near-linearly on 16 KB of long words', () => {
-    assertNearLinear((count) => ('a'.repeat(100) + ' ').repeat(count), 160);
+    expect(() =>
+      assertNearLinear((count) => ('a'.repeat(100) + ' ').repeat(count), 160),
+    ).not.toThrow();
   });
 
   it('scales near-linearly and masks the value on repeated long-word keys', () => {
     const build: InputBuilder = (count) => ('a'.repeat(100) + 'Password=x ').repeat(count);
-    assertNearLinear(build, 140);
-    assert.ok(!redactText(build(140)).includes('=x'));
+    expect(() => assertNearLinear(build, 140)).not.toThrow();
+    expect(redactText(build(140))).not.toContain('=x');
   });
 });
 
@@ -608,7 +596,7 @@ describe('bearer and colon values stop before a separated key', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input.slice(0, 48))} to ${JSON.stringify(output.slice(-24))}`, () => {
-      assert.strictEqual(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 });
@@ -624,12 +612,12 @@ describe('nested bracket keys', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.strictEqual(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 
   it('scales near-linearly on repeated closing brackets', () => {
-    assertNearLinear((count) => 'a]'.repeat(count) + '=', 8000);
+    expect(() => assertNearLinear((count) => 'a]'.repeat(count) + '=', 8000)).not.toThrow();
   });
 });
 
@@ -642,12 +630,12 @@ describe('backslashes inside bearer tokens', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.strictEqual(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 
   it('scales near-linearly on a run of backslashes', () => {
-    assertNearLinear((count) => 'Bearer ' + '\\'.repeat(count), 16000);
+    expect(() => assertNearLinear((count) => 'Bearer ' + '\\'.repeat(count), 16000)).not.toThrow();
   });
 });
 
@@ -662,7 +650,7 @@ describe('quoted values before a query key and keys behind long prefixes', () =>
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input.slice(0, 48))} to ${JSON.stringify(output.slice(-24))}`, () => {
-      assert.strictEqual(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 
@@ -677,7 +665,7 @@ describe('quoted values before a query key and keys behind long prefixes', () =>
 
   for (const [name, count, build] of longWords) {
     it(`scales near-linearly on ${name}`, () => {
-      assertNearLinear(build, count);
+      expect(() => assertNearLinear(build, count)).not.toThrow();
     });
   }
 });
@@ -694,13 +682,13 @@ describe('cookie headers anywhere and narrowed auth bypass', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.strictEqual(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 
   for (const input of ['author_status_code=200']) {
     it(`keeps ${JSON.stringify(input)}`, () => {
-      assert.strictEqual(redactText(input), input);
+      expect(redactText(input)).toBe(input);
     });
   }
 });
@@ -721,7 +709,7 @@ describe('glued commas and semicolons inside secret values', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.strictEqual(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 
@@ -735,7 +723,7 @@ describe('glued commas and semicolons inside secret values', () => {
 
   for (const [name, count, build] of timed) {
     it(`scales near-linearly on ${name}`, () => {
-      assertNearLinear(build, count);
+      expect(() => assertNearLinear(build, count)).not.toThrow();
     });
   }
 });
@@ -755,7 +743,7 @@ describe('equals values spanning spaces', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.strictEqual(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 
@@ -770,7 +758,7 @@ describe('equals values spanning spaces', () => {
 
   for (const [name, count, build] of timed) {
     it(`scales near-linearly on ${name}`, () => {
-      assertNearLinear(build, count);
+      expect(() => assertNearLinear(build, count)).not.toThrow();
     });
   }
 });
@@ -898,7 +886,7 @@ describe('userinfo, yaml blocks, glued separators and query values', () => {
 
   for (const [input, output] of rows) {
     it(`redacts ${JSON.stringify(input)} to ${JSON.stringify(output)}`, () => {
-      assert.strictEqual(redactText(input), output);
+      expect(redactText(input)).toBe(output);
     });
   }
 
@@ -948,7 +936,7 @@ describe('userinfo, yaml blocks, glued separators and query values', () => {
 
   for (const [name, count, build] of timed) {
     it(`scales near-linearly on ${name}`, () => {
-      assertNearLinear(build, count);
+      expect(() => assertNearLinear(build, count)).not.toThrow();
     });
   }
 });

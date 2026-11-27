@@ -375,7 +375,7 @@ describe('redactText scaling on 16 KB inputs', () => {
   for (const [name, build] of shapes) {
     it(`grows near-linearly for ${JSON.stringify(name)} repeated`, () => {
       expect(redactText(build(LARGE)).length).toBeLessThanOrEqual(2048);
-      assertNearLinear(build, LARGE);
+      expect(() => assertNearLinear(build, LARGE)).not.toThrow();
     });
   }
 });
