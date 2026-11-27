@@ -37,6 +37,29 @@ export const Labels: Story = {
   }),
 };
 
+export const Accent: Story = {
+  ...Labels,
+  globals: { accent: 'indigo' },
+};
+
+export const Dark: Story = {
+  ...Labels,
+  globals: { accent: 'amber', theme: 'dark' },
+};
+
+export const CustomSelection: Story = {
+  render: () => ({
+    props: { ranges, range: 'week' },
+    template: `
+      <flr-segmented
+        aria-label="Range"
+        style="--flr-seg-selected-bg:#fef3c7;--flr-seg-selected-rule:#b45309;--flr-seg-selected-ink:#78350f"
+        [options]="ranges"
+        [(value)]="range"
+      />`,
+  }),
+};
+
 export const IconOnly: Story = {
   render: () => ({
     props: { views, view: 'grid' },
