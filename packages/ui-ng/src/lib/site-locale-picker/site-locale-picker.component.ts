@@ -188,7 +188,8 @@ let nextPanelId = 0;
       padding: 6px;
       background: var(--color-card, #ffffff);
       border: 1px solid var(--color-card-rule, rgba(30, 41, 59, 0.1));
-      border-radius: var(--radius-card, 8px);
+      border-radius: var(--radius-card, 16px);
+      corner-shape: var(--corner-shape, round);
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
     }
     .flr-locale-picker__option {
@@ -198,7 +199,8 @@ let nextPanelId = 0;
       box-sizing: border-box;
       min-height: 44px;
       padding: 8px 12px;
-      border-radius: var(--radius-control, 4px);
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
       color: var(--color-ink-2, #475569);
       font-size: 14px;
       text-decoration: none;

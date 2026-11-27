@@ -113,7 +113,8 @@
 .flr-pane__handle:focus-visible {
   outline: 2px solid var(--color-accent, currentColor);
   outline-offset: -2px;
-  border-radius: var(--radius-control, 4px);
+  border-radius: var(--radius-control, 8px);
+  corner-shape: var(--corner-shape, round);
 }
 
 @media (prefers-reduced-motion: reduce) {

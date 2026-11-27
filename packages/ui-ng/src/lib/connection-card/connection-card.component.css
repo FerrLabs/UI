@@ -4,7 +4,8 @@
 
 .flr-cc {
   border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-  border-radius: var(--radius-card, 8px);
+  border-radius: var(--radius-card, 16px);
+  corner-shape: var(--corner-shape, round);
   background: var(--color-card, #ffffff);
   color: var(--color-ink, #1e293b);
 }
@@ -143,7 +144,8 @@
   margin-top: 14px;
   padding: 12px;
   border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-  border-radius: var(--radius-card, 8px);
+  border-radius: var(--radius-card, 16px);
+  corner-shape: var(--corner-shape, round);
 }
 
 .flr-cc__extra {

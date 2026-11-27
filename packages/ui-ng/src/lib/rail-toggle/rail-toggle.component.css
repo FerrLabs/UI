@@ -9,7 +9,8 @@
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: var(--radius-control, 4px);
+  border-radius: var(--radius-control, 8px);
+  corner-shape: var(--corner-shape, round);
   background: transparent;
   color: var(--color-ink-2, #475569);
   cursor: pointer;
