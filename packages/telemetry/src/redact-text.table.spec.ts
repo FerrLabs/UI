@@ -44,14 +44,14 @@ describe('redactText query and host handling', () => {
   });
 
   it('keeps a port only right after a colon', () => {
-    expect(!redactText('x //pwd: 1234abc').includes('1234')).toBeTruthy();
-    expect(!redactText('x //secret:\n12345abc').includes('12345')).toBeTruthy();
+    expect(redactText('x //pwd: 1234abc')).not.toContain('1234');
+    expect(redactText('x //secret:\n12345abc')).not.toContain('12345');
   });
 
   it('keeps the host when the fragment contains an @', () => {
     const out = redactText('open https://app.example.com/x#next=a@b.c now');
-    expect(out.includes('https://app.example.com/x'), out).toBeTruthy();
-    expect(!out.includes('a@b.c'), out).toBeTruthy();
+    expect(out, out).toContain('https://app.example.com/x');
+    expect(out, out).not.toContain('a@b.c');
   });
 
   it('masks the whole word when a slashed password runs past 512 characters', () => {
@@ -64,21 +64,21 @@ describe('redactText query and host handling', () => {
 
   it('drops URL userinfo and keeps the host', () => {
     const out = redactText('connect https://user:pw@host.example.com/db failed');
-    expect(!out.includes('pw'), out).toBeTruthy();
-    expect(!out.includes('user'), out).toBeTruthy();
-    expect(out.includes('https://host.example.com/db'), out).toBeTruthy();
+    expect(out, out).not.toContain('pw');
+    expect(out, out).not.toContain('user');
+    expect(out, out).toContain('https://host.example.com/db');
   });
 
   it('keeps host:port while masking a numeric password', () => {
     expect(redactText('connect host.example.com:8443')).toBe('connect host.example.com:8443');
     expect(redactText('https://host.example.com:8443/x')).toBe('https://host.example.com:8443/x');
     const masked = redactText('login password: 8443');
-    expect(!masked.includes('8443'), masked).toBeTruthy();
+    expect(masked, masked).not.toContain('8443');
   });
 
   it('does not treat a numeric secret after a URL as a port', () => {
     const out = redactText('https://host.example.com/x password: 48291');
-    expect(!out.includes('48291'), out).toBeTruthy();
+    expect(out, out).not.toContain('48291');
   });
 
   it('masks quoted query values', () => {
@@ -88,7 +88,7 @@ describe('redactText query and host handling', () => {
       'GET https://h.example.com/a?x="secret value abc" failed',
     ]) {
       const out = redactText(input);
-      expect(!out.includes(LEAK_MARKER), `${input} -> ${out}`).toBeTruthy();
+      expect(out, `${input} -> ${out}`).not.toContain(LEAK_MARKER);
     }
   });
 });
@@ -96,8 +96,8 @@ describe('redactText query and host handling', () => {
 describe('redactText credentials', () => {
   it('masks Basic credentials', () => {
     const out = redactText('Authorization Basic YQ==');
-    expect(!out.includes('YQ=='), out).toBeTruthy();
-    expect(!redactText('Basic YQ==').includes('YQ==')).toBeTruthy();
+    expect(out, out).not.toContain('YQ==');
+    expect(redactText('Basic YQ==')).not.toContain('YQ==');
   });
 
   it('masks Basic credentials that follow a key', () => {
@@ -107,21 +107,19 @@ describe('redactText credentials', () => {
       'token: Basic abc12345',
     ]) {
       const out = redactText(input);
-      expect(!out.includes('abc'), `${input} -> ${out}`).toBeTruthy();
+      expect(out, `${input} -> ${out}`).not.toContain('abc');
     }
   });
 
   it('masks a Bearer token and a JWT', () => {
-    expect(!redactText('Authorization: Bearer abcOR5iMadOdPDXCB3').includes('abc')).toBeTruthy();
-    expect(
-      !redactText('jwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4abc.sigabc').includes('abc'),
-    ).toBeTruthy();
+    expect(redactText('Authorization: Bearer abcOR5iMadOdPDXCB3')).not.toContain('abc');
+    expect(redactText('jwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4abc.sigabc')).not.toContain('abc');
   });
 
   it('masks every sensitive pair when several share a line', () => {
     const out = redactText('token=abc12345,password="hunter22abc" key=abcdefgh');
-    expect(!out.includes('abc'), out).toBeTruthy();
-    expect(!out.includes('hunter22'), out).toBeTruthy();
+    expect(out, out).not.toContain('abc');
+    expect(out, out).not.toContain('hunter22');
   });
 });
 
@@ -129,10 +127,7 @@ describe('redactText tables', () => {
   for (const input of leakInputs) {
     it(`masks ${JSON.stringify(input.slice(0, 60))}`, () => {
       const out = redactText(input);
-      expect(
-        !out.includes(LEAK_MARKER),
-        `${JSON.stringify(input)} -> ${JSON.stringify(out)}`,
-      ).toBeTruthy();
+      expect(out, `${JSON.stringify(input)} -> ${JSON.stringify(out)}`).not.toContain(LEAK_MARKER);
     });
   }
 
@@ -158,14 +153,14 @@ describe('redactText bounds', () => {
       '?a='.repeat(21000),
       'token=abc '.repeat(5000),
     ]) {
-      expect(redactText(input).length <= 2048).toBeTruthy();
+      expect(redactText(input).length).toBeLessThanOrEqual(2048);
     }
   });
 
   it('masks a secret that sits across the input cut', () => {
     for (let n = 2000; n < 2060; n++) {
       const out = redactText(`${'x'.repeat(n)} token=SECRETSECRETSECRET`);
-      expect(!/CRET/.test(out), `n=${n}`).toBeTruthy();
+      expect(out, `n=${n}`).not.toMatch(/CRET/);
     }
   });
 
@@ -205,7 +200,7 @@ describe('redactText bracketed keys, multi-chunk quotes and whitespace runs', ()
 
   for (const [input, marker] of leaks) {
     it(`masks ${JSON.stringify(input)}`, () => {
-      expect(!redactText(input).includes(marker)).toBeTruthy();
+      expect(redactText(input)).not.toContain(marker);
     });
   }
 
@@ -229,7 +224,7 @@ describe('redactText bracketed keys, multi-chunk quotes and whitespace runs', ()
 
   for (const [label, count, build] of runs) {
     it(`scales near-linearly on 16 KB of ${label}`, () => {
-      expect(build(count).length >= 16000).toBeTruthy();
+      expect(build(count).length).toBeGreaterThanOrEqual(16000);
       expect(() => assertNearLinear(build, count)).not.toThrow();
     });
   }
@@ -253,7 +248,7 @@ describe('redactText', () => {
 
   for (const [input, marker] of leaks) {
     it(`masks ${JSON.stringify(input)}`, () => {
-      expect(!redactText(input).includes(marker), redactText(input)).toBeTruthy();
+      expect(redactText(input), redactText(input)).not.toContain(marker);
     });
   }
 
@@ -315,7 +310,7 @@ describe('redactText', () => {
 
   for (const [input, marker] of leaks) {
     it(`masks ${JSON.stringify(input)}`, () => {
-      expect(!redactText(input).includes(marker), redactText(input)).toBeTruthy();
+      expect(redactText(input), redactText(input)).not.toContain(marker);
     });
   }
 
@@ -339,7 +334,8 @@ describe('redactText bare //host:port', () => {
   it('masks a port that is not followed by a path', () => {
     for (const input of ['//password:12345', 'see //password:12345', '//password:8080']) {
       const out = redactText(input);
-      expect(!out.includes('12345') && !out.includes('8080'), out).toBeTruthy();
+      expect(out, out).not.toContain('12345');
+      expect(out, out).not.toContain('8080');
     }
   });
 
@@ -388,7 +384,7 @@ describe('redactText doubled equals and long or punctuated prefixes', () => {
     ['a'.repeat(300) + '_otp_code: 834201', '834201'],
   ] as const) {
     it(`masks ${JSON.stringify(input.length > 60 ? `${input.slice(0, 12)}...${input.slice(-24)}` : input)}`, () => {
-      expect(!redactText(input).includes(marker), redactText(input)).toBeTruthy();
+      expect(redactText(input), redactText(input)).not.toContain(marker);
     });
   }
 
@@ -501,7 +497,7 @@ describe('redactText primary and query keys, narrowed state words', () => {
   }
 
   it('drops the password of a host-relative userinfo with a query', () => {
-    expect(!redactText('//host:abc/path?email=a@b.com').includes('abc')).toBeTruthy();
+    expect(redactText('//host:abc/path?email=a@b.com')).not.toContain('abc');
   });
 
   for (const unit of ['x_request_state=', 'cosmosPrimaryKey=', 'x_client_state=', 'x_keycode=']) {
@@ -569,9 +565,9 @@ describe('a secret value stops before a following query key', () => {
   }
 
   it('does not leak a secret behind a fragment key in a url', () => {
-    expect(
-      !redactText('https://x.com/cb?token=abc#pwd= hunter2secret').includes('hunter2secret'),
-    ).toBeTruthy();
+    expect(redactText('https://x.com/cb?token=abc#pwd= hunter2secret')).not.toContain(
+      'hunter2secret',
+    );
   });
 
   it('scales near-linearly on 16 KB of long words', () => {
@@ -583,7 +579,7 @@ describe('a secret value stops before a following query key', () => {
   it('scales near-linearly and masks the value on repeated long-word keys', () => {
     const build: InputBuilder = (count) => ('a'.repeat(100) + 'Password=x ').repeat(count);
     expect(() => assertNearLinear(build, 140)).not.toThrow();
-    expect(!redactText(build(140)).includes('=x')).toBeTruthy();
+    expect(redactText(build(140))).not.toContain('=x');
   });
 });
 
