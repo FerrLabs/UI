@@ -18,21 +18,21 @@ const SIZE: Record<ButtonSize, SizeDim> = {
     padding: '0 12px',
     fontSize: '11px',
     gap: '6px',
-    radius: 'var(--radius-control, 4px)',
+    radius: 'var(--radius-control, 8px)',
   },
   md: {
     minHeight: 'var(--control-height, 40px)',
     padding: '0 16px',
-    fontSize: '12px',
+    fontSize: '13px',
     gap: '8px',
-    radius: 'var(--radius-control, 4px)',
+    radius: 'var(--radius-control, 8px)',
   },
   lg: {
     minHeight: 'calc(var(--control-height, 40px) + 8px)',
     padding: '0 20px',
     fontSize: '14px',
     gap: '10px',
-    radius: 'var(--radius-control, 4px)',
+    radius: 'var(--radius-control, 8px)',
   },
 };
 
@@ -174,6 +174,7 @@ export class ButtonComponent {
       'min-height': d.minHeight,
       padding: d.padding,
       'border-radius': d.radius,
+      'corner-shape': 'var(--corner-shape, round)',
       'font-size': d.fontSize,
       gap: d.gap,
       border: `1px solid ${border}`,

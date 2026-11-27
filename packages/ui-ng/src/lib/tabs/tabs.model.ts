@@ -6,6 +6,7 @@ export interface TabsStripItem {
   readonly active: Signal<boolean>;
   readonly disabled: Signal<boolean>;
   focus(): void;
+  element(): HTMLElement | null;
 }
 
 export interface TabsStrip {

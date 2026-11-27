@@ -35,6 +35,8 @@ export class SegmentedComponent {
   readonly value = model.required<string>();
   readonly iconOnly = input(false);
   readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+  readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
+  readonly ariaDescribedby = input<string | null>(null, { alias: 'aria-describedby' });
 
   private readonly group = viewChild.required<ElementRef<HTMLElement>>('group');
   private readonly thumb = viewChild.required<ElementRef<HTMLElement>>('thumb');

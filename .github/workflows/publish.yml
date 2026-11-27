@@ -25,13 +25,13 @@ jobs:
           if [ -n "$TAG" ]; then
             pkg="${TAG%%@*}"
             echo "packages=[\"$pkg\"]" >> "$GITHUB_OUTPUT"
-            echo "Release tag $TAG â†’ publish $pkg"
+            echo "Release tag $TAG → publish $pkg"
           elif [ -n "$INPUT" ]; then
             echo "packages=[\"$INPUT\"]" >> "$GITHUB_OUTPUT"
-            echo "Manual dispatch â†’ publish $INPUT"
+            echo "Manual dispatch → publish $INPUT"
           else
             echo 'packages=["foundation","ui-ng","telemetry"]' >> "$GITHUB_OUTPUT"
-            echo "Manual dispatch (no input) â†’ publish all"
+            echo "Manual dispatch (no input) → publish all"
           fi
 
   publish:
@@ -59,8 +59,8 @@ jobs:
       - name: Build package (with workspace deps)
         # Use --filter '...^@ferrlabs/ui-foo' to build the package AND its
         # workspace dependencies first. Required since UI#105 introduced
-        # re-export shells (ui-icons â†’ ui-foundation, ui â†’ primitives + react)
-        # â€” building the shell alone fails without the upstream's dist.
+        # re-export shells (ui-icons → ui-foundation, ui → primitives + react).
+        # Building the shell alone fails without the upstream's dist.
         run: |
           pkg_name=$(node -p "require('./packages/${{ matrix.package }}/package.json').name")
           pnpm --filter "$pkg_name..." run --if-present build
@@ -74,7 +74,7 @@ jobs:
           current=$(node -p "require('./${pubdir}/package.json').version")
           name=$(node -p "require('./${pubdir}/package.json').name")
           if npm view "$name@$current" version --registry https://registry.npmjs.org >/dev/null 2>&1; then
-            echo "Already published: $name@$current â€” skipping"
+            echo "Already published: $name@$current, skipping"
             exit 0
           fi
           cd "$pubdir"

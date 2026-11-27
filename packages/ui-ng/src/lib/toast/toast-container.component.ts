@@ -14,7 +14,7 @@ const ICON: Record<ToastVariant, string> = {
   template: `
     <div class="flr-toasts">
       @for (toast of toasts(); track toast.id) {
-        <div class="flr-toast" [class]="'flr-toast--' + toast.variant" role="status">
+        <div class="flr-toast" [class]="'flr-toast--' + toast.variant">
           <span class="flr-toast__icon mono" aria-hidden="true">{{ icon(toast.variant) }}</span>
           <div class="flr-toast__body">
             @if (toast.title; as title) {
@@ -53,7 +53,8 @@ const ICON: Record<ToastVariant, string> = {
       pointer-events: auto;
       min-width: 288px;
       max-width: 384px;
-      border-radius: var(--radius-card, 8px);
+      border-radius: var(--radius-card, 16px);
+      corner-shape: var(--corner-shape, round);
       box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
       border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 12px 16px;

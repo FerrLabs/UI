@@ -30,7 +30,8 @@
 .flr-waitlist__error {
   margin: 0;
   padding: 10px 12px;
-  border-radius: var(--radius-card, 8px);
+  border-radius: var(--radius-card, 16px);
+  corner-shape: var(--corner-shape, round);
   font-size: 14px;
   color: var(--color-danger, #b91c1c);
   background: color-mix(in srgb, var(--color-danger, #b91c1c) 8%, transparent);
@@ -38,7 +39,8 @@
 
 .flr-waitlist__joined {
   padding: 20px 24px;
-  border-radius: var(--radius-modal, 12px);
+  border-radius: var(--radius-modal, 24px);
+  corner-shape: var(--corner-shape, round);
   background: color-mix(in srgb, var(--color-accent, #1e293b) 7%, transparent);
 }
 

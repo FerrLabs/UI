@@ -49,7 +49,8 @@ const ERROR = 'var(--color-danger, #dc2626)';
       font-family: var(--font-sans, 'Fraunces', Georgia, ui-serif, serif);
       line-height: 1.5;
       color: var(--color-ink, #1e293b);
-      border-radius: var(--radius-control, 4px);
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
       outline: none;
       resize: vertical;
       transition:

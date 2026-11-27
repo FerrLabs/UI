@@ -1,0 +1,11 @@
+flr-combobox {
+  display: block;
+}
+
+.flr-cb__panel .flr-ms__row--on .flr-ms__label {
+  font-weight: 600;
+}
+
+.flr-cb__row--active {
+  background: color-mix(in oklab, currentColor 8%, transparent);
+}

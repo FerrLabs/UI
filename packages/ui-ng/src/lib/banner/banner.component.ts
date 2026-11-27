@@ -71,7 +71,8 @@ const TOKENS: Record<BannerVariant, BannerTokens> = {
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      border-radius: var(--radius-card, 8px);
+      border-radius: var(--radius-card, 16px);
+      corner-shape: var(--corner-shape, round);
       padding: 12px 16px;
       overflow: hidden;
     }

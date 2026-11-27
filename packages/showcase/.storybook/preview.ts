@@ -56,6 +56,16 @@ const preview: Preview = {
   ],
   parameters: {
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
+    viewport: {
+      options: {
+        phone: { name: 'Phone (390)', styles: { width: '390px', height: '844px' }, type: 'mobile' },
+        phoneSmall: {
+          name: 'Small phone (360)',
+          styles: { width: '360px', height: '740px' },
+          type: 'mobile',
+        },
+      },
+    },
     options: {
       storySort: {
         order: ['Foundation', 'Primitives', 'Forms', 'Overlays', 'App chrome', 'Site chrome'],

@@ -1,13 +1,21 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { OverlayContainer, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import {
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
+  type ElementRef,
   forwardRef,
   inject,
   input,
   model,
   output,
+  signal,
+  viewChild,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {
   SidebarComponent,
@@ -37,32 +45,48 @@ export interface ShellNavGroup {
   readonly items: readonly ShellNavItem[];
 }
 
+const NARROW_VIEWPORT = '(max-width: 880px)';
+
 @Component({
   selector: 'flr-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SidebarComponent, SidebarSectionComponent, SidebarItemComponent, RailToggleComponent],
-  providers: [{ provide: SHELL_CONTEXT, useExisting: forwardRef(() => ShellComponent) }],
+  providers: [
+    {
+      provide: SHELL_CONTEXT,
+      useFactory: (): ShellContext => ({
+        collapsed: inject(forwardRef(() => ShellComponent)).railCollapsed,
+      }),
+    },
+  ],
   host: {
     '(window:keydown)': 'onKeydown($event)',
   },
   template: `
     <div class="flr-shell">
-      <div class="flr-shell__rail"><ng-content select="[shell-rail]" /></div>
+      <div class="flr-shell__rail" [attr.inert]="navOpen() ? '' : null">
+        <ng-content select="[shell-rail]" />
+      </div>
       <div class="flr-shell__surface">
-        <flr-sidebar [(collapsed)]="collapsed">
+        <flr-sidebar
+          [collapsed]="railCollapsed()"
+          [(drawerOpen)]="navOpen"
+          [drawerLabel]="navLabel()"
+          [drawerCloseLabel]="navCloseLabel()"
+        >
           <div sidebar-switcher class="flr-shell__switcher">
             <ng-content select="[shell-switcher]" />
           </div>
           <div sidebar-brand class="flr-shell__brand"><ng-content select="[shell-brand]" /></div>
           <div sidebar-project><ng-content select="[shell-project]" /></div>
           @for (group of sections(); track group.title ?? $index) {
-            <flr-sidebar-section [title]="group.title ?? null" [collapsed]="collapsed()">
+            <flr-sidebar-section [title]="group.title ?? null" [collapsed]="railCollapsed()">
               @for (item of group.items; track item.id) {
                 <flr-sidebar-item
                   [label]="item.label"
                   [href]="item.href ?? null"
                   [active]="isActive(item)"
-                  [collapsed]="collapsed()"
+                  [collapsed]="railCollapsed()"
                   [accent]="accent()"
                   [badge]="item.badge ?? null"
                   [danger]="item.danger ?? false"
@@ -89,8 +113,31 @@ export interface ShellNavGroup {
           <div sidebar-footer class="flr-shell__user"><ng-content select="[shell-user]" /></div>
         </flr-sidebar>
 
-        <div class="flr-shell__body">
+        <div class="flr-shell__body" [attr.inert]="navOpen() ? '' : null">
           <header class="flr-shell__topbar">
+            <button
+              #navToggle
+              type="button"
+              class="flr-shell__nav-toggle"
+              aria-haspopup="dialog"
+              [attr.aria-controls]="sidebar().panelId"
+              [attr.aria-expanded]="navOpen()"
+              [attr.aria-label]="navOpenLabel()"
+              (click)="navOpen.set(true)"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <line x1="4" y1="7" x2="20" y2="7" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="17" x2="20" y2="17" />
+              </svg>
+            </button>
             <flr-rail-toggle class="flr-shell__rail-toggle" [(collapsed)]="collapsed" />
             <div class="flr-shell__slot flr-shell__slot--crumb-lead">
               <ng-content select="[shell-breadcrumb-lead]" />
@@ -160,7 +207,8 @@ export interface ShellNavGroup {
     .flr-shell:has(.flr-shell__rail:not(:empty)) .flr-shell__surface {
       --flr-sidebar-height: calc(100dvh - var(--flr-shell-inset, 10px));
       margin-top: var(--flr-shell-inset, 10px);
-      border-top-left-radius: var(--flr-shell-radius, var(--radius-modal, 12px));
+      border-top-left-radius: var(--flr-shell-radius, var(--radius-modal, 24px));
+      corner-shape: var(--corner-shape, round);
       overflow: clip;
     }
     .flr-shell:not(:has(.flr-shell__rail:not(:empty))):not(:has(.flr-shell__switcher:not(:empty))) {
@@ -189,7 +237,8 @@ export interface ShellNavGroup {
     }
     .flr-shell:has(.flr-shell__switcher:not(:empty)) .flr-shell__body {
       margin-top: var(--flr-shell-inset, 10px);
-      border-top-left-radius: var(--flr-shell-radius, var(--radius-modal, 12px));
+      border-top-left-radius: var(--flr-shell-radius, var(--radius-modal, 24px));
+      corner-shape: var(--corner-shape, round);
       overflow: clip;
       background: var(--color-app-bg, #f8fafc);
     }
@@ -227,9 +276,44 @@ export interface ShellNavGroup {
     .flr-shell__rail-toggle {
       margin-left: -8px;
     }
+    .flr-shell__nav-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      margin-left: -12px;
+      padding: 0;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
+      background: transparent;
+      color: var(--color-ink-2, #475569);
+      cursor: pointer;
+    }
+    .flr-shell__nav-toggle:hover {
+      background: var(--color-app-nav-hover, rgba(30, 41, 59, 0.06));
+      color: var(--color-ink, #1e293b);
+    }
+    .flr-shell__nav-toggle:focus-visible {
+      outline: 2px solid var(--color-accent, var(--color-ink, #1e293b));
+      outline-offset: 2px;
+    }
+    .flr-shell__nav-toggle svg {
+      width: 20px;
+      height: 20px;
+    }
     @media (max-width: 880px) {
+      .flr-shell__topbar {
+        padding: 0 16px;
+        gap: 12px;
+      }
       .flr-shell__rail-toggle {
         display: none;
+      }
+      .flr-shell__nav-toggle {
+        display: inline-flex;
       }
     }
     .flr-shell__crumbs {
@@ -245,7 +329,8 @@ export interface ShellNavGroup {
     .flr-shell__crumb--link {
       color: inherit;
       text-decoration: none;
-      border-radius: var(--radius-control, 4px);
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
     }
     .flr-shell__crumb--link:hover {
       color: var(--color-ink, #1e293b);
@@ -266,7 +351,8 @@ export interface ShellNavGroup {
       align-items: center;
       gap: 8px;
       padding: 6px 10px 6px 12px;
-      border-radius: var(--radius-control, 4px);
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
       background: var(--color-app-bg-2, #f1f5f9);
       color: var(--color-ink-3, #64748b);
@@ -285,7 +371,8 @@ export interface ShellNavGroup {
       display: inline-flex;
       align-items: center;
       padding: 1px 5px;
-      border-radius: var(--radius-control, 4px);
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
       background: var(--color-card, #fff);
       font-family: inherit;
@@ -326,8 +413,20 @@ export class ShellComponent implements ShellContext {
   readonly currentPath = input('/');
   readonly breadcrumb = input<readonly ShellCrumb[]>([]);
   readonly searchEnabled = input(false);
+  readonly navLabel = input('Navigation');
+  readonly navOpenLabel = input('Open navigation');
+  readonly navCloseLabel = input('Close navigation');
 
   readonly collapsed = model(false);
+
+  private readonly viewport = toSignal(inject(BreakpointObserver).observe(NARROW_VIEWPORT));
+  private readonly narrow = computed(() => this.viewport()?.matches ?? false);
+  readonly railCollapsed = computed(() => this.collapsed() && !this.narrow());
+  protected readonly navOpen = signal(false);
+  private readonly navToggle = viewChild.required<ElementRef<HTMLButtonElement>>('navToggle');
+  protected readonly sidebar = viewChild.required(SidebarComponent);
+  private readonly overlayContainer = inject(OverlayContainer);
+  private readonly scrollBlock = inject(ScrollStrategyOptions).block();
 
   protected readonly crumbs = computed(() => resolveCrumbs(this.breadcrumb()));
 
@@ -340,11 +439,36 @@ export class ShellComponent implements ShellContext {
     activeNavItemId(this.sections(), this.currentPath()),
   );
 
+  constructor() {
+    effect(() => {
+      this.currentPath();
+      this.narrow();
+      this.navOpen.set(false);
+    });
+    effect((onCleanup) => {
+      if (!this.navOpen()) return;
+      this.loadScrollBlockStyles();
+      this.scrollBlock.enable();
+      onCleanup(() => this.scrollBlock.disable());
+    });
+    let wasOpen = false;
+    afterRenderEffect(() => {
+      const open = this.navOpen();
+      if (wasOpen && !open && this.narrow()) this.navToggle().nativeElement.focus();
+      wasOpen = open;
+    });
+  }
+
+  private loadScrollBlockStyles(): void {
+    this.overlayContainer.getContainerElement();
+  }
+
   protected isActive(item: ShellNavItem): boolean {
     return item.href !== undefined && item.id === this.activeItemId();
   }
 
   protected onSelect(item: ShellNavItem): void {
+    this.navOpen.set(false);
     if (item.href) this.navigate.emit(item.href);
   }
 

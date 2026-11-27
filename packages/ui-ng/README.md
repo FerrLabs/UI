@@ -41,6 +41,30 @@ import { ButtonComponent } from '@ferrlabs/ui-ng';
 export class Demo {}
 ```
 
+## Shell on narrow viewports
+
+At `max-width: 880px` `flr-shell` takes the sidebar out of the layout and shows a
+menu button in the topbar instead of the rail toggle. The button opens the sidebar
+as an off-canvas drawer with the app switcher, the org switcher, the nav and the
+user menu, always expanded whatever `collapsed` says.
+
+While the drawer is open the rest of the shell is `inert`, focus moves into the
+drawer and page scroll is locked. Escape, the backdrop, a nav item and a
+`currentPath` change close it and return focus to the menu button. No setup is
+needed. The drawer is announced as a dialog. Its name and the two button labels
+are inputs, for translation:
+
+```html
+<flr-shell
+  navLabel="Navigation"
+  navOpenLabel="Ouvrir la navigation"
+  navCloseLabel="Fermer la navigation"
+/>
+```
+
+A standalone `flr-sidebar` gets the same drawer through `[(drawerOpen)]`; the
+trigger and the `inert` handling are then yours.
+
 ## Splitter
 
 Resizable panes with a draggable, keyboard accessible handle between each pair.
@@ -92,6 +116,30 @@ vertical separators. The new size is announced through the CDK `LiveAnnouncer` (
 direction is read from CSS `direction`. Stored sizes are restored once per `storageKey`, so adding
 or removing a pane later keeps the live layout. A drag is cancelled if its handle goes away
 (for example when the splitter crosses `stackBelow`).
+
+## Segmented
+
+`flr-segmented` is a radio group drawn as a pill of options: `options` (`{ value, label, icon? }[]`),
+`[(value)]`, `iconOnly`, and `aria-label` / `aria-labelledby` / `aria-describedby`.
+
+The selected option takes its colour from `--color-accent`, so each app gets its own accent with no
+override: accent text, an accent border, and a 12% accent tint over `--color-card`. The accent keeps
+its hue and saturation, and its lightness is clamped against `--color-ink` (at most 0.45 in OKLab on
+a light theme, at least 0.8 on a dark one) so the label stays above 4.5:1 on the tint whatever the
+accent. A theme that remaps `--color-card`, `--color-app-bg-2`, `--color-ink`, `--color-ink-3` or
+`--color-rule` on the `flr-segmented` host is followed automatically.
+
+To set the selection by hand, declare any of these on `flr-segmented` or an ancestor:
+
+| Custom property           | Applies to                          | Default                          |
+| ------------------------- | ----------------------------------- | -------------------------------- |
+| `--flr-seg-selected-bg`   | Thumb background                    | 12% clamped accent over the card |
+| `--flr-seg-selected-rule` | Thumb border                        | Clamped accent                   |
+| `--flr-seg-selected-ink`  | Selected label and icon, focus ring | Clamped accent                   |
+
+Hover on the other options keeps using `--color-ink`, and idle options `--color-ink-3`. Before the
+thumb is placed (prerendered HTML that has not hydrated yet) the selected option carries the same
+tint and border itself. In `forced-colors` mode the selection uses `Highlight` and `HighlightText`.
 
 ## Versioned docs (`@ferrlabs/ui-ng/docs`)
 

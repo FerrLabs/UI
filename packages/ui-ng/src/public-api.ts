@@ -18,6 +18,7 @@ export type { DividerOrientation } from './lib/divider/divider.component';
 export { ContainerComponent } from './lib/container/container.component';
 export type { ContainerSize, ContainerPadding } from './lib/container/container.component';
 
+export { CopyIconComponent } from './lib/copy-icon/copy-icon.component';
 export { SpinnerComponent } from './lib/spinner/spinner.component';
 export type { SpinnerSize, SpinnerColor } from './lib/spinner/spinner.component';
 
@@ -60,6 +61,8 @@ export type { SwitchSize } from './lib/switch/switch.component';
 export { SelectComponent } from './lib/select/select.component';
 export { MultiSelectComponent } from './lib/multi-select/multi-select.component';
 export type { MultiSelectMode, MultiSelectOption } from './lib/multi-select/multi-select.component';
+export { ComboboxComponent } from './lib/combobox/combobox.component';
+export type { ComboboxOption } from './lib/combobox/combobox.model';
 export { BarChartComponent } from './lib/bar-chart/bar-chart.component';
 export type { BarChartPoint } from './lib/bar-chart/bar-chart.component';
 export { TreeSelectComponent } from './lib/tree-select/tree-select.component';

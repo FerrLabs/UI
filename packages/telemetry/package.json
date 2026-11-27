@@ -1,6 +1,6 @@
 {
   "name": "@ferrlabs/telemetry",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Grafana Faro setup shared by FerrLabs fronts: opt-out, fail-closed payload redaction and an Angular ErrorHandler.",
   "license": "MIT OR Apache-2.0",
   "homepage": "https://github.com/FerrLabs/UI#readme",
@@ -40,7 +40,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@grafana/faro-web-sdk": "~2.14.0"
+    "@grafana/faro-web-sdk": "~2.15.0"
   },
   "peerDependencies": {
     "@angular/core": "^22.0.0"

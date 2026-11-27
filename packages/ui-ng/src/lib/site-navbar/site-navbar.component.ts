@@ -174,7 +174,7 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
     .nav__desktop {
       display: flex;
       align-items: center;
-      gap: 28px;
+      gap: 12px;
       margin-left: auto;
     }
     .nav__link {
@@ -183,15 +183,18 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
       text-transform: uppercase;
       color: var(--color-ink-2, #475569);
       position: relative;
-      padding: 6px 0;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 8px;
       text-decoration: none;
     }
     .nav__link::after {
       content: '';
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -2px;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
       height: 1px;
       background: var(--accent, #1e293b);
       transform: scaleX(0);
@@ -208,14 +211,24 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
       font-size: 12px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      box-sizing: border-box;
+      min-height: 44px;
+      margin-left: 8px;
       padding: 10px 16px;
       border-radius: var(--radius-full, 999px);
       background: var(--accent, #1e293b);
       color: #fff;
+      color: oklch(from var(--accent, #1e293b) clamp(0, (0.564 - l) * 1000, 1) 0 0);
       text-decoration: none;
       transition:
         transform 180ms,
         opacity 180ms;
+    }
+    .nav__desktop flr-site-locale-picker {
+      margin-left: 8px;
+    }
+    .nav__desktop flr-site-locale-picker + .nav__cta {
+      margin-left: 16px;
     }
     .nav__cta:hover {
       transform: translateY(-1px);
@@ -228,6 +241,9 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
       border-radius: var(--radius-full, 999px);
       background: transparent;
       color: var(--color-ink, #1e293b);
+      box-sizing: border-box;
+      min-height: 44px;
+      align-items: center;
       padding: 8px 14px;
       font-size: 11px;
       letter-spacing: 0.08em;
@@ -280,6 +296,10 @@ import { SiteLocalePickerComponent } from '../site-locale-picker/site-locale-pic
       gap: 8px;
     }
     .nav__mobile-lang {
+      display: inline-flex;
+      align-items: center;
+      box-sizing: border-box;
+      min-height: 44px;
       padding: 8px 16px;
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
       border-radius: var(--radius-full, 999px);

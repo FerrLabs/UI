@@ -3,7 +3,8 @@
   min-width: 0;
   max-width: 100%;
   border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-  border-radius: var(--radius-card, 8px);
+  border-radius: var(--radius-card, 16px);
+  corner-shape: var(--corner-shape, round);
   background: var(--color-code-bg, #f1f5f9);
   color: var(--color-code-fg, #1e293b);
   overflow: hidden;
@@ -30,7 +31,8 @@
   line-height: 1;
   padding: 5px 9px;
   border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-  border-radius: var(--radius-control, 4px);
+  border-radius: var(--radius-control, 8px);
+  corner-shape: var(--corner-shape, round);
   background: transparent;
   color: var(--color-ink-2, #475569);
   cursor: pointer;

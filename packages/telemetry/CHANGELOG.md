@@ -4,6 +4,12 @@ All notable changes to `telemetry` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.6.2] - 2026-11-26
+
+### Bug Fixes
+
+- fix(deps): update dependency @grafana/faro-web-sdk to ~2.15.0 (#835)
+
 ## [0.6.1] - 2026-11-18
 
 ### Bug Fixes

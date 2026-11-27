@@ -25,6 +25,8 @@ let radioGroupCounter = 0;
       class="flr-radio-group"
       role="radiogroup"
       [attr.aria-label]="ariaLabel()"
+      [attr.aria-labelledby]="ariaLabelledby()"
+      [attr.aria-describedby]="ariaDescribedby()"
       [class.flr-radio-group--horizontal]="orientation() === 'horizontal'"
     >
       <ng-content />
@@ -48,6 +50,8 @@ let radioGroupCounter = 0;
 export class RadioGroupComponent implements ControlValueAccessor {
   readonly orientation = input<RadioGroupOrientation>('vertical');
   readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+  readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
+  readonly ariaDescribedby = input<string | null>(null, { alias: 'aria-describedby' });
   readonly name = input<string>(`flr-radio-${++radioGroupCounter}`);
 
   readonly value = signal<string | number | null>(null);

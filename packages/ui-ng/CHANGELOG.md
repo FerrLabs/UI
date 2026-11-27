@@ -4,6 +4,78 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.64.1] - 2026-11-27
+
+### Bug Fixes
+
+- fix(ui-ng): open the shell sidebar as a drawer on narrow viewports (#844)
+
+## [1.64.0] - 2026-11-27
+
+### Features
+
+- feat(ui-ng): tint the selected segmented option with the app accent (#845)
+
+## [1.63.0] - 2026-11-27
+
+### Features
+
+- feat(foundation): double default radii and add squircle corners (#843)
+
+## [1.62.0] - 2026-11-24
+
+### Features
+
+- feat(tabs): scroll the active tab into view and fade overflowing edges (#828)
+
+## [1.61.2] - 2026-11-24
+
+### Bug Fixes
+
+- fix(toast): announce each toast once (#827)
+
+## [1.61.1] - 2026-11-22
+
+### Bug Fixes
+
+- fix(deps): update dependency @ferrlabs/ui-foundation to ^5.12.0 (#824)
+
+## [1.61.0] - 2026-11-20
+
+### Features
+
+- feat(foundation): raise precision preset to 36px controls and 4px control radius (#815)
+
+## [1.60.1] - 2026-11-20
+
+### Bug Fixes
+
+- fix(ui-ng): raise tabs and site chrome to 44px targets, AA text on accent buttons (#814)
+
+## [1.60.0] - 2026-11-20
+
+### Features
+
+- feat(ui-ng): add an animated copy icon (#813)
+
+## [1.59.0] - 2026-11-20
+
+### Features
+
+- feat(ui-ng): let flr-field label a composite control (#811)
+
+## [1.58.1] - 2026-11-20
+
+### Bug Fixes
+
+- fix(ui-ng): theme flr-tree-select panel in dark mode (#810)
+
+## [1.58.0] - 2026-11-20
+
+### Features
+
+- feat(ui-ng): add flr-combobox single searchable select (#808)
+
 ## [1.57.1] - 2026-11-19
 
 ### Bug Fixes

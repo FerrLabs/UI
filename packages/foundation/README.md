@@ -26,8 +26,8 @@ is the default editorial look.
 
 | `data-style` | Radii (control / card / modal) | Font     | `--control-height` |
 | ------------ | ------------------------------ | -------- | ------------------ |
-| (none)       | 4px / 8px / 12px               | Fraunces | 40px               |
-| `precision`  | 2px / 4px / 6px                | Geist    | 28px               |
+| (none)       | 8px / 16px / 24px              | Fraunces | 40px               |
+| `precision`  | 4px / 4px / 6px                | Geist    | 36px               |
 | `soft`       | 8px / 12px / 16px              | Geist    | 36px               |
 
 `--control-height` is the `md` height of buttons, inputs, selects, search fields,
@@ -68,12 +68,16 @@ import { icons } from '@ferrlabs/ui-foundation/icons';
 
 | Token              | Value | Tailwind utility  | Use                                                 |
 | ------------------ | ----- | ----------------- | --------------------------------------------------- |
-| `--radius-control` | 4px   | `rounded-control` | Buttons, inputs, selects, search, tabs, small chips |
-| `--radius-card`    | 8px   | `rounded-card`    | Cards, menus, popovers, rail items                  |
-| `--radius-modal`   | 12px  | `rounded-modal`   | Modals, switcher panels, large surfaces             |
+| `--radius-control` | 8px   | `rounded-control` | Buttons, inputs, selects, search, tabs, small chips |
+| `--radius-card`    | 16px  | `rounded-card`    | Cards, menus, popovers, rail items                  |
+| `--radius-modal`   | 24px  | `rounded-modal`   | Modals, switcher panels, large surfaces             |
 | `--radius-full`    | 999px | `rounded-full`    | Switch, avatar, badges, status dots                 |
 
-`.btn-primary` and `.btn-ghost` use `--radius-control`.
+`--corner-shape` (`squircle`) is applied with `corner-shape` next to the tokenized radii. Browsers without `corner-shape` support (Chromium 139+ only for now) keep plain rounded corners.
+
+`.btn-primary` and `.btn-ghost` use `--radius-control` and `--corner-shape`.
+
+Both are at least 44px tall. `.btn-primary` fills with `--accent` and derives its text colour from it: white on dark accents, black on light ones, so every product accent clears 4.5:1 (slate 14.6, orange 6.9, emerald 8.3, indigo 4.7, violet 5.0, amber 9.8, teal 8.4). Browsers without relative colour syntax keep white text.
 
 ## Migration from old packages
 

@@ -1,0 +1,91 @@
+<button
+  #trigger
+  cdkOverlayOrigin
+  #origin="cdkOverlayOrigin"
+  type="button"
+  role="combobox"
+  class="flr-ms__trigger"
+  [class.flr-ms__trigger--invalid]="invalid()"
+  [class.flr-ms__trigger--placeholder]="selectedLabel() === null"
+  [attr.id]="triggerId()"
+  [attr.aria-label]="triggerLabel()"
+  aria-haspopup="listbox"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="open() ? uid + '-list' : null"
+  [attr.aria-invalid]="invalid() || null"
+  [disabled]="disabled()"
+  (click)="toggleOpen()"
+  (keydown)="onTriggerKeydown($event)"
+>
+  <span class="flr-ms__summary">{{ summary() }}</span>
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayMinWidth]="panelMinWidth()"
+  (overlayOutsideClick)="onOutsideClick($event)"
+  (detach)="close(false)"
+>
+  <div
+    #panel
+    class="flr-ms flr-ms__panel flr-cb__panel"
+    role="presentation"
+    [style]="panelTokens()"
+    (mousedown)="$event.preventDefault()"
+    (focusout)="onFocusOut($event)"
+  >
+    <input
+      #search
+      class="flr-ms__search"
+      type="search"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-haspopup="listbox"
+      aria-expanded="true"
+      [attr.aria-label]="searchPlaceholder()"
+      [attr.aria-controls]="uid + '-list'"
+      [attr.aria-activedescendant]="activeOptionId()"
+      [placeholder]="searchPlaceholder()"
+      [value]="query()"
+      (input)="onQuery($event)"
+      (keydown)="onSearchKeydown($event)"
+    />
+
+    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+    <div
+      #listbox
+      class="flr-ms__list"
+      role="listbox"
+      [attr.id]="uid + '-list'"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-busy]="loading()"
+      (click)="onListClick($event)"
+    >
+      @for (o of visible(); track o.value; let i = $index) {
+        <div
+          class="flr-ms__row"
+          role="option"
+          [attr.id]="optionId(i)"
+          [attr.aria-selected]="isSelected(o)"
+          [class.flr-ms__row--on]="isSelected(o)"
+          [class.flr-cb__row--active]="i === active()"
+          [attr.data-index]="i"
+        >
+          <span class="flr-ms__text">
+            <span class="flr-ms__label">{{ o.label }}</span>
+            @if (o.hint) {
+              <span class="flr-ms__hint">{{ o.hint }}</span>
+            }
+          </span>
+        </div>
+      }
+    </div>
+
+    @if (emptyMessage(); as message) {
+      <p class="flr-ms__empty" role="status">{{ message }}</p>
+    }
+  </div>
+</ng-template>

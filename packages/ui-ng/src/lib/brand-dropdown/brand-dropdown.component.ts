@@ -226,7 +226,8 @@ interface BrandRow {
       justify-content: flex-start;
       padding: 6px 12px;
       margin: 1px 0;
-      border-radius: var(--radius-card, 8px);
+      border-radius: var(--radius-card, 16px);
+      corner-shape: var(--corner-shape, round);
       text-decoration: none;
       color: var(--color-ink-2, #475569);
       background: transparent;
@@ -252,7 +253,8 @@ interface BrandRow {
       top: 8px;
       bottom: 8px;
       width: 2px;
-      border-radius: var(--radius-control, 4px);
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
     }
     .flr-bd__mark {
       width: 36px;
@@ -323,7 +325,8 @@ interface BrandRow {
     .flr-bd__switch-mark {
       width: 64px;
       height: 64px;
-      border-radius: var(--radius-card, 8px);
+      border-radius: var(--radius-card, 16px);
+      corner-shape: var(--corner-shape, round);
       display: inline-flex;
       align-items: center;
       justify-content: center;

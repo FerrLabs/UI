@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 export type SkeletonShape = 'rect' | 'text' | 'circle';
 
 const RADIUS: Record<SkeletonShape, string> = {
-  rect: 'var(--radius-card, 8px)',
-  text: 'var(--radius-control, 4px)',
+  rect: 'var(--radius-card, 16px)',
+  text: 'var(--radius-control, 8px)',
   circle: 'var(--radius-full, 999px)',
 };
 
@@ -56,6 +56,7 @@ export class SkeletonComponent {
     else if (shape === 'text') defaultHeight = '12px';
     return {
       'border-radius': RADIUS[shape],
+      'corner-shape': shape === 'circle' ? 'round' : 'var(--corner-shape, round)',
       width: w != null ? toLength(w) : defaultWidth,
       height: h != null ? toLength(h) : defaultHeight,
     };

@@ -242,8 +242,10 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  min-height: 44px;
   padding: 14px 24px;
   border-radius: var(--radius-control);
+  corner-shape: var(--corner-shape, round);
   font-family: var(--font-mono);
   font-size: 13px;
   letter-spacing: 0.04em;
@@ -257,6 +259,7 @@
 .btn-primary {
   background: var(--accent);
   color: #fff;
+  color: oklch(from var(--accent) clamp(0, (0.564 - l) * 1000, 1) 0 0);
 }
 .btn-primary:hover {
   transform: translateY(-1px);

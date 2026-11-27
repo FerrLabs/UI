@@ -94,7 +94,8 @@ export class LoadingStateComponent {
         var(--color-danger, #dc2626) 10%,
         var(--color-paper, #f8fafc)
       );
-      border-radius: var(--radius-card, 8px);
+      border-radius: var(--radius-card, 16px);
+      corner-shape: var(--corner-shape, round);
       padding: 20px;
       color: var(--color-danger-fg, #7f1d1d);
     }
@@ -110,7 +111,8 @@ export class LoadingStateComponent {
     }
     .flr-error__retry {
       margin-top: 12px;
-      border-radius: var(--radius-control, 4px);
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
       background: color-mix(in oklab, var(--color-danger, #dc2626) 16%, transparent);
       color: inherit;
       padding: 6px 12px;
