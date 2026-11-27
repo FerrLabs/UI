@@ -1,10 +1,10 @@
-import { DOCUMENT } from '@angular/common';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { OverlayContainer, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import {
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   effect,
   type ElementRef,
   forwardRef,
@@ -15,6 +15,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {
   SidebarComponent,
@@ -70,6 +71,7 @@ const NARROW_VIEWPORT = '(max-width: 880px)';
         <flr-sidebar
           [collapsed]="railCollapsed()"
           [(drawerOpen)]="navOpen"
+          [drawerLabel]="navLabel()"
           [drawerCloseLabel]="navCloseLabel()"
         >
           <div sidebar-switcher class="flr-shell__switcher">
@@ -117,7 +119,8 @@ const NARROW_VIEWPORT = '(max-width: 880px)';
               #navToggle
               type="button"
               class="flr-shell__nav-toggle"
-              aria-haspopup="true"
+              aria-haspopup="dialog"
+              [attr.aria-controls]="sidebar().panelId"
               [attr.aria-expanded]="navOpen()"
               [attr.aria-label]="navOpenLabel()"
               (click)="navOpen.set(true)"
@@ -410,17 +413,20 @@ export class ShellComponent implements ShellContext {
   readonly currentPath = input('/');
   readonly breadcrumb = input<readonly ShellCrumb[]>([]);
   readonly searchEnabled = input(false);
+  readonly navLabel = input('Navigation');
   readonly navOpenLabel = input('Open navigation');
   readonly navCloseLabel = input('Close navigation');
 
   readonly collapsed = model(false);
 
-  private readonly narrow = signal(false);
+  private readonly viewport = toSignal(inject(BreakpointObserver).observe(NARROW_VIEWPORT));
+  private readonly narrow = computed(() => this.viewport()?.matches ?? false);
   readonly railCollapsed = computed(() => this.collapsed() && !this.narrow());
   protected readonly navOpen = signal(false);
   private readonly navToggle = viewChild.required<ElementRef<HTMLButtonElement>>('navToggle');
-  private readonly document = inject(DOCUMENT);
-  private readonly destroyRef = inject(DestroyRef);
+  protected readonly sidebar = viewChild.required(SidebarComponent);
+  private readonly overlayContainer = inject(OverlayContainer);
+  private readonly scrollBlock = inject(ScrollStrategyOptions).block();
 
   protected readonly crumbs = computed(() => resolveCrumbs(this.breadcrumb()));
 
@@ -434,7 +440,6 @@ export class ShellComponent implements ShellContext {
   );
 
   constructor() {
-    this.watchViewport();
     effect(() => {
       this.currentPath();
       this.narrow();
@@ -442,28 +447,20 @@ export class ShellComponent implements ShellContext {
     });
     effect((onCleanup) => {
       if (!this.navOpen()) return;
-      const root = this.document.documentElement;
-      const previous = root.style.overflow;
-      root.style.overflow = 'hidden';
-      onCleanup(() => {
-        root.style.overflow = previous;
-      });
+      this.loadScrollBlockStyles();
+      this.scrollBlock.enable();
+      onCleanup(() => this.scrollBlock.disable());
     });
     let wasOpen = false;
     afterRenderEffect(() => {
       const open = this.navOpen();
-      if (wasOpen && !open) this.navToggle().nativeElement.focus();
+      if (wasOpen && !open && this.narrow()) this.navToggle().nativeElement.focus();
       wasOpen = open;
     });
   }
 
-  private watchViewport(): void {
-    const query = this.document.defaultView?.matchMedia?.(NARROW_VIEWPORT);
-    if (!query) return;
-    const sync = () => this.narrow.set(query.matches);
-    sync();
-    query.addEventListener('change', sync);
-    this.destroyRef.onDestroy(() => query.removeEventListener('change', sync));
+  private loadScrollBlockStyles(): void {
+    this.overlayContainer.getContainerElement();
   }
 
   protected isActive(item: ShellNavItem): boolean {

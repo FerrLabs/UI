@@ -1,5 +1,5 @@
+import { A11yModule } from '@angular/cdk/a11y';
 import {
-  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -13,36 +13,47 @@ import { NgTemplateOutlet } from '@angular/common';
 import { IconPlayDirective } from '../icon/icon-play.directive';
 import { markColorOnDark } from '../app-rail/mark-color';
 
+let sidebarCounter = 0;
+
 @Component({
   selector: 'flr-sidebar',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [A11yModule],
   host: {
     '(document:keydown.escape)': 'onEscape()',
   },
   template: `
     <aside
-      #panel
       class="flr-sb"
       [class.flr-sb--collapsed]="collapsed()"
       [class.flr-sb--drawer-open]="drawerOpen()"
       [style.width]="widthPx()"
-      [attr.tabindex]="drawerOpen() ? -1 : null"
     >
-      <div class="flr-sb__switcher"><ng-content select="[sidebar-switcher]" /></div>
-      <div class="flr-sb__brand"><ng-content select="[sidebar-brand]" /></div>
-      <div class="flr-sb__project"><ng-content select="[sidebar-project]" /></div>
-      <nav class="flr-sb__nav" [attr.aria-label]="navLabel()"><ng-content /></nav>
-      <div class="flr-sb__footer">
-        <div class="flr-sb__extra"><ng-content select="[sidebar-footer]" /></div>
+      <div
+        #panel
+        class="flr-sb__panel"
+        [id]="panelId"
+        [cdkTrapFocus]="drawerOpen()"
+        [cdkTrapFocusAutoCapture]="drawerOpen()"
+        [attr.role]="drawerOpen() ? 'dialog' : null"
+        [attr.aria-modal]="drawerOpen() ? 'true' : null"
+        [attr.aria-label]="drawerOpen() ? drawerLabel() : null"
+      >
+        <div class="flr-sb__switcher"><ng-content select="[sidebar-switcher]" /></div>
+        <div class="flr-sb__brand"><ng-content select="[sidebar-brand]" /></div>
+        <div class="flr-sb__project"><ng-content select="[sidebar-project]" /></div>
+        <nav class="flr-sb__nav" [attr.aria-label]="navLabel()"><ng-content /></nav>
+        <div class="flr-sb__footer">
+          <div class="flr-sb__extra"><ng-content select="[sidebar-footer]" /></div>
+        </div>
+        <button
+          type="button"
+          class="flr-sb__backdrop"
+          [attr.aria-label]="drawerCloseLabel()"
+          (click)="drawerOpen.set(false)"
+        ></button>
       </div>
     </aside>
-    <button
-      type="button"
-      class="flr-sb__backdrop"
-      [class.flr-sb__backdrop--open]="drawerOpen()"
-      [attr.aria-label]="drawerCloseLabel()"
-      (click)="drawerOpen.set(false)"
-    ></button>
   `,
   styles: `
     :host {
@@ -58,6 +69,12 @@ import { markColorOnDark } from '../app-rail/mark-color';
       background: var(--color-app-sidebar, #f6f8fb);
       border-right: 1px solid var(--flr-sidebar-border, var(--color-rule, rgba(30, 41, 59, 0.14)));
       transition: width 220ms ease;
+    }
+    .flr-sb__panel {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
     }
     .flr-sb__brand {
       height: 64px;
@@ -126,29 +143,21 @@ import { markColorOnDark } from '../app-rail/mark-color';
           translate 220ms ease,
           visibility 0s;
       }
-      .flr-sb:focus {
-        outline: none;
-      }
       .flr-sb__backdrop {
         display: block;
-        position: fixed;
-        inset: 0;
-        z-index: 39;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        width: calc(100vw - 100%);
+        height: 100%;
         padding: 0;
         border: none;
         background: var(--flr-sidebar-backdrop, rgba(15, 23, 42, 0.5));
         opacity: 0;
-        visibility: hidden;
-        transition:
-          opacity 220ms ease,
-          visibility 0s 220ms;
+        transition: opacity 220ms ease;
       }
-      .flr-sb__backdrop--open {
+      .flr-sb--drawer-open .flr-sb__backdrop {
         opacity: 1;
-        visibility: visible;
-        transition:
-          opacity 220ms ease,
-          visibility 0s;
       }
       .flr-sb__backdrop:focus-visible {
         outline: 2px solid #ffffff;
@@ -168,17 +177,14 @@ export class SidebarComponent {
   readonly collapsed = model(false);
   readonly drawerOpen = model(false);
   readonly navLabel = input('Sections');
+  readonly drawerLabel = input('Navigation');
   readonly drawerCloseLabel = input('Close navigation');
   readonly width = input(256);
   readonly collapsedWidth = input(64);
 
-  private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');
+  readonly panelId = `flr-sb-${++sidebarCounter}`;
 
-  constructor() {
-    afterRenderEffect(() => {
-      if (this.drawerOpen()) this.panel().nativeElement.focus();
-    });
-  }
+  private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');
 
   protected readonly widthPx = computed(() =>
     this.collapsed() ? `${this.collapsedWidth()}px` : `${this.width()}px`,

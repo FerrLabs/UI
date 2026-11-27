@@ -51,10 +51,15 @@ user menu, always expanded whatever `collapsed` says.
 While the drawer is open the rest of the shell is `inert`, focus moves into the
 drawer and page scroll is locked. Escape, the backdrop, a nav item and a
 `currentPath` change close it and return focus to the menu button. No setup is
-needed. The two button labels are inputs, for translation:
+needed. The drawer is announced as a dialog. Its name and the two button labels
+are inputs, for translation:
 
 ```html
-<flr-shell navOpenLabel="Ouvrir la navigation" navCloseLabel="Fermer la navigation" />
+<flr-shell
+  navLabel="Navigation"
+  navOpenLabel="Ouvrir la navigation"
+  navCloseLabel="Fermer la navigation"
+/>
 ```
 
 A standalone `flr-sidebar` gets the same drawer through `[(drawerOpen)]`; the

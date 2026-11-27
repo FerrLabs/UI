@@ -405,12 +405,50 @@ export const NarrowViewportDrawerOpen: Story = {
   play: async ({ canvasElement }) => {
     const { toggle, panel, body } = await openDrawer(canvasElement);
     await expect(toggle.getAttribute('aria-expanded')).toBe('true');
-    await expect(panel.contains(document.activeElement)).toBe(true);
+    const dialog = within(canvasElement).getByRole('dialog', { name: 'Navigation' });
+    await expect(panel.contains(dialog)).toBe(true);
+    await expect(dialog.getAttribute('aria-modal')).toBe('true');
+    await expect(toggle.getAttribute('aria-controls')).toBe(dialog.id);
+    await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
     await expect(body.hasAttribute('inert')).toBe(true);
-    await expect(document.documentElement.style.overflow).toBe('hidden');
     await expect(
       within(canvasElement).getByRole('button', { name: 'Close navigation' }),
     ).toBeVisible();
+  },
+};
+
+export const NarrowViewportTabStaysInTheDrawer: Story = {
+  ...NarrowViewport,
+  play: async ({ canvasElement }) => {
+    const { panel } = await openDrawer(canvasElement);
+    const first = within(panel).getByRole('button', { name: /Switch app/i });
+    const close = within(panel).getByRole('button', { name: 'Close navigation' });
+    close.focus();
+    await userEvent.tab();
+    await expect(document.activeElement).toBe(first);
+    await userEvent.tab({ shift: true });
+    await expect(document.activeElement).toBe(close);
+  },
+};
+
+export const NarrowViewportDrawerLocksPageScroll: Story = {
+  ...NarrowViewport,
+  render: (args) => ({
+    props: args,
+    template: `
+      <flr-shell [sections]="sections" [currentPath]="currentPath">
+        <div style="padding:24px">vault-rotator</div>
+      </flr-shell>
+      <div style="height:200vh"></div>`,
+  }),
+  play: async ({ canvasElement }) => {
+    const root = document.documentElement;
+    await expect(root.scrollHeight).toBeGreaterThan(window.innerHeight);
+    const parts = await openDrawer(canvasElement);
+    await expect(getComputedStyle(root).position).toBe('fixed');
+    await userEvent.keyboard('{Escape}');
+    await expectDrawerClosed(parts);
+    await expect(getComputedStyle(root).position).not.toBe('fixed');
   },
 };
 
