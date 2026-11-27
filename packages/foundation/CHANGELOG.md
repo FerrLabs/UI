@@ -4,6 +4,12 @@ All notable changes to `foundation` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.13.0] - 2026-11-27
+
+### Features
+
+- feat(foundation): double default radii and add squircle corners (#843)
+
 ## [5.12.0] - 2026-11-20
 
 ### Features

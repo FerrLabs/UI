@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.63.0] - 2026-11-27
+
+### Features
+
+- feat(foundation): double default radii and add squircle corners (#843)
+
 ## [1.62.0] - 2026-11-24
 
 ### Features
