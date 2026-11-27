@@ -164,7 +164,8 @@ describe('redactText properties', () => {
     fc.assert(
       fc.property(anyText, (s) => {
         const out = redactText(s);
-        return out.length <= s.length && out.length <= 2048;
+        expect(out.length).toBeLessThanOrEqual(s.length);
+        expect(out.length).toBeLessThanOrEqual(2048);
       }),
       { numRuns: 20000 },
     );
@@ -172,7 +173,9 @@ describe('redactText properties', () => {
 
   it('is idempotent', () => {
     fc.assert(
-      fc.property(anyText, (s) => redactText(redactText(s)) === redactText(s)),
+      fc.property(anyText, (s) => {
+        expect(redactText(redactText(s))).toBe(redactText(s));
+      }),
       { numRuns: 20000 },
     );
   });
@@ -182,14 +185,18 @@ describe('redactText properties', () => {
       .array(fc.constantFrom(...'abcdfghmnorvwxyz0123456789 ,.()-_'), { maxLength: 200 })
       .map((c) => c.join(''));
     fc.assert(
-      fc.property(plain, (s) => redactText(s) === s),
+      fc.property(plain, (s) => {
+        expect(redactText(s)).toBe(s);
+      }),
       { numRuns: 5000 },
     );
   });
 
   it('removes every part of a credential placed after a sensitive key, scheme or userinfo', () => {
     fc.assert(
-      fc.property(placed, ({ input, secret }) => leakedWindow(secret, redactText(input)) === null),
+      fc.property(placed, ({ input, secret }) => {
+        expect(leakedWindow(secret, redactText(input))).toBeNull();
+      }),
       {
         numRuns: 20000,
         examples: [
