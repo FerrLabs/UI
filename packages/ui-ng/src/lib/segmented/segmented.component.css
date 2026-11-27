@@ -3,19 +3,18 @@
 }
 
 .flr-seg {
+  --flr-seg-tint: var(--flr-seg-selected-bg, var(--color-accent, #1e293b));
+  --flr-seg-ink: var(
+    --flr-seg-selected-ink,
+    oklch(from var(--flr-seg-tint) clamp(0, (0.564 - l) * 1000, 1) 0 0)
+  );
   --flr-seg-pole: oklch(from var(--color-ink, #1e293b) clamp(0, (l - 0.6) * 1000, 1) 0 0);
-  --flr-seg-probe: color-mix(in oklab, var(--color-accent, #1e293b) 25%, var(--flr-seg-pole));
-  --flr-seg-tone: oklab(
-    from var(--flr-seg-probe)
-      max(min(4 * l, 0.45), clamp(0, (l - 0.5) * 1000, 1) * max(4 * l - 3, 0.8)) calc(a * 4)
-      calc(b * 4)
+  --flr-seg-probe: color-mix(in oklab, var(--flr-seg-tint) 40%, var(--flr-seg-pole));
+  --flr-seg-rim: oklch(
+    from var(--flr-seg-probe) clamp(0, (l - 0.5) * 1000, 1) 0 0 /
+      calc(clamp(0, (l - 0.34) * 1000, 1) * clamp(0, (0.76 - l) * 1000, 1) * 0.5)
   );
-  --flr-seg-ink: var(--flr-seg-selected-ink, var(--flr-seg-tone));
-  --flr-seg-edge: var(--flr-seg-selected-rule, var(--flr-seg-tone));
-  --flr-seg-tint: var(
-    --flr-seg-selected-bg,
-    color-mix(in srgb, var(--flr-seg-tone) 12%, var(--color-card, #ffffff))
-  );
+  --flr-seg-edge: var(--flr-seg-selected-rule, var(--flr-seg-rim));
   position: relative;
   display: inline-flex;
   overflow: hidden;
@@ -82,8 +81,13 @@
 }
 
 .flr-seg__option:focus-visible {
-  outline: 2px solid var(--flr-seg-ink);
+  outline: 2px solid var(--color-ink, #1e293b);
   outline-offset: -2px;
+}
+
+.flr-seg__option--selected:focus-visible {
+  outline-color: var(--flr-seg-ink);
+  outline-offset: -3px;
 }
 
 .flr-seg__option--selected,
