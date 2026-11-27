@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.65.0] - 2026-11-27
+
+### Features
+
+- feat(ui-ng): add toast actions, a mobile ready drawer and reduced motion rules (#849)
+
 ## [1.64.2] - 2026-11-27
 
 ### Bug Fixes
