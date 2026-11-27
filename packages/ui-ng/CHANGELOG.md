@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.66.0] - 2026-11-27
+
+### Features
+
+- feat(ui-ng): fill the selected segmented option with the accent (#850)
+
 ## [1.65.0] - 2026-11-27
 
 ### Features
