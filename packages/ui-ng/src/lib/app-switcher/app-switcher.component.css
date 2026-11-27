@@ -14,7 +14,8 @@
   width: 100%;
   box-sizing: border-box;
   padding: 9px 10px;
-  border-radius: var(--radius-modal, 12px);
+  border-radius: var(--radius-modal, 24px);
+  corner-shape: var(--corner-shape, round);
   border: 1px solid var(--color-app-rail-rule, rgba(255, 255, 255, 0.1));
   background: var(--color-app-rail-tile, rgba(255, 255, 255, 0.05));
   color: inherit;
@@ -55,7 +56,8 @@
 .flr-as--collapsed .flr-as__trigger .flr-as__mark {
   width: var(--flr-as-compact-size, 48px);
   height: var(--flr-as-compact-size, 48px);
-  border-radius: var(--radius-modal, 12px);
+  border-radius: var(--radius-modal, 24px);
+  corner-shape: var(--corner-shape, round);
 }
 
 .flr-as--collapsed .flr-as__trigger .flr-as__text {
@@ -86,7 +88,8 @@
   width: 34px;
   height: 34px;
   flex: none;
-  border-radius: var(--radius-card, 8px);
+  border-radius: var(--radius-card, 16px);
+  corner-shape: var(--corner-shape, round);
   background: color-mix(in srgb, var(--flr-as-accent, #ffffff) 16%, #101012);
 }
 
@@ -108,7 +111,8 @@
 .flr-as__item .flr-as__mark {
   width: 30px;
   height: 30px;
-  border-radius: var(--radius-card, 8px);
+  border-radius: var(--radius-card, 16px);
+  corner-shape: var(--corner-shape, round);
 }
 
 .flr-as__text {
@@ -193,7 +197,8 @@
   width: max(100%, 244px);
   box-sizing: border-box;
   padding: 8px;
-  border-radius: var(--radius-modal, 12px);
+  border-radius: var(--radius-modal, 24px);
+  corner-shape: var(--corner-shape, round);
   border: 1px solid var(--color-app-rail-rule, rgba(255, 255, 255, 0.12));
   background: var(--color-app-rail-tip, #1a1b20);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
@@ -249,7 +254,8 @@
   height: 28px;
   padding: 0;
   border: none;
-  border-radius: var(--radius-card, 8px);
+  border-radius: var(--radius-card, 16px);
+  corner-shape: var(--corner-shape, round);
   background: transparent;
   color: rgba(255, 255, 255, 0.62);
   cursor: pointer;
@@ -298,7 +304,8 @@
   align-items: center;
   gap: 11px;
   padding: 9px 10px;
-  border-radius: var(--radius-card, 8px);
+  border-radius: var(--radius-card, 16px);
+  corner-shape: var(--corner-shape, round);
   text-decoration: none;
   transition: background 130ms ease;
 }
@@ -330,7 +337,8 @@
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
-  border-radius: var(--radius-card, 8px);
+  border-radius: var(--radius-card, 16px);
+  corner-shape: var(--corner-shape, round);
   color: rgba(255, 255, 255, 0.72);
   font-size: 12.5px;
   text-decoration: none;

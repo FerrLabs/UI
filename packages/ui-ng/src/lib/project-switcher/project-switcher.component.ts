@@ -244,7 +244,8 @@ export interface ProjectSwitcherPlaceholder {
       left: 0;
       right: 0;
       top: 100%;
-      border-radius: 0 0 var(--radius-card, 8px) var(--radius-card, 8px);
+      border-radius: 0 0 var(--radius-card, 16px) var(--radius-card, 16px);
+      corner-shape: var(--corner-shape, round);
     }
     :host(.flr-ps--compact) .flr-ps__brand {
       gap: 0;
@@ -264,7 +265,8 @@ export interface ProjectSwitcherPlaceholder {
     :host(.flr-ps--compact) .flr-ps__monogram {
       width: var(--flr-ps-compact-size, 48px);
       margin-right: 0;
-      border-radius: var(--radius-modal, 12px);
+      border-radius: var(--radius-modal, 24px);
+      corner-shape: var(--corner-shape, round);
       opacity: 1;
     }
     :host(.flr-ps--compact) .flr-ps__brand:hover .flr-ps__monogram {
@@ -275,7 +277,8 @@ export interface ProjectSwitcherPlaceholder {
       right: auto;
       top: 8px;
       width: 280px;
-      border-radius: var(--radius-modal, 12px);
+      border-radius: var(--radius-modal, 24px);
+      corner-shape: var(--corner-shape, round);
     }
     .flr-ps__monogram {
       display: flex;
@@ -287,7 +290,8 @@ export interface ProjectSwitcherPlaceholder {
       overflow: hidden;
       opacity: 0;
       flex: none;
-      border-radius: var(--radius-card, 8px);
+      border-radius: var(--radius-card, 16px);
+      corner-shape: var(--corner-shape, round);
       background: var(--color-app-bg-2, #f1f5f9);
       color: var(--color-ink, #1e293b);
       font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
@@ -322,7 +326,8 @@ export interface ProjectSwitcherPlaceholder {
       right: 12px;
       background: var(--color-card, #fff);
       border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      border-radius: var(--radius-modal, 12px);
+      border-radius: var(--radius-modal, 24px);
+      corner-shape: var(--corner-shape, round);
       box-shadow: 0 10px 30px rgba(15, 23, 42, 0.14);
       padding: 6px;
       z-index: 60;
@@ -358,7 +363,8 @@ export interface ProjectSwitcherPlaceholder {
       padding: 6px 10px;
       font-size: 13px;
       border: 1px solid var(--color-rule, #e2e8f0);
-      border-radius: var(--radius-control, 4px);
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
       background: var(--color-app-bg-2, #f8fafc);
       color: var(--color-ink, #0f172a);
       outline: none;
@@ -389,7 +395,8 @@ export interface ProjectSwitcherPlaceholder {
       gap: 10px;
       background: transparent;
       border: none;
-      border-radius: var(--radius-control, 4px);
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
       cursor: pointer;
       color: var(--color-ink, #0f172a);
       text-align: left;
@@ -439,7 +446,8 @@ export interface ProjectSwitcherPlaceholder {
       gap: 10px;
       background: transparent;
       border: none;
-      border-radius: var(--radius-control, 4px);
+      border-radius: var(--radius-control, 8px);
+      corner-shape: var(--corner-shape, round);
       cursor: pointer;
       color: var(--color-ink-2, #475569);
       text-align: left;

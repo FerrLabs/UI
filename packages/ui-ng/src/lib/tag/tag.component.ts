@@ -62,7 +62,8 @@ const SIZE: Record<TagSize, { padding: string; fontSize: string; gap: string; do
     .flr-tag {
       display: inline-flex;
       align-items: center;
-      border-radius: var(--radius-control, 4px);
+      border-radius: min(var(--radius-control, 8px), 4px);
+      corner-shape: var(--corner-shape, round);
       letter-spacing: 0.06em;
       text-transform: uppercase;
       white-space: nowrap;

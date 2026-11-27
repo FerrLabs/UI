@@ -95,10 +95,11 @@
  * Utilities: `rounded-control`, `rounded-card`, `rounded-modal`.
  */
 @theme static {
-  --radius-control: 4px; /* Buttons, inputs, selects, tabs, small chips */
-  --radius-card: 8px; /* Cards, menus, popovers, rail items */
-  --radius-modal: 12px; /* Modals, switcher panels, large surfaces */
+  --radius-control: 8px; /* Buttons, inputs, selects, tabs, small chips */
+  --radius-card: 16px; /* Cards, menus, popovers, rail items */
+  --radius-modal: 24px; /* Modals, switcher panels, large surfaces */
   --radius-full: 999px; /* Switch, avatar, badges, status dots */
+  --corner-shape: squircle;
   --control-height: 40px;
 }
 

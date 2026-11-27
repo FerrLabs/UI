@@ -245,6 +245,7 @@
   min-height: 44px;
   padding: 14px 24px;
   border-radius: var(--radius-control);
+  corner-shape: var(--corner-shape, round);
   font-family: var(--font-mono);
   font-size: 13px;
   letter-spacing: 0.04em;

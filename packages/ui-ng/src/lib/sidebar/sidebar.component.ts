@@ -210,7 +210,8 @@ export class SidebarSectionComponent {
       gap: 12px;
       padding: 10px 12px;
       margin: 1px 0;
-      border-radius: var(--radius-card, 8px);
+      border-radius: var(--radius-card, 16px);
+      corner-shape: var(--corner-shape, round);
       background: transparent;
       border: none;
       cursor: pointer;

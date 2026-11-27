@@ -110,7 +110,8 @@ export interface UserMenuItem {
       cursor: pointer;
       color: inherit;
       font: inherit;
-      border-radius: var(--radius-card, 8px);
+      border-radius: var(--radius-card, 16px);
+      corner-shape: var(--corner-shape, round);
       transition: background 140ms ease;
     }
     .flr-um__trigger:hover {
