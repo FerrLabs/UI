@@ -74,9 +74,11 @@ export function buildAccessSelection(
   pickedScopes: ReadonlySet<string>,
   orgs: readonly AccessOrg[],
 ): AccessSelection | null {
-  const scopes = [...pickedScopes].sort();
+  const scopes = [...pickedScopes].sort((a, b) => a.localeCompare(b));
   const listed = new Set(orgs.map((o) => o.id));
-  const orgIds = allOrgs ? null : [...pickedOrgs].filter((id) => listed.has(id)).sort();
+  const orgIds = allOrgs
+    ? null
+    : [...pickedOrgs].filter((id) => listed.has(id)).sort((a, b) => a.localeCompare(b));
   if (scopes.length === 0 || (orgIds !== null && orgIds.length === 0)) return null;
   return { orgIds, scopes };
 }

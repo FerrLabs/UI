@@ -181,7 +181,7 @@ export function cycleHeading(state: EditState): EditState {
   const hasContent = range.lines.some((line) => line.trim() !== '');
   const isTouched = (line: string, index: number) =>
     hasContent ? line.trim() !== '' : index === 0;
-  const touched = range.lines.filter(isTouched);
+  const touched = range.lines.filter((line, index) => isTouched(line, index));
   const remainders = touched.map((line) => line.replace(HEADING, ''));
   const reference = touched[0] ?? range.lines[0];
   const current = HEADING.exec(reference)?.[1].length ?? 0;
@@ -189,7 +189,8 @@ export function cycleHeading(state: EditState): EditState {
     remainders.some((text) => HEADING.test(text)) ||
     (hasContent && range.lines.length > 1 && remainders.some((text) => text.trim() === ''));
   const wraps = current === MAX_HEADING_LEVEL && !keepsHeading;
-  const next = wraps ? 0 : current >= MAX_HEADING_LEVEL ? 1 : current + 1;
+  const advanced = current >= MAX_HEADING_LEVEL ? 1 : current + 1;
+  const next = wraps ? 0 : advanced;
   const marker = next === 0 ? '' : `${'#'.repeat(next)} `;
   return replaceLines(
     state,

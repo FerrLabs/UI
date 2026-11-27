@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-export type ComparisonCell = boolean | 'partial' | string;
+export type ComparisonCell = boolean | string;
 
 export interface ComparisonColumn {
   name: string;

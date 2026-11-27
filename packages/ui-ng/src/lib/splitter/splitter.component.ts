@@ -150,7 +150,9 @@ export class SplitterComponent implements SplitterHost {
     const destroyRef = inject(DestroyRef);
     afterNextRender(() => {
       const observer = new ResizeObserver((entries) => {
-        const { width, height } = entries[entries.length - 1].contentRect;
+        const entry = entries.at(-1);
+        if (!entry) return;
+        const { width, height } = entry.contentRect;
         this.box.set({ width, height });
       });
       observer.observe(this.element);
@@ -221,7 +223,7 @@ export class SplitterComponent implements SplitterHost {
 
   moveDrag(event: PointerEvent): void {
     const drag = this.drag.current;
-    if (!drag || event.pointerId !== drag.pointerId) return;
+    if (drag?.pointerId !== event.pointerId) return;
     drag.position = this.axisPosition(event);
     drag.frame ??= requestAnimationFrame(() => this.applyDrag(drag));
   }
