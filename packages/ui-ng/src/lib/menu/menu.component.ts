@@ -57,6 +57,7 @@ export type MenuDirection = 'down' | 'up';
       <div
         class="flr-menu__panel"
         role="menu"
+        [class.flr-menu__panel--up]="direction() === 'up'"
         [style.min-width.px]="minWidth()"
         (click)="open.set(false)"
         (keydown)="onKeydown($event)"
@@ -82,6 +83,25 @@ export type MenuDirection = 'down' | 'up';
       corner-shape: var(--corner-shape, round);
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
       padding: 6px;
+      animation: flr-menu-in 120ms ease-out;
+    }
+    .flr-menu__panel--up {
+      --flr-menu-shift: 4px;
+    }
+    @keyframes flr-menu-in {
+      from {
+        opacity: 0;
+        transform: translateY(var(--flr-menu-shift, -4px));
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .flr-menu__panel {
+        animation: none;
+      }
     }
   `,
 })
@@ -287,6 +307,16 @@ export class MenuComponent {
     }
     .flr-menu-item__shortcut:empty {
       display: none;
+    }
+    @media (pointer: coarse) {
+      .flr-menu-item {
+        min-height: 44px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .flr-menu-item {
+        transition: none;
+      }
     }
   `,
 })

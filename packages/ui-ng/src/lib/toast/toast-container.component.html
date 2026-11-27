@@ -1,0 +1,42 @@
+@if (toasts().length) {
+  <div class="flr-toasts" role="region" aria-label="Notifications">
+    @for (toast of toasts(); track toast.id) {
+      <div
+        class="flr-toast"
+        [class]="'flr-toast--' + toast.variant"
+        (mouseenter)="pause(toast.id)"
+        (mouseleave)="resumeWhenIdle($event, toast.id)"
+        (focusin)="onFocusIn($event, toast.id)"
+        (focusout)="resumeWhenIdle($event, toast.id)"
+      >
+        <span class="flr-toast__icon mono" aria-hidden="true">{{ icon(toast.variant) }}</span>
+        <div class="flr-toast__content">
+          <div class="flr-toast__body">
+            @if (toast.title; as title) {
+              <div class="flr-toast__title">{{ title }}</div>
+            }
+            <div class="flr-toast__message" [class.flr-toast__message--with-title]="!!toast.title">
+              {{ toast.message }}
+            </div>
+          </div>
+          @if (toast.action; as action) {
+            <button type="button" class="flr-toast__action" (click)="runAction($event, toast.id)">
+              {{ action.label }}
+              @if (action.shortcut; as shortcut) {
+                <kbd class="flr-toast__shortcut">{{ shortcut }}</kbd>
+              }
+            </button>
+          }
+        </div>
+        <button
+          type="button"
+          class="flr-toast__close"
+          aria-label="Dismiss"
+          (click)="dismiss($event, toast.id)"
+        >
+          ×
+        </button>
+      </div>
+    }
+  </div>
+}

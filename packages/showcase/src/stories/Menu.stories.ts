@@ -100,3 +100,35 @@ export const KeyboardNavigation: Story = {
     await expect(trigger).toHaveFocus();
   },
 };
+
+async function openMenu(canvasElement: HTMLElement): Promise<HTMLElement> {
+  const overlay = within(canvasElement.ownerDocument.body);
+  await userEvent.click(within(canvasElement).getByRole('button', { name: 'Actions' }));
+  await overlay.findByRole('menuitem', { name: 'Trigger now' });
+  return overlay.getByRole('menu');
+}
+
+export const TouchTargets: Story = {
+  parameters: { emulate: { touch: true } },
+  play: async ({ canvasElement }) => {
+    const coarse = matchMedia('(pointer: coarse)').matches;
+    const menu = await openMenu(canvasElement);
+    for (const item of within(menu).getAllByRole('menuitem')) {
+      const height = item.getBoundingClientRect().height;
+      if (coarse) await expect(height).toBeGreaterThanOrEqual(44);
+      else await expect(height).toBeLessThan(44);
+    }
+  },
+};
+
+export const ReducedMotion: Story = {
+  parameters: { emulate: { reducedMotion: true } },
+  play: async ({ canvasElement }) => {
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const menu = await openMenu(canvasElement);
+    await expect(getComputedStyle(menu).animationName).toBe('none');
+    for (const item of within(menu).getAllByRole('menuitem')) {
+      await expect(getComputedStyle(item).transitionDuration).toBe('0s');
+    }
+  },
+};
