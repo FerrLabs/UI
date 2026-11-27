@@ -160,7 +160,7 @@ flr-multi-select {
   margin-top: 2px;
   box-sizing: border-box;
   border: 1px solid var(--flr-rule, var(--color-rule-strong, rgba(30, 41, 59, 0.28)));
-  border-radius: var(--radius-control, 8px);
+  border-radius: min(var(--radius-control, 8px), 4px);
   corner-shape: var(--corner-shape, round);
   background: transparent;
   transition:
