@@ -44,7 +44,7 @@ interface SiblingLink {
       >
         @if (versions().length) {
           <div class="docs__versions mono" translate="no">
-            <label class="docs__versions-label" for="flr-docs-version">{{ versionLabel() }}</label>
+            <label class="docs__versions-label" for="flr-docs-version">{{ versionLabel }}</label>
             <select
               id="flr-docs-version"
               class="docs__version-select"
@@ -487,7 +487,7 @@ export class DocsLayoutComponent {
   protected readonly pagerLabel = 'Pagination';
   protected readonly prevLabel = computed(() => (this.isFr() ? 'Précédent' : 'Previous'));
   protected readonly nextLabel = computed(() => (this.isFr() ? 'Suivant' : 'Next'));
-  protected readonly versionLabel = computed(() => (this.isFr() ? 'Version' : 'Version'));
+  protected readonly versionLabel = 'Version';
 
   protected onVersionChange(event: Event): void {
     if (!isPlatformBrowser(this.platformId)) {

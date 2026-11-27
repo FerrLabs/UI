@@ -21,7 +21,9 @@ export type KeyIntent = number | 'min' | 'max';
 
 const EPSILON = 0.001;
 
-export function coerceSize(value: number | string | null | undefined): SplitterSize | undefined {
+export type SplitterSizeInput = number | string | null | undefined;
+
+export function coerceSize(value: SplitterSizeInput): SplitterSize | undefined {
   if (typeof value === 'number') return Number.isFinite(value) && value >= 0 ? value : undefined;
   if (typeof value !== 'string') return undefined;
   const trimmed = value.trim();

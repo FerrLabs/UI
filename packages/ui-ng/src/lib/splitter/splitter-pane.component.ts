@@ -13,6 +13,7 @@ import {
   resolveHandleLabel,
   resolvePaneLabel,
   type SplitterSize,
+  type SplitterSizeInput,
 } from './splitter-model';
 
 let nextPaneId = 0;
@@ -32,18 +33,15 @@ let nextPaneId = 0;
 export class SplitterPaneComponent {
   protected readonly host = inject(SPLITTER_HOST);
 
-  readonly defaultSize = input<SplitterSize | undefined, number | string | null | undefined>(
-    undefined,
-    { transform: coerceSize },
-  );
-  readonly minSize = input<SplitterSize | undefined, number | string | null | undefined>(
-    undefined,
-    { transform: coerceSize },
-  );
-  readonly maxSize = input<SplitterSize | undefined, number | string | null | undefined>(
-    undefined,
-    { transform: coerceSize },
-  );
+  readonly defaultSize = input<SplitterSize | undefined, SplitterSizeInput>(undefined, {
+    transform: coerceSize,
+  });
+  readonly minSize = input<SplitterSize | undefined, SplitterSizeInput>(undefined, {
+    transform: coerceSize,
+  });
+  readonly maxSize = input<SplitterSize | undefined, SplitterSizeInput>(undefined, {
+    transform: coerceSize,
+  });
   readonly collapsible = input(false, { transform: booleanAttribute });
   readonly collapsed = model(false);
   readonly label = input<string | undefined>(undefined);

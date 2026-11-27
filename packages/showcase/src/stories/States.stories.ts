@@ -42,7 +42,8 @@ export const Loading: Story = {
   }),
 };
 
-export const Error: Story = {
+export const ErrorState: Story = {
+  name: 'Error',
   render: () => ({
     template: `
       <div>
