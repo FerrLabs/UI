@@ -1,7 +1,7 @@
 import { ButtonComponent, DrawerComponent, ModalComponent } from '@ferrlabs/ui-ng';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
-import { expect, waitFor, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Overlays/Modal & Drawer',
@@ -117,4 +117,107 @@ export const DrawerLeft: Story = {
         </flr-drawer>
       </div>`,
   }),
+};
+
+const closableDrawer = `
+  <div style="padding:24px">
+    <flr-button (pressed)="open = true">Open drawer</flr-button>
+    <flr-drawer
+      [open]="open"
+      size="lg"
+      title="Metadata"
+      closeLabel="Close"
+      (closed)="open = false"
+    >
+      <dl style="margin:0; display:grid; gap:4px; font-size:13px">
+        <dt style="color:var(--color-fg-3)">ferrfleet.triage.fingerprint</dt>
+        <dd style="margin:0; overflow-wrap:anywhere">9f2c41d07ab35e6618c0d4f2b7a9e3105c8d6f4471b2a0e9</dd>
+      </dl>
+    </flr-drawer>
+  </div>`;
+
+async function openClosableDrawer(canvasElement: HTMLElement) {
+  const page = within(canvasElement.ownerDocument.body);
+  const opener = within(canvasElement).getByRole('button', { name: 'Open drawer' });
+  opener.focus();
+  await userEvent.keyboard('{Enter}');
+  const dialog = await page.findByRole('dialog', { name: 'Metadata' });
+  const close = within(dialog).getByRole('button', { name: 'Close' });
+  await waitFor(() => expect(close).toHaveFocus());
+  return { page, opener, dialog, close };
+}
+
+export const DrawerWithClose: Story = {
+  render: () => ({ props: { open: false }, template: closableDrawer }),
+  play: async ({ canvasElement }) => {
+    const { page, opener, close } = await openClosableDrawer(canvasElement);
+    await expect(close.getBoundingClientRect().width).toBeGreaterThanOrEqual(44);
+    await expect(close.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull());
+    await expect(opener).toHaveFocus();
+
+    const reopened = await openClosableDrawer(canvasElement);
+    reopened.close.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true, cancelable: true }),
+    );
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull());
+    await expect(opener).toHaveFocus();
+  },
+};
+
+export const DrawerNarrow: Story = {
+  globals: { viewport: { value: 'phoneNarrow', isRotated: false } },
+  render: () => ({ props: { open: false }, template: closableDrawer }),
+  play: async ({ canvasElement }) => {
+    const { dialog, close } = await openClosableDrawer(canvasElement);
+    await waitFor(() => expect(dialog.getAnimations()).toHaveLength(0));
+    const panel = dialog.getBoundingClientRect();
+    await expect(panel.left).toBe(0);
+    await expect(panel.width).toBe(window.innerWidth);
+    await expect(panel.height).toBe(window.innerHeight);
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+    await expect(close.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth);
+    await expect(close).toBeVisible();
+  },
+};
+
+export const DrawerExitAnimation: Story = {
+  render: () => ({ props: { open: false }, template: closableDrawer }),
+  play: async ({ canvasElement }) => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const { page, dialog, close } = await openClosableDrawer(canvasElement);
+    await waitFor(() => expect(dialog.getAnimations()).toHaveLength(0));
+    await userEvent.click(close);
+    await waitFor(() =>
+      expect(getComputedStyle(dialog).animationName).toBe('flr-drawer-out-right'),
+    );
+    await expect(dialog.isConnected).toBe(true);
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull());
+  },
+};
+
+export const DrawerReducedMotion: Story = {
+  parameters: { emulate: { reducedMotion: true } },
+  render: () => ({ props: { open: false }, template: closableDrawer }),
+  play: async ({ canvasElement }) => {
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const { page, dialog, close } = await openClosableDrawer(canvasElement);
+    await expect(getComputedStyle(dialog).animationName).toBe('flr-drawer-fade-in');
+    await expect(getComputedStyle(close).transitionDuration).toBe('0s');
+    await userEvent.click(close);
+    await waitFor(() => expect(getComputedStyle(dialog).animationName).toBe('flr-drawer-fade-out'));
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull());
+  },
+};
+
+export const ModalReducedMotion: Story = {
+  ...Modal,
+  parameters: { emulate: { reducedMotion: true } },
+  play: async ({ canvasElement }) => {
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole('dialog');
+    await expect(getComputedStyle(dialog).animationName).toBe('flr-modal-fade');
+  },
 };

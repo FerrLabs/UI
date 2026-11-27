@@ -1,6 +1,7 @@
 import type { TestRunnerConfig } from '@storybook/test-runner';
 import { getStoryContext } from '@storybook/test-runner';
 import { checkA11y, configureAxe, injectAxe } from 'axe-playwright';
+import type { CDPSession, Page } from 'playwright';
 
 const DEFAULT_VIEWPORT = { width: 1280, height: 720 };
 
@@ -8,8 +9,33 @@ interface ViewportOption {
   readonly styles: { readonly width: string; readonly height: string };
 }
 
+interface EmulateOptions {
+  readonly reducedMotion?: boolean;
+  readonly touch?: boolean;
+}
+
 interface StoryGlobals {
   readonly storyGlobals?: { readonly viewport?: { readonly value?: string } };
+}
+
+const cdpSessions = new WeakMap<Page, CDPSession>();
+
+async function emulate(page: Page, options: EmulateOptions): Promise<void> {
+  const reducedMotion = options.reducedMotion === true;
+  const touch = options.touch === true;
+  await page.emulateMedia({ reducedMotion: reducedMotion ? 'reduce' : 'no-preference' });
+  const cdp = cdpSessions.get(page) ?? (await page.context().newCDPSession(page));
+  cdpSessions.set(page, cdp);
+  await cdp.send('Emulation.setTouchEmulationEnabled', { enabled: touch });
+  const applied = await page.evaluate(() => ({
+    reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+    touch: matchMedia('(pointer: coarse)').matches,
+  }));
+  if (applied.reducedMotion !== reducedMotion || applied.touch !== touch) {
+    throw new Error(
+      `Media emulation not applied: wanted ${JSON.stringify({ reducedMotion, touch })}, got ${JSON.stringify(applied)}`,
+    );
+  }
 }
 
 const config: TestRunnerConfig = {
@@ -27,6 +53,7 @@ const config: TestRunnerConfig = {
           }
         : DEFAULT_VIEWPORT,
     );
+    await emulate(page, storyContext.parameters?.emulate ?? {});
     await injectAxe(page);
   },
   async postVisit(page, context) {

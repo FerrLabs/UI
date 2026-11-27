@@ -64,6 +64,11 @@ const preview: Preview = {
           styles: { width: '360px', height: '740px' },
           type: 'mobile',
         },
+        phoneNarrow: {
+          name: 'Narrow phone (320)',
+          styles: { width: '320px', height: '568px' },
+          type: 'mobile',
+        },
       },
     },
     options: {

@@ -89,6 +89,19 @@ let modalCounter = 0;
         transform: scale(1);
       }
     }
+    @keyframes flr-modal-fade {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .flr-modal__panel {
+        animation: flr-modal-fade 120ms linear;
+      }
+    }
     .flr-modal__head {
       flex: none;
       padding: 24px 24px 12px;

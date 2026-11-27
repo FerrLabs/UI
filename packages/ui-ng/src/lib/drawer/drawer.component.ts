@@ -31,99 +31,9 @@ let drawerCounter = 0;
   selector: 'flr-drawer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['../overlay/cdk-overlay.css'],
+  styleUrls: ['../overlay/cdk-overlay.css', './drawer.component.css'],
   imports: [A11yModule],
-  template: `
-    <ng-template #panel>
-      <div
-        class="flr-drawer__panel"
-        [class.flr-drawer__panel--left]="side() === 'left'"
-        [class.flr-drawer__panel--right]="side() === 'right'"
-        cdkTrapFocus
-        cdkTrapFocusAutoCapture
-        role="dialog"
-        aria-modal="true"
-        [attr.aria-labelledby]="title() ? titleId : null"
-        [style.width.px]="width()"
-      >
-        @if (title(); as t) {
-          <div class="flr-drawer__head">
-            <h2 class="flr-drawer__title" [id]="titleId">{{ t }}</h2>
-          </div>
-        }
-        <div class="flr-drawer__body"><ng-content /></div>
-        <div class="flr-drawer__footer"><ng-content select="[drawer-footer]" /></div>
-      </div>
-    </ng-template>
-  `,
-  styles: `
-    .flr-drawer-backdrop {
-      background: rgba(30, 41, 59, 0.45);
-    }
-    .flr-drawer__panel {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background: var(--color-card, #fff);
-      box-shadow: 0 20px 48px rgba(15, 23, 42, 0.18);
-    }
-    .flr-drawer__panel--right {
-      border-left: 1px solid var(--color-card-rule, rgba(30, 41, 59, 0.1));
-      animation: flr-drawer-in-right 200ms ease-out;
-    }
-    .flr-drawer__panel--left {
-      border-right: 1px solid var(--color-card-rule, rgba(30, 41, 59, 0.1));
-      animation: flr-drawer-in-left 200ms ease-out;
-    }
-    @keyframes flr-drawer-in-right {
-      from {
-        transform: translateX(100%);
-      }
-      to {
-        transform: translateX(0);
-      }
-    }
-    @keyframes flr-drawer-in-left {
-      from {
-        transform: translateX(-100%);
-      }
-      to {
-        transform: translateX(0);
-      }
-    }
-    .flr-drawer__head {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-    }
-    .flr-drawer__title {
-      font-family: var(--font-display, 'Fraunces', Georgia, ui-serif, serif);
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 1.3;
-      color: var(--color-ink, #1e293b);
-      margin: 0;
-    }
-    .flr-drawer__body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px 20px;
-      font-size: 14px;
-      line-height: 1.5;
-      color: var(--color-ink-2, #475569);
-    }
-    .flr-drawer__footer {
-      padding: 12px 20px;
-      background: var(--color-paper-2, #f1f5f9);
-      border-top: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-    .flr-drawer__footer:empty {
-      display: none;
-    }
-  `,
+  templateUrl: './drawer.component.html',
 })
 export class DrawerComponent implements OnDestroy {
   readonly open = input(false);
@@ -131,6 +41,7 @@ export class DrawerComponent implements OnDestroy {
   readonly title = input<string | null>(null);
   readonly size = input<DrawerSize>('md');
   readonly dismissOnBackdrop = input(true);
+  readonly closeLabel = input<string | null>(null);
 
   readonly closed = output<void>();
 
@@ -141,11 +52,12 @@ export class DrawerComponent implements OnDestroy {
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly panelTpl = viewChild<TemplateRef<unknown>>('panel');
   private overlayRef: OverlayRef | null = null;
+  private leaving = false;
 
   constructor() {
     effect(() => {
       if (this.open()) this.attach();
-      else this.detach();
+      else this.leave();
     });
   }
 
@@ -154,6 +66,7 @@ export class DrawerComponent implements OnDestroy {
   }
 
   private attach(): void {
+    if (this.leaving) this.setLeaving(false);
     const tpl = this.panelTpl();
     if (this.overlayRef || !tpl) return;
 
@@ -180,7 +93,27 @@ export class DrawerComponent implements OnDestroy {
     this.overlayRef = overlayRef;
   }
 
+  private leave(): void {
+    const panel = this.overlayRef?.overlayElement.querySelector('.flr-drawer__panel');
+    if (!panel || this.leaving) return;
+    this.setLeaving(true);
+    const exits = panel.getAnimations().map((animation) => animation.finished);
+    void Promise.allSettled(exits).then(() => {
+      if (this.leaving) this.detach();
+    });
+  }
+
+  private setLeaving(leaving: boolean): void {
+    this.leaving = leaving;
+    const overlayRef = this.overlayRef;
+    overlayRef?.overlayElement
+      .querySelector('.flr-drawer__panel')
+      ?.classList.toggle('flr-drawer__panel--leaving', leaving);
+    overlayRef?.backdropElement?.classList.toggle('flr-drawer-backdrop--leaving', leaving);
+  }
+
   private detach(): void {
+    this.leaving = false;
     this.overlayRef?.dispose();
     this.overlayRef = null;
   }
