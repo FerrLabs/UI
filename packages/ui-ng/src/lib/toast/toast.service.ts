@@ -35,7 +35,8 @@ function announcementOf(toast: ToastItem): string {
   if (!toast.action) return toast.message;
   const { label, shortcut } = toast.action;
   const sentence = /[.!?]$/.test(toast.message) ? toast.message : `${toast.message}.`;
-  return `${sentence} ${shortcut ? `${label} (${shortcut})` : label}`;
+  const actionText = shortcut ? `${label} (${shortcut})` : label;
+  return `${sentence} ${actionText}`;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -71,7 +72,7 @@ export class ToastService {
 
   pause(id: string): void {
     const timer = this.timers.get(id);
-    if (!timer || timer.handle === null) return;
+    if (timer?.handle == null) return;
     clearTimeout(timer.handle);
     timer.handle = null;
     timer.remaining = Math.max(0, timer.remaining - (Date.now() - timer.startedAt));
@@ -79,7 +80,7 @@ export class ToastService {
 
   resume(id: string): void {
     const timer = this.timers.get(id);
-    if (!timer || timer.handle !== null) return;
+    if (timer?.handle !== null) return;
     timer.startedAt = Date.now();
     timer.handle = setTimeout(() => this.dismiss(id), timer.remaining);
   }
@@ -90,7 +91,7 @@ export class ToastService {
   }
 
   clear(): void {
-    for (const id of [...this.timers.keys()]) this.stopTimer(id);
+    for (const id of this.timers.keys()) this.stopTimer(id);
     this.items.set([]);
   }
 

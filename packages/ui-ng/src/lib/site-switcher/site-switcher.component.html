@@ -39,6 +39,7 @@
         class="flr-ss__search"
         [value]="query()"
         [placeholder]="searchPlaceholder()"
+        [attr.aria-label]="searchPlaceholder()"
         (input)="query.set($any($event.target).value)"
         (keydown)="onInputKey($event)"
       />

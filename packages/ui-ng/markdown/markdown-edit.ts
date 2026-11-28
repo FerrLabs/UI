@@ -220,8 +220,8 @@ export function insertBlock(
 
 export function insertLink({ value, start, end }: EditState, url = 'https://'): EditState {
   const label = (value.slice(start, end) || 'text')
-    .replace(/\s*\n\s*/g, ' ')
-    .replace(/[\\[\]]/g, '\\$&');
+    .replace(/\s+/g, (space) => (space.includes('\n') ? ' ' : space))
+    .replace(/[\\[\]]/g, String.raw`\$&`);
   const link = `[${label}](${url})`;
   const urlStart = start + label.length + 3;
   return {
