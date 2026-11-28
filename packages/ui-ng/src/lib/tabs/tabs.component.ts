@@ -145,7 +145,7 @@ export class TabsComponent implements TabsStrip {
 
   handleKeydown(event: KeyboardEvent, tab: TabsStripItem): void {
     const reachable = this.tabs().filter((t) => !t.disabled());
-    const from = reachable.findIndex((t) => t === tab);
+    const from = (reachable as readonly TabsStripItem[]).indexOf(tab);
     if (from === -1) return;
 
     const to = this.nextIndex(event.key, from, reachable.length);

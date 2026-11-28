@@ -52,7 +52,8 @@ const ATTRIBUTES: ReadonlySet<string> = new Set([
 ]);
 
 const TAG = /<\/?([a-zA-Z][a-zA-Z0-9-]*)((?:[\t\n\f\r ][^<>]*)?)\/?>/g;
-const ATTRIBUTE = /([a-zA-Z_:][-a-zA-Z0-9_:.]*)[\t\n\f\r ]*=[\t\n\f\r ]*"([^"<>]*)"/g;
+const ATTRIBUTE =
+  /(?<![-a-zA-Z0-9_:.])([a-zA-Z_:][-a-zA-Z0-9_:.]*)[\t\n\f\r ]*=[\t\n\f\r ]*"([^"<>]*)"/g;
 const BLANK = /^[\t\n\f\r ]*$/;
 const NON_HTML_WHITESPACE = /[^\S\t\n\f\r ]/;
 

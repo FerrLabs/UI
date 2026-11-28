@@ -4,20 +4,29 @@ const MAX_WORD_LENGTH = 512;
 const MAX_PASSES = 4;
 export const MASK = '*';
 const MARKERS = /[?#=@]/;
-const WORDS = `token|secret|cookie|passw(?:or)?d|pwd|key|session(?:_?id)?|auth(?!or(?!i[sz]ation))\\w{0,32}|sig(?:nature)?`;
+const WORDS = String.raw`token|secret|cookie|passw(?:or)?d|pwd|key|session(?:_?id)?|auth(?!or(?!i[sz]ation))\w{0,32}|sig(?:nature)?`;
 const BENIGN_CODE = `(?:(?:error|status|response|http|exit|return|result|reason|country|zip|postal|post|currency|lang(?:uage)?|locale|region|area|promo|scan|colou?r|event|product|item|sku|font|short|source|geo|trans|hash|dial|tax|class|airport|iata|icao|type|kind|category|state|bar|micro|char|version|room|lobby|game|level|build|seat|table|zone|course)[_.-]?codes?|(?:ready|visibility|loading|playback)[_.-]?states?)`;
 const BENIGN_SHORT_CODE = `(?:(?:err|resp|uni|en|de|op|qr|iso|src)[_.-]?codes?)`;
 const BENIGN_STATE = `(?:(?:ready|trace|visibility|ui|app|view|page|form|nav(?:igation)?|router?|connection|network|player|game|load(?:ing)?|render|component|store|signaling|ice(?:[_.-]?(?:gathering|connection))?|gathering|lifecycle|button|toggle|menu|modal|sort|filter|scroll|focus|hover|play(?:back)?|media|audio|video|animation|transition|editor|selection|document|window|sync|job|task|machine|initial|current|prev(?:ious)?|next|error|status|search|query|cache|billing|shipping|address|delivery|workflow|build|deploy(?:ment)?|pipeline|cart|checkout|upload|download|online|offline|power|battery|health|stream|queue|match|lobby|round|level|room|combat|board|turn|battle|world|scene|hand|deck|card)[_.-]?states?)`;
-const BENIGN = `(?:(?=auth(?!or(?!i[sz]ation)))|(?!keys?[_.-]?codes?(?![\\w.$-])|(?:[\\w.$[\\]-]{0,63}[_.$[\\]-])?(?:(?:dic|don|doohic|flu|flun|hic|hoc|ho|hoo|hot|joc|lac|malar|mic|mon|po|ric|smo|tur|turn|whis)keys?|desig(?:nature)?|${BENIGN_SHORT_CODE}|${BENIGN_STATE})(?![\\w.$-])|[\\w.$[\\]-]{0,64}${BENIGN_CODE}(?![\\w.$-])))`;
+const BENIGN = String.raw`(?:(?=auth(?!or(?!i[sz]ation)))|(?!keys?[_.-]?codes?(?![\w.$-])|(?:[\w.$[\]-]{0,63}[_.$[\]-])?(?:(?:dic|don|doohic|flu|flun|hic|hoc|ho|hoo|hot|joc|lac|malar|mic|mon|po|ric|smo|tur|turn|whis)keys?|desig(?:nature)?|${BENIGN_SHORT_CODE}|${BENIGN_STATE})(?![\w.$-])|[\w.$[\]-]{0,64}${BENIGN_CODE}(?![\w.$-])))`;
 const BENIGN_LONG = BENIGN.replaceAll('{0,63}', '{0,2047}').replaceAll('{0,64}', '{0,2047}');
-const CODE_WORDS = `[\\w.$[\\]-]{0,64}(?:code|state)[\\])}>]{0,4}`;
+const CODE_WORDS = String.raw`[\w.$[\]-]{0,64}(?:code|state)[\])}>]{0,4}`;
 const COLON_WORDS = `(?:${WORDS})`;
-const KEY_WORDS = `${BENIGN}(?:[\\w.$[\\]-]{0,64}(?:${WORDS})[\\])}>]{0,4}|${CODE_WORDS})`;
-const PARAM_KEYS = `\\b(?=\\w)(?:(?=[\\w.-]{65})${BENIGN_LONG}(?:[\\w.-]{32}){2,64}?)?${BENIGN}(?:[\\w.[\\]-]{0,64}(?:${WORDS})[\\])}>]{0,4}|${CODE_WORDS})`;
-const COLON_KEYS = `\\b(?=\\w)(?:(?=\\w{65})${BENIGN_LONG}(?:\\w{32}){2,64}?)?${BENIGN}(?:[\\w[\\]-]{0,64}${COLON_WORDS}|[\\w[\\]-]{1,64}(?:code|state))[\\])}>]{0,4}`;
+const KEY_WORDS = String.raw`${BENIGN}(?:[\w.$[\]-]{0,64}(?:${WORDS})[\])}>]{0,4}|${CODE_WORDS})`;
+const PARAM_KEYS = String.raw`\b(?=\w)(?:(?=[\w.-]{65})${BENIGN_LONG}(?:[\w.-]{32}){2,64}?)?${BENIGN}(?:[\w.[\]-]{0,64}(?:${WORDS})[\])}>]{0,4}|${CODE_WORDS})`;
+const COLON_KEYS = String.raw`\b(?=\w)(?:(?=\w{65})${BENIGN_LONG}(?:\w{32}){2,64}?)?${BENIGN}(?:[\w[\]-]{0,64}${COLON_WORDS}|[\w[\]-]{1,64}(?:code|state))[\])}>]{0,4}`;
 const JWT = /\beyJ[\w-]*\.[\w-]+\.[\w-]*/g;
-const BASIC =
-  /\b([Bb][Aa][Ss][Ii][Cc])\s+(?:(?:(?=[A-Za-z0-9+/]*[0-9A-Z+/])[A-Za-z0-9+/]{8,}|[A-Za-z0-9+/]{2,})={1,2}(?![\w+/=])|(?=[A-Za-z0-9+/]*[0-9+/])[A-Za-z0-9+/]{16,}(?![\w+/=])|(?=[A-Za-z0-9+/]*[0-9A-Z+/])[A-Za-z0-9+/]{8,}(?![\w+/:=]))(?:[,;](?![\w.$[\]-]+(?:[ \t]*(?:=(?![=\s]|$)|:(?:[ \t]|$))|[ \t]+=[ \t])|(?:[Bb][Aa][Ss][Ii][Cc]|[Bb][Ee][Aa][Rr][Ee][Rr]|[Tt][Oo][Kk][Ee][Nn]|[Dd][Ii][Gg][Ee][Ss][Tt])[ \t])[^\s,;"']+)*/g;
+const B64 = '[A-Za-z0-9+/]';
+const B64_PADDED = String.raw`(?:(?=${B64}*[0-9A-Z+/])${B64}{8,}|${B64}{2,})={1,2}(?![\w+/=])`;
+const B64_LONG = String.raw`(?=${B64}*[0-9+/])${B64}{16,}(?![\w+/=])`;
+const B64_SHORT = String.raw`(?=${B64}*[0-9A-Z+/])${B64}{8,}(?![\w+/:=])`;
+const NEXT_PAIR = String.raw`[\w.$[\]-]+(?:[ \t]*(?:=(?![=\s]|$)|:(?:[ \t]|$))|[ \t]+=[ \t])`;
+const NEXT_SCHEME = String.raw`(?:[Bb][Aa][Ss][Ii][Cc]|[Bb][Ee][Aa][Rr][Ee][Rr]|[Tt][Oo][Kk][Ee][Nn]|[Dd][Ii][Gg][Ee][Ss][Tt])[ \t]`;
+const BASIC_TAIL = String.raw`(?:[,;](?!${NEXT_PAIR}|${NEXT_SCHEME})[^\s,;"']+)*`;
+const BASIC = new RegExp(
+  String.raw`\b([Bb][Aa][Ss][Ii][Cc])\s+(?:${B64_PADDED}|${B64_LONG}|${B64_SHORT})${BASIC_TAIL}`,
+  'g',
+);
 const EMAIL = /[\w.!#$%&*+?^`{|}~-][\w.!#$%&'*+?^`{|}~-]{0,63}=*@[\w-]{1,63}(?:\.[\w-]{1,63})+/g;
 const WORD_EMAIL = /(?!['/=])[\w.!#$%&'*+/=?^`{|}~-]{1,64}@[\w-]{1,63}(?:\.[\w-]{1,63})+/g;
 const QUOTED_EMAIL =
@@ -26,69 +35,81 @@ const USERINFO = new RegExp(
   String.raw`(//)(?:(?!\[[\da-f:.]+\](?::\d+)?[?#]|[\w.-]+:\d+[?#])[^\s/?#@]*(?::[^\s/@]*)?|[^\s/?#@:[]+:(?!\d+(?:[/?#]|$))[^\s@]{0,${MAX_WORD_LENGTH}}|[^\s/?#@:[.]*:\d+/[^\s/?#@]+)@(?![+!*'"(),;<>=])`,
   'g',
 );
-const QUOTE = `(?:\\\\{0,4}["'])?`;
-const KEY_HEAD = `(?:\\\\{0,4}["'][ \\t]*)?[([{<]?${KEY_WORDS}[ \\t]*(?:\\\\{0,4}["'][ \\t]*)?`;
+const QUOTE = String.raw`(?:\\{0,4}["'])?`;
+const KEY_HEAD = String.raw`(?:\\{0,4}["'][ \t]*)?[([{<]?${KEY_WORDS}[ \t]*(?:\\{0,4}["'][ \t]*)?`;
 const KEY_AHEAD = `${KEY_HEAD}[:=]`;
-const GLUED = `[,;](?![ \\t\\r\\n]|$|[\\w.$[\\]-]+(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$))|(?:basic|bearer|token|digest)[ \\t]|${KEY_AHEAD})`;
-const REAL_KEY_AHEAD = `${KEY_HEAD}(?::|=(?!=*(?:[\\s,;"']|$)))`;
-const QVAL = `(?:\\\\{0,4}"[^"]*"?|\\\\{0,4}'[^']*'?)(?:\\\\{0,4}"[^"]*"?|\\\\{0,4}'[^']*'?|(?![?#][ \\t]*${KEY_AHEAD})[^\\s"',;&|])*`;
-const VALUE_JOIN = `|[ \\t]+(?![ \\t-])(?!(?:basic|bearer|token|digest)[ \\t])(?![\\w.$[\\]-]{1,64}(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$)))(?!${KEY_AHEAD})(?=[^\\r\\n,;&|])`;
-const VALUE = `(?:${QVAL}|(?:(?:bearer|basic|token|digest|apikey|bot)[ \\t]+(?![ \\t])(?!${REAL_KEY_AHEAD})|[a-z][\\w-]{0,20}[ \\t]+(?![ \\t])(?![\\w.$[\\]-]{1,64}(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$)))(?!${REAL_KEY_AHEAD})(?=[^\\s"'<>&;,]{8}))?(?:(?![,;&|?#][ \\t]*${KEY_AHEAD})[^\\t\\n\\r ,;"']|${GLUED})+(?:\\\\{0,4}"[^"]*"?|\\\\{0,4}'[^']*'?|(?![,;&|?#][ \\t]*${KEY_AHEAD})[^\\t\\n\\r ,;"']|${GLUED}${VALUE_JOIN})*)`;
+const GLUED = String.raw`[,;](?![ \t\r\n]|$|[\w.$[\]-]+(?:=(?![=\s]|$)|[ \t]*:(?:[ \t]|$))|(?:basic|bearer|token|digest)[ \t]|${KEY_AHEAD})`;
+const REAL_KEY_AHEAD = String.raw`${KEY_HEAD}(?::|=(?!=*(?:[\s,;"']|$)))`;
+const QVAL = String.raw`(?:\\{0,4}"[^"]*"?|\\{0,4}'[^']*'?)(?:\\{0,4}"[^"]*"?|\\{0,4}'[^']*'?|(?![?#][ \t]*${KEY_AHEAD})[^\s"',;&|])*`;
+const VALUE_JOIN = String.raw`|[ \t]+(?![ \t-])(?!(?:basic|bearer|token|digest)[ \t])(?![\w.$[\]-]{1,64}(?:=(?![=\s]|$)|[ \t]*:(?:[ \t]|$)))(?!${KEY_AHEAD})(?=[^\r\n,;&|])`;
+const VALUE = String.raw`(?:${QVAL}|(?:(?:bearer|basic|token|digest|apikey|bot)[ \t]+(?![ \t])(?!${REAL_KEY_AHEAD})|[a-z][\w-]{0,20}[ \t]+(?![ \t])(?![\w.$[\]-]{1,64}(?:=(?![=\s]|$)|[ \t]*:(?:[ \t]|$)))(?!${REAL_KEY_AHEAD})(?=[^\s"'<>&;,]{8}))?(?:(?![,;&|?#][ \t]*${KEY_AHEAD})[^\t\n\r ,;"']|${GLUED})+(?:\\{0,4}"[^"]*"?|\\{0,4}'[^']*'?|(?![,;&|?#][ \t]*${KEY_AHEAD})[^\t\n\r ,;"']|${GLUED}${VALUE_JOIN})*)`;
 const VALUE_WORD = VALUE.replace(VALUE_JOIN, '');
-const QUOTED = `\\\\{0,4}"[^"]*"?|\\\\{0,4}'[^']*'?`;
-const CLOSE = `[}\\]>)](?=[\\s"']|$|[,;](?:[\\s"'{\\[]|$|[\\w.$[\\]-]+[ \\t]*[:=]))`;
-const CLOSED = `\\\\{0,4}"[^"]*"|\\\\{0,4}'[^']*'`;
-const SCHEME_LEAD = `(?:(?:bearer|basic|token|digest|apikey|api-key|bot|hmac|negotiate|ntlm)[ \\t]+(?![ \\t])(?!${REAL_KEY_AHEAD})(?=[^\\s,;"']))?`;
-const SEGMENT = `${SCHEME_LEAD}(?:(?:${CLOSED})(?=[\\s,;}\\]>)]|$)(?![ \\t]*[:=])|(?:${QUOTED}|(?!${CLOSE})[^\\t\\n\\r ,;"']|${GLUED})(?:[ \\t]+(?![ \\t])(?![\\w.$[\\]-]{1,64}(?:=(?![=\\s]|$)|[ \\t]*:(?:[ \\t]|$)))(?!${KEY_AHEAD})(?=[^\\r\\n,;])|(?!${CLOSE})(?![|&#?]${KEY_AHEAD})[^\\t\\n\\r ,;"']|${GLUED}|${QUOTED})*)`;
-const BREAKS = `(?:\\r?\\n[ \\t]*(?![ \\t])){0,4}`;
-const TOKEN_CHARS = `(?:(?![&#|?{(\\[<]${KEY_AHEAD})[^\\s"',;:=\\\\])`;
-const BEARER_KEYED = `(?=${BENIGN}(?:[^\\s"',;:=\\\\]{0,64}(?:${WORDS})|${CODE_WORDS})\\\\{0,4}["']?[ \\t]*[:=])(?=(${TOKEN_CHARS}+))\\2\\\\{0,4}["']?[ \\t]*[:=]+[ \\t]*(?![ \\t])${BREAKS}(?:${SEGMENT})?`;
+const QUOTED = String.raw`\\{0,4}"[^"]*"?|\\{0,4}'[^']*'?`;
+const CLOSE = String.raw`[}\]>)](?=[\s"']|$|[,;](?:[\s"'{\[]|$|[\w.$[\]-]+[ \t]*[:=]))`;
+const CLOSED = String.raw`\\{0,4}"[^"]*"|\\{0,4}'[^']*'`;
+const SCHEME_LEAD = String.raw`(?:(?:bearer|basic|token|digest|apikey|api-key|bot|hmac|negotiate|ntlm)[ \t]+(?![ \t])(?!${REAL_KEY_AHEAD})(?=[^\s,;"']))?`;
+const SEGMENT = String.raw`${SCHEME_LEAD}(?:(?:${CLOSED})(?=[\s,;}\]>)]|$)(?![ \t]*[:=])|(?:${QUOTED}|(?!${CLOSE})[^\t\n\r ,;"']|${GLUED})(?:[ \t]+(?![ \t])(?![\w.$[\]-]{1,64}(?:=(?![=\s]|$)|[ \t]*:(?:[ \t]|$)))(?!${KEY_AHEAD})(?=[^\r\n,;])|(?!${CLOSE})(?![|&#?]${KEY_AHEAD})[^\t\n\r ,;"']|${GLUED}|${QUOTED})*)`;
+const BREAKS = String.raw`(?:\r?\n[ \t]*(?![ \t])){0,4}`;
+const TOKEN_CHARS = String.raw`(?:(?![&#|?{(\[<]${KEY_AHEAD})[^\s"',;:=\\])`;
+const BEARER_KEYED = String.raw`(?=${BENIGN}(?:[^\s"',;:=\\]{0,64}(?:${WORDS})|${CODE_WORDS})\\{0,4}["']?[ \t]*[:=])(?=(${TOKEN_CHARS}+))\2\\{0,4}["']?[ \t]*[:=]+[ \t]*(?![ \t])${BREAKS}(?:${SEGMENT})?`;
 const BEARER = new RegExp(
-  `\\b(bearer)(?:\\s+bearer){0,3}\\s+(?:\\\\{0,4}["'][ \\t]*[\\w.$-]{0,64}\\\\{0,4}["']?[ \\t]*[:=][ \\t]*(?![ \\t])${BREAKS}(?:${SEGMENT})?|${QUOTED}|${BEARER_KEYED}|(?=(?:[^\\s"',;]|${GLUED}){8})(?=((?:${TOKEN_CHARS}|${GLUED}|\\\\(?!\\\\{0,3}["'])|[:=]+(?!${KEY_AHEAD}))+))\\3)`,
+  String.raw`\b(bearer)(?:\s+bearer){0,3}\s+(?:\\{0,4}["'][ \t]*[\w.$-]{0,64}\\{0,4}["']?[ \t]*[:=][ \t]*(?![ \t])${BREAKS}(?:${SEGMENT})?|${QUOTED}|${BEARER_KEYED}|(?=(?:[^\s"',;]|${GLUED}){8})(?=((?:${TOKEN_CHARS}|${GLUED}|\\(?!\\{0,3}["'])|[:=]+(?!${KEY_AHEAD}))+))\3)`,
   'gi',
 );
 const YAML_BLOCK = new RegExp(
-  `(^)([ \\t]*)(${QUOTE}${COLON_KEYS}${QUOTE}[ \\t]*:[ \\t]*)[|>][-+1-9]{0,2}[ \\t]*(?:#[^\\r\\n]*)?((?:\\r?\\n(?:[ \\t]*(?=\\r?\\n|$)|\\2[ \\t]+[^\\r\\n]*))+)`,
+  String.raw`(^)([ \t]*)(${QUOTE}${COLON_KEYS}${QUOTE}[ \t]*:[ \t]*)[|>][-+1-9]{0,2}[ \t]*(?:#[^\r\n]*)?((?:\r?\n(?:[ \t]*(?=\r?\n|$)|\2[ \t]+[^\r\n]*))+)`,
   'gim',
 );
 const YAML_INLINE_BLOCK = new RegExp(
-  `([^ \\t\\r\\n])([ \\t]+)((?:-[ \\t]+)?${QUOTE}${COLON_KEYS}${QUOTE}[ \\t]*:[ \\t]*)[|>][-+1-9]{0,2}[ \\t]*(?:#[^\\r\\n]*)?((?:\\r?\\n(?:[ \\t]*(?=\\r?\\n|$)|[ \\t]+[^\\r\\n]*))+)`,
+  String.raw`([^ \t\r\n])([ \t]+)((?:-[ \t]+)?${QUOTE}${COLON_KEYS}${QUOTE}[ \t]*:[ \t]*)[|>][-+1-9]{0,2}[ \t]*(?:#[^\r\n]*)?((?:\r?\n(?:[ \t]*(?=\r?\n|$)|[ \t]+[^\r\n]*))+)`,
   'gi',
 );
 const YAML_LIST_BLOCK = new RegExp(
-  `(^)([ \\t]*)(-[ \\t]+${QUOTE}${COLON_KEYS}${QUOTE}[ \\t]*:[ \\t]*)[|>][-+1-9]{0,2}[ \\t]*(?:#[^\\r\\n]*)?((?:\\r?\\n(?:[ \\t]*(?=\\r?\\n|$)|\\2[ \\t]{3,}[^\\r\\n]*))+)`,
+  String.raw`(^)([ \t]*)(-[ \t]+${QUOTE}${COLON_KEYS}${QUOTE}[ \t]*:[ \t]*)[|>][-+1-9]{0,2}[ \t]*(?:#[^\r\n]*)?((?:\r?\n(?:[ \t]*(?=\r?\n|$)|\2[ \t]{3,}[^\r\n]*))+)`,
   'gim',
 );
 const SENSITIVE_COLON = new RegExp(
-  `(${QUOTE}${COLON_KEYS}${QUOTE}[ \\t]*:[ \\t]*(?![ \\t])${BREAKS})(?!bearer(?:[ \\t]+\\*|$))(?!\\*[}\\]>)]*(?:[\\s,;"']|$))(?:(?:${KEY_AHEAD}[ \\t]*(?![ \\t])${BREAKS})+(?:${SEGMENT})?|${SEGMENT})`,
+  String.raw`(${QUOTE}${COLON_KEYS}${QUOTE}[ \t]*:[ \t]*(?![ \t])${BREAKS})(?!bearer(?:[ \t]+\*|$))(?!\*[}\]>)]*(?:[\s,;"']|$))(?:(?:${KEY_AHEAD}[ \t]*(?![ \t])${BREAKS})+(?:${SEGMENT})?|${SEGMENT})`,
   'gi',
 );
 const SENSITIVE_QUERY_PARAM = new RegExp(
-  `([?#](?:[^\\s?#]{0,${MAX_INPUT_LENGTH}}?[&;])?${QUOTE}${PARAM_KEYS}${QUOTE}\\s*=(?!=(?:[\\s=]|$))=*\\s*(?!\\s))(?:(?:${KEY_AHEAD}=*[ \\t]*(?![ \\t]))+(?:${VALUE_WORD})?|${VALUE_WORD})`,
+  String.raw`([?#](?:[^\s?#]{0,${MAX_INPUT_LENGTH}}?[&;])?${QUOTE}${PARAM_KEYS}${QUOTE}\s*=(?!=(?:[\s=]|$))=*\s*(?!\s))(?:(?:${KEY_AHEAD}=*[ \t]*(?![ \t]))+(?:${VALUE_WORD})?|${VALUE_WORD})`,
   'gi',
 );
 const SENSITIVE_PARAM = new RegExp(
-  `((?:^|[^\\w.?#-])[-.]*${QUOTE}${PARAM_KEYS}${QUOTE}\\s*=(?!=(?:[\\s=]|$))=*\\s*(?!\\s))(?!=*\\*(?:[\\s,;&]|$))(?:(?:${KEY_AHEAD}=*[ \\t]*(?![ \\t]))+(?:${VALUE})?|${VALUE})`,
+  String.raw`((?:^|[^\w.?#-])[-.]*${QUOTE}${PARAM_KEYS}${QUOTE}\s*=(?!=(?:[\s=]|$))=*\s*(?!\s))(?!=*\*(?:[\s,;&]|$))(?:(?:${KEY_AHEAD}=*[ \t]*(?![ \t]))+(?:${VALUE})?|${VALUE})`,
   'gi',
 );
-const HOST_TAIL =
-  /^((?:[a-z][\w+.-]*:)?(?:\/\/)?(?:[\w-]+(?:\.[\w-]+)+|localhost|\[[\da-f:.]+\]|[\w-]+(?=:\d))(?::\d+)?)[?#].*$/i;
-const PATH_TAIL = /[?#].*$/;
-const HOST_BEFORE = /[a-z][\w+.-]*:\/\/[\w.-]*$/i;
+const HOST_HEAD =
+  /^((?:[a-z][\w+.-]*:)?(?:\/\/)?(?:[\w-]+(?:\.[\w-]+)+|localhost|\[[\da-f:.]+\]|[\w-]+(?=:\d))(?::\d+)?)[?#]/i;
+const TAIL_START = /[?#]/;
+const HOST_BEFORE = /[a-z][\w+.-]{0,255}:\/\/[\w.-]{0,255}$/i;
 const BARE_HOST_BEFORE = /(?:^|[^\w:/])\/\/[\w.-]*$/;
 const CREDENTIAL_HOST = /(?:passw(?:or)?d|pwd|secret|token|api[_-]?key|session(?:_?id)?|cookie):$/i;
 const COOKIE_HEADER = /\b((?:set-)?cookie[ \t]*:[ \t]*)(?![ \t]|\*$)[^\r\n]+/gi;
 const QUERY_QUOTED = /([?#&;][^\s=&#?;"'<>]+=)(?:\\{0,4}"[^"]*"?|\\{0,4}'[^']*'?)/g;
-const PARAM_VALUE = /([?#&;][^\s=&#?;"'<>]+=+)(?:\\{0,4}"[^"]*"?|\\{0,4}'[^']*'?|[^\s&#;"'<>]+)/g;
+const PARAM_VALUE = new RegExp(
+  String.raw`([?#&;][^\s=&#?;"'<>]+=+)(?:${QUOTED}|[^\s&#;"'<>]+)`,
+  'g',
+);
+
+function stripHostTail(word: string): string {
+  const head = HOST_HEAD.exec(word);
+  return head === null ? word : head[1];
+}
+
+function stripPathTail(word: string): string {
+  const start = word.search(TAIL_START);
+  return start === -1 ? word : word.slice(0, start);
+}
 
 function redactWord(word: string): string {
   if (!MARKERS.test(word)) return word;
   if (word.length > MAX_WORD_LENGTH) return MASK;
-  const bare = word.includes('//')
-    ? word
-    : word.replace(word.startsWith('/') ? EMAIL : WORD_EMAIL, MASK);
-  const scrubbed = bare.replace(USERINFO, '$1').replace(HOST_TAIL, '$1');
-  const cut = scrubbed.includes('/') ? scrubbed.replace(PATH_TAIL, '') : scrubbed;
+  const emailPattern = word.startsWith('/') ? EMAIL : WORD_EMAIL;
+  const bare = word.includes('//') ? word : word.replace(emailPattern, MASK);
+  const scrubbed = stripHostTail(bare.replace(USERINFO, '$1'));
+  const cut = scrubbed.includes('/') ? stripPathTail(scrubbed) : scrubbed;
   return cut.replace(PARAM_VALUE, `$1${MASK}`);
 }
 
@@ -102,7 +123,7 @@ function isHostPort(text: string, offset: number, key: string, rest: string): bo
 
 function maskColon(match: string, key: string, offset: number, text: string): string {
   const port =
-    /:$/.test(key) && /^\d{1,5}(?=[/?#\s"'<>),;\]}]|:(?:\s|$)|$)/.test(match.slice(key.length));
+    key.endsWith(':') && /^\d{1,5}(?=[/?#\s"'<>),;\]}]|:(?:\s|$)|$)/.test(match.slice(key.length));
   return port && isHostPort(text, offset, key, match.slice(key.length)) ? match : key + MASK;
 }
 
@@ -147,15 +168,37 @@ export function redactText(value: string): string {
 }
 
 const SENSITIVE_FIELD = new RegExp(
-  `^${BENIGN}(?!(?:[\\w.$-]{0,64}[_.$-])?(?:list|row|map)[-_]?keys?$|(?:[\\w$-]{0,64}\\.)?(?:primary|query|object|foreign|lookup|group|unique)[-_]?keys?$|[\\w.$-]{0,64}(?:cache|i18n|sort|partition|translation|route|react|track|idempotency)[-_]?keys?$|[\\w.$-]{0,64}auth[-_]?(?:Method|Type|Provider|Mode|Status)$)[\\w.$-]{0,64}${COLON_WORDS}s?$|^${BENIGN}[\\w.$-]{1,64}(?:code|state)s?$`,
+  String.raw`^${BENIGN}(?!(?:[\w.$-]{0,64}[_.$-])?(?:list|row|map)[-_]?keys?$|(?:[\w$-]{0,64}\.)?(?:primary|query|object|foreign|lookup|group|unique)[-_]?keys?$|[\w.$-]{0,64}(?:cache|i18n|sort|partition|translation|route|react|track|idempotency)[-_]?keys?$|[\w.$-]{0,64}auth[-_]?(?:Method|Type|Provider|Mode|Status)$)[\w.$-]{0,64}${COLON_WORDS}s?$|^${BENIGN}[\w.$-]{1,64}(?:code|state)s?$`,
   'i',
 );
 
-export const METRIC_FIELD =
-  /(?:(?:^|[_. -])(?:duration|latency|ms|millis|seconds|secs|count|time|timestamp|size|bytes|ttl|age|attempts?|retries|expires(?:_?(?:in|at))?)|(?:^|_)(?:DURATION|LATENCY|MS|MILLIS|SECONDS|SECS|COUNT|TIME|TIMESTAMP|SIZE|BYTES|TTL|AGE|ATTEMPTS?|RETRIES|EXPIRES(?:_?(?:IN|AT))?)|(?:Duration|Latency|Ms|Millis|Seconds|Secs|Count|Time|Timestamp|Size|Bytes|Ttl|TTL|Age|Attempts?|Retries|Expires(?:In|At)?)|(?:^|[_. -])(?:input|output|total|max|prompt|completion|cached)[_-]?[Tt]okens?|(?:^|_)(?:INPUT|OUTPUT|TOTAL|MAX|PROMPT|COMPLETION|CACHED)[_-]?TOKENS?|(?:Input|Output|Total|Max|Prompt|Completion|Cached)Tokens?)$/;
+const METRIC_NAMES = String.raw`duration|latency|ms|millis|seconds|secs|count|time|timestamp|size|bytes|ttl|age|attempts?|retries|expires(?:_?(?:in|at))?`;
+const METRIC_NAMES_UPPER = String.raw`DURATION|LATENCY|MS|MILLIS|SECONDS|SECS|COUNT|TIME|TIMESTAMP|SIZE|BYTES|TTL|AGE|ATTEMPTS?|RETRIES|EXPIRES(?:_?(?:IN|AT))?`;
+const METRIC_NAMES_CAMEL = String.raw`Duration|Latency|Ms|Millis|Seconds|Secs|Count|Time|Timestamp|Size|Bytes|Ttl|TTL|Age|Attempts?|Retries|Expires(?:In|At)?`;
+const TOKEN_KINDS = 'input|output|total|max|prompt|completion|cached';
+const TOKEN_KINDS_UPPER = TOKEN_KINDS.toUpperCase();
+const TOKEN_KINDS_CAMEL = String.raw`Input|Output|Total|Max|Prompt|Completion|Cached`;
+const METRIC_SUFFIXES = [
+  String.raw`(?:^|[_. -])(?:${METRIC_NAMES})`,
+  String.raw`(?:^|_)(?:${METRIC_NAMES_UPPER})`,
+  `(?:${METRIC_NAMES_CAMEL})`,
+  String.raw`(?:^|[_. -])(?:${TOKEN_KINDS})[_-]?[Tt]okens?`,
+  String.raw`(?:^|_)(?:${TOKEN_KINDS_UPPER})[_-]?TOKENS?`,
+  `(?:${TOKEN_KINDS_CAMEL})Tokens?`,
+];
+
+export const METRIC_FIELD = new RegExp(`(?:${METRIC_SUFFIXES.join('|')})$`);
+
+function trimUnderscores(text: string): string {
+  let start = 0;
+  let end = text.length;
+  while (start < end && text[start] === '_') start++;
+  while (end > start && text[end - 1] === '_') end--;
+  return text.slice(start, end);
+}
 
 export function isSecretName(key: string): boolean {
-  const normalized = key.replace(/[^\w.$-]+/g, '_').replace(/^_+|_+$/g, '');
+  const normalized = trimUnderscores(key.replace(/[^\w.$-]+/g, '_'));
   if (SENSITIVE_FIELD.test(normalized)) return true;
   if (normalized.length <= 64) return false;
   const tail = normalized.slice(-64);

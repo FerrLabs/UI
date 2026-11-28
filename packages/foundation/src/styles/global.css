@@ -53,6 +53,8 @@
     -moz-osx-font-smoothing: grayscale;
     font-family: var(--font-sans);
     text-rendering: optimizeLegibility;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-rule-strong) transparent;
   }
 
   /*
@@ -69,6 +71,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    font-feature-settings: 'ss01', 'ss02';
   }
   body > main {
     flex: 1;
@@ -88,9 +91,6 @@
    * vitrine surface wants them; admin chrome that needs the plain
    * forms can opt out with `font-feature-settings: normal`.
    */
-  body {
-    font-feature-settings: 'ss01', 'ss02';
-  }
   html[data-style='precision'] body,
   html[data-style='soft'] body {
     font-feature-settings: normal;
@@ -112,10 +112,6 @@
   }
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-ink-2);
-  }
-  html {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-rule-strong) transparent;
   }
 
   /*

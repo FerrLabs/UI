@@ -22,6 +22,17 @@ function containsQuery(current: URLSearchParams, target: URLSearchParams): boole
   return true;
 }
 
+function isMoreSpecific(
+  pathLength: number,
+  querySize: number,
+  bestPathLength: number,
+  bestQuerySize: number,
+): boolean {
+  return (
+    pathLength > bestPathLength || (pathLength === bestPathLength && querySize > bestQuerySize)
+  );
+}
+
 export function activeNavItemId(
   groups: readonly ShellNavGroup[],
   currentUrl: string,
@@ -37,9 +48,7 @@ export function activeNavItemId(
       if (!containsPath(current.path, target.path)) continue;
       if (!containsQuery(current.query, target.query)) continue;
       const querySize = [...target.query].length;
-      const longer = target.path.length > bestPathLength;
-      const moreSpecific = target.path.length === bestPathLength && querySize > bestQuerySize;
-      if (longer || moreSpecific) {
+      if (isMoreSpecific(target.path.length, querySize, bestPathLength, bestQuerySize)) {
         bestId = item.id;
         bestPathLength = target.path.length;
         bestQuerySize = querySize;

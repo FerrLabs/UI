@@ -28,9 +28,15 @@ export function readRuntimeEnv(): RuntimeEnv {
   return (globalThis as { __ENV?: RuntimeEnv }).__ENV ?? {};
 }
 
+function trimTrailingSlashes(value: string): string {
+  let end = value.length;
+  while (end > 0 && value[end - 1] === '/') end--;
+  return value.slice(0, end);
+}
+
 export function runtimeUrl(value: string | undefined): string | null {
   const v = value?.trim();
-  return v ? v.replace(/\/+$/, '') : null;
+  return v ? trimTrailingSlashes(v) : null;
 }
 
 export function accountUrl(env: RuntimeEnv = readRuntimeEnv()): string | null {

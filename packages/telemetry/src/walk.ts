@@ -92,9 +92,11 @@ function collectSecretContainers(
   const secret = new WeakSet<object>();
   const seenPlain = new WeakSet<object>();
   const seenMetaRoot = new WeakSet<object>();
+  const metaRootOrPlain = (isMetaRoot: boolean): WeakSet<object> =>
+    isMetaRoot ? seenMetaRoot : seenPlain;
   const visit = (value: unknown, inSecret: boolean, isMetaRoot = false): void => {
     if (value === null || typeof value !== 'object' || !isTraversable(snapshot, value)) return;
-    const seen = inSecret ? secret : isMetaRoot ? seenMetaRoot : seenPlain;
+    const seen = inSecret ? secret : metaRootOrPlain(isMetaRoot);
     if (seen.has(value)) return;
     seen.add(value);
     if (Array.isArray(value)) {
@@ -151,7 +153,59 @@ function dateTime(value: object): number | undefined {
 function redactOpaque(value: object, redactString: StringRedactor): unknown {
   const time = dateTime(value);
   if (time !== undefined) return new Date(time);
-  return redactString(String(value));
+  return redactString(String(value as unknown));
+}
+
+function uniqueTarget(base: string, taken: Set<string>): string {
+  let target = base;
+  for (let n = 2; taken.has(target); n++) target = `${base}#${n}`;
+  taken.add(target);
+  return target;
+}
+
+function redactArray(
+  value: unknown[],
+  inSecret: boolean,
+  redactString: StringRedactor,
+  walk: Walk,
+): unknown[] {
+  const copy: unknown[] = [];
+  walk.copies.set(value, copy);
+  for (const entry of elementsOf(walk, value))
+    copy.push(
+      inSecret && isSecretValue(walk, entry) ? MASK : redactWalk(entry, redactString, walk),
+    );
+  return copy;
+}
+
+function isMaskedEntry(
+  walk: Walk,
+  key: string,
+  entry: unknown,
+  inSecret: boolean,
+  holdsMetrics: boolean,
+): boolean {
+  if (holdsMetrics && typeof entry === 'number') return false;
+  return inSecret ? isSecretValue(walk, entry) : isSecretField(walk, key, entry);
+}
+
+function redactRecord(
+  value: object,
+  inSecret: boolean,
+  redactString: StringRedactor,
+  walk: Walk,
+): Record<string, unknown> {
+  const copy: Record<string, unknown> = {};
+  walk.copies.set(value, copy);
+  const taken = new Set<string>();
+  const holdsMetrics = value === walk.measurementValues;
+  for (const [key, entry] of entriesOf(walk, value)) {
+    const base = inSecret ? MASK : redactKey(key, redactString, walk);
+    const target = uniqueTarget(base, taken);
+    const masked = isMaskedEntry(walk, key, entry, inSecret, holdsMetrics);
+    defineEntry(copy, target, masked ? MASK : redactWalk(entry, redactString, walk));
+  }
+  return copy;
 }
 
 function redactWalk(value: unknown, redactString: StringRedactor, walk: Walk): unknown {
@@ -161,33 +215,9 @@ function redactWalk(value: unknown, redactString: StringRedactor, walk: Walk): u
   const known = walk.copies.get(value);
   if (known !== undefined) return known;
   const inSecret = walk.secret.has(value);
-  if (Array.isArray(value)) {
-    const copy: unknown[] = [];
-    walk.copies.set(value, copy);
-    for (const entry of elementsOf(walk, value))
-      copy.push(
-        inSecret && isSecretValue(walk, entry) ? MASK : redactWalk(entry, redactString, walk),
-      );
-    return copy;
-  }
-  const copy: Record<string, unknown> = {};
-  walk.copies.set(value, copy);
-  const taken = new Set<string>();
-  const holdsMetrics = value === walk.measurementValues;
-  for (const [key, entry] of entriesOf(walk, value)) {
-    const base = inSecret ? MASK : redactKey(key, redactString, walk);
-    let target = base;
-    for (let n = 2; taken.has(target); n++) target = `${base}#${n}`;
-    taken.add(target);
-    const masked =
-      holdsMetrics && typeof entry === 'number'
-        ? false
-        : inSecret
-          ? isSecretValue(walk, entry)
-          : isSecretField(walk, key, entry);
-    defineEntry(copy, target, masked ? MASK : redactWalk(entry, redactString, walk));
-  }
-  return copy;
+  return Array.isArray(value)
+    ? redactArray(value, inSecret, redactString, walk)
+    : redactRecord(value, inSecret, redactString, walk);
 }
 
 export function redactDeep(value: unknown, redactString: StringRedactor = redactText): unknown {
