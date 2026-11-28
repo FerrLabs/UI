@@ -4,6 +4,12 @@ All notable changes to `ui-ng` will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.66.1] - 2026-11-28
+
+### Bug Fixes
+
+- fix(ui-ng): use the on-accent colour and more padding on the selected segmented option (#853)
+
 ## [1.66.0] - 2026-11-27
 
 ### Features
