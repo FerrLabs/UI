@@ -611,7 +611,7 @@ describe('sanitizeItem copies and the Faro session meta', () => {
     expect(data).toStrictEqual(before);
     expect(payload['data']['password']).toBe('*');
     expect(payload['data']['keep']).toBe('ok');
-    expect(Object.keys(payload['data']).length).toBe(4);
+    expect(Object.keys(payload['data'])).toHaveLength(4);
   });
 
   it('masks every leaf of an object that holds itself under a secret field', () => {
@@ -1114,7 +1114,7 @@ describe('sanitizeItem key cache', () => {
       return redactText(value);
     };
     const cached = sanitizeItem(item, { redactString: counting });
-    expect(keyCalls.length).toBe(1);
+    expect(keyCalls).toHaveLength(1);
     expect(cached).toStrictEqual(sanitizeItem(item));
   });
 
