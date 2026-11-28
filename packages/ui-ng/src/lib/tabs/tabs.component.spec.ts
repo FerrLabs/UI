@@ -6,26 +6,26 @@ import {
   signal,
   ɵINJECTOR_SCOPE,
   type EnvironmentInjector,
-  type InputSignal,
+  type InputSignalWithTransform,
   type WritableSignal,
 } from '@angular/core';
 import { SIGNAL } from '@angular/core/primitives/signals';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi, type Mock } from 'vitest';
 import { TabsComponent } from './tabs.component';
 import type { TabsStripItem } from './tabs.model';
 
-type InputNode<T> = { applyValueToInputSignal(node: unknown, value: T): void };
+type InputNode<W> = { applyValueToInputSignal(node: unknown, value: W): void };
 
-function setInput<T>(input: InputSignal<T>, value: T): void {
-  const node = (input as unknown as Record<symbol, InputNode<T>>)[SIGNAL];
+function setInput<T, W>(input: InputSignalWithTransform<T, W>, value: W): void {
+  const node = (input as unknown as Record<symbol, InputNode<W>>)[SIGNAL];
   node.applyValueToInputSignal(node, value);
 }
 
 interface FakeTab extends TabsStripItem {
   readonly activeState: WritableSignal<boolean>;
   readonly disabledState: WritableSignal<boolean>;
-  readonly selected: { emit: ReturnType<typeof vi.fn> };
-  readonly focus: ReturnType<typeof vi.fn>;
+  readonly selected: { emit: Mock<() => void> };
+  readonly focus: Mock<() => void>;
   readonly box: { left: number; width: number };
   readonly el: FakeElement | null;
 }
@@ -54,8 +54,8 @@ function fakeTab(
     disabledState,
     active: activeState,
     disabled: disabledState,
-    selected: { emit: vi.fn() },
-    focus: vi.fn(),
+    selected: { emit: vi.fn<() => void>() },
+    focus: vi.fn<() => void>(),
     element: () => el as unknown as HTMLElement | null,
     box,
     el,
@@ -84,7 +84,7 @@ class TabsProbe extends TabsComponent {
   reveal(animate: boolean) {
     this['revealActive'](animate);
   }
-  get userScrolled() {
+  get wasScrolledByUser() {
     return this['userScrolled'];
   }
 }
@@ -93,7 +93,7 @@ interface FakeStrip {
   scrollLeft: number;
   clientWidth: number;
   scrollWidth: number;
-  scrollTo: ReturnType<typeof vi.fn>;
+  scrollTo: Mock<(options: unknown) => void>;
   getBoundingClientRect(): { left: number; width: number };
 }
 
@@ -110,7 +110,7 @@ function createTabs(
     scrollLeft: 0,
     clientWidth: 400,
     scrollWidth: 400,
-    scrollTo: vi.fn(),
+    scrollTo: vi.fn<(options: unknown) => void>(),
     getBoundingClientRect: () => ({ left: 0, width: 400 }),
     ...strip,
   };
@@ -123,7 +123,7 @@ function createTabs(
 
 function keydown(key: string) {
   return { key, preventDefault: vi.fn() } as unknown as KeyboardEvent & {
-    preventDefault: ReturnType<typeof vi.fn>;
+    preventDefault: Mock<() => void>;
   };
 }
 
@@ -403,7 +403,7 @@ describe('TabsComponent layout settling', () => {
     stubMotion();
     const { tabs, strip } = createTabs([fakeTab({ active: true, left: 300, width: 100 })]);
     tabs.scrolledByUser();
-    expect(tabs.userScrolled).toBe(true);
+    expect(tabs.wasScrolledByUser).toBe(true);
     tabs.settle();
     expect(strip.scrollTo).not.toHaveBeenCalled();
   });

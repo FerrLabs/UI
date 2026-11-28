@@ -3,7 +3,7 @@ import {
   Injector,
   runInInjectionContext,
   signal,
-  type InputSignal,
+  type InputSignalWithTransform,
   type WritableSignal,
 } from '@angular/core';
 import { SIGNAL } from '@angular/core/primitives/signals';
@@ -12,10 +12,10 @@ import { SPLITTER_HOST, type SplitterHost } from './splitter-host';
 import { SplitterPaneComponent } from './splitter-pane.component';
 import type { SplitterOrientation } from './splitter-model';
 
-type InputNode<T> = { applyValueToInputSignal(node: unknown, value: T): void };
+type InputNode<W> = { applyValueToInputSignal(node: unknown, value: W): void };
 
-function setInput<T>(input: InputSignal<T>, value: T): void {
-  const node = (input as unknown as Record<symbol, InputNode<T>>)[SIGNAL];
+function setInput<T, W>(input: InputSignalWithTransform<T, W>, value: W): void {
+  const node = (input as unknown as Record<symbol, InputNode<W>>)[SIGNAL];
   node.applyValueToInputSignal(node, value);
 }
 

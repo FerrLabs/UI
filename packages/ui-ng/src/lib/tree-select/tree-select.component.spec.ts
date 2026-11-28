@@ -1,13 +1,13 @@
 import '@angular/compiler';
-import { Injector, runInInjectionContext, type InputSignal } from '@angular/core';
+import { Injector, runInInjectionContext, type InputSignalWithTransform } from '@angular/core';
 import { SIGNAL } from '@angular/core/primitives/signals';
 import { describe, expect, it, vi } from 'vitest';
 import { TreeSelectComponent, type TreeSelectGroup } from './tree-select.component';
 
-type InputNode<T> = { applyValueToInputSignal(node: unknown, value: T): void };
+type InputNode<W> = { applyValueToInputSignal(node: unknown, value: W): void };
 
-function setInput<T>(input: InputSignal<T>, value: T): void {
-  const node = (input as unknown as Record<symbol, InputNode<T>>)[SIGNAL];
+function setInput<T, W>(input: InputSignalWithTransform<T, W>, value: W): void {
+  const node = (input as unknown as Record<symbol, InputNode<W>>)[SIGNAL];
   node.applyValueToInputSignal(node, value);
 }
 

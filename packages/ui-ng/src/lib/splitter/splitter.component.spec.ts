@@ -9,7 +9,7 @@ import {
   signal,
   ɵINJECTOR_SCOPE,
   type EnvironmentInjector,
-  type InputSignal,
+  type InputSignalWithTransform,
   type WritableSignal,
 } from '@angular/core';
 import { SIGNAL } from '@angular/core/primitives/signals';
@@ -17,10 +17,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SplitterComponent, type SplitterResizeEvent } from './splitter.component';
 import type { SplitterSize } from './splitter-model';
 
-type InputNode<T> = { applyValueToInputSignal(node: unknown, value: T): void };
+type InputNode<W> = { applyValueToInputSignal(node: unknown, value: W): void };
 
-function setInput<T>(input: InputSignal<T>, value: T): void {
-  const node = (input as unknown as Record<symbol, InputNode<T>>)[SIGNAL];
+function setInput<T, W>(input: InputSignalWithTransform<T, W>, value: W): void {
+  const node = (input as unknown as Record<symbol, InputNode<W>>)[SIGNAL];
   node.applyValueToInputSignal(node, value);
 }
 
