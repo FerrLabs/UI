@@ -132,11 +132,11 @@ remaps `--color-accent`, `--color-app-bg-2`, `--color-ink`, `--color-ink-3` or `
 
 To set the selection by hand, declare any of these on `flr-segmented` or an ancestor:
 
-| Custom property           | Applies to              | Default                                |
-| ------------------------- | ----------------------- | -------------------------------------- |
-| `--flr-seg-selected-bg`   | Thumb background        | `--color-accent`                       |
-| `--flr-seg-selected-rule` | Thumb border            | The thumb background                   |
-| `--flr-seg-selected-ink`  | Selected label and icon | Black or white, from the thumb's light |
+| Custom property           | Applies to              | Default                                                         |
+| ------------------------- | ----------------------- | --------------------------------------------------------------- |
+| `--flr-seg-selected-bg`   | Thumb background        | `--color-accent`                                                |
+| `--flr-seg-selected-rule` | Thumb border            | The thumb background                                            |
+| `--flr-seg-selected-ink`  | Selected label and icon | `--color-on-accent`, else black or white from the thumb's light |
 
 The focus ring is drawn inside the selected option in the label colour, so it stays visible on the
 accent.
