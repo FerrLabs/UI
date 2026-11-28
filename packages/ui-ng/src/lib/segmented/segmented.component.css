@@ -6,7 +6,7 @@
   --flr-seg-tint: var(--flr-seg-selected-bg, var(--color-accent, #1e293b));
   --flr-seg-ink: var(
     --flr-seg-selected-ink,
-    oklch(from var(--flr-seg-tint) clamp(0, (0.564 - l) * 1000, 1) 0 0)
+    var(--color-on-accent, oklch(from var(--flr-seg-tint) clamp(0, (0.564 - l) * 1000, 1) 0 0))
   );
   --flr-seg-pole: oklch(from var(--color-ink, #1e293b) clamp(0, (l - 0.6) * 1000, 1) 0 0);
   --flr-seg-probe: color-mix(in oklab, var(--flr-seg-tint) 40%, var(--flr-seg-pole));
@@ -19,7 +19,7 @@
   display: inline-flex;
   overflow: hidden;
   gap: 2px;
-  padding: 3px;
+  padding: 4px;
   border: 1px solid var(--color-rule, rgba(30, 41, 59, 0.14));
   border-radius: var(--radius-card, 16px);
   corner-shape: var(--corner-shape, round);
@@ -28,8 +28,8 @@
 
 .flr-seg__thumb {
   position: absolute;
-  top: 3px;
-  bottom: 3px;
+  top: 4px;
+  bottom: 4px;
   left: 0;
   box-sizing: border-box;
   border: 1px solid var(--flr-seg-edge);
